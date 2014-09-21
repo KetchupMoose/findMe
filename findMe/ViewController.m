@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import <Parse/Parse.h>
 
 @interface ViewController ()
 
@@ -18,6 +19,19 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
+    [query getObjectInBackgroundWithId:@"exTJgfgotY" block:^(PFObject *latestCase, NSError *error) {
+        // Do something with the returned PFObject in the gameScore variable.
+        NSLog(@"%@", latestCase);
+        NSArray *jsonBlobArray = [latestCase objectForKey:@"cases"];
+        NSString *jsonBlob1 = [jsonBlobArray objectAtIndex:0];
+        
+        NSLog(jsonBlob1);
+        
+        
+    }];
+  
 }
 
 - (void)didReceiveMemoryWarning

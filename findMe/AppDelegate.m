@@ -7,12 +7,26 @@
 //
 
 #import "AppDelegate.h"
+#import <Parse/Parse.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
+    [Parse setApplicationId:@"XaleNqb8plMKReJIkuAwbokajOkcKo1RkOGdPUcN" clientKey:@"EqxiSF75OYaPQcOMYRR3K8yJursh6sbyHSLpldTT"];
+    
+    [PFUser enableAutomaticUser];
+    
+    
+    PFACL *defaultACL = [PFACL ACL];
+    
+    // If you would like all objects to be private by default, remove this line.
+    [defaultACL setPublicReadAccess:YES];
+    
+    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+    
     return YES;
 }
 							
