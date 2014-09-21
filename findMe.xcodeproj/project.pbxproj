@@ -1,0 +1,485 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D31DF2F619CEFC0C00A37725 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F519CEFC0C00A37725 /* Foundation.framework */; };
+		D31DF2F819CEFC0C00A37725 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F719CEFC0C00A37725 /* CoreGraphics.framework */; };
+		D31DF2FA19CEFC0C00A37725 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F919CEFC0C00A37725 /* UIKit.framework */; };
+		D31DF30019CEFC0C00A37725 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D31DF2FE19CEFC0C00A37725 /* InfoPlist.strings */; };
+		D31DF30219CEFC0C00A37725 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D31DF30119CEFC0C00A37725 /* main.m */; };
+		D31DF30619CEFC0C00A37725 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D31DF30519CEFC0C00A37725 /* AppDelegate.m */; };
+		D31DF30919CEFC0C00A37725 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D31DF30719CEFC0C00A37725 /* Main_iPhone.storyboard */; };
+		D31DF30C19CEFC0C00A37725 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */; };
+		D31DF30F19CEFC0C00A37725 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D31DF30E19CEFC0C00A37725 /* ViewController.m */; };
+		D31DF31119CEFC0C00A37725 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D31DF31019CEFC0C00A37725 /* Images.xcassets */; };
+		D31DF31819CEFC0C00A37725 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF31719CEFC0C00A37725 /* XCTest.framework */; };
+		D31DF31919CEFC0C00A37725 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F519CEFC0C00A37725 /* Foundation.framework */; };
+		D31DF31A19CEFC0C00A37725 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F919CEFC0C00A37725 /* UIKit.framework */; };
+		D31DF32219CEFC0C00A37725 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D31DF32019CEFC0C00A37725 /* InfoPlist.strings */; };
+		D31DF32419CEFC0C00A37725 /* findMeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D31DF32319CEFC0C00A37725 /* findMeTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D31DF31B19CEFC0C00A37725 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D31DF2EA19CEFC0C00A37725 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D31DF2F119CEFC0C00A37725;
+			remoteInfo = findMe;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D31DF2F219CEFC0C00A37725 /* findMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = findMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D31DF2F519CEFC0C00A37725 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D31DF2F719CEFC0C00A37725 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		D31DF2F919CEFC0C00A37725 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D31DF2FD19CEFC0C00A37725 /* findMe-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "findMe-Info.plist"; sourceTree = "<group>"; };
+		D31DF2FF19CEFC0C00A37725 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D31DF30119CEFC0C00A37725 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D31DF30319CEFC0C00A37725 /* findMe-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "findMe-Prefix.pch"; sourceTree = "<group>"; };
+		D31DF30419CEFC0C00A37725 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		D31DF30519CEFC0C00A37725 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		D31DF30819CEFC0C00A37725 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
+		D31DF30B19CEFC0C00A37725 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
+		D31DF30D19CEFC0C00A37725 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		D31DF30E19CEFC0C00A37725 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		D31DF31019CEFC0C00A37725 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		D31DF31619CEFC0C00A37725 /* findMeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = findMeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D31DF31719CEFC0C00A37725 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		D31DF31F19CEFC0C00A37725 /* findMeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "findMeTests-Info.plist"; sourceTree = "<group>"; };
+		D31DF32119CEFC0C00A37725 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D31DF32319CEFC0C00A37725 /* findMeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = findMeTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D31DF2EF19CEFC0C00A37725 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D31DF2F819CEFC0C00A37725 /* CoreGraphics.framework in Frameworks */,
+				D31DF2FA19CEFC0C00A37725 /* UIKit.framework in Frameworks */,
+				D31DF2F619CEFC0C00A37725 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D31DF31319CEFC0C00A37725 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D31DF31819CEFC0C00A37725 /* XCTest.framework in Frameworks */,
+				D31DF31A19CEFC0C00A37725 /* UIKit.framework in Frameworks */,
+				D31DF31919CEFC0C00A37725 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D31DF2E919CEFC0C00A37725 = {
+			isa = PBXGroup;
+			children = (
+				D31DF2FB19CEFC0C00A37725 /* findMe */,
+				D31DF31D19CEFC0C00A37725 /* findMeTests */,
+				D31DF2F419CEFC0C00A37725 /* Frameworks */,
+				D31DF2F319CEFC0C00A37725 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D31DF2F319CEFC0C00A37725 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D31DF2F219CEFC0C00A37725 /* findMe.app */,
+				D31DF31619CEFC0C00A37725 /* findMeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D31DF2F419CEFC0C00A37725 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D31DF2F519CEFC0C00A37725 /* Foundation.framework */,
+				D31DF2F719CEFC0C00A37725 /* CoreGraphics.framework */,
+				D31DF2F919CEFC0C00A37725 /* UIKit.framework */,
+				D31DF31719CEFC0C00A37725 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D31DF2FB19CEFC0C00A37725 /* findMe */ = {
+			isa = PBXGroup;
+			children = (
+				D31DF30419CEFC0C00A37725 /* AppDelegate.h */,
+				D31DF30519CEFC0C00A37725 /* AppDelegate.m */,
+				D31DF30719CEFC0C00A37725 /* Main_iPhone.storyboard */,
+				D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */,
+				D31DF30D19CEFC0C00A37725 /* ViewController.h */,
+				D31DF30E19CEFC0C00A37725 /* ViewController.m */,
+				D31DF31019CEFC0C00A37725 /* Images.xcassets */,
+				D31DF2FC19CEFC0C00A37725 /* Supporting Files */,
+			);
+			path = findMe;
+			sourceTree = "<group>";
+		};
+		D31DF2FC19CEFC0C00A37725 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D31DF2FD19CEFC0C00A37725 /* findMe-Info.plist */,
+				D31DF2FE19CEFC0C00A37725 /* InfoPlist.strings */,
+				D31DF30119CEFC0C00A37725 /* main.m */,
+				D31DF30319CEFC0C00A37725 /* findMe-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D31DF31D19CEFC0C00A37725 /* findMeTests */ = {
+			isa = PBXGroup;
+			children = (
+				D31DF32319CEFC0C00A37725 /* findMeTests.m */,
+				D31DF31E19CEFC0C00A37725 /* Supporting Files */,
+			);
+			path = findMeTests;
+			sourceTree = "<group>";
+		};
+		D31DF31E19CEFC0C00A37725 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D31DF31F19CEFC0C00A37725 /* findMeTests-Info.plist */,
+				D31DF32019CEFC0C00A37725 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D31DF2F119CEFC0C00A37725 /* findMe */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D31DF32719CEFC0C00A37725 /* Build configuration list for PBXNativeTarget "findMe" */;
+			buildPhases = (
+				D31DF2EE19CEFC0C00A37725 /* Sources */,
+				D31DF2EF19CEFC0C00A37725 /* Frameworks */,
+				D31DF2F019CEFC0C00A37725 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = findMe;
+			productName = findMe;
+			productReference = D31DF2F219CEFC0C00A37725 /* findMe.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D31DF31519CEFC0C00A37725 /* findMeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D31DF32A19CEFC0C00A37725 /* Build configuration list for PBXNativeTarget "findMeTests" */;
+			buildPhases = (
+				D31DF31219CEFC0C00A37725 /* Sources */,
+				D31DF31319CEFC0C00A37725 /* Frameworks */,
+				D31DF31419CEFC0C00A37725 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D31DF31C19CEFC0C00A37725 /* PBXTargetDependency */,
+			);
+			name = findMeTests;
+			productName = findMeTests;
+			productReference = D31DF31619CEFC0C00A37725 /* findMeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D31DF2EA19CEFC0C00A37725 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "Avial Ltd";
+				TargetAttributes = {
+					D31DF31519CEFC0C00A37725 = {
+						TestTargetID = D31DF2F119CEFC0C00A37725;
+					};
+				};
+			};
+			buildConfigurationList = D31DF2ED19CEFC0C00A37725 /* Build configuration list for PBXProject "findMe" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D31DF2E919CEFC0C00A37725;
+			productRefGroup = D31DF2F319CEFC0C00A37725 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D31DF2F119CEFC0C00A37725 /* findMe */,
+				D31DF31519CEFC0C00A37725 /* findMeTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D31DF2F019CEFC0C00A37725 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D31DF30C19CEFC0C00A37725 /* Main_iPad.storyboard in Resources */,
+				D31DF31119CEFC0C00A37725 /* Images.xcassets in Resources */,
+				D31DF30919CEFC0C00A37725 /* Main_iPhone.storyboard in Resources */,
+				D31DF30019CEFC0C00A37725 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D31DF31419CEFC0C00A37725 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D31DF32219CEFC0C00A37725 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D31DF2EE19CEFC0C00A37725 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D31DF30F19CEFC0C00A37725 /* ViewController.m in Sources */,
+				D31DF30619CEFC0C00A37725 /* AppDelegate.m in Sources */,
+				D31DF30219CEFC0C00A37725 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D31DF31219CEFC0C00A37725 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D31DF32419CEFC0C00A37725 /* findMeTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D31DF31C19CEFC0C00A37725 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D31DF2F119CEFC0C00A37725 /* findMe */;
+			targetProxy = D31DF31B19CEFC0C00A37725 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D31DF2FE19CEFC0C00A37725 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D31DF2FF19CEFC0C00A37725 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D31DF30719CEFC0C00A37725 /* Main_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D31DF30819CEFC0C00A37725 /* Base */,
+			);
+			name = Main_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D31DF30B19CEFC0C00A37725 /* Base */,
+			);
+			name = Main_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+		D31DF32019CEFC0C00A37725 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D31DF32119CEFC0C00A37725 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D31DF32519CEFC0C00A37725 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D31DF32619CEFC0C00A37725 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D31DF32819CEFC0C00A37725 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "findMe/findMe-Prefix.pch";
+				INFOPLIST_FILE = "findMe/findMe-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		D31DF32919CEFC0C00A37725 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "findMe/findMe-Prefix.pch";
+				INFOPLIST_FILE = "findMe/findMe-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		D31DF32B19CEFC0C00A37725 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/findMe.app/findMe";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "findMe/findMe-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "findMeTests/findMeTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		D31DF32C19CEFC0C00A37725 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/findMe.app/findMe";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "findMe/findMe-Prefix.pch";
+				INFOPLIST_FILE = "findMeTests/findMeTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D31DF2ED19CEFC0C00A37725 /* Build configuration list for PBXProject "findMe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D31DF32519CEFC0C00A37725 /* Debug */,
+				D31DF32619CEFC0C00A37725 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D31DF32719CEFC0C00A37725 /* Build configuration list for PBXNativeTarget "findMe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D31DF32819CEFC0C00A37725 /* Debug */,
+				D31DF32919CEFC0C00A37725 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		D31DF32A19CEFC0C00A37725 /* Build configuration list for PBXNativeTarget "findMeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D31DF32B19CEFC0C00A37725 /* Debug */,
+				D31DF32C19CEFC0C00A37725 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D31DF2EA19CEFC0C00A37725 /* Project object */;
+}
