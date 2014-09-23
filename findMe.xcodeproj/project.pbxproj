@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D318324919D06173003D51A3 /* CaseItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D318324819D06173003D51A3 /* CaseItem.m */; };
+		D318324D19D062ED003D51A3 /* CaseBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = D318324C19D062ED003D51A3 /* CaseBuilder.m */; };
+		D318325019D1828B003D51A3 /* CaseDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D318324F19D1828B003D51A3 /* CaseDetailsViewController.m */; };
 		D31DF2F619CEFC0C00A37725 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F519CEFC0C00A37725 /* Foundation.framework */; };
 		D31DF2F819CEFC0C00A37725 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F719CEFC0C00A37725 /* CoreGraphics.framework */; };
 		D31DF2FA19CEFC0C00A37725 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F919CEFC0C00A37725 /* UIKit.framework */; };
@@ -36,6 +39,7 @@
 		D3FBD13619CF0419008240F5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD13519CF0419008240F5 /* Security.framework */; };
 		D3FBD13819CF0424008240F5 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD13719CF0423008240F5 /* StoreKit.framework */; };
 		D3FBD13A19CF042F008240F5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD13919CF042E008240F5 /* SystemConfiguration.framework */; };
+		D3FBD13D19D0505D008240F5 /* Case.m in Sources */ = {isa = PBXBuildFile; fileRef = D3FBD13C19D0505D008240F5 /* Case.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +53,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D318324719D06173003D51A3 /* CaseItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaseItem.h; sourceTree = "<group>"; };
+		D318324819D06173003D51A3 /* CaseItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaseItem.m; sourceTree = "<group>"; };
+		D318324B19D062ED003D51A3 /* CaseBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaseBuilder.h; sourceTree = "<group>"; };
+		D318324C19D062ED003D51A3 /* CaseBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaseBuilder.m; sourceTree = "<group>"; };
+		D318324E19D1828B003D51A3 /* CaseDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaseDetailsViewController.h; sourceTree = "<group>"; };
+		D318324F19D1828B003D51A3 /* CaseDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaseDetailsViewController.m; sourceTree = "<group>"; };
 		D31DF2F219CEFC0C00A37725 /* findMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = findMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D31DF2F519CEFC0C00A37725 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D31DF2F719CEFC0C00A37725 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -83,6 +93,8 @@
 		D3FBD13519CF0419008240F5 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		D3FBD13719CF0423008240F5 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		D3FBD13919CF042E008240F5 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		D3FBD13B19D0505D008240F5 /* Case.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Case.h; sourceTree = "<group>"; };
+		D3FBD13C19D0505D008240F5 /* Case.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Case.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,12 +182,15 @@
 		D31DF2FB19CEFC0C00A37725 /* findMe */ = {
 			isa = PBXGroup;
 			children = (
+				D3FBD13E19D05062008240F5 /* JSON Parsing */,
 				D31DF30419CEFC0C00A37725 /* AppDelegate.h */,
 				D31DF30519CEFC0C00A37725 /* AppDelegate.m */,
 				D31DF30719CEFC0C00A37725 /* Main_iPhone.storyboard */,
 				D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */,
 				D31DF30D19CEFC0C00A37725 /* ViewController.h */,
 				D31DF30E19CEFC0C00A37725 /* ViewController.m */,
+				D318324E19D1828B003D51A3 /* CaseDetailsViewController.h */,
+				D318324F19D1828B003D51A3 /* CaseDetailsViewController.m */,
 				D31DF31019CEFC0C00A37725 /* Images.xcassets */,
 				D31DF2FC19CEFC0C00A37725 /* Supporting Files */,
 			);
@@ -209,6 +224,19 @@
 				D31DF32019CEFC0C00A37725 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D3FBD13E19D05062008240F5 /* JSON Parsing */ = {
+			isa = PBXGroup;
+			children = (
+				D3FBD13B19D0505D008240F5 /* Case.h */,
+				D3FBD13C19D0505D008240F5 /* Case.m */,
+				D318324B19D062ED003D51A3 /* CaseBuilder.h */,
+				D318324C19D062ED003D51A3 /* CaseBuilder.m */,
+				D318324719D06173003D51A3 /* CaseItem.h */,
+				D318324819D06173003D51A3 /* CaseItem.m */,
+			);
+			name = "JSON Parsing";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -310,8 +338,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D31DF30F19CEFC0C00A37725 /* ViewController.m in Sources */,
+				D3FBD13D19D0505D008240F5 /* Case.m in Sources */,
+				D318324919D06173003D51A3 /* CaseItem.m in Sources */,
 				D31DF30619CEFC0C00A37725 /* AppDelegate.m in Sources */,
+				D318325019D1828B003D51A3 /* CaseDetailsViewController.m in Sources */,
 				D31DF30219CEFC0C00A37725 /* main.m in Sources */,
+				D318324D19D062ED003D51A3 /* CaseBuilder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
