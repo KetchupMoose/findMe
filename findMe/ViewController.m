@@ -35,6 +35,7 @@ NSArray *caseListJSON;
        caseListJSON = [latestCaseList objectForKey:@"cases"];
         //this represents the overall list of cases
         
+    /*
         for (PFObject *caseObject in caseListJSON)
         {
             NSArray *caseItems = [caseObject objectForKey:@"caseItems"];
@@ -50,7 +51,7 @@ NSArray *caseListJSON;
             
             
         }
-        
+       */
         
         [casesTableView reloadData];
         

@@ -8,17 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CaseDetailsViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
+@interface CaseDetailsViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *backButton;
 
 @property (weak,nonatomic) IBOutlet UITableView *caseDetailsTableView;
+
+-(IBAction)doUpdate:(id)sender;
 
 
 
 @property (weak,nonatomic) NSArray *caseListData;
 @property (weak,nonatomic) NSNumber *selectedCaseIndex;
 
+@property (weak,nonatomic) IBOutlet UILabel *questionLabel;
 
 
 @end
