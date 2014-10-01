@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CaseDetailsViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
+@interface CaseDetailsViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *backButton;
 
@@ -16,6 +16,7 @@
 
 -(IBAction)doUpdate:(id)sender;
 
+@property(weak,nonatomic) IBOutlet UIPickerView *pickerView;
 
 
 @property (weak,nonatomic) NSArray *caseListData;
@@ -23,5 +24,6 @@
 
 @property (weak,nonatomic) IBOutlet UILabel *questionLabel;
 
+@property (weak,nonatomic) NSString *userName;
 
 @end

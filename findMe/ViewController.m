@@ -19,7 +19,7 @@
 @implementation ViewController
 NSArray *caseListJSON;
 @synthesize casesTableView;
-
+NSString *userName = @"exTJgfgotY";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -29,7 +29,7 @@ NSArray *caseListJSON;
     [casesTableView setDelegate:self];
     
     PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
-    [query getObjectInBackgroundWithId:@"exTJgfgotY" block:^(PFObject *latestCaseList, NSError *error) {
+    [query getObjectInBackgroundWithId:userName block:^(PFObject *latestCaseList, NSError *error) {
         // Do something with the returned PFObject
         NSLog(@"%@", latestCaseList);
        caseListJSON = [latestCaseList objectForKey:@"cases"];
@@ -120,6 +120,8 @@ NSArray *caseListJSON;
     
     cdvc.selectedCaseIndex=selectedIndex;
     cdvc.caseListData = caseListJSON;
+    cdvc.userName = userName;
+    
     
     [self.navigationController pushViewController:cdvc animated:YES];
     

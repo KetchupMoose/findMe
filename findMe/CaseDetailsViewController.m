@@ -8,6 +8,7 @@
 
 #import "CaseDetailsViewController.h"
 #import <Parse/Parse.h>
+#import "XMLWriter.h"
 
 @interface CaseDetailsViewController ()
 
@@ -16,6 +17,9 @@
 @implementation CaseDetailsViewController
 @synthesize caseListData;
 @synthesize selectedCaseIndex;
+@synthesize pickerView;
+@synthesize userName;
+
 NSArray *answersList;
 NSArray *optionsArray;
 NSArray *ansStaticArray;
@@ -90,14 +94,14 @@ NSMutableArray *answersArray;
     }
      ];
     
-    
-    
-    
     //here are the contents of each case item object
    answersList = [caseItemObject objectForKey:@"answers"];
     
     self.caseDetailsTableView.dataSource = self;
     self.caseDetailsTableView.delegate = self;
+    
+    self.pickerView.dataSource = self;
+    self.pickerView.delegate = self;
     
     
 }
@@ -118,6 +122,10 @@ NSMutableArray *answersArray;
     // Pass the selected object to the new view controller.
 }
 */
+#pragma mark UITableViewDelegateMethods
+
+
+
 
 #pragma mark UITableViewDelegateMethods
 -(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -163,7 +171,7 @@ NSMutableArray *answersArray;
     if(indexPath.row==[optionsArray count])
     {
         OptionNameLabel.text = @"";
-        [cell addSubview:textEnter];
+        
         textEnter.delegate = self;
         
         textEnter.text = @"Tap Here To Add An Option";
@@ -294,6 +302,102 @@ NSMutableArray *answersArray;
 -(IBAction)doUpdate:(id)sender
 {
     //send an xml function with the updated answers and options.
+    
+    NSString *xmlString = @"<PAYLOAD><USEROBJECTID>exTJgfgotY</USEROBJECTID><LAISO>EN</LAISO><CASEOBJECTID>ZRfwJYgFYe</CASEOBJECTID><CASENAME>Sparks on my way to school yesterday</CASENAME><ITEM><CASEITEM>403</CASEITEM><PROPERTYNUM>GbietFwjDh</PROPERTYNUM><ANSWER><A>4</A></ANSWER></ITEM></PAYLOAD>";
+    
+    int *selectedCaseInt = (NSInteger *)[selectedCaseIndex integerValue];
+
+    
+    PFObject *caseItemObject = [caseListData objectAtIndex:selectedCaseInt];
+    
+    NSString *generatedXMLString = [self createXMLFunction:caseItemObject];
+    
+    
+    //use parse cloud code function
+    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+                       withParameters:@{@"payload": xmlString}
+                                block:^(NSString *responseString, NSError *error) {
+                                    if (!error) {
+                                        
+                                        NSString *responseText = responseString;
+                                        NSLog(responseText);
+                                        
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSLog(error.localizedDescription);
+                                        
+                                    }
+                                }];
+    
+    
+    //XML needs to take in the new case information and new
+    
+    
+    
+    
+}
+
+-(NSString *)createXMLFunction:(PFObject *)caseObject
+{
+    NSString *part1 = @"<PAYLOAD><USEROBJECTID>";
+    NSString *actualUserObjectID = userName;
+    NSString *userObjPart2 = @"</USEROBJECTID>";
+    NSString *languagePart = @"<LAISO>EN</LAISO>";
+    NSString *caseObjectIDPart1 = @"<CaseObjectID>";
+    NSString *caseObjectID = @"2";
+    NSString *caseObjectIDPart2 = @"</CaseObjectID>";
+    
+    NSString *CaseNamePart1 = @"<CaseName>";
+    
+    // allocate serializer
+    
+    
+    
+    
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"Payload"];
+    
+        // add element with an attribute and some some text
+        [xmlWriter writeStartElement:@"UserObjectID"];
+        [xmlWriter writeCharacters:userName];
+        [xmlWriter writeEndElement];
+    
+        [xmlWriter writeStartElement:@"LAISO"];
+        [xmlWriter writeCharacters:@"EN"];
+        [xmlWriter writeEndElement];
+    
+        [xmlWriter writeStartElement:@"CaseObjectID"];
+        NSString *caseObjID = [caseObject objectForKey:@"caseId"];
+        [xmlWriter writeCharacters:caseObjID];
+    
+        [xmlWriter writeStartElement:@"CaseName"];
+        NSString *caseName = [caseObject objectForKey:@"caseName"];
+        [xmlWriter writeCharacters:caseName];
+        [xmlWriter writeEndElement];
+    
+        [xmlWriter writeStartElement:@"PROPERTY"];
+    
+    
+            [xmlWriter writeStartElement:@"PropertyNum"];
+            [xmlWriter writeCharacters:@"1"];
+            [xmlWriter writeEndElement];
+    
+        [xmlWriter writeEndElement];
+    
+    
+    // close root element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    return part1;
     
     
 }
