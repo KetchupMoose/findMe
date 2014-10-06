@@ -20,10 +20,13 @@
 @synthesize pickerView;
 @synthesize userName;
 
+NSArray *questionItems;
 NSArray *answersList;
 NSArray *optionsArray;
 NSArray *ansStaticArray;
 NSMutableArray *answersArray;
+//need to set selectedPropertyQuestion from the question picked by the pickerView
+NSString *selectedPropertyQuestion;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -46,7 +49,7 @@ NSMutableArray *answersArray;
     
     //get the LAST (latest) QuestionItem to display that information.
     
-    NSArray *questionItems = [caseItemObject objectForKey:@"caseItems"];
+   questionItems= [caseItemObject objectForKey:@"caseItems"];
     
     PFObject *lastQuestion = [questionItems objectAtIndex:(questionItems.count-7)];
     
@@ -67,8 +70,6 @@ NSMutableArray *answersArray;
     }
     
     ansStaticArray = [answersArray mutableCopy];
-    
-    
     
     //retrieve the property choices for this caseItemObject from Parse.
     
@@ -195,10 +196,6 @@ NSMutableArray *answersArray;
     {
         
     }
-    
-    
-    
-    
     
     UIView *cell = [tableView cellForRowAtIndexPath:indexPath];
     
@@ -341,19 +338,14 @@ NSMutableArray *answersArray;
 
 -(NSString *)createXMLFunction:(PFObject *)caseObject
 {
-    NSString *part1 = @"<PAYLOAD><USEROBJECTID>";
-    NSString *actualUserObjectID = userName;
-    NSString *userObjPart2 = @"</USEROBJECTID>";
-    NSString *languagePart = @"<LAISO>EN</LAISO>";
-    NSString *caseObjectIDPart1 = @"<CaseObjectID>";
-    NSString *caseObjectID = @"2";
-    NSString *caseObjectIDPart2 = @"</CaseObjectID>";
+   
+NSString *caseName = [caseObject objectForKey:@"caseName"];
+NSString *caseObjID = [caseObject objectForKey:@"caseId"];
     
-    NSString *CaseNamePart1 = @"<CaseName>";
+//get the selected property from the chooser element.
     
+
     // allocate serializer
-    
-    
     
     
     XMLWriter *xmlWriter = [[XMLWriter alloc] init];
@@ -371,14 +363,16 @@ NSMutableArray *answersArray;
         [xmlWriter writeEndElement];
     
         [xmlWriter writeStartElement:@"CaseObjectID"];
-        NSString *caseObjID = [caseObject objectForKey:@"caseId"];
+    
         [xmlWriter writeCharacters:caseObjID];
     
         [xmlWriter writeStartElement:@"CaseName"];
-        NSString *caseName = [caseObject objectForKey:@"caseName"];
+    
         [xmlWriter writeCharacters:caseName];
         [xmlWriter writeEndElement];
     
+    
+    //build strings for adding properties
         [xmlWriter writeStartElement:@"PROPERTY"];
     
     
@@ -386,10 +380,68 @@ NSMutableArray *answersArray;
             [xmlWriter writeCharacters:@"1"];
             [xmlWriter writeEndElement];
     
+            [xmlWriter writeStartElement:@"PROPERTYDESCR"];
+            [xmlWriter writeCharacters:@"what was I wearing"];
+            [xmlWriter writeEndElement];
+    
+    //go through the list of options for the selected case.
+
+            [xmlWriter writeStartElement:@"OPTIONS"];
+    
+    //generate list of strings from options
+    int i = 0;
+    NSString *fullCharsString = @"";
+    for(NSString *optionString in optionsArray)
+    {
+        i = i+1;
+     
+        fullCharsString = [fullCharsString stringByAppendingString:optionString];
+        
+        if(i!= [optionsArray count])
+        {
+            fullCharsString = [fullCharsString stringByAppendingString:@";"];
+        }
+        
+    }
+            [xmlWriter writeCharacters:fullCharsString];
+            [xmlWriter writeEndElement];
+    
+        [xmlWriter writeEndElement];
+    
+    //build strings for building item
+    [xmlWriter writeStartElement:@"ITEM"];
+    
+        [xmlWriter writeStartElement:@"CASEITEM"];
+        [xmlWriter writeCharacters:@"9000"];
+        [xmlWriter writeEndElement];
+    
+        [xmlWriter writeStartElement:@"PROPERTYNUM"];
+        [xmlWriter writeCharacters:@"1"];
         [xmlWriter writeEndElement];
     
     
-    // close root element
+    //write all the possible answers
+    
+    for (NSNumber *ansNumber in answersArray)
+    {
+        //build a new answer element
+        NSString *ansString = [ansNumber stringValue];
+        
+        [xmlWriter writeStartElement:@"ANSWER"];
+        
+        [xmlWriter writeStartElement:@"A"];
+        [xmlWriter writeCharacters:ansString];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeEndElement];
+        
+    }
+    
+    //close item element
+    [xmlWriter writeEndElement];
+    
+    
+    // close payload element
     [xmlWriter writeEndElement];
     
     // end document
@@ -397,7 +449,94 @@ NSMutableArray *answersArray;
     
     NSString* xml = [xmlWriter toString];
     
-    return part1;
+    return xml;
+    
+    
+}
+
+#pragma mark -
+#pragma mark PickerView DataSource
+
+- (NSInteger)numberOfComponentsInPickerView:
+(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView
+numberOfRowsInComponent:(NSInteger)component
+{
+    return questionItems.count;
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView
+             titleForRow:(NSInteger)row
+            forComponent:(NSInteger)component
+{
+    PFObject *questionItem = questionItems[row];
+    NSString *questionPropertyNum = [questionItem objectForKey:@"propertyNum"];
+    
+    
+    return questionPropertyNum;
+}
+
+#pragma mark -
+#pragma mark PickerView Delegate
+-(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row
+      inComponent:(NSInteger)component
+{
+ 
+  
+    
+ //query for a new set of selected answers based on this property num.
+    
+    PFObject *questionItemPicked = [questionItems objectAtIndex:row];
+    
+    NSString *lastQPropertyNum = [questionItemPicked objectForKey:@"propertyNum"];
+    answersList = [questionItemPicked objectForKey:@"answers"];
+    //setting global var
+     selectedPropertyQuestion = [questionItemPicked objectForKey:@"propertyNum"];
+    
+    answersArray = [[NSMutableArray alloc] init];
+    
+    [answersArray removeAllObjects];
+    
+    for (PFObject *eachAnsObj in answersList)
+    {
+        NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
+        
+        
+        [answersArray addObject:ansNum];
+        
+    }
+    
+    ansStaticArray = [answersArray mutableCopy];
+
+    //retrieve the property choices for this caseItemObject from Parse.
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Properts"];
+    
+    //hardcoded string with 3 answers
+    //eI4q4TycPu
+    [query getObjectInBackgroundWithId:lastQPropertyNum block:^(PFObject *PropertsObject, NSError *error) {
+        
+        NSString *questionString = [PropertsObject objectForKey:@"propertyDescr"];
+        
+        NSString *optionsString = [PropertsObject objectForKey:@"options"];
+        
+        //need to convert options string to an array of objects with ; separators.
+        
+        optionsArray = [optionsString componentsSeparatedByString:@";"];
+        
+        self.questionLabel.text = questionString;
+        
+        [self.caseDetailsTableView reloadData];
+        
+        
+    }
+     ];
+
+    
     
     
 }
