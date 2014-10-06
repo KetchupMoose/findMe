@@ -494,10 +494,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/findMe",
-					"/Users/brian/Downloads/PSIndyProject-master",
-					"/Users/brian/Downloads/PSIndyProject-master/petGallery/Pinterest.embeddedframework",
+					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)/findMe/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "findMe/findMe-Prefix.pch";
@@ -514,10 +512,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/findMe",
-					"/Users/brian/Downloads/PSIndyProject-master",
-					"/Users/brian/Downloads/PSIndyProject-master/petGallery/Pinterest.embeddedframework",
+					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)/findMe/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "findMe/findMe-Prefix.pch";
