@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import <Parse/Parse.h>
+#import "XMLWriter.h"
 #import "CaseBuilder.h"
 #import "CaseDetailsViewController.h"
 
@@ -127,6 +128,96 @@ NSString *userName = @"exTJgfgotY";
     
     
 }
+
+-(IBAction)newCase:(id)sender
+{
+    //create a new case via XML
+    NSString *generatedXMLString = [self createXMLFunction];
+    
+    //use parse cloud code function
+    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+                       withParameters:@{@"payload": generatedXMLString}
+                                block:^(NSString *responseString, NSError *error) {
+                                    if (!error) {
+                                        
+                                        NSString *responseText = responseString;
+                                        NSLog(responseText);
+                                        
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSLog(error.localizedDescription);
+                                        
+                                    }
+                                }];
+
+}
+
+-(NSString *)createXMLFunction
+{
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:userName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    //blank case objectID for starting new case
+    [xmlWriter writeStartElement:@"CASEOBJECTID"];
+    [xmlWriter writeEndElement];
+    
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:@"Brian Ontario Test Case"];
+    [xmlWriter writeEndElement];
+    
+    
+        //build strings for building item
+    [xmlWriter writeStartElement:@"ITEM"];
+    
+    [xmlWriter writeStartElement:@"CASEITEM"];
+    [xmlWriter writeCharacters:@"9001"];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"PROPERTYNUM"];
+    [xmlWriter writeCharacters:@"Satl6b79yh"];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"MYVALUE"];
+    [xmlWriter writeCharacters:@"Ontario"];
+    [xmlWriter writeEndElement];
+      
+    [xmlWriter writeStartElement:@"THEIRVALUE"];
+    [xmlWriter writeCharacters:@"Ontario"];
+    [xmlWriter writeEndElement];
+    
+    //close item element
+    [xmlWriter writeEndElement];
+    
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    return xml;
+    
+   
+    
+}
+
 
 
 @end

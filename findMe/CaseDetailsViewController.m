@@ -370,10 +370,10 @@ NSString *propertyDesc = self.questionLabel.text;
     XMLWriter *xmlWriter = [[XMLWriter alloc] init];
     
     // add root element
-    [xmlWriter writeStartElement:@"Payload"];
+    [xmlWriter writeStartElement:@"PAYLOAD"];
     
         // add element with an attribute and some some text
-        [xmlWriter writeStartElement:@"UserObjectID"];
+        [xmlWriter writeStartElement:@"USEROBJECTID"];
         [xmlWriter writeCharacters:userName];
         [xmlWriter writeEndElement];
     
@@ -381,12 +381,11 @@ NSString *propertyDesc = self.questionLabel.text;
         [xmlWriter writeCharacters:@"EN"];
         [xmlWriter writeEndElement];
     
-        [xmlWriter writeStartElement:@"CaseObjectID"];
-    
+        [xmlWriter writeStartElement:@"CASEOBJECTID"];
         [xmlWriter writeCharacters:caseObjID];
+        [xmlWriter writeEndElement];
     
-        [xmlWriter writeStartElement:@"CaseName"];
-    
+        [xmlWriter writeStartElement:@"CASENAME"];
         [xmlWriter writeCharacters:caseName];
         [xmlWriter writeEndElement];
     
@@ -395,7 +394,7 @@ NSString *propertyDesc = self.questionLabel.text;
         [xmlWriter writeStartElement:@"PROPERTY"];
     
     
-            [xmlWriter writeStartElement:@"PropertyNum"];
+            [xmlWriter writeStartElement:@"PROPERTYNUM"];
             [xmlWriter writeCharacters:propertyNum];
             [xmlWriter writeEndElement];
     
