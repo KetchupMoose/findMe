@@ -27,6 +27,9 @@ NSArray *ansStaticArray;
 NSMutableArray *answersArray;
 //need to set selectedPropertyQuestion from the question picked by the pickerView
 NSString *selectedPropertyQuestion;
+NSInteger newTextFieldIndex;
+NSInteger selectedItemForUpdate;
+
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -51,7 +54,8 @@ NSString *selectedPropertyQuestion;
     
    questionItems= [caseItemObject objectForKey:@"caseItems"];
     
-    PFObject *lastQuestion = [questionItems objectAtIndex:(questionItems.count-7)];
+    PFObject *lastQuestion = [questionItems objectAtIndex:(questionItems.count-1)];
+    selectedItemForUpdate = questionItems.count-1;
     
     NSString *lastQPropertyNum = [lastQuestion objectForKey:@"propertyNum"];
     answersList = [lastQuestion objectForKey:@"answers"];
@@ -63,7 +67,6 @@ NSString *selectedPropertyQuestion;
     for (PFObject *eachAnsObj in answersList)
     {
         NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
-        
         
         [answersArray addObject:ansNum];
         
@@ -145,6 +148,11 @@ NSString *selectedPropertyQuestion;
     UITextField *textEnter = (UITextField *)[cell viewWithTag:4];
     textEnter.frame = cell.bounds;
     
+    if(textEnter==nil)
+    {
+        NSLog(@"warning it's nil!!");
+        
+    }
     
     UILabel *OptionNameLabel = (UILabel *)[cell viewWithTag:3];
     
@@ -156,6 +164,9 @@ NSString *selectedPropertyQuestion;
   }
     
     //check to see if the answer should be highlighted
+    cell.backgroundColor = [UIColor clearColor];
+
+    
     
    for (NSNumber *eachAns in answersArray)
    {
@@ -166,10 +177,16 @@ NSString *selectedPropertyQuestion;
            cell.backgroundColor = [UIColor greenColor];
            
        }
+      
    }
     
+    NSInteger myIndexRow = indexPath.row;
+    NSInteger optionsCount = [optionsArray count];
+    
+
+    
     //for the last cell, make it show text saying "Tap Here to Add"
-    if(indexPath.row==[optionsArray count])
+    if(myIndexRow == optionsCount)
     {
         OptionNameLabel.text = @"";
         
@@ -178,12 +195,15 @@ NSString *selectedPropertyQuestion;
         textEnter.text = @"Tap Here To Add An Option";
         textEnter.alpha=1;
         
-        textEnter.tag = indexPath.row+100;
+        newTextFieldIndex  = indexPath.row;
         
     }
     else
     {
         OptionNameLabel.text = [optionsArray objectAtIndex:indexPath.row];
+        textEnter.alpha = 0;
+        textEnter.text = @"";
+        
     }
     
     return cell;
@@ -271,7 +291,7 @@ NSString *selectedPropertyQuestion;
     
     //put the string of the text field onto a label now in the same cell
     //put -100 so it doesn't interfere with the uilabel tag of 3 in every cell
-    NSIndexPath *cellIndexPath = [NSIndexPath indexPathForRow:textField.tag-100 inSection:0];
+    NSIndexPath *cellIndexPath = [NSIndexPath indexPathForRow:newTextFieldIndex inSection:0];
     
     UIView *cell = [self.caseDetailsTableView cellForRowAtIndexPath:cellIndexPath];
     
@@ -302,17 +322,14 @@ NSString *selectedPropertyQuestion;
     
     NSString *xmlString = @"<PAYLOAD><USEROBJECTID>exTJgfgotY</USEROBJECTID><LAISO>EN</LAISO><CASEOBJECTID>ZRfwJYgFYe</CASEOBJECTID><CASENAME>Sparks on my way to school yesterday</CASENAME><ITEM><CASEITEM>403</CASEITEM><PROPERTYNUM>GbietFwjDh</PROPERTYNUM><ANSWER><A>4</A></ANSWER></ITEM></PAYLOAD>";
     
-    int *selectedCaseInt = (NSInteger *)[selectedCaseIndex integerValue];
-
-    
-    PFObject *caseItemObject = [caseListData objectAtIndex:selectedCaseInt];
-    
-    NSString *generatedXMLString = [self createXMLFunction:caseItemObject];
+    PFObject *itemObjectToUpdate = questionItems [selectedItemForUpdate];
+  
+    NSString *generatedXMLString = [self createXMLFunction:itemObjectToUpdate];
     
     
     //use parse cloud code function
     [PFCloud callFunctionInBackground:@"inboundZITSMTL"
-                       withParameters:@{@"payload": xmlString}
+                       withParameters:@{@"payload": generatedXMLString}
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {
                                         
@@ -336,18 +353,20 @@ NSString *selectedPropertyQuestion;
     
 }
 
--(NSString *)createXMLFunction:(PFObject *)caseObject
+-(NSString *)createXMLFunction:(PFObject *)itemObject
 {
-   
+    int *selectedCaseInt = (NSInteger *)[selectedCaseIndex integerValue];
+    PFObject *caseObject = [caseListData objectAtIndex:selectedCaseInt];
+    
+    
 NSString *caseName = [caseObject objectForKey:@"caseName"];
 NSString *caseObjID = [caseObject objectForKey:@"caseId"];
+NSString *propertyNum = [itemObject objectForKey:@"propertyNum"];
+NSString *propertyDesc = self.questionLabel.text;
     
-//get the selected property from the chooser element.
     
-
+    //get the selected property from the chooser element.
     // allocate serializer
-    
-    
     XMLWriter *xmlWriter = [[XMLWriter alloc] init];
     
     // add root element
@@ -377,11 +396,11 @@ NSString *caseObjID = [caseObject objectForKey:@"caseId"];
     
     
             [xmlWriter writeStartElement:@"PropertyNum"];
-            [xmlWriter writeCharacters:@"1"];
+            [xmlWriter writeCharacters:propertyNum];
             [xmlWriter writeEndElement];
     
             [xmlWriter writeStartElement:@"PROPERTYDESCR"];
-            [xmlWriter writeCharacters:@"what was I wearing"];
+            [xmlWriter writeCharacters:propertyDesc];
             [xmlWriter writeEndElement];
     
     //go through the list of options for the selected case.
@@ -416,7 +435,7 @@ NSString *caseObjID = [caseObject objectForKey:@"caseId"];
         [xmlWriter writeEndElement];
     
         [xmlWriter writeStartElement:@"PROPERTYNUM"];
-        [xmlWriter writeCharacters:@"1"];
+        [xmlWriter writeCharacters:propertyNum];
         [xmlWriter writeEndElement];
     
     
@@ -476,6 +495,8 @@ numberOfRowsInComponent:(NSInteger)component
     PFObject *questionItem = questionItems[row];
     NSString *questionPropertyNum = [questionItem objectForKey:@"propertyNum"];
     
+    //Inefficient design here with lots of parse queries; need a better way to do an include query that includes all of the property titles.
+    
     
     return questionPropertyNum;
 }
@@ -486,16 +507,15 @@ numberOfRowsInComponent:(NSInteger)component
       inComponent:(NSInteger)component
 {
  
-  
-    
- //query for a new set of selected answers based on this property num.
+    //query for a new set of selected answers based on this property num.
     
     PFObject *questionItemPicked = [questionItems objectAtIndex:row];
+    selectedItemForUpdate = row;
     
     NSString *lastQPropertyNum = [questionItemPicked objectForKey:@"propertyNum"];
     answersList = [questionItemPicked objectForKey:@"answers"];
     //setting global var
-     selectedPropertyQuestion = [questionItemPicked objectForKey:@"propertyNum"];
+    selectedPropertyQuestion = [questionItemPicked objectForKey:@"propertyNum"];
     
     answersArray = [[NSMutableArray alloc] init];
     
@@ -504,12 +524,10 @@ numberOfRowsInComponent:(NSInteger)component
     for (PFObject *eachAnsObj in answersList)
     {
         NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
-        
-        
+  
         [answersArray addObject:ansNum];
         
     }
-    
     ansStaticArray = [answersArray mutableCopy];
 
     //retrieve the property choices for this caseItemObject from Parse.
@@ -521,6 +539,9 @@ numberOfRowsInComponent:(NSInteger)component
     [query getObjectInBackgroundWithId:lastQPropertyNum block:^(PFObject *PropertsObject, NSError *error) {
         
         NSString *questionString = [PropertsObject objectForKey:@"propertyDescr"];
+        
+        self.questionLabel.text = questionString;
+        
         
         NSString *optionsString = [PropertsObject objectForKey:@"options"];
         
@@ -536,8 +557,6 @@ numberOfRowsInComponent:(NSInteger)component
     }
      ];
 
-    
-    
     
 }
 
