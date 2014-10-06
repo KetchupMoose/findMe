@@ -156,6 +156,13 @@ NSString *userName = @"exTJgfgotY";
 
 -(NSString *)createXMLFunction
 {
+    //show user list of choices if there are multiple templates based on their entered user info/preferences
+    
+    //pull templatemaker jsons
+    
+    //create new case based on their templatemaker jsons
+    
+    
     // allocate serializer
     XMLWriter *xmlWriter = [[XMLWriter alloc] init];
     
@@ -177,7 +184,7 @@ NSString *userName = @"exTJgfgotY";
     
     
     [xmlWriter writeStartElement:@"CASENAME"];
-    [xmlWriter writeCharacters:@"Brian Ontario Test Case"];
+    [xmlWriter writeCharacters:@"CrazyNewCase"];
     [xmlWriter writeEndElement];
     
     
@@ -185,7 +192,7 @@ NSString *userName = @"exTJgfgotY";
     [xmlWriter writeStartElement:@"ITEM"];
     
     [xmlWriter writeStartElement:@"CASEITEM"];
-    [xmlWriter writeCharacters:@"9001"];
+    [xmlWriter writeCharacters:@"9002"];
     [xmlWriter writeEndElement];
     
     [xmlWriter writeStartElement:@"PROPERTYNUM"];

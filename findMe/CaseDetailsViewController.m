@@ -443,7 +443,13 @@ NSString *propertyDesc = self.questionLabel.text;
     for (NSNumber *ansNumber in answersArray)
     {
         //build a new answer element
-        NSString *ansString = [ansNumber stringValue];
+        NSInteger myInt = [ansNumber integerValue];
+        
+        myInt = myInt+1;
+        
+        NSString *ansString = [NSString stringWithFormat:@"%i",myInt];
+
+        
         
         [xmlWriter writeStartElement:@"ANSWER"];
         
