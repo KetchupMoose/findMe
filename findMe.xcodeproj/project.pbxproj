@@ -26,6 +26,7 @@
 		D31DF31A19CEFC0C00A37725 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F919CEFC0C00A37725 /* UIKit.framework */; };
 		D31DF32219CEFC0C00A37725 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D31DF32019CEFC0C00A37725 /* InfoPlist.strings */; };
 		D31DF32419CEFC0C00A37725 /* findMeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D31DF32319CEFC0C00A37725 /* findMeTests.m */; };
+		D3207AFF19E9B01200085B7C /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D3207AFE19E9B01200085B7C /* MBProgressHUD.m */; };
 		D328EF7719DCA99B00838999 /* XMLWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = D328EF7619DCA99B00838999 /* XMLWriter.m */; };
 		D3FBD12219CF0386008240F5 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD12119CF0386008240F5 /* AdSupport.framework */; };
 		D3FBD12419CF0391008240F5 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD12319CF0391008240F5 /* Social.framework */; };
@@ -81,6 +82,8 @@
 		D31DF31F19CEFC0C00A37725 /* findMeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "findMeTests-Info.plist"; sourceTree = "<group>"; };
 		D31DF32119CEFC0C00A37725 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D31DF32319CEFC0C00A37725 /* findMeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = findMeTests.m; sourceTree = "<group>"; };
+		D3207AFD19E9B01200085B7C /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		D3207AFE19E9B01200085B7C /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		D328EF7519DCA99B00838999 /* XMLWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLWriter.h; sourceTree = "<group>"; };
 		D328EF7619DCA99B00838999 /* XMLWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLWriter.m; sourceTree = "<group>"; };
 		D3FBD12119CF0386008240F5 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
@@ -185,6 +188,7 @@
 		D31DF2FB19CEFC0C00A37725 /* findMe */ = {
 			isa = PBXGroup;
 			children = (
+				D3207AFC19E9AFE800085B7C /* progressHUD */,
 				D328EF7419DCA8A400838999 /* xmlWriting */,
 				D3FBD13E19D05062008240F5 /* JSON Parsing */,
 				D31DF30419CEFC0C00A37725 /* AppDelegate.h */,
@@ -228,6 +232,15 @@
 				D31DF32019CEFC0C00A37725 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D3207AFC19E9AFE800085B7C /* progressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				D3207AFD19E9B01200085B7C /* MBProgressHUD.h */,
+				D3207AFE19E9B01200085B7C /* MBProgressHUD.m */,
+			);
+			name = progressHUD;
 			sourceTree = "<group>";
 		};
 		D328EF7419DCA8A400838999 /* xmlWriting */ = {
@@ -354,6 +367,7 @@
 				D3FBD13D19D0505D008240F5 /* Case.m in Sources */,
 				D318324919D06173003D51A3 /* CaseItem.m in Sources */,
 				D31DF30619CEFC0C00A37725 /* AppDelegate.m in Sources */,
+				D3207AFF19E9B01200085B7C /* MBProgressHUD.m in Sources */,
 				D328EF7719DCA99B00838999 /* XMLWriter.m in Sources */,
 				D318325019D1828B003D51A3 /* CaseDetailsViewController.m in Sources */,
 				D31DF30219CEFC0C00A37725 /* main.m in Sources */,

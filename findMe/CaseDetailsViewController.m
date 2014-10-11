@@ -29,6 +29,7 @@ NSMutableArray *answersArray;
 NSString *selectedPropertyQuestion;
 NSInteger newTextFieldIndex;
 NSInteger selectedItemForUpdate;
+MBProgressHUD *HUD;
 
 
 
@@ -76,6 +77,18 @@ NSInteger selectedItemForUpdate;
     
     //retrieve the property choices for this caseItemObject from Parse.
     
+    //add a progress HUD to show it is retrieving list of properts
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Retrieving List of Properts";
+    [HUD show:YES];
+
+    
+    
      PFQuery *query = [PFQuery queryWithClassName:@"Properts"];
     
     //hardcoded string with 3 answers
@@ -93,6 +106,8 @@ NSInteger selectedItemForUpdate;
         self.questionLabel.text = questionString;
         
         [self.caseDetailsTableView reloadData];
+        
+        [HUD hide:YES];
         
         
     }
@@ -329,6 +344,15 @@ NSInteger selectedItemForUpdate;
   
     NSString *generatedXMLString = [self createXMLFunction:itemObjectToUpdate];
     
+    //add a progress HUD to show it is retrieving list of properts
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Updating The Properties And Answers";
+    [HUD show:YES];
     
     //use parse cloud code function
     [PFCloud callFunctionInBackground:@"inboundZITSMTL"
@@ -339,11 +363,13 @@ NSInteger selectedItemForUpdate;
                                         NSString *responseText = responseString;
                                         NSLog(responseText);
                                         
+                                        [HUD hide:YES];
                                         
                                     }
                                     else
                                     {
                                         NSLog(error.localizedDescription);
+                                        [HUD hide:YES];
                                         
                                     }
                                 }];
@@ -503,10 +529,42 @@ numberOfRowsInComponent:(NSInteger)component
     PFObject *questionItem = questionItems[row];
     NSString *questionPropertyNum = [questionItem objectForKey:@"propertyNum"];
     
+    NSString *origin = [questionItem objectForKey:@"origin"];
+    
+    //If a system suggested case item, add to text.
+    NSString *stringWithOrigin;
+    if([origin isEqualToString:@"S"])
+    {
+       stringWithOrigin = [@"Suggested Property: " stringByAppendingString:questionPropertyNum];
+    }
+    else
+    {
+        stringWithOrigin = questionPropertyNum;
+        
+    }
+    NSArray *answers = [questionItem objectForKey:@"answers"];
+    
+    NSString *answerCount = [NSString stringWithFormat:@"%i",answers.count];
+    
+    NSString *stringToReturn;
+    
+    //If Case is answered, show # answers
+    if(answers.count>0)
+    {
+        stringToReturn = [[[[stringWithOrigin stringByAppendingString:@" ("] stringByAppendingString:answerCount]  stringByAppendingString:@" Answers"]stringByAppendingString: @")"];
+                          
+                          
+    }
+    else
+    {
+        stringToReturn = stringWithOrigin;
+        
+    }
+    
     //Inefficient design here with lots of parse queries; need a better way to do an include query that includes all of the property titles.
     
     
-    return questionPropertyNum;
+    return stringToReturn;
 }
 
 #pragma mark -

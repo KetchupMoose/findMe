@@ -11,6 +11,7 @@
 #import "XMLWriter.h"
 #import "CaseBuilder.h"
 #import "CaseDetailsViewController.h"
+#import "MBProgressHUD.h"
 
 
 @interface ViewController ()
@@ -21,19 +22,44 @@
 NSArray *caseListJSON;
 @synthesize casesTableView;
 NSString *userName = @"exTJgfgotY";
+MBProgressHUD *HUD;
+UIRefreshControl *refreshControl;
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    refreshControl = [[UIRefreshControl alloc]init];
+    [self.casesTableView addSubview:refreshControl];
+    [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
+    
+    
     [casesTableView setDataSource:self];
     [casesTableView setDelegate:self];
+    
+    //add a progress HUD to show it is retrieving list of cases
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Retrieving Cases";
+    [HUD show:YES];
+    
     
     PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
     [query getObjectInBackgroundWithId:userName block:^(PFObject *latestCaseList, NSError *error) {
         // Do something with the returned PFObject
+        
+       
+        
         NSLog(@"%@", latestCaseList);
        caseListJSON = [latestCaseList objectForKey:@"cases"];
+        
+        
         //this represents the overall list of cases
         
     /*
@@ -57,6 +83,8 @@ NSString *userName = @"exTJgfgotY";
         [casesTableView reloadData];
         
         
+        [HUD hide:YES];
+        
        // NSArray *myCases = [CaseBuilder casesFromJSON:[latestCase objectForKey:@"cases"] error:nil];
         
        // NSLog(@"%i",myCases.count);
@@ -78,6 +106,34 @@ NSString *userName = @"exTJgfgotY";
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)refreshTable
+{
+    //if response case is ok, refresh the list of cases.
+    PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
+    
+    //add a progress HUD to show it is retrieving list of cases
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Updating Case List";
+    [HUD show:YES];
+    
+    PFObject *latestCaseList = [query getObjectWithId:userName];
+    
+    NSLog(@"%@", latestCaseList);
+    caseListJSON = [latestCaseList objectForKey:@"cases"];
+    
+    [refreshControl endRefreshing];
+    
+    [casesTableView reloadData];
+    
+    [HUD hide:YES];
+
 }
 
 
@@ -131,6 +187,21 @@ NSString *userName = @"exTJgfgotY";
 
 -(IBAction)newCase:(id)sender
 {
+    //add a progress HUD to show it is retrieving list of cases
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Creating Case";
+    [HUD show:YES];
+    
+    
+    
+    
+    
+    
     //create a new case via XML
     NSString *generatedXMLString = [self createXMLFunction];
     
@@ -140,13 +211,20 @@ NSString *userName = @"exTJgfgotY";
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {
                                         
+                                        [HUD hide:YES];
+                                        
+                                        
+                                        
                                         NSString *responseText = responseString;
                                         NSLog(responseText);
+                                        
+                                         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Case Uploaded Successfully!", nil) message:NSLocalizedString(@"Case Uploaded Correctly.  Pull Down To Refresh And View", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
                                         
                                         
                                     }
                                     else
                                     {
+                                          [HUD hide:YES];
                                         NSLog(error.localizedDescription);
                                         
                                     }
@@ -163,7 +241,7 @@ NSString *userName = @"exTJgfgotY";
     //create new case based on their templatemaker jsons
     
     //hard coded value:
-    NSString *hardcodedXML =@"<PAYLOAD><USEROBJECTID>exTJgfgotY</USEROBJECTID><LAISO>EN</LAISO><CASEOBJECTID></CASEOBJECTID><CASENAME>test case answer canada</CASENAME><ITEM><CASEITEM>1</CASEITEM><PROPERTYNUM>GSU3bVVIxF</PROPERTYNUM><MYVALUE>1</MYVALUE></ITEM><ITEM><CASEITEM>2</CASEITEM><PROPERTYNUM>Hwww7qnXNn</PROPERTYNUM></ITEM><ITEM><CASEITEM>3</CASEITEM><PROPERTYNUM>pkxK92zhKh</PROPERTYNUM><MYVALUE>1</MYVALUE></ITEM><ITEM><CASEITEM>4</CASEITEM><PROPERTYNUM>mk6CND8PaH</PROPERTYNUM><ANSWER><A>36</A></ANSWER></ITEM></PAYLOAD>";
+    NSString *hardcodedXML =@"<PAYLOAD><USEROBJECTID>exTJgfgotY</USEROBJECTID><LAISO>EN</LAISO><CASEOBJECTID></CASEOBJECTID><CASENAME>refresh test 3</CASENAME><ITEM><CASEITEM>1</CASEITEM><PROPERTYNUM>GSU3bVVIxF</PROPERTYNUM><MYVALUE>1</MYVALUE></ITEM><ITEM><CASEITEM>2</CASEITEM><PROPERTYNUM>Hwww7qnXNn</PROPERTYNUM></ITEM><ITEM><CASEITEM>3</CASEITEM><PROPERTYNUM>pkxK92zhKh</PROPERTYNUM><MYVALUE>1</MYVALUE></ITEM><ITEM><CASEITEM>4</CASEITEM><PROPERTYNUM>mk6CND8PaH</PROPERTYNUM><ANSWER><A>36</A></ANSWER></ITEM></PAYLOAD>";
     
     
     // allocate serializer

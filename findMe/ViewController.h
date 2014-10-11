@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
-@interface ViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
+@interface ViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,MBProgressHUDDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *testLabel;
 @property (weak,nonatomic) IBOutlet UITableView *casesTableView;
 -(IBAction)newCase:(id)sender;
