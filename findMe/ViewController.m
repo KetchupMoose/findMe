@@ -162,6 +162,9 @@ NSString *userName = @"exTJgfgotY";
     
     //create new case based on their templatemaker jsons
     
+    //hard coded value:
+    NSString *hardcodedXML =@"<PAYLOAD><USEROBJECTID>exTJgfgotY</USEROBJECTID><LAISO>EN</LAISO><CASEOBJECTID></CASEOBJECTID><CASENAME>test case answer canada</CASENAME><ITEM><CASEITEM>1</CASEITEM><PROPERTYNUM>GSU3bVVIxF</PROPERTYNUM><MYVALUE>1</MYVALUE></ITEM><ITEM><CASEITEM>2</CASEITEM><PROPERTYNUM>Hwww7qnXNn</PROPERTYNUM></ITEM><ITEM><CASEITEM>3</CASEITEM><PROPERTYNUM>pkxK92zhKh</PROPERTYNUM><MYVALUE>1</MYVALUE></ITEM><ITEM><CASEITEM>4</CASEITEM><PROPERTYNUM>mk6CND8PaH</PROPERTYNUM><ANSWER><A>36</A></ANSWER></ITEM></PAYLOAD>";
+    
     
     // allocate serializer
     XMLWriter *xmlWriter = [[XMLWriter alloc] init];
@@ -219,11 +222,15 @@ NSString *userName = @"exTJgfgotY";
     
     NSString* xml = [xmlWriter toString];
     
-    return xml;
+   // return xml;
     
-   
+    return hardcodedXML;
     
 }
+
+
+
+
 
 
 
