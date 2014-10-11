@@ -9,6 +9,8 @@
 #import "CaseDetailsViewController.h"
 #import <Parse/Parse.h>
 #import "XMLWriter.h"
+#import "NewPropertyViewController.h"
+
 
 @interface CaseDetailsViewController ()
 
@@ -121,6 +123,7 @@ MBProgressHUD *HUD;
     
     self.pickerView.dataSource = self;
     self.pickerView.delegate = self;
+    
     
     
 }
@@ -522,50 +525,17 @@ numberOfRowsInComponent:(NSInteger)component
     return questionItems.count;
 }
 
+/*
 - (NSString *)pickerView:(UIPickerView *)pickerView
              titleForRow:(NSInteger)row
             forComponent:(NSInteger)component
 {
-    PFObject *questionItem = questionItems[row];
-    NSString *questionPropertyNum = [questionItem objectForKey:@"propertyNum"];
     
-    NSString *origin = [questionItem objectForKey:@"origin"];
-    
-    //If a system suggested case item, add to text.
-    NSString *stringWithOrigin;
-    if([origin isEqualToString:@"S"])
-    {
-       stringWithOrigin = [@"Suggested Property: " stringByAppendingString:questionPropertyNum];
-    }
-    else
-    {
-        stringWithOrigin = questionPropertyNum;
-        
-    }
-    NSArray *answers = [questionItem objectForKey:@"answers"];
-    
-    NSString *answerCount = [NSString stringWithFormat:@"%i",answers.count];
-    
-    NSString *stringToReturn;
-    
-    //If Case is answered, show # answers
-    if(answers.count>0)
-    {
-        stringToReturn = [[[[stringWithOrigin stringByAppendingString:@" ("] stringByAppendingString:answerCount]  stringByAppendingString:@" Answers"]stringByAppendingString: @")"];
-                          
-                          
-    }
-    else
-    {
-        stringToReturn = stringWithOrigin;
-        
-    }
-    
-    //Inefficient design here with lots of parse queries; need a better way to do an include query that includes all of the property titles.
     
     
     return stringToReturn;
 }
+*/
 
 #pragma mark -
 #pragma mark PickerView Delegate
@@ -624,6 +594,70 @@ numberOfRowsInComponent:(NSInteger)component
      ];
 
     
+}
+
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view{
+    UILabel* tView = (UILabel*)view;
+    if (!tView){
+        tView = [[UILabel alloc] init];
+       
+        
+        // Setup label properties - frame, font, colors etc
+        tView.frame = view.bounds;
+        tView.textAlignment = NSTextAlignmentCenter;
+        
+        tView.font = [UIFont systemFontOfSize:12];
+    }
+    // Fill the label text here
+    PFObject *questionItem = questionItems[row];
+    NSString *questionPropertyNum = [questionItem objectForKey:@"propertyNum"];
+    
+    NSString *origin = [questionItem objectForKey:@"origin"];
+    
+    //If a system suggested case item, add to text.
+    NSString *stringWithOrigin;
+    if([origin isEqualToString:@"S"])
+    {
+        stringWithOrigin = [@"Suggested Property: " stringByAppendingString:questionPropertyNum];
+    }
+    else
+    {
+        stringWithOrigin = questionPropertyNum;
+        
+    }
+    NSArray *answers = [questionItem objectForKey:@"answers"];
+    
+    NSString *answerCount = [NSString stringWithFormat:@"%i",answers.count];
+    
+    NSString *stringToReturn;
+    
+    //If Case is answered, show # answers
+    if(answers.count>0)
+    {
+        stringToReturn = [[[[stringWithOrigin stringByAppendingString:@" ("] stringByAppendingString:answerCount]  stringByAppendingString:@" Answers"]stringByAppendingString: @")"];
+        
+        
+    }
+    else
+    {
+        stringToReturn = stringWithOrigin;
+        
+    }
+    
+    //Inefficient design here with lots of parse queries; need a better way to do an include query that includes all of the property titles.
+    tView.text = stringToReturn;
+    
+    return tView;
+}
+
+-(IBAction)NewProperty:(id)sender
+{
+   NewPropertyViewController *npvc = [self.storyboard instantiateViewControllerWithIdentifier:@"npvc"];
+    
+   npvc.userName = userName;
+    
+    
+    [self.navigationController pushViewController:npvc animated:YES];
 }
 
 

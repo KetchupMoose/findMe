@@ -16,7 +16,7 @@
 @property (weak,nonatomic) IBOutlet UITableView *caseDetailsTableView;
 
 -(IBAction)doUpdate:(id)sender;
-
+-(IBAction)NewProperty:(id)sender;
 @property(weak,nonatomic) IBOutlet UIPickerView *pickerView;
 
 
