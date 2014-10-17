@@ -10,7 +10,6 @@
 		D318324919D06173003D51A3 /* CaseItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D318324819D06173003D51A3 /* CaseItem.m */; };
 		D318324D19D062ED003D51A3 /* CaseBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = D318324C19D062ED003D51A3 /* CaseBuilder.m */; };
 		D318325019D1828B003D51A3 /* CaseDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D318324F19D1828B003D51A3 /* CaseDetailsViewController.m */; };
-		D318325219D88DEE003D51A3 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D318325119D88DEE003D51A3 /* Parse.framework */; };
 		D31DF2F619CEFC0C00A37725 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F519CEFC0C00A37725 /* Foundation.framework */; };
 		D31DF2F819CEFC0C00A37725 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F719CEFC0C00A37725 /* CoreGraphics.framework */; };
 		D31DF2FA19CEFC0C00A37725 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F919CEFC0C00A37725 /* UIKit.framework */; };
@@ -30,6 +29,8 @@
 		D3207B0219E9CBCE00085B7C /* NewPropertyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3207B0119E9CBCE00085B7C /* NewPropertyViewController.m */; };
 		D3207B0419E9CF8B00085B7C /* green-checkmark.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D3207B0319E9CF8B00085B7C /* green-checkmark.jpg */; };
 		D328EF7719DCA99B00838999 /* XMLWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = D328EF7619DCA99B00838999 /* XMLWriter.m */; };
+		D35C597919F1D07700140998 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D35C597819F1D07700140998 /* Bolts.framework */; };
+		D35C597B19F1D0EC00140998 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D35C597A19F1D0EC00140998 /* Parse.framework */; };
 		D3FBD12219CF0386008240F5 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD12119CF0386008240F5 /* AdSupport.framework */; };
 		D3FBD12419CF0391008240F5 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD12319CF0391008240F5 /* Social.framework */; };
 		D3FBD12619CF0399008240F5 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD12519CF0399008240F5 /* Accounts.framework */; };
@@ -63,15 +64,14 @@
 		D318324C19D062ED003D51A3 /* CaseBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaseBuilder.m; sourceTree = "<group>"; };
 		D318324E19D1828B003D51A3 /* CaseDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaseDetailsViewController.h; sourceTree = "<group>"; };
 		D318324F19D1828B003D51A3 /* CaseDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaseDetailsViewController.m; sourceTree = "<group>"; };
-		D318325119D88DEE003D51A3 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = findMe/Parse.framework; sourceTree = "<group>"; };
-		D31DF2F219CEFC0C00A37725 /* findMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = findMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D31DF2F219CEFC0C00A37725 /* findme.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = findme.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D31DF2F519CEFC0C00A37725 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D31DF2F719CEFC0C00A37725 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D31DF2F919CEFC0C00A37725 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		D31DF2FD19CEFC0C00A37725 /* findMe-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "findMe-Info.plist"; sourceTree = "<group>"; };
+		D31DF2FD19CEFC0C00A37725 /* findme.temp_caseinsensitive_rename-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "findme.temp_caseinsensitive_rename-Info.plist"; sourceTree = "<group>"; };
 		D31DF2FF19CEFC0C00A37725 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D31DF30119CEFC0C00A37725 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		D31DF30319CEFC0C00A37725 /* findMe-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "findMe-Prefix.pch"; sourceTree = "<group>"; };
+		D31DF30319CEFC0C00A37725 /* findme.temp_caseinsensitive_rename-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "findme.temp_caseinsensitive_rename-Prefix.pch"; sourceTree = "<group>"; };
 		D31DF30419CEFC0C00A37725 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D31DF30519CEFC0C00A37725 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		D31DF30819CEFC0C00A37725 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
@@ -79,9 +79,9 @@
 		D31DF30D19CEFC0C00A37725 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		D31DF30E19CEFC0C00A37725 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		D31DF31019CEFC0C00A37725 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		D31DF31619CEFC0C00A37725 /* findMeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = findMeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D31DF31619CEFC0C00A37725 /* findme.temp_caseinsensitive_renameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = findme.temp_caseinsensitive_renameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D31DF31719CEFC0C00A37725 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		D31DF31F19CEFC0C00A37725 /* findMeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "findMeTests-Info.plist"; sourceTree = "<group>"; };
+		D31DF31F19CEFC0C00A37725 /* findme.temp_caseinsensitive_renameTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "findme.temp_caseinsensitive_renameTests-Info.plist"; sourceTree = "<group>"; };
 		D31DF32119CEFC0C00A37725 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D31DF32319CEFC0C00A37725 /* findMeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = findMeTests.m; sourceTree = "<group>"; };
 		D3207AFD19E9B01200085B7C /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -91,6 +91,8 @@
 		D3207B0319E9CF8B00085B7C /* green-checkmark.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "green-checkmark.jpg"; sourceTree = "<group>"; };
 		D328EF7519DCA99B00838999 /* XMLWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLWriter.h; sourceTree = "<group>"; };
 		D328EF7619DCA99B00838999 /* XMLWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLWriter.m; sourceTree = "<group>"; };
+		D35C597819F1D07700140998 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = findMe/Bolts.framework; sourceTree = "<group>"; };
+		D35C597A19F1D0EC00140998 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = findMe/Parse.framework; sourceTree = "<group>"; };
 		D3FBD12119CF0386008240F5 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		D3FBD12319CF0391008240F5 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		D3FBD12519CF0399008240F5 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
@@ -113,7 +115,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D318325219D88DEE003D51A3 /* Parse.framework in Frameworks */,
+				D35C597B19F1D0EC00140998 /* Parse.framework in Frameworks */,
+				D35C597919F1D07700140998 /* Bolts.framework in Frameworks */,
 				D3FBD13A19CF042F008240F5 /* SystemConfiguration.framework in Frameworks */,
 				D3FBD13819CF0424008240F5 /* StoreKit.framework in Frameworks */,
 				D3FBD13619CF0419008240F5 /* Security.framework in Frameworks */,
@@ -159,8 +162,8 @@
 		D31DF2F319CEFC0C00A37725 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D31DF2F219CEFC0C00A37725 /* findMe.app */,
-				D31DF31619CEFC0C00A37725 /* findMeTests.xctest */,
+				D31DF2F219CEFC0C00A37725 /* findme.app */,
+				D31DF31619CEFC0C00A37725 /* findme.temp_caseinsensitive_renameTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -168,7 +171,8 @@
 		D31DF2F419CEFC0C00A37725 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D318325119D88DEE003D51A3 /* Parse.framework */,
+				D35C597A19F1D0EC00140998 /* Parse.framework */,
+				D35C597819F1D07700140998 /* Bolts.framework */,
 				D3FBD13919CF042E008240F5 /* SystemConfiguration.framework */,
 				D3FBD13719CF0423008240F5 /* StoreKit.framework */,
 				D3FBD13519CF0419008240F5 /* Security.framework */,
@@ -216,10 +220,10 @@
 		D31DF2FC19CEFC0C00A37725 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D31DF2FD19CEFC0C00A37725 /* findMe-Info.plist */,
+				D31DF2FD19CEFC0C00A37725 /* findme.temp_caseinsensitive_rename-Info.plist */,
 				D31DF2FE19CEFC0C00A37725 /* InfoPlist.strings */,
 				D31DF30119CEFC0C00A37725 /* main.m */,
-				D31DF30319CEFC0C00A37725 /* findMe-Prefix.pch */,
+				D31DF30319CEFC0C00A37725 /* findme.temp_caseinsensitive_rename-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -236,7 +240,7 @@
 		D31DF31E19CEFC0C00A37725 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D31DF31F19CEFC0C00A37725 /* findMeTests-Info.plist */,
+				D31DF31F19CEFC0C00A37725 /* findme.temp_caseinsensitive_renameTests-Info.plist */,
 				D31DF32019CEFC0C00A37725 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -276,9 +280,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D31DF2F119CEFC0C00A37725 /* findMe */ = {
+		D31DF2F119CEFC0C00A37725 /* findme.temp_caseinsensitive_rename */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D31DF32719CEFC0C00A37725 /* Build configuration list for PBXNativeTarget "findMe" */;
+			buildConfigurationList = D31DF32719CEFC0C00A37725 /* Build configuration list for PBXNativeTarget "findme.temp_caseinsensitive_rename" */;
 			buildPhases = (
 				D31DF2EE19CEFC0C00A37725 /* Sources */,
 				D31DF2EF19CEFC0C00A37725 /* Frameworks */,
@@ -288,14 +292,14 @@
 			);
 			dependencies = (
 			);
-			name = findMe;
+			name = findme.temp_caseinsensitive_rename;
 			productName = findMe;
-			productReference = D31DF2F219CEFC0C00A37725 /* findMe.app */;
+			productReference = D31DF2F219CEFC0C00A37725 /* findme.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D31DF31519CEFC0C00A37725 /* findMeTests */ = {
+		D31DF31519CEFC0C00A37725 /* findme.temp_caseinsensitive_renameTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D31DF32A19CEFC0C00A37725 /* Build configuration list for PBXNativeTarget "findMeTests" */;
+			buildConfigurationList = D31DF32A19CEFC0C00A37725 /* Build configuration list for PBXNativeTarget "findme.temp_caseinsensitive_renameTests" */;
 			buildPhases = (
 				D31DF31219CEFC0C00A37725 /* Sources */,
 				D31DF31319CEFC0C00A37725 /* Frameworks */,
@@ -306,9 +310,9 @@
 			dependencies = (
 				D31DF31C19CEFC0C00A37725 /* PBXTargetDependency */,
 			);
-			name = findMeTests;
+			name = findme.temp_caseinsensitive_renameTests;
 			productName = findMeTests;
-			productReference = D31DF31619CEFC0C00A37725 /* findMeTests.xctest */;
+			productReference = D31DF31619CEFC0C00A37725 /* findme.temp_caseinsensitive_renameTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -325,7 +329,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D31DF2ED19CEFC0C00A37725 /* Build configuration list for PBXProject "findMe" */;
+			buildConfigurationList = D31DF2ED19CEFC0C00A37725 /* Build configuration list for PBXProject "findme" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -338,8 +342,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D31DF2F119CEFC0C00A37725 /* findMe */,
-				D31DF31519CEFC0C00A37725 /* findMeTests */,
+				D31DF2F119CEFC0C00A37725 /* findme.temp_caseinsensitive_rename */,
+				D31DF31519CEFC0C00A37725 /* findme.temp_caseinsensitive_renameTests */,
 			);
 		};
 /* End PBXProject section */
@@ -398,7 +402,7 @@
 /* Begin PBXTargetDependency section */
 		D31DF31C19CEFC0C00A37725 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D31DF2F119CEFC0C00A37725 /* findMe */;
+			target = D31DF2F119CEFC0C00A37725 /* findme.temp_caseinsensitive_rename */;
 			targetProxy = D31DF31B19CEFC0C00A37725 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -516,15 +520,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Brian Allen (U536PJZFA3)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
 					"$(PROJECT_DIR)/findMe/**",
+					"$(PROJECT_DIR)/findMe",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "findMe/findMe-Prefix.pch";
-				INFOPLIST_FILE = "findMe/findMe-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "findMe/findme.temp_caseinsensitive_rename-Prefix.pch";
+				INFOPLIST_FILE = "findMe/findme.temp_caseinsensitive_rename-Info.plist";
+				PRODUCT_NAME = findme;
+				PROVISIONING_PROFILE = "b848f95e-31fd-43b1-9d6a-9ee077d5fa64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -534,15 +541,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Brian Allen (U536PJZFA3)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
 					"$(PROJECT_DIR)/findMe/**",
+					"$(PROJECT_DIR)/findMe",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "findMe/findMe-Prefix.pch";
-				INFOPLIST_FILE = "findMe/findMe-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "findMe/findme.temp_caseinsensitive_rename-Prefix.pch";
+				INFOPLIST_FILE = "findMe/findme.temp_caseinsensitive_rename-Info.plist";
+				PRODUCT_NAME = findme;
+				PROVISIONING_PROFILE = "b848f95e-31fd-43b1-9d6a-9ee077d5fa64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -562,8 +572,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "findMeTests/findMeTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "findMeTests/findme.temp_caseinsensitive_renameTests-Info.plist";
+				PRODUCT_NAME = findme.temp_caseinsensitive_renameTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -580,8 +590,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "findMe/findMe-Prefix.pch";
-				INFOPLIST_FILE = "findMeTests/findMeTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "findMeTests/findme.temp_caseinsensitive_renameTests-Info.plist";
+				PRODUCT_NAME = findme.temp_caseinsensitive_renameTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -590,7 +600,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D31DF2ED19CEFC0C00A37725 /* Build configuration list for PBXProject "findMe" */ = {
+		D31DF2ED19CEFC0C00A37725 /* Build configuration list for PBXProject "findme" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D31DF32519CEFC0C00A37725 /* Debug */,
@@ -599,7 +609,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D31DF32719CEFC0C00A37725 /* Build configuration list for PBXNativeTarget "findMe" */ = {
+		D31DF32719CEFC0C00A37725 /* Build configuration list for PBXNativeTarget "findme.temp_caseinsensitive_rename" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D31DF32819CEFC0C00A37725 /* Debug */,
@@ -608,7 +618,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D31DF32A19CEFC0C00A37725 /* Build configuration list for PBXNativeTarget "findMeTests" */ = {
+		D31DF32A19CEFC0C00A37725 /* Build configuration list for PBXNativeTarget "findme.temp_caseinsensitive_renameTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D31DF32B19CEFC0C00A37725 /* Debug */,

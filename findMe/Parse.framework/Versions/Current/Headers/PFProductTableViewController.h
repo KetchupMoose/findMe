@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Parse Inc. All rights reserved.
 //
 
-#import "PFQueryTableViewController.h"
+#import <Parse/PFQueryTableViewController.h>
 
 /*!
  PFProductTableViewController displays in-app purchase products stored on Parse.
@@ -18,5 +18,6 @@
 /*!
  Initializes a product table view controller.
  */
-- (id)init;
+- (instancetype)init;
+
 @end

@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PFFile.h"
+
+@class BFTask;
+@class PFFile;
 
 /*!
  An image view that downloads and displays remote image stored on Parse's server.
@@ -16,12 +18,13 @@
 
 /// The remote file on Parse's server that stores the image.
 /// Note that the download does not start until loadInBackground: is called.
-@property (nonatomic, retain) PFFile *file;
+@property (nonatomic, strong) PFFile *file;
 
 /*!
  Initiate downloading of the remote image. Once the download completes, the remote image will be displayed.
+ @returns The task, that encapsulates the work being done.
  */
-- (void)loadInBackground;
+- (BFTask *)loadInBackground;
 
 /*!
  Initiate downloading of the remote image. Once the download completes, the remote image will be displayed.

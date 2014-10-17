@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D31DF2F119CEFC0C00A37725"
-               BuildableName = "findMe.app"
-               BlueprintName = "findMe"
-               ReferencedContainer = "container:findMe.xcodeproj">
+               BuildableName = "findme.temp_caseinsensitive_rename.app"
+               BlueprintName = "findme.temp_caseinsensitive_rename"
+               ReferencedContainer = "container:findme.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D31DF31519CEFC0C00A37725"
-               BuildableName = "findMeTests.xctest"
-               BlueprintName = "findMeTests"
-               ReferencedContainer = "container:findMe.xcodeproj">
+               BuildableName = "findme.temp_caseinsensitive_renameTests.xctest"
+               BlueprintName = "findme.temp_caseinsensitive_renameTests"
+               ReferencedContainer = "container:findme.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D31DF2F119CEFC0C00A37725"
-            BuildableName = "findMe.app"
-            BlueprintName = "findMe"
-            ReferencedContainer = "container:findMe.xcodeproj">
+            BuildableName = "findme.temp_caseinsensitive_rename.app"
+            BlueprintName = "findme.temp_caseinsensitive_rename"
+            ReferencedContainer = "container:findme.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D31DF2F119CEFC0C00A37725"
-            BuildableName = "findMe.app"
-            BlueprintName = "findMe"
-            ReferencedContainer = "container:findMe.xcodeproj">
+            BuildableName = "findme.temp_caseinsensitive_rename.app"
+            BlueprintName = "findme.temp_caseinsensitive_rename"
+            ReferencedContainer = "container:findme.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -80,9 +80,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D31DF2F119CEFC0C00A37725"
-            BuildableName = "findMe.app"
-            BlueprintName = "findMe"
-            ReferencedContainer = "container:findMe.xcodeproj">
+            BuildableName = "findme.temp_caseinsensitive_rename.app"
+            BlueprintName = "findme.temp_caseinsensitive_rename"
+            ReferencedContainer = "container:findme.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
