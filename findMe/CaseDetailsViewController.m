@@ -522,7 +522,7 @@ NSString *propertyDesc = self.questionLabel.text;
 - (NSInteger)pickerView:(UIPickerView *)pickerView
 numberOfRowsInComponent:(NSInteger)component
 {
-    return questionItems.count;
+    return questionItems.count +1;
 }
 
 /*
@@ -543,6 +543,34 @@ numberOfRowsInComponent:(NSInteger)component
       inComponent:(NSInteger)component
 {
  
+    //if they pick the very last row on the wheel, they are selecting to create a new question.
+    if(row==questionItems.count)
+    {
+        //show a dialogue asking if they want to create a new question
+        // Customize Alert View
+        UIAlertView *alertView = [UIAlertView new];
+        alertView.title = @"Create New Question?";
+        
+        
+        // Adding Your Buttons
+        [alertView addButtonWithTitle:@"Create New"];
+        [alertView addButtonWithTitle:@"Cancel"];
+        
+        alertView.delegate = self;
+        
+        
+        [alertView show];
+        
+        return;
+        
+    }
+    
+    //else, query for the answers based on that already created property
+    else
+    
+    {
+    
+    
     //query for a new set of selected answers based on this property num.
     
     PFObject *questionItemPicked = [questionItems objectAtIndex:row];
@@ -592,7 +620,7 @@ numberOfRowsInComponent:(NSInteger)component
         
     }
      ];
-
+    }
     
 }
 
@@ -608,6 +636,24 @@ numberOfRowsInComponent:(NSInteger)component
         
         tView.font = [UIFont systemFontOfSize:12];
     }
+    
+    //show a label to create a new property if it's the final questionItem
+    if(row ==questionItems.count)
+    {
+        //show a button
+        tView.text = @"Create New Question";
+        tView.font = [UIFont boldSystemFontOfSize:12];
+        tView.textColor = [UIColor blueColor];
+        
+        return tView;
+        
+    }
+    
+    else
+    {
+        
+    
+    
     // Fill the label text here
     PFObject *questionItem = questionItems[row];
     NSString *questionPropertyNum = [questionItem objectForKey:@"propertyNum"];
@@ -636,7 +682,6 @@ numberOfRowsInComponent:(NSInteger)component
     {
         stringToReturn = [[[[stringWithOrigin stringByAppendingString:@" ("] stringByAppendingString:answerCount]  stringByAppendingString:@" Answers"]stringByAppendingString: @")"];
         
-        
     }
     else
     {
@@ -644,10 +689,14 @@ numberOfRowsInComponent:(NSInteger)component
         
     }
     
+    
+    
     //Inefficient design here with lots of parse queries; need a better way to do an include query that includes all of the property titles.
     tView.text = stringToReturn;
     
     return tView;
+        
+        }
 }
 
 -(IBAction)NewProperty:(id)sender
@@ -658,6 +707,29 @@ numberOfRowsInComponent:(NSInteger)component
     
     
     [self.navigationController pushViewController:npvc animated:YES];
+}
+
+#pragma mark UIAlertViewDelegate Methods
+
+- (void)alertView:(UIAlertView *)alertView
+clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if(buttonIndex ==0)
+    {
+        //said Ok, create the view controller for adding a new property
+        NewPropertyViewController *npvc = [self.storyboard instantiateViewControllerWithIdentifier:@"npvc"];
+        
+        npvc.userName = userName;
+        
+        
+        [self.navigationController pushViewController:npvc animated:YES];
+    }
+    if (buttonIndex==1)
+    {
+        //cancel, dismiss alertview
+        [alertView dismissWithClickedButtonIndex:1 animated:YES];
+        
+    }
 }
 
 

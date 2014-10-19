@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
 
-@interface CaseDetailsViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate,MBProgressHUDDelegate>
+@interface CaseDetailsViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate,MBProgressHUDDelegate,UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *backButton;
 
@@ -24,6 +24,7 @@
 @property (weak,nonatomic) NSNumber *selectedCaseIndex;
 
 @property (weak,nonatomic) IBOutlet UILabel *questionLabel;
+@property (weak,nonatomic) IBOutlet UILabel *percentMatchingLabel;
 
 @property (weak,nonatomic) NSString *userName;
 

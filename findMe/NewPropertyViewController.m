@@ -42,13 +42,13 @@ NSString *questionText;
     self.answerTextField.delegate = self;
     self.questionTextField.delegate = self;
     
-    /*
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
     
     [self.view addGestureRecognizer:tap];
-     */
+    
 }
 
 - (void)didReceiveMemoryWarning
