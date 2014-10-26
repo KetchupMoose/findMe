@@ -144,10 +144,6 @@ MBProgressHUD *HUD;
     // Pass the selected object to the new view controller.
 }
 */
-#pragma mark UITableViewDelegateMethods
-
-
-
 
 #pragma mark UITableViewDelegateMethods
 -(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

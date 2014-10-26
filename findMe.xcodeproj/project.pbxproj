@@ -31,6 +31,9 @@
 		D328EF7719DCA99B00838999 /* XMLWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = D328EF7619DCA99B00838999 /* XMLWriter.m */; };
 		D35C597919F1D07700140998 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D35C597819F1D07700140998 /* Bolts.framework */; };
 		D35C597B19F1D0EC00140998 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D35C597A19F1D0EC00140998 /* Parse.framework */; };
+		D3F4573F19F88199000EDF25 /* setProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3F4573E19F88199000EDF25 /* setProfileViewController.m */; };
+		D3F4574219FD920A000EDF25 /* ManButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D3F4574019FD920A000EDF25 /* ManButton.png */; };
+		D3F4574319FD920A000EDF25 /* womanbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = D3F4574119FD920A000EDF25 /* womanbutton.png */; };
 		D3FBD12219CF0386008240F5 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD12119CF0386008240F5 /* AdSupport.framework */; };
 		D3FBD12419CF0391008240F5 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD12319CF0391008240F5 /* Social.framework */; };
 		D3FBD12619CF0399008240F5 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD12519CF0399008240F5 /* Accounts.framework */; };
@@ -93,6 +96,10 @@
 		D328EF7619DCA99B00838999 /* XMLWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLWriter.m; sourceTree = "<group>"; };
 		D35C597819F1D07700140998 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = findMe/Bolts.framework; sourceTree = "<group>"; };
 		D35C597A19F1D0EC00140998 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = findMe/Parse.framework; sourceTree = "<group>"; };
+		D3F4573D19F88199000EDF25 /* setProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = setProfileViewController.h; sourceTree = "<group>"; };
+		D3F4573E19F88199000EDF25 /* setProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = setProfileViewController.m; sourceTree = "<group>"; };
+		D3F4574019FD920A000EDF25 /* ManButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ManButton.png; sourceTree = "<group>"; };
+		D3F4574119FD920A000EDF25 /* womanbutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = womanbutton.png; sourceTree = "<group>"; };
 		D3FBD12119CF0386008240F5 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		D3FBD12319CF0391008240F5 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		D3FBD12519CF0399008240F5 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
@@ -197,6 +204,7 @@
 		D31DF2FB19CEFC0C00A37725 /* findMe */ = {
 			isa = PBXGroup;
 			children = (
+				D3F4574419FD9215000EDF25 /* imageAssets */,
 				D3207AFC19E9AFE800085B7C /* progressHUD */,
 				D328EF7419DCA8A400838999 /* xmlWriting */,
 				D3FBD13E19D05062008240F5 /* JSON Parsing */,
@@ -210,6 +218,8 @@
 				D318324F19D1828B003D51A3 /* CaseDetailsViewController.m */,
 				D3207B0019E9CBCE00085B7C /* NewPropertyViewController.h */,
 				D3207B0119E9CBCE00085B7C /* NewPropertyViewController.m */,
+				D3F4573D19F88199000EDF25 /* setProfileViewController.h */,
+				D3F4573E19F88199000EDF25 /* setProfileViewController.m */,
 				D3207B0319E9CF8B00085B7C /* green-checkmark.jpg */,
 				D31DF31019CEFC0C00A37725 /* Images.xcassets */,
 				D31DF2FC19CEFC0C00A37725 /* Supporting Files */,
@@ -262,6 +272,15 @@
 				D328EF7619DCA99B00838999 /* XMLWriter.m */,
 			);
 			name = xmlWriting;
+			sourceTree = "<group>";
+		};
+		D3F4574419FD9215000EDF25 /* imageAssets */ = {
+			isa = PBXGroup;
+			children = (
+				D3F4574019FD920A000EDF25 /* ManButton.png */,
+				D3F4574119FD920A000EDF25 /* womanbutton.png */,
+			);
+			name = imageAssets;
 			sourceTree = "<group>";
 		};
 		D3FBD13E19D05062008240F5 /* JSON Parsing */ = {
@@ -353,6 +372,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3F4574319FD920A000EDF25 /* womanbutton.png in Resources */,
+				D3F4574219FD920A000EDF25 /* ManButton.png in Resources */,
 				D31DF30C19CEFC0C00A37725 /* Main_iPad.storyboard in Resources */,
 				D31DF31119CEFC0C00A37725 /* Images.xcassets in Resources */,
 				D31DF30919CEFC0C00A37725 /* Main_iPhone.storyboard in Resources */,
@@ -381,6 +402,7 @@
 				D318324919D06173003D51A3 /* CaseItem.m in Sources */,
 				D31DF30619CEFC0C00A37725 /* AppDelegate.m in Sources */,
 				D3207B0219E9CBCE00085B7C /* NewPropertyViewController.m in Sources */,
+				D3F4573F19F88199000EDF25 /* setProfileViewController.m in Sources */,
 				D3207AFF19E9B01200085B7C /* MBProgressHUD.m in Sources */,
 				D328EF7719DCA99B00838999 /* XMLWriter.m in Sources */,
 				D318325019D1828B003D51A3 /* CaseDetailsViewController.m in Sources */,

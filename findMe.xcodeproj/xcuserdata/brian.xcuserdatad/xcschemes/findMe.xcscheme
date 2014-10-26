@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D31DF2F119CEFC0C00A37725"
-               BuildableName = "findme.temp_caseinsensitive_rename.app"
+               BuildableName = "findme.app"
                BlueprintName = "findme.temp_caseinsensitive_rename"
                ReferencedContainer = "container:findme.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D31DF2F119CEFC0C00A37725"
-            BuildableName = "findme.temp_caseinsensitive_rename.app"
+            BuildableName = "findme.app"
             BlueprintName = "findme.temp_caseinsensitive_rename"
             ReferencedContainer = "container:findme.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D31DF2F119CEFC0C00A37725"
-            BuildableName = "findme.temp_caseinsensitive_rename.app"
+            BuildableName = "findme.app"
             BlueprintName = "findme.temp_caseinsensitive_rename"
             ReferencedContainer = "container:findme.xcodeproj">
          </BuildableReference>
@@ -80,7 +80,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D31DF2F119CEFC0C00A37725"
-            BuildableName = "findme.temp_caseinsensitive_rename.app"
+            BuildableName = "findme.app"
             BlueprintName = "findme.temp_caseinsensitive_rename"
             ReferencedContainer = "container:findme.xcodeproj">
          </BuildableReference>
