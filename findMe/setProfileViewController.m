@@ -29,6 +29,8 @@ NSMutableArray *templatePickerActiveChoices;
 
 NSString *selectedTemplate1;
 NSString *selectedTemplate2;
+PFObject *itsMTLObject;
+int timerTicks =0;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -155,11 +157,25 @@ NSString *selectedTemplate2;
     PFUser *currentUser = [PFUser currentUser];
     
     //create new case with this user.
-    PFObject *itsMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
-    
+    itsMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
     [itsMTLObject setObject:currentUser forKey:@"ParseUser"];
+    [itsMTLObject setObject:showName forKey:@"showName"];
+    
+    // Set the access control list to current user for security purposes
+    PFACL *itsMTLACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [itsMTLACL setPublicReadAccess:YES];
+    [itsMTLACL setPublicWriteAccess:YES];
+    
+    itsMTLObject.ACL = itsMTLACL;
     
     [itsMTLObject save];
+    
+    //set user properties to parse true user account
+    [currentUser setObject:showName forKey:@"showName"];
+    [currentUser setObject:phoneNum forKey:@"cellNumber"];
+    [currentUser setObject:gender forKey:@"gender"];
+    [currentUser save];
+    
     
     //get the ID and run the XML with the case info.
     NSString *itsMTLObjectID = itsMTLObject.objectId;
@@ -176,19 +192,27 @@ NSString *selectedTemplate2;
     // Set determinate mode
     HUD.mode = MBProgressHUDModeDeterminate;
     HUD.delegate = self;
-    HUD.labelText = @"Updating The Properties And Answers";
+    HUD.labelText = @"Sending XML to Generate New User";
     [HUD show:YES];
     
-    //use parse cloud code function
+    //use parse cloud code function to update with appropriate XML
     [PFCloud callFunctionInBackground:@"inboundZITSMTL"
                        withParameters:@{@"payload": xmlGeneratedString}
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {
                                         
-                                        NSString *responseText = responseString;
-                                        NSLog(responseText);
+                                    NSString *responseText = responseString;
+                                    NSLog(responseText);
                                         
-                                        [HUD hide:YES];
+                                    [HUD hide:NO];
+                                    if([responseText isEqualToString:@"ok"])
+                                    {
+                                           
+                                        NSLog(@"starting to poll for template maker update");
+                                        [self pollForTemplateMaker];
+                                        
+                                    }
+                                        
                                         
                                     }
                                     else
@@ -199,19 +223,62 @@ NSString *selectedTemplate2;
                                     }
                                 }];
     
-
+   
+    
     
 }
 
+-(void)pollForTemplateMaker
+{
+    //run a timer in the background to look for the moment the case is updated with a template maker
+    
+    //show progress HUD
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Polling Parse For Update";
+    [HUD show:YES];
+    
+    [NSTimer scheduledTimerWithTimeInterval:5.0
+                                     target:self
+                                   selector:@selector(timerFired:)
+                                   userInfo:nil
+                                    repeats:YES];
+    
+}
 
-
+- (void)timerFired:(NSTimer *)timer {
+    
+    NSLog(@"timer fired");
+//check the parse object to see if it is updated
+  
+    [itsMTLObject fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        //do stuff with object.
+        PFObject *templateMakerObj = [object objectForKey:@"templateMaker"];
+        
+        if(templateMakerObj != nil)
+        {
+            //stop the timer
+            [timer invalidate];
+            timerTicks = 0;
+            
+            NSLog(@"got a template maker with this ID", templateMakerObj.objectId);
+            [HUD hide:YES];
+          
+        }
+    }];
+     
+     timerTicks=timerTicks+1;
+    if(timerTicks==6)
+     {
+         [timer invalidate];
+         NSLog(@"ran into maximum time");
+          [HUD hide:YES];
+     }
+    
+}
 
 -(NSString *)createTemplateXMLFunction:(NSString *)userName
 {
-    
-  
-    
-    
     //get the selected property from the chooser element.
     // allocate serializer
     XMLWriter *xmlWriter = [[XMLWriter alloc] init];
@@ -268,10 +335,7 @@ NSString *selectedTemplate2;
     
     return xml;
     
-    
 }
- 
-
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
@@ -320,9 +384,6 @@ NSString *selectedTemplate2;
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
     
     [textField resignFirstResponder];
-    
-   
-    
     
     return YES;
 }
@@ -379,8 +440,6 @@ numberOfRowsInComponent:(NSInteger)component
     
     
 }
-
-
 
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view{
     UILabel* tView = (UILabel*)view;
