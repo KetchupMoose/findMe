@@ -20,6 +20,13 @@
 @property (weak,nonatomic) IBOutlet UIPickerView *templatePickerView;
 @property (weak,nonatomic) IBOutlet UITableView *childTemplateTableView;
 
+@property (weak,nonatomic) IBOutlet UILabel *setProfileLabel;
+@property (weak,nonatomic) IBOutlet UILabel *chooseGenderLabel;
+@property (weak,nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak,nonatomic) IBOutlet UILabel *phoneLabel;
+
+
+
 
 -(IBAction)selectedMale:(id)sender;
 -(IBAction)selectedFemale:(id)sender;

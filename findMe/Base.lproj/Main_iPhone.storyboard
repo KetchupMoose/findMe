@@ -421,10 +421,14 @@
                     <navigationItem key="navigationItem" id="C7J-mX-WPD"/>
                     <connections>
                         <outlet property="childTemplateTableView" destination="szX-bJ-c3b" id="RgS-2p-fld"/>
+                        <outlet property="chooseGenderLabel" destination="atI-4z-ngv" id="Ebs-jz-cKD"/>
                         <outlet property="femaleButton" destination="aFq-Yt-WOp" id="EaE-nm-uYy"/>
                         <outlet property="maleButton" destination="CfE-2B-wEb" id="aBx-H2-0eh"/>
+                        <outlet property="nameLabel" destination="UjJ-5B-ffn" id="bXm-ae-jHE"/>
                         <outlet property="nameTextField" destination="yjO-s1-4jY" id="QX1-qK-tcB"/>
+                        <outlet property="phoneLabel" destination="WNG-PL-Urq" id="3HJ-rJ-kmU"/>
                         <outlet property="phoneTextField" destination="6C3-bN-NsN" id="go1-fO-fHI"/>
+                        <outlet property="setProfileLabel" destination="Et5-QG-oSv" id="OJp-Vx-lKi"/>
                         <outlet property="submitProfileButton" destination="jw3-9A-mlS" id="JFB-l8-MMO"/>
                         <outlet property="templatePickerView" destination="0EQ-Zt-CAs" id="fGA-qd-vZZ"/>
                         <segue destination="vXZ-lx-hvc" kind="push" id="ULF-J4-nft"/>

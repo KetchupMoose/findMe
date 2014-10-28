@@ -34,6 +34,9 @@
 		D3F4573F19F88199000EDF25 /* setProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3F4573E19F88199000EDF25 /* setProfileViewController.m */; };
 		D3F4574219FD920A000EDF25 /* ManButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D3F4574019FD920A000EDF25 /* ManButton.png */; };
 		D3F4574319FD920A000EDF25 /* womanbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = D3F4574119FD920A000EDF25 /* womanbutton.png */; };
+		D3F457471A0026EE000EDF25 /* UIView+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = D3F457461A0026EE000EDF25 /* UIView+Animation.m */; };
+		D3F457491A0031F0000EDF25 /* stockphotowoman1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D3F457481A0031F0000EDF25 /* stockphotowoman1.jpg */; };
+		D3F4574B1A003772000EDF25 /* stockphotoguy1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D3F4574A1A003772000EDF25 /* stockphotoguy1.jpg */; };
 		D3FBD12219CF0386008240F5 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD12119CF0386008240F5 /* AdSupport.framework */; };
 		D3FBD12419CF0391008240F5 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD12319CF0391008240F5 /* Social.framework */; };
 		D3FBD12619CF0399008240F5 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD12519CF0399008240F5 /* Accounts.framework */; };
@@ -100,6 +103,10 @@
 		D3F4573E19F88199000EDF25 /* setProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = setProfileViewController.m; sourceTree = "<group>"; };
 		D3F4574019FD920A000EDF25 /* ManButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ManButton.png; sourceTree = "<group>"; };
 		D3F4574119FD920A000EDF25 /* womanbutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = womanbutton.png; sourceTree = "<group>"; };
+		D3F457451A0026EE000EDF25 /* UIView+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Animation.h"; sourceTree = "<group>"; };
+		D3F457461A0026EE000EDF25 /* UIView+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animation.m"; sourceTree = "<group>"; };
+		D3F457481A0031F0000EDF25 /* stockphotowoman1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = stockphotowoman1.jpg; sourceTree = "<group>"; };
+		D3F4574A1A003772000EDF25 /* stockphotoguy1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = stockphotoguy1.jpg; sourceTree = "<group>"; };
 		D3FBD12119CF0386008240F5 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		D3FBD12319CF0391008240F5 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		D3FBD12519CF0399008240F5 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
@@ -214,6 +221,8 @@
 				D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */,
 				D31DF30D19CEFC0C00A37725 /* ViewController.h */,
 				D31DF30E19CEFC0C00A37725 /* ViewController.m */,
+				D3F457451A0026EE000EDF25 /* UIView+Animation.h */,
+				D3F457461A0026EE000EDF25 /* UIView+Animation.m */,
 				D318324E19D1828B003D51A3 /* CaseDetailsViewController.h */,
 				D318324F19D1828B003D51A3 /* CaseDetailsViewController.m */,
 				D3207B0019E9CBCE00085B7C /* NewPropertyViewController.h */,
@@ -279,6 +288,8 @@
 			children = (
 				D3F4574019FD920A000EDF25 /* ManButton.png */,
 				D3F4574119FD920A000EDF25 /* womanbutton.png */,
+				D3F457481A0031F0000EDF25 /* stockphotowoman1.jpg */,
+				D3F4574A1A003772000EDF25 /* stockphotoguy1.jpg */,
 			);
 			name = imageAssets;
 			sourceTree = "<group>";
@@ -375,7 +386,9 @@
 				D3F4574319FD920A000EDF25 /* womanbutton.png in Resources */,
 				D3F4574219FD920A000EDF25 /* ManButton.png in Resources */,
 				D31DF30C19CEFC0C00A37725 /* Main_iPad.storyboard in Resources */,
+				D3F4574B1A003772000EDF25 /* stockphotoguy1.jpg in Resources */,
 				D31DF31119CEFC0C00A37725 /* Images.xcassets in Resources */,
+				D3F457491A0031F0000EDF25 /* stockphotowoman1.jpg in Resources */,
 				D31DF30919CEFC0C00A37725 /* Main_iPhone.storyboard in Resources */,
 				D3207B0419E9CF8B00085B7C /* green-checkmark.jpg in Resources */,
 				D31DF30019CEFC0C00A37725 /* InfoPlist.strings in Resources */,
@@ -406,6 +419,7 @@
 				D3207AFF19E9B01200085B7C /* MBProgressHUD.m in Sources */,
 				D328EF7719DCA99B00838999 /* XMLWriter.m in Sources */,
 				D318325019D1828B003D51A3 /* CaseDetailsViewController.m in Sources */,
+				D3F457471A0026EE000EDF25 /* UIView+Animation.m in Sources */,
 				D31DF30219CEFC0C00A37725 /* main.m in Sources */,
 				D318324D19D062ED003D51A3 /* CaseBuilder.m in Sources */,
 			);

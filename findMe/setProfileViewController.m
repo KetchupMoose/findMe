@@ -10,6 +10,7 @@
 #import "Parse/Parse.h"
 #import "MBProgressHUD.h"
 #import "XMLWriter.h"
+#import "UIView+Animation.h"
 
 @interface setProfileViewController ()
 
@@ -31,6 +32,10 @@ NSString *selectedTemplate1;
 NSString *selectedTemplate2;
 PFObject *itsMTLObject;
 int timerTicks =0;
+
+UIImageView *phoneSearchersView;
+int selectedPic;
+
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -111,6 +116,10 @@ int timerTicks =0;
 -(IBAction)selectedMale:(id)sender
 {
     gender = @"M";
+    [self removeViewsShowTemplateChoices:nil];
+    
+   
+    
     
 }
 
@@ -186,8 +195,20 @@ int timerTicks =0;
     
     NSString *xmlGeneratedString = [self createTemplateXMLFunction:itsMTLObjectID];
     
+    //add a layer here to show pictures of beautiful people while the user is getting information
+    phoneSearchersView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.bounds.origin.x,self.view.bounds.origin.y+40,self.view.bounds.size.width, self.view.bounds.size.height-40)];
+    phoneSearchersView.image = [UIImage imageNamed:@"stockphotowoman1.jpg"];
+    
+    [self.view addSubviewWithFadeAnimation:phoneSearchersView duration:2 option:UIViewAnimationOptionCurveEaseIn];
+    
+    [NSTimer scheduledTimerWithTimeInterval:5.0
+                                     target:self
+                                   selector:@selector(changeSearchPicture:)
+                                   userInfo:nil
+                                    repeats:YES];
+    
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:HUD];
+    [phoneSearchersView addSubview:HUD];
     
     // Set determinate mode
     HUD.mode = MBProgressHUDModeDeterminate;
@@ -246,6 +267,25 @@ int timerTicks =0;
     
 }
 
+-(void) changeSearchPicture:(NSTimer *) timer
+{
+    
+    
+    if(selectedPic ==1)
+    {
+        //change to pic 2
+        phoneSearchersView.image = [UIImage imageNamed:@"stockphotoguy1.jpg"];
+        selectedPic = 2;
+        
+    }
+    else
+    {
+         phoneSearchersView.image = [UIImage imageNamed:@"stockphotowoman1.jpg"];
+        selectedPic = 1;
+    }
+        
+}
+
 - (void)timerFired:(NSTimer *)timer {
     
     NSLog(@"timer fired");
@@ -261,9 +301,11 @@ int timerTicks =0;
             [timer invalidate];
             timerTicks = 0;
             
-            NSLog(@"got a template maker with this ID", templateMakerObj.objectId);
+            NSLog(@"got a template maker with this ID: ", templateMakerObj.objectId);
             [HUD hide:YES];
           
+            
+            [self removeViewsShowTemplateChoices:(templateMakerObj)];
         }
     }];
      
@@ -275,6 +317,37 @@ int timerTicks =0;
           [HUD hide:YES];
      }
     
+}
+
+-(void)removeViewsShowTemplateChoices:(PFObject *) tmpMaker
+{
+    //remove views with animation
+    [self.femaleButton removeWithSinkAnimation:2];
+    [self.maleButton removeWithSinkAnimation:2];
+    [self.nameTextField removeWithSinkAnimation:2];
+    [self.phoneTextField removeWithSinkAnimation:2];
+    [self.childTemplateTableView removeWithSinkAnimation:3];
+    [self.templatePickerView removeWithSinkAnimation:3];
+    [self.nameTextField removeWithSinkAnimation:3];
+     [self.setProfileLabel removeWithSinkAnimation:3];
+     [self.chooseGenderLabel removeWithSinkAnimation:3];
+     [self.phoneLabel removeWithSinkAnimation:3];
+     [self.nameLabel removeWithSinkAnimation:3];
+    [self.submitProfileButton removeWithSinkAnimation:3];
+    
+    
+    
+    UILabel *templatePicker = [[UILabel alloc] initWithFrame:CGRectMake(0,60,320,60)];
+    templatePicker.font = [UIFont systemFontOfSize:20];
+    templatePicker.text = @"Pick One Of These Pre-Set Templates For Your Case";
+    templatePicker.textAlignment = NSTextAlignmentCenter;
+    
+    templatePicker.numberOfLines=2;
+    
+    
+    [self.view BounceAddTheView:templatePicker];
+    
+  
 }
 
 -(NSString *)createTemplateXMLFunction:(NSString *)userName
