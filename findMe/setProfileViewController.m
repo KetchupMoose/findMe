@@ -34,7 +34,7 @@ PFObject *itsMTLObject;
 int timerTicks =0;
 
 UIImageView *phoneSearchersView;
-int selectedPic;
+int selectedPic = 1;
 
 
 
@@ -201,7 +201,7 @@ int selectedPic;
     
     [self.view addSubviewWithFadeAnimation:phoneSearchersView duration:2 option:UIViewAnimationOptionCurveEaseIn];
     
-    [NSTimer scheduledTimerWithTimeInterval:5.0
+    [NSTimer scheduledTimerWithTimeInterval:2.0
                                      target:self
                                    selector:@selector(changeSearchPicture:)
                                    userInfo:nil
@@ -270,7 +270,6 @@ int selectedPic;
 -(void) changeSearchPicture:(NSTimer *) timer
 {
     
-    
     if(selectedPic ==1)
     {
         //change to pic 2
@@ -278,10 +277,17 @@ int selectedPic;
         selectedPic = 2;
         
     }
-    else
+    else if(selectedPic==2)
+    
     {
-         phoneSearchersView.image = [UIImage imageNamed:@"stockphotowoman1.jpg"];
-        selectedPic = 1;
+        phoneSearchersView.image = [UIImage imageNamed:@"stockphotowoman1.jpg"];
+        selectedPic = 3;
+    }
+    else if(selectedPic==3)
+    {
+        phoneSearchersView.image = [UIImage imageNamed:@"stockphotowoman2.jpg"];
+        selectedPic=1;
+        
     }
         
 }
@@ -295,15 +301,21 @@ int selectedPic;
         //do stuff with object.
         PFObject *templateMakerObj = [object objectForKey:@"templateMaker"];
         
+        //note November 1
+        //look at timestamp at time of sending request for profile maker, then poll every few seconds until the updatedTimestamp for the itsMTLObject is changed
+        //Make sure the updated timestamp for templateMakerObject is
+        
         if(templateMakerObj != nil)
         {
             //stop the timer
             [timer invalidate];
             timerTicks = 0;
+            NSString *tempMakerID = templateMakerObj.objectId;
             
-            NSLog(@"got a template maker with this ID: ", templateMakerObj.objectId);
+            NSLog(@"got a template maker with this ID: %@", tempMakerID);
             [HUD hide:YES];
           
+            //show button after this step
             
             [self removeViewsShowTemplateChoices:(templateMakerObj)];
         }
@@ -334,20 +346,121 @@ int selectedPic;
      [self.phoneLabel removeWithSinkAnimation:3];
      [self.nameLabel removeWithSinkAnimation:3];
     [self.submitProfileButton removeWithSinkAnimation:3];
-    
-    
+    [phoneSearchersView removeWithSinkAnimation:3];
     
     UILabel *templatePicker = [[UILabel alloc] initWithFrame:CGRectMake(0,60,320,60)];
     templatePicker.font = [UIFont systemFontOfSize:20];
     templatePicker.text = @"Pick One Of These Pre-Set Templates For Your Case";
     templatePicker.textAlignment = NSTextAlignmentCenter;
     
-    templatePicker.numberOfLines=2;
-    
+    templatePicker.numberOfLines=3;
     
     [self.view BounceAddTheView:templatePicker];
     
-  
+    
+    //add a UIImageView, Button, and Text section based on the selected case.
+    int startyMargin = 140;
+    int startxMargin = 20;
+    
+    int imgWidth = 90;
+    int imgHeight = 90;
+    
+    int textimgxmargin=10;
+    
+    int textWidth = 60;
+    int textHeight = 50;
+    
+    int textbuttonxmargin=10;
+    
+    int buttonWidth = 100;
+    int buttonHeight = 50;
+    
+    int verticalMargin = 0;
+    
+    int bgVertMargin = 10;
+    int bgHorizMargin = 10;
+    
+    
+    //get number of options to show based on the template maker cases
+    
+    NSArray *templateMakerCases = [tmpMaker objectForKey:@"cases"];
+    PFFile *templateMakerImage = [tmpMaker objectForKey:@"templateMakerImage"];
+    UIImage *tmpMakerImage = [UIImage imageWithData:templateMakerImage];
+    
+    
+    int numOptions = [templateMakerCases count];
+    
+    //loop through creating UI for the options to show
+    for (int i = 0; i<numOptions;i++)
+    {
+        
+        UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(startxMargin-bgHorizMargin,startyMargin-10,imgWidth+textWidth+buttonWidth+textimgxmargin+textbuttonxmargin+bgHorizMargin*2,imgHeight+bgVertMargin*2)];
+        
+        bgView.backgroundColor = [UIColor colorWithRed:0.902 green:0.98 blue:1 alpha:1] /*#e6faff*/;
+        
+        
+        
+        UIImageView *choice1ImageView = [[UIImageView alloc] initWithFrame:CGRectMake(startxMargin,startyMargin,imgWidth,imgHeight)];
+        
+        choice1ImageView.image = [UIImage imageNamed:@"sawyousubway.jpg"];
+        
+        int imgMidPoint = choice1ImageView.frame.origin.y+choice1ImageView.frame.size.height/2;
+        
+        
+        UILabel *choiceLabel = [[UILabel alloc] initWithFrame:CGRectMake(textimgxmargin+choice1ImageView.frame.origin.x+choice1ImageView.frame.size.width,imgMidPoint-textHeight/2,textWidth,textHeight)];
+        
+        if (i==0)
+        {
+              choiceLabel.text = @"I just saw you";
+               choice1ImageView.image = [UIImage imageNamed:@"sawyousubway.jpg"];
+        }
+        else
+        if(i==1)
+        {
+            choiceLabel.text = @"I just saw 2";
+               choice1ImageView.image = [UIImage imageNamed:@"thinkingaboutyou.jpg"];
+        }
+        else
+        if(i==2)
+        {
+            choiceLabel.text = @"I still love you, do you love me?";
+            choice1ImageView.image = [UIImage imageNamed:@"alwaysloveyou.png"];
+        }
+      
+        choiceLabel.font = [UIFont systemFontOfSize:12];
+        
+        choiceLabel.numberOfLines = 2;
+        
+        
+        UIButton *createCaseButton = [[UIButton alloc] initWithFrame:CGRectMake(choiceLabel.frame.origin.x+choiceLabel.frame.size.width+textbuttonxmargin,imgMidPoint-buttonHeight/2,buttonWidth,buttonHeight)];
+        
+        [createCaseButton setBackgroundColor:[UIColor blueColor]];
+        
+        [createCaseButton setTitle:@"Create Case" forState:UIControlStateNormal];
+        
+        createCaseButton.layer.cornerRadius = 9.0;
+        createCaseButton.layer.masksToBounds = YES;
+        
+        bgView.layer.cornerRadius = 9.0;
+        bgView.layer.masksToBounds = YES;
+        
+        choice1ImageView.layer.cornerRadius = 4.0;
+        choice1ImageView.layer.masksToBounds = YES;
+        
+        
+        [self.view BounceAddTheView:bgView];
+        [self.view BounceAddTheView:choice1ImageView];
+        [self.view BounceAddTheView:choiceLabel];
+        [self.view BounceAddTheView:createCaseButton];
+        
+        startyMargin = choice1ImageView.frame.origin.y+choice1ImageView.frame.size.height + verticalMargin;
+        
+        
+        
+    }
+        
+    
+    
 }
 
 -(NSString *)createTemplateXMLFunction:(NSString *)userName

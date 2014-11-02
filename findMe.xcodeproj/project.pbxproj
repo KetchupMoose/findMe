@@ -20,7 +20,6 @@
 		D31DF30C19CEFC0C00A37725 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */; };
 		D31DF30F19CEFC0C00A37725 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D31DF30E19CEFC0C00A37725 /* ViewController.m */; };
 		D31DF31119CEFC0C00A37725 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D31DF31019CEFC0C00A37725 /* Images.xcassets */; };
-		D31DF31819CEFC0C00A37725 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF31719CEFC0C00A37725 /* XCTest.framework */; };
 		D31DF31919CEFC0C00A37725 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F519CEFC0C00A37725 /* Foundation.framework */; };
 		D31DF31A19CEFC0C00A37725 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31DF2F919CEFC0C00A37725 /* UIKit.framework */; };
 		D31DF32219CEFC0C00A37725 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D31DF32019CEFC0C00A37725 /* InfoPlist.strings */; };
@@ -29,8 +28,6 @@
 		D3207B0219E9CBCE00085B7C /* NewPropertyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3207B0119E9CBCE00085B7C /* NewPropertyViewController.m */; };
 		D3207B0419E9CF8B00085B7C /* green-checkmark.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D3207B0319E9CF8B00085B7C /* green-checkmark.jpg */; };
 		D328EF7719DCA99B00838999 /* XMLWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = D328EF7619DCA99B00838999 /* XMLWriter.m */; };
-		D35C597919F1D07700140998 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D35C597819F1D07700140998 /* Bolts.framework */; };
-		D35C597B19F1D0EC00140998 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D35C597A19F1D0EC00140998 /* Parse.framework */; };
 		D3F4573F19F88199000EDF25 /* setProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3F4573E19F88199000EDF25 /* setProfileViewController.m */; };
 		D3F4574219FD920A000EDF25 /* ManButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D3F4574019FD920A000EDF25 /* ManButton.png */; };
 		D3F4574319FD920A000EDF25 /* womanbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = D3F4574119FD920A000EDF25 /* womanbutton.png */; };
@@ -51,6 +48,13 @@
 		D3FBD13819CF0424008240F5 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD13719CF0423008240F5 /* StoreKit.framework */; };
 		D3FBD13A19CF042F008240F5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD13919CF042E008240F5 /* SystemConfiguration.framework */; };
 		D3FBD13D19D0505D008240F5 /* Case.m in Sources */ = {isa = PBXBuildFile; fileRef = D3FBD13C19D0505D008240F5 /* Case.m */; };
+		ECE6B1631A069AC3007F4A19 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1621A069AC3007F4A19 /* Bolts.framework */; };
+		ECE6B1671A069B69007F4A19 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1661A069B69007F4A19 /* Parse.framework */; };
+		ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B1691A069C1D007F4A19 /* findmeInfo.plist */; };
+		ECE6B16C1A069DAB007F4A19 /* stockphotowoman2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B16B1A069DAB007F4A19 /* stockphotowoman2.jpg */; };
+		ECE6B16E1A06AD0E007F4A19 /* sawyousubway.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B16D1A06AD0E007F4A19 /* sawyousubway.jpg */; };
+		ECE6B1711A06B8A9007F4A19 /* alwaysloveyou.png in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B16F1A06B8A9007F4A19 /* alwaysloveyou.png */; };
+		ECE6B1721A06B8A9007F4A19 /* thinkingaboutyou.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B1701A06B8A9007F4A19 /* thinkingaboutyou.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,10 +78,8 @@
 		D31DF2F519CEFC0C00A37725 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D31DF2F719CEFC0C00A37725 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D31DF2F919CEFC0C00A37725 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		D31DF2FD19CEFC0C00A37725 /* findme.temp_caseinsensitive_rename-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "findme.temp_caseinsensitive_rename-Info.plist"; sourceTree = "<group>"; };
 		D31DF2FF19CEFC0C00A37725 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D31DF30119CEFC0C00A37725 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		D31DF30319CEFC0C00A37725 /* findme.temp_caseinsensitive_rename-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "findme.temp_caseinsensitive_rename-Prefix.pch"; sourceTree = "<group>"; };
 		D31DF30419CEFC0C00A37725 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D31DF30519CEFC0C00A37725 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		D31DF30819CEFC0C00A37725 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
@@ -85,9 +87,8 @@
 		D31DF30D19CEFC0C00A37725 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		D31DF30E19CEFC0C00A37725 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		D31DF31019CEFC0C00A37725 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		D31DF31619CEFC0C00A37725 /* findme.temp_caseinsensitive_renameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = findme.temp_caseinsensitive_renameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D31DF31719CEFC0C00A37725 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		D31DF31F19CEFC0C00A37725 /* findme.temp_caseinsensitive_renameTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "findme.temp_caseinsensitive_renameTests-Info.plist"; sourceTree = "<group>"; };
+		D31DF31619CEFC0C00A37725 /* findmeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = findmeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D31DF31F19CEFC0C00A37725 /* findmeInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = findmeInfo.plist; sourceTree = "<group>"; };
 		D31DF32119CEFC0C00A37725 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D31DF32319CEFC0C00A37725 /* findMeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = findMeTests.m; sourceTree = "<group>"; };
 		D3207AFD19E9B01200085B7C /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -97,8 +98,6 @@
 		D3207B0319E9CF8B00085B7C /* green-checkmark.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "green-checkmark.jpg"; sourceTree = "<group>"; };
 		D328EF7519DCA99B00838999 /* XMLWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLWriter.h; sourceTree = "<group>"; };
 		D328EF7619DCA99B00838999 /* XMLWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLWriter.m; sourceTree = "<group>"; };
-		D35C597819F1D07700140998 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = findMe/Bolts.framework; sourceTree = "<group>"; };
-		D35C597A19F1D0EC00140998 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = findMe/Parse.framework; sourceTree = "<group>"; };
 		D3F4573D19F88199000EDF25 /* setProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = setProfileViewController.h; sourceTree = "<group>"; };
 		D3F4573E19F88199000EDF25 /* setProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = setProfileViewController.m; sourceTree = "<group>"; };
 		D3F4574019FD920A000EDF25 /* ManButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ManButton.png; sourceTree = "<group>"; };
@@ -122,6 +121,14 @@
 		D3FBD13919CF042E008240F5 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D3FBD13B19D0505D008240F5 /* Case.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Case.h; sourceTree = "<group>"; };
 		D3FBD13C19D0505D008240F5 /* Case.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Case.m; sourceTree = "<group>"; };
+		ECE6B1621A069AC3007F4A19 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = findMe/Bolts.framework; sourceTree = "<group>"; };
+		ECE6B1661A069B69007F4A19 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = findMe/Parse.framework; sourceTree = "<group>"; };
+		ECE6B1681A069C1D007F4A19 /* findme-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "findme-Prefix.pch"; sourceTree = "<group>"; };
+		ECE6B1691A069C1D007F4A19 /* findmeInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = findmeInfo.plist; sourceTree = "<group>"; };
+		ECE6B16B1A069DAB007F4A19 /* stockphotowoman2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = stockphotowoman2.jpg; sourceTree = "<group>"; };
+		ECE6B16D1A06AD0E007F4A19 /* sawyousubway.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sawyousubway.jpg; sourceTree = "<group>"; };
+		ECE6B16F1A06B8A9007F4A19 /* alwaysloveyou.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = alwaysloveyou.png; sourceTree = "<group>"; };
+		ECE6B1701A06B8A9007F4A19 /* thinkingaboutyou.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = thinkingaboutyou.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,8 +136,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D35C597B19F1D0EC00140998 /* Parse.framework in Frameworks */,
-				D35C597919F1D07700140998 /* Bolts.framework in Frameworks */,
+				ECE6B1671A069B69007F4A19 /* Parse.framework in Frameworks */,
+				ECE6B1631A069AC3007F4A19 /* Bolts.framework in Frameworks */,
 				D3FBD13A19CF042F008240F5 /* SystemConfiguration.framework in Frameworks */,
 				D3FBD13819CF0424008240F5 /* StoreKit.framework in Frameworks */,
 				D3FBD13619CF0419008240F5 /* Security.framework in Frameworks */,
@@ -154,7 +161,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D31DF31819CEFC0C00A37725 /* XCTest.framework in Frameworks */,
 				D31DF31A19CEFC0C00A37725 /* UIKit.framework in Frameworks */,
 				D31DF31919CEFC0C00A37725 /* Foundation.framework in Frameworks */,
 			);
@@ -177,7 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				D31DF2F219CEFC0C00A37725 /* findme.app */,
-				D31DF31619CEFC0C00A37725 /* findme.temp_caseinsensitive_renameTests.xctest */,
+				D31DF31619CEFC0C00A37725 /* findmeTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -185,8 +191,8 @@
 		D31DF2F419CEFC0C00A37725 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D35C597A19F1D0EC00140998 /* Parse.framework */,
-				D35C597819F1D07700140998 /* Bolts.framework */,
+				ECE6B1661A069B69007F4A19 /* Parse.framework */,
+				ECE6B1621A069AC3007F4A19 /* Bolts.framework */,
 				D3FBD13919CF042E008240F5 /* SystemConfiguration.framework */,
 				D3FBD13719CF0423008240F5 /* StoreKit.framework */,
 				D3FBD13519CF0419008240F5 /* Security.framework */,
@@ -203,7 +209,6 @@
 				D31DF2F519CEFC0C00A37725 /* Foundation.framework */,
 				D31DF2F719CEFC0C00A37725 /* CoreGraphics.framework */,
 				D31DF2F919CEFC0C00A37725 /* UIKit.framework */,
-				D31DF31719CEFC0C00A37725 /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -239,10 +244,10 @@
 		D31DF2FC19CEFC0C00A37725 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D31DF2FD19CEFC0C00A37725 /* findme.temp_caseinsensitive_rename-Info.plist */,
+				ECE6B1681A069C1D007F4A19 /* findme-Prefix.pch */,
+				ECE6B1691A069C1D007F4A19 /* findmeInfo.plist */,
 				D31DF2FE19CEFC0C00A37725 /* InfoPlist.strings */,
 				D31DF30119CEFC0C00A37725 /* main.m */,
-				D31DF30319CEFC0C00A37725 /* findme.temp_caseinsensitive_rename-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -259,7 +264,7 @@
 		D31DF31E19CEFC0C00A37725 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D31DF31F19CEFC0C00A37725 /* findme.temp_caseinsensitive_renameTests-Info.plist */,
+				D31DF31F19CEFC0C00A37725 /* findmeInfo.plist */,
 				D31DF32019CEFC0C00A37725 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -286,6 +291,10 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				ECE6B16D1A06AD0E007F4A19 /* sawyousubway.jpg */,
+				ECE6B16F1A06B8A9007F4A19 /* alwaysloveyou.png */,
+				ECE6B1701A06B8A9007F4A19 /* thinkingaboutyou.jpg */,
+				ECE6B16B1A069DAB007F4A19 /* stockphotowoman2.jpg */,
 				D3F4574019FD920A000EDF25 /* ManButton.png */,
 				D3F4574119FD920A000EDF25 /* womanbutton.png */,
 				D3F457481A0031F0000EDF25 /* stockphotowoman1.jpg */,
@@ -342,7 +351,7 @@
 			);
 			name = findme.temp_caseinsensitive_renameTests;
 			productName = findMeTests;
-			productReference = D31DF31619CEFC0C00A37725 /* findme.temp_caseinsensitive_renameTests.xctest */;
+			productReference = D31DF31619CEFC0C00A37725 /* findmeTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -354,12 +363,15 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Avial Ltd";
 				TargetAttributes = {
+					D31DF2F119CEFC0C00A37725 = {
+						DevelopmentTeam = U536PJZFA3;
+					};
 					D31DF31519CEFC0C00A37725 = {
 						TestTargetID = D31DF2F119CEFC0C00A37725;
 					};
 				};
 			};
-			buildConfigurationList = D31DF2ED19CEFC0C00A37725 /* Build configuration list for PBXProject "findme" */;
+			buildConfigurationList = D31DF2ED19CEFC0C00A37725 /* Build configuration list for PBXProject "findMe" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -384,12 +396,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3F4574319FD920A000EDF25 /* womanbutton.png in Resources */,
+				ECE6B16C1A069DAB007F4A19 /* stockphotowoman2.jpg in Resources */,
+				ECE6B16E1A06AD0E007F4A19 /* sawyousubway.jpg in Resources */,
 				D3F4574219FD920A000EDF25 /* ManButton.png in Resources */,
 				D31DF30C19CEFC0C00A37725 /* Main_iPad.storyboard in Resources */,
 				D3F4574B1A003772000EDF25 /* stockphotoguy1.jpg in Resources */,
 				D31DF31119CEFC0C00A37725 /* Images.xcassets in Resources */,
 				D3F457491A0031F0000EDF25 /* stockphotowoman1.jpg in Resources */,
 				D31DF30919CEFC0C00A37725 /* Main_iPhone.storyboard in Resources */,
+				ECE6B1721A06B8A9007F4A19 /* thinkingaboutyou.jpg in Resources */,
+				ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */,
+				ECE6B1711A06B8A9007F4A19 /* alwaysloveyou.png in Resources */,
 				D3207B0419E9CF8B00085B7C /* green-checkmark.jpg in Resources */,
 				D31DF30019CEFC0C00A37725 /* InfoPlist.strings in Resources */,
 			);
@@ -556,18 +573,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Brian Allen (U536PJZFA3)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/**",
-					"$(PROJECT_DIR)/findMe/**",
 					"$(PROJECT_DIR)/findMe",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "findMe/findme.temp_caseinsensitive_rename-Prefix.pch";
-				INFOPLIST_FILE = "findMe/findme.temp_caseinsensitive_rename-Info.plist";
+				GCC_PREFIX_HEADER = "findMe/findme-Prefix.pch";
+				INFOPLIST_FILE = findMe/findmeInfo.plist;
 				PRODUCT_NAME = findme;
-				PROVISIONING_PROFILE = "b848f95e-31fd-43b1-9d6a-9ee077d5fa64";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -577,18 +593,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Brian Allen (U536PJZFA3)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/**",
-					"$(PROJECT_DIR)/findMe/**",
 					"$(PROJECT_DIR)/findMe",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "findMe/findme.temp_caseinsensitive_rename-Prefix.pch";
-				INFOPLIST_FILE = "findMe/findme.temp_caseinsensitive_rename-Info.plist";
+				GCC_PREFIX_HEADER = "findMe/findme-Prefix.pch";
+				INFOPLIST_FILE = findMe/findmeInfo.plist;
 				PRODUCT_NAME = findme;
-				PROVISIONING_PROFILE = "b848f95e-31fd-43b1-9d6a-9ee077d5fa64";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -608,8 +623,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "findMeTests/findme.temp_caseinsensitive_renameTests-Info.plist";
-				PRODUCT_NAME = findme.temp_caseinsensitive_renameTests;
+				INFOPLIST_FILE = findMeTests/findmeInfo.plist;
+				PRODUCT_NAME = findmeTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -626,8 +641,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "findMe/findMe-Prefix.pch";
-				INFOPLIST_FILE = "findMeTests/findme.temp_caseinsensitive_renameTests-Info.plist";
-				PRODUCT_NAME = findme.temp_caseinsensitive_renameTests;
+				INFOPLIST_FILE = findMeTests/findmeInfo.plist;
+				PRODUCT_NAME = findmeTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -636,7 +651,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D31DF2ED19CEFC0C00A37725 /* Build configuration list for PBXProject "findme" */ = {
+		D31DF2ED19CEFC0C00A37725 /* Build configuration list for PBXProject "findMe" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D31DF32519CEFC0C00A37725 /* Debug */,

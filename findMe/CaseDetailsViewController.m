@@ -467,6 +467,7 @@ NSString *propertyDesc = self.questionLabel.text;
     
     
     //write all the possible answers
+    //Nov-01-2014--this will be changing in the future to show CUSTOM instead of A and show the actual strings instead of the answer index.
     
     for (NSNumber *ansNumber in answersArray)
     {
@@ -476,8 +477,6 @@ NSString *propertyDesc = self.questionLabel.text;
         myInt = myInt+1;
         
         NSString *ansString = [NSString stringWithFormat:@"%i",myInt];
-
-        
         
         [xmlWriter writeStartElement:@"ANSWER"];
         
