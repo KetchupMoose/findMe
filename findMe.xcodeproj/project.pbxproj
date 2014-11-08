@@ -55,6 +55,13 @@
 		ECE6B16E1A06AD0E007F4A19 /* sawyousubway.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B16D1A06AD0E007F4A19 /* sawyousubway.jpg */; };
 		ECE6B1711A06B8A9007F4A19 /* alwaysloveyou.png in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B16F1A06B8A9007F4A19 /* alwaysloveyou.png */; };
 		ECE6B1721A06B8A9007F4A19 /* thinkingaboutyou.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B1701A06B8A9007F4A19 /* thinkingaboutyou.jpg */; };
+		ECE6B1761A0D8AE5007F4A19 /* newCaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE6B1751A0D8AE5007F4A19 /* newCaseViewController.m */; };
+		ECE6B17A1A0D9C83007F4A19 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1791A0D9C83007F4A19 /* ImageIO.framework */; };
+		ECE6B1801A0D9FF3007F4A19 /* UIImageView+Scaling.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE6B17D1A0D9FF3007F4A19 /* UIImageView+Scaling.m */; };
+		ECE6B1811A0D9FF3007F4A19 /* UIImageView+UIActivityIndicatorForSDWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE6B17F1A0D9FF3007F4A19 /* UIImageView+UIActivityIndicatorForSDWebImage.m */; };
+		ECE6B1841A0DA01D007F4A19 /* UIImage+Scaling.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE6B1831A0DA01D007F4A19 /* UIImage+Scaling.m */; };
+		ECE6B1861A0DA402007F4A19 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1851A0DA402007F4A19 /* SDWebImage.framework */; };
+		ECE6B1871A0DA40E007F4A19 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1791A0D9C83007F4A19 /* ImageIO.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,6 +136,16 @@
 		ECE6B16D1A06AD0E007F4A19 /* sawyousubway.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sawyousubway.jpg; sourceTree = "<group>"; };
 		ECE6B16F1A06B8A9007F4A19 /* alwaysloveyou.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = alwaysloveyou.png; sourceTree = "<group>"; };
 		ECE6B1701A06B8A9007F4A19 /* thinkingaboutyou.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = thinkingaboutyou.jpg; sourceTree = "<group>"; };
+		ECE6B1741A0D8AE5007F4A19 /* newCaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = newCaseViewController.h; path = ../newCaseViewController.h; sourceTree = "<group>"; };
+		ECE6B1751A0D8AE5007F4A19 /* newCaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = newCaseViewController.m; path = ../newCaseViewController.m; sourceTree = "<group>"; };
+		ECE6B1791A0D9C83007F4A19 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		ECE6B17C1A0D9FF3007F4A19 /* UIImageView+Scaling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+Scaling.h"; sourceTree = "<group>"; };
+		ECE6B17D1A0D9FF3007F4A19 /* UIImageView+Scaling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+Scaling.m"; sourceTree = "<group>"; };
+		ECE6B17E1A0D9FF3007F4A19 /* UIImageView+UIActivityIndicatorForSDWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+UIActivityIndicatorForSDWebImage.h"; sourceTree = "<group>"; };
+		ECE6B17F1A0D9FF3007F4A19 /* UIImageView+UIActivityIndicatorForSDWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+UIActivityIndicatorForSDWebImage.m"; sourceTree = "<group>"; };
+		ECE6B1821A0DA01D007F4A19 /* UIImage+Scaling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scaling.h"; sourceTree = "<group>"; };
+		ECE6B1831A0DA01D007F4A19 /* UIImage+Scaling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scaling.m"; sourceTree = "<group>"; };
+		ECE6B1851A0DA402007F4A19 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = findMe/SDWebImage.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +153,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECE6B1871A0DA40E007F4A19 /* ImageIO.framework in Frameworks */,
+				ECE6B1861A0DA402007F4A19 /* SDWebImage.framework in Frameworks */,
 				ECE6B1671A069B69007F4A19 /* Parse.framework in Frameworks */,
 				ECE6B1631A069AC3007F4A19 /* Bolts.framework in Frameworks */,
 				D3FBD13A19CF042F008240F5 /* SystemConfiguration.framework in Frameworks */,
@@ -161,6 +180,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECE6B17A1A0D9C83007F4A19 /* ImageIO.framework in Frameworks */,
 				D31DF31A19CEFC0C00A37725 /* UIKit.framework in Frameworks */,
 				D31DF31919CEFC0C00A37725 /* Foundation.framework in Frameworks */,
 			);
@@ -191,6 +211,8 @@
 		D31DF2F419CEFC0C00A37725 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ECE6B1851A0DA402007F4A19 /* SDWebImage.framework */,
+				ECE6B1791A0D9C83007F4A19 /* ImageIO.framework */,
 				ECE6B1661A069B69007F4A19 /* Parse.framework */,
 				ECE6B1621A069AC3007F4A19 /* Bolts.framework */,
 				D3FBD13919CF042E008240F5 /* SystemConfiguration.framework */,
@@ -216,6 +238,7 @@
 		D31DF2FB19CEFC0C00A37725 /* findMe */ = {
 			isa = PBXGroup;
 			children = (
+				ECE6B17B1A0D9FAB007F4A19 /* commonControls */,
 				D3F4574419FD9215000EDF25 /* imageAssets */,
 				D3207AFC19E9AFE800085B7C /* progressHUD */,
 				D328EF7419DCA8A400838999 /* xmlWriting */,
@@ -228,6 +251,8 @@
 				D31DF30E19CEFC0C00A37725 /* ViewController.m */,
 				D3F457451A0026EE000EDF25 /* UIView+Animation.h */,
 				D3F457461A0026EE000EDF25 /* UIView+Animation.m */,
+				ECE6B1741A0D8AE5007F4A19 /* newCaseViewController.h */,
+				ECE6B1751A0D8AE5007F4A19 /* newCaseViewController.m */,
 				D318324E19D1828B003D51A3 /* CaseDetailsViewController.h */,
 				D318324F19D1828B003D51A3 /* CaseDetailsViewController.m */,
 				D3207B0019E9CBCE00085B7C /* NewPropertyViewController.h */,
@@ -314,6 +339,19 @@
 				D318324819D06173003D51A3 /* CaseItem.m */,
 			);
 			name = "JSON Parsing";
+			sourceTree = "<group>";
+		};
+		ECE6B17B1A0D9FAB007F4A19 /* commonControls */ = {
+			isa = PBXGroup;
+			children = (
+				ECE6B1821A0DA01D007F4A19 /* UIImage+Scaling.h */,
+				ECE6B1831A0DA01D007F4A19 /* UIImage+Scaling.m */,
+				ECE6B17C1A0D9FF3007F4A19 /* UIImageView+Scaling.h */,
+				ECE6B17D1A0D9FF3007F4A19 /* UIImageView+Scaling.m */,
+				ECE6B17E1A0D9FF3007F4A19 /* UIImageView+UIActivityIndicatorForSDWebImage.h */,
+				ECE6B17F1A0D9FF3007F4A19 /* UIImageView+UIActivityIndicatorForSDWebImage.m */,
+			);
+			name = commonControls;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -427,18 +465,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECE6B1801A0D9FF3007F4A19 /* UIImageView+Scaling.m in Sources */,
 				D31DF30F19CEFC0C00A37725 /* ViewController.m in Sources */,
 				D3FBD13D19D0505D008240F5 /* Case.m in Sources */,
 				D318324919D06173003D51A3 /* CaseItem.m in Sources */,
 				D31DF30619CEFC0C00A37725 /* AppDelegate.m in Sources */,
 				D3207B0219E9CBCE00085B7C /* NewPropertyViewController.m in Sources */,
 				D3F4573F19F88199000EDF25 /* setProfileViewController.m in Sources */,
+				ECE6B1811A0D9FF3007F4A19 /* UIImageView+UIActivityIndicatorForSDWebImage.m in Sources */,
 				D3207AFF19E9B01200085B7C /* MBProgressHUD.m in Sources */,
+				ECE6B1841A0DA01D007F4A19 /* UIImage+Scaling.m in Sources */,
 				D328EF7719DCA99B00838999 /* XMLWriter.m in Sources */,
 				D318325019D1828B003D51A3 /* CaseDetailsViewController.m in Sources */,
 				D3F457471A0026EE000EDF25 /* UIView+Animation.m in Sources */,
 				D31DF30219CEFC0C00A37725 /* main.m in Sources */,
 				D318324D19D062ED003D51A3 /* CaseBuilder.m in Sources */,
+				ECE6B1761A0D8AE5007F4A19 /* newCaseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -530,6 +572,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -562,6 +605,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -616,6 +660,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)/findMe",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "findMe/findMe-Prefix.pch";
@@ -638,6 +683,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)/findMe",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "findMe/findMe-Prefix.pch";
