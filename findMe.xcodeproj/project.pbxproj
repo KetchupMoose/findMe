@@ -272,8 +272,6 @@
 				D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */,
 				D31DF30D19CEFC0C00A37725 /* ViewController.h */,
 				D31DF30E19CEFC0C00A37725 /* ViewController.m */,
-				D3F457451A0026EE000EDF25 /* UIView+Animation.h */,
-				D3F457461A0026EE000EDF25 /* UIView+Animation.m */,
 				ECE6B1741A0D8AE5007F4A19 /* newCaseViewController.h */,
 				ECE6B1751A0D8AE5007F4A19 /* newCaseViewController.m */,
 				D318324E19D1828B003D51A3 /* CaseDetailsViewController.h */,
@@ -413,6 +411,8 @@
 				ECE6B17D1A0D9FF3007F4A19 /* UIImageView+Scaling.m */,
 				ECE6B17E1A0D9FF3007F4A19 /* UIImageView+UIActivityIndicatorForSDWebImage.h */,
 				ECE6B17F1A0D9FF3007F4A19 /* UIImageView+UIActivityIndicatorForSDWebImage.m */,
+				D3F457451A0026EE000EDF25 /* UIView+Animation.h */,
+				D3F457461A0026EE000EDF25 /* UIView+Animation.m */,
 			);
 			name = commonControls;
 			sourceTree = "<group>";

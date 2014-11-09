@@ -13,6 +13,7 @@
 
 @property (weak,nonatomic) IBOutlet UICollectionView *CaseOptionsCollectionView;
 
+@property (weak,nonatomic) UITableView *blah;
 
 
 

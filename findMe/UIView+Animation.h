@@ -27,7 +27,7 @@
 -(void) BounceAddTheView:(UIView *) view;
 - (void) SlideFromLeft:(UIView *) addview duration:(float) secs option:(UIViewAnimationOptions)option;
 -(void) PopButtonWithBounce:(UIButton *) view;
--(void) BounceViewThenFadeAlpha:(UIView *) view;
+-(void) BounceViewThenFadeAlpha:(UIView *) view shouldRemoveParentView:(NSString *) removeOrNot;
 -(void) addHeartThenSpin:(UIView *) view withCellView:(UIView *) cv;
 -(void) SpinAView:(UIView *) view;
 -(void) SpinThenAdd:(UIView *) view withHeartView:(UIView *) heartView;

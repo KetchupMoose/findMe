@@ -447,51 +447,60 @@
 }
 
 
--(void) BounceViewThenFadeAlpha:(UIView *) view
+-(void) BounceViewThenFadeAlpha:(UIView *) view shouldRemoveParentView:(NSString *) removeOrNot
 {
     
-    view.transform =  view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.2, 0.2);
+  
     
     //[UIView setAnimationDuration:0.3/1.5];
     [UIView setAnimationDelegate:self];
     
-    [self addSubview:view];
+    //[self addSubview:view];
     
     [UIView animateWithDuration:0.6 animations:^{
-        view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.1, 1.1);
+        view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.2, 1.2);
     }
                      completion:^(BOOL finished) {
-                         [self bouncebackbeforefade:view];
+                         [self bouncebackbeforefade:view shouldRemoveParentView:removeOrNot];
                      }
      ];
 }
 
 
--(void)bouncebackbeforefade:(UIView *) view {
+-(void)bouncebackbeforefade:(UIView *) view shouldRemoveParentView:(NSString *) removeOrNot{
     [UIView setAnimationDelegate:self];
     [UIView animateWithDuration:0.4 animations:^{
-        view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.9, 0.9);
+        view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.5, 0.5);
     }
                      completion:^(BOOL finished) {
-                         [self bouncefade:view];
+                         [self bouncefade:view shouldRemoveParentView:removeOrNot];
                      }
      ];
 
 }
 
-- (void)bouncefade:(UIView *) view {
+- (void)bouncefade:(UIView *) view shouldRemoveParentView:(NSString *) removeOrNot{
      [UIView setAnimationDelegate:self];
-    [UIView animateWithDuration:2 animations:^{
+    [UIView animateWithDuration:0.2 animations:^{
         view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
         view.alpha = 0.1;
     }
-                     completion:^(BOOL finished) {
+                     completion:^(BOOL finished) {\
+                         UIView *parentView = view.superview;
+                         
                          [view removeFromSuperview];
                          
+                         if([removeOrNot isEqualToString:@"yes"])
+                         {
+                            // [parentView removeFromSuperview];
+                             [parentView removeWithSinkAnimation:20];
+                             
+                         }
                      }
      ];
 
 }
+
 
 
 
