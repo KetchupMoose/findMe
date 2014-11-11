@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface newCaseViewController : UIViewController <UICollectionViewDataSource,UICollectionViewDelegate>
+@interface newCaseViewController : UIViewController <UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate>
 
 
 @property (weak,nonatomic) IBOutlet UICollectionView *CaseOptionsCollectionView;
 
-@property (weak,nonatomic) UITableView *blah;
+@property (strong,nonatomic) UITableView *TemplateSecondLevelTableView;
 
 
 

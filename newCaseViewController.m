@@ -12,6 +12,7 @@
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 #import "UIImageView+Scaling.h"
 #import "UIView+Animation.h"
+#import "XMLWriter.h"
 
 @interface newCaseViewController ()
 
@@ -25,8 +26,13 @@ NSMutableArray *templatePickerParentChoices;
 NSMutableArray *templatePickerActiveChoices;
 int pickedParentTemplateIndex;
 
-@synthesize CaseOptionsCollectionView;
+NSString *selectedTemplate1;
+NSString *selectedTemplate2;
+PFObject *itsMTLObject;
+int timerTickCheck =0;
 
+@synthesize CaseOptionsCollectionView;
+@synthesize TemplateSecondLevelTableView;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -37,6 +43,7 @@ int pickedParentTemplateIndex;
     
     CaseOptionsCollectionView.dataSource = self;
     CaseOptionsCollectionView.delegate = self;
+    
     
     [CaseOptionsCollectionView reloadData];
     
@@ -54,6 +61,7 @@ int pickedParentTemplateIndex;
     
     templatePickerChoices = [templateQuery findObjects];
     templatePickerParentChoices = [[NSMutableArray alloc] init];
+    templatePickerActiveChoices = [[NSMutableArray alloc] init];
     
     for(PFObject *templateObject in templatePickerChoices)
     {
@@ -146,8 +154,46 @@ int pickedParentTemplateIndex;
     
     pickedParentTemplateIndex = btnTag -1;
     
+    
+    
     //remove all the templatePicker Parent Views With An Interesting Animation
     [self removeTemplatePickerParentViews];
+    
+    //remove everything from the previous active choices
+    [templatePickerActiveChoices removeAllObjects];
+    
+    //get the selected parent template object
+    PFObject *selectedParentTemplateObj = [templatePickerParentChoices objectAtIndex:btnTag-1];
+    selectedTemplate1 = selectedParentTemplateObj.objectId;
+    
+    
+    //loop through and add to the active templates in the 2nd table/wheel only the ones that match that selected parent template.
+    for (PFObject *templateObj in templatePickerChoices)
+    {
+        PFObject *pointerObj = [templateObj objectForKey:@"parenttemplateid"];
+        if([pointerObj.objectId isEqualToString:selectedParentTemplateObj.objectId])
+        {
+            [templatePickerActiveChoices addObject:templateObj];
+            
+        }
+    }
+    if(templatePickerActiveChoices.count ==0)
+    {
+        //show alert view saying theres no choices for this parent template yet
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Choices Yet", nil) message:NSLocalizedString(@"There are no child templates for this parent template yet", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+    }
+    
+   
+    TemplateSecondLevelTableView = [[UITableView alloc] initWithFrame:CGRectMake(0,150,320,400)];
+    TemplateSecondLevelTableView.dataSource = self;
+    TemplateSecondLevelTableView.delegate = self;
+    
+    [TemplateSecondLevelTableView reloadData];
+    
+    [self.view BounceAddTheView:TemplateSecondLevelTableView];
+    
+    
+    //[self.childTemplateTableView reloadData];
     
 }
 
@@ -169,8 +215,445 @@ int pickedParentTemplateIndex;
         
         
     }
-    //[CaseOptionsCollectionView removeFromSuperview];
+    
+   
+    //[self showSecondTierTemplateOptions];
     
 }
+
+//create 2nd tier template option views
+-(void) showSecondTierTemplateOptions
+{
+    
+    
+    
+    //add a UIImageView, Button, and Text section based on the selected case.
+    int startyMargin = 140;
+    int startxMargin = 20;
+    
+    int imgWidth = 90;
+    int imgHeight = 90;
+    
+    int textimgxmargin=10;
+    
+    int textWidth = 60;
+    int textHeight = 50;
+    
+    int textbuttonxmargin=10;
+    
+    int buttonWidth = 100;
+    int buttonHeight = 50;
+    
+    int verticalMargin = 0;
+    
+    int bgVertMargin = 10;
+    int bgHorizMargin = 10;
+    
+    
+    //get number of options to show based on the template maker cases
+    
+    /*
+    NSArray *templateMakerCases = [tmpMaker objectForKey:@"cases"];
+    PFFile *templateMakerImage = [tmpMaker objectForKey:@"templateMakerImage"];
+    UIImage *tmpMakerImage = [UIImage imageWithData:templateMakerImage];
+    */
+    
+    int numOptions = 3;
+    
+    //loop through creating UI for the options to show
+    for (int i = 0; i<numOptions;i++)
+    {
+        
+        UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(startxMargin-bgHorizMargin,startyMargin-10,imgWidth+textWidth+buttonWidth+textimgxmargin+textbuttonxmargin+bgHorizMargin*2,imgHeight+bgVertMargin*2)];
+        
+        bgView.backgroundColor = [UIColor colorWithRed:0.902 green:0.98 blue:1 alpha:1] /*#e6faff*/;
+        
+        UIImageView *choice1ImageView = [[UIImageView alloc] initWithFrame:CGRectMake(startxMargin,startyMargin,imgWidth,imgHeight)];
+        
+        choice1ImageView.image = [UIImage imageNamed:@"sawyousubway.jpg"];
+        
+        int imgMidPoint = choice1ImageView.frame.origin.y+choice1ImageView.frame.size.height/2;
+        
+        
+        UILabel *choiceLabel = [[UILabel alloc] initWithFrame:CGRectMake(textimgxmargin+choice1ImageView.frame.origin.x+choice1ImageView.frame.size.width,imgMidPoint-textHeight/2,textWidth,textHeight)];
+        
+        if (i==0)
+        {
+            choiceLabel.text = @"I just saw you";
+            choice1ImageView.image = [UIImage imageNamed:@"sawyousubway.jpg"];
+        }
+        else
+            if(i==1)
+            {
+                choiceLabel.text = @"I just saw 2";
+                choice1ImageView.image = [UIImage imageNamed:@"thinkingaboutyou.jpg"];
+            }
+            else
+                if(i==2)
+                {
+                    choiceLabel.text = @"I still love you, do you love me?";
+                    choice1ImageView.image = [UIImage imageNamed:@"alwaysloveyou.png"];
+                }
+        
+        choiceLabel.font = [UIFont systemFontOfSize:12];
+        
+        choiceLabel.numberOfLines = 2;
+        
+        
+        UIButton *createCaseButton = [[UIButton alloc] initWithFrame:CGRectMake(choiceLabel.frame.origin.x+choiceLabel.frame.size.width+textbuttonxmargin,imgMidPoint-buttonHeight/2,buttonWidth,buttonHeight)];
+        
+        [createCaseButton setBackgroundColor:[UIColor blueColor]];
+        
+        [createCaseButton setTitle:@"Create Case" forState:UIControlStateNormal];
+        
+        createCaseButton.layer.cornerRadius = 9.0;
+        createCaseButton.layer.masksToBounds = YES;
+        
+        bgView.layer.cornerRadius = 9.0;
+        bgView.layer.masksToBounds = YES;
+        
+        choice1ImageView.layer.cornerRadius = 4.0;
+        choice1ImageView.layer.masksToBounds = YES;
+        
+        
+        [self.view BounceAddTheView:bgView];
+        [self.view BounceAddTheView:choice1ImageView];
+        [self.view BounceAddTheView:choiceLabel];
+        [self.view BounceAddTheView:createCaseButton];
+        
+        startyMargin = choice1ImageView.frame.origin.y+choice1ImageView.frame.size.height + verticalMargin;
+        
+    }
+    
+}
+
+#pragma mark UITableViewDelegateMethods
+-(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return templatePickerActiveChoices.count;
+    
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  
+    static NSString *CellIdentifier = @"cell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    if(cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        
+    }
+    
+    UILabel *templateDescLabel = (UILabel *)[cell viewWithTag:51];
+    
+    if(templateDescLabel ==nil)
+    {
+        templateDescLabel = [[UILabel alloc] init];
+        templateDescLabel.tag = 51;
+        [cell addSubview:templateDescLabel];
+        
+    }
+    
+    UIImageView *choice1ImageView = (UIImageView *)[cell viewWithTag:52];
+    
+    if(choice1ImageView ==nil)
+    {
+        choice1ImageView = [[UIImageView alloc] init];
+        choice1ImageView.tag = 52;
+        [cell addSubview:choice1ImageView];
+        
+    }
+    
+    UIButton *createCaseButton = (UIButton *)[cell viewWithTag:60+indexPath.row];
+    
+    if(createCaseButton ==nil)
+    {
+        createCaseButton = [[UIButton alloc] init];
+        createCaseButton.tag = 60+indexPath.row;
+        [createCaseButton addTarget:self action:@selector(secondTemplatePicked:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [cell addSubview:createCaseButton];
+        
+    }
+    
+    [createCaseButton setBackgroundColor:[UIColor blueColor]];
+    
+    [createCaseButton setTitle:@"Create Case" forState:UIControlStateNormal];
+    
+    int startyMargin = 20;
+    int startxMargin = 20;
+    
+    int imgWidth = 90;
+    int imgHeight = 90;
+    
+    int textimgxmargin=10;
+    
+    int textWidth = 90;
+    int textHeight = 90;
+    
+    int textbuttonxmargin=10;
+    
+    int buttonWidth = 80;
+    int buttonHeight = 80;
+    
+    int verticalMargin = 0;
+    
+    int bgVertMargin = 10;
+    int bgHorizMargin = 10;
+    
+    
+    choice1ImageView.frame = CGRectMake(startxMargin,startyMargin,imgWidth,imgHeight);
+     int imgMidPoint = choice1ImageView.frame.origin.y+choice1ImageView.frame.size.height/2;
+    
+    templateDescLabel.frame = CGRectMake(textimgxmargin+choice1ImageView.frame.origin.x+choice1ImageView.frame.size.width,imgMidPoint-textHeight/2,textWidth,textHeight);
+    templateDescLabel.font = [UIFont systemFontOfSize:10];
+    templateDescLabel.numberOfLines = 5;
+    
+    PFObject *selectedTemplateObject = [templatePickerActiveChoices objectAtIndex:indexPath.row];
+    templateDescLabel.text = (NSString *)[selectedTemplateObject objectForKey:@"description"];
+    
+    
+    createCaseButton.frame = CGRectMake(templateDescLabel.frame.origin.x+templateDescLabel.frame.size.width+textbuttonxmargin,imgMidPoint-buttonHeight/2,buttonWidth,buttonHeight);
+    
+    //createCaseButton.titleLabel.numberOfLines = 2;
+    UILabel *buttonTitleLabel = createCaseButton.titleLabel;
+    buttonTitleLabel.numberOfLines = 2;
+    buttonTitleLabel.font = [UIFont systemFontOfSize:12];
+    
+    
+    //set rounded corners on UIViews
+    createCaseButton.layer.cornerRadius = 9.0;
+    createCaseButton.layer.masksToBounds = YES;
+    
+    //bgView.layer.cornerRadius = 9.0;
+    //bgView.layer.masksToBounds = YES;
+    
+    choice1ImageView.layer.cornerRadius = 4.0;
+    choice1ImageView.layer.masksToBounds = YES;
+    
+    choice1ImageView.image = [UIImage imageNamed:@"thinkingaboutyou.jpg"];
+    
+    //templateDescLabel.text = [[templatePickerActiveChoices objectAtIndex:indexPath.row] objectForKey:@"description"];
+    
+ 
+    
+    
+    return cell;
+    
+    
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 120;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //PFObject *selectedTemplateObject = [templatePickerActiveChoices objectAtIndex:indexPath.row];
+    
+    
+   // selectedTemplate2=selectedTemplateObject.objectId;
+    
+    
+}
+
+-(void)secondTemplatePicked:(UIButton *) sendingButton
+{
+    //create a new case with the two templates.
+    
+    int indexOfButton = sendingButton.tag-60;
+    
+    //second level template
+    PFObject *secondTemplate = [templatePickerActiveChoices objectAtIndex:indexOfButton];
+    selectedTemplate2 = secondTemplate.objectId;
+    
+    //create parse objects and create the new case for the template
+    PFUser *currentUser = [PFUser currentUser];
+    
+    //create new case with this user.
+    itsMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
+    [itsMTLObject setObject:currentUser forKey:@"ParseUser"];
+    [itsMTLObject setObject:@"newtemptest" forKey:@"showName"];
+    
+    // Set the access control list to current user for security purposes
+    PFACL *itsMTLACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [itsMTLACL setPublicReadAccess:YES];
+    [itsMTLACL setPublicWriteAccess:YES];
+    
+    itsMTLObject.ACL = itsMTLACL;
+    
+    [itsMTLObject save];
+    
+    //set user properties to parse true user account
+    [currentUser setObject:@"newtemptest" forKey:@"showName"];
+    [currentUser setObject:@"4" forKey:@"cellNumber"];
+    [currentUser setObject:@"F" forKey:@"gender"];
+    [currentUser save];
+    
+    
+    //get the ID and run the XML with the case info.
+    NSString *itsMTLObjectID = itsMTLObject.objectId;
+    
+    //add a progress HUD to show it is sending the XML with the case info
+    
+    NSString *hardcodedXMLString = @"<PAYLOAD><USEROBJECTID>4OvTmAzGE7</USEROBJECTID><LAISO>EN</LAISO><PREFERENCES><SHOWNAME>Rose</SHOWNAME><COUNTRY>CA</COUNTRY><GENDER>F</GENDER><TEMPLATEID1>01VURH6zGz</TEMPLATEID1><TEMPLATEID2>9XXwNvkFTI</TEMPLATEID2></PREFERENCES></PAYLOAD>";
+    
+    NSString *xmlGeneratedString = [self createTemplateXMLFunction:itsMTLObjectID];
+    
+ 
+    //use parse cloud code function to update with appropriate XML
+    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+                       withParameters:@{@"payload": xmlGeneratedString}
+                                block:^(NSString *responseString, NSError *error) {
+                                    if (!error) {
+                                        
+                                        NSString *responseText = responseString;
+                                        NSLog(responseText);
+                                        
+                                       
+                                        if([responseText isEqualToString:@"ok"])
+                                        {
+                                            
+                                            NSLog(@"starting to poll for template maker update");
+                                            [self pollForTemplateMaker];
+                                            
+                                        }
+                                        
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSLog(error.localizedDescription);
+                                        
+                                        
+                                    }
+                                }];
+
+    
+    
+}
+
+
+-(void)pollForTemplateMaker
+{
+    //run a timer in the background to look for the moment the case is updated with a template maker
+    
+    //show progress HUD
+   
+    
+    [NSTimer scheduledTimerWithTimeInterval:5.0
+                                     target:self
+                                   selector:@selector(timerFired:)
+                                   userInfo:nil
+                                    repeats:YES];
+    
+}
+
+- (void)timerFired:(NSTimer *)timer {
+    
+    NSLog(@"timer fired");
+    //check the parse object to see if it is updated
+    
+    [itsMTLObject fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        //do stuff with object.
+        PFObject *templateMakerObj = [object objectForKey:@"templateMaker"];
+        
+        //note November 1
+        //look at timestamp at time of sending request for profile maker, then poll every few seconds until the updatedTimestamp for the itsMTLObject is changed
+        //Make sure the updated timestamp for templateMakerObject is
+        
+        if(templateMakerObj != nil)
+        {
+            //stop the timer
+            [timer invalidate];
+            timerTickCheck = 0;
+            NSString *tempMakerID = templateMakerObj.objectId;
+            
+            NSLog(@"got a template maker with this ID: %@", tempMakerID);
+          
+            
+        }
+    }];
+    
+    timerTickCheck=timerTickCheck+1;
+    if(timerTickCheck==6)
+    {
+        [timer invalidate];
+        NSLog(@"ran into maximum time");
+        //[HUD hide:YES];
+    }
+    
+}
+
+
+-(NSString *)createTemplateXMLFunction:(NSString *)userName
+{
+    //get the selected property from the chooser element.
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:userName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"PREFERENCES"];
+    
+    [xmlWriter writeStartElement:@"COUNTRY"];
+    [xmlWriter writeCharacters:@"CA"];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"GENDER"];
+    [xmlWriter writeCharacters:@"F"];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"SHOWNAME"];
+    [xmlWriter writeCharacters:@"newTempTest"];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"CELLNUMBER"];
+    [xmlWriter writeCharacters:@"4"];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"TEMPLATEID1"];
+    [xmlWriter writeCharacters:selectedTemplate1];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"TEMPLATEID2"];
+    [xmlWriter writeCharacters:selectedTemplate2];
+    [xmlWriter writeEndElement];
+    
+    
+    //close preferences element
+    [xmlWriter writeEndElement];
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    return xml;
+    
+}
+
+
 
 @end
