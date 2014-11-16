@@ -18,7 +18,7 @@
 		D31DF30619CEFC0C00A37725 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D31DF30519CEFC0C00A37725 /* AppDelegate.m */; };
 		D31DF30919CEFC0C00A37725 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D31DF30719CEFC0C00A37725 /* Main_iPhone.storyboard */; };
 		D31DF30C19CEFC0C00A37725 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */; };
-		D31DF30F19CEFC0C00A37725 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D31DF30E19CEFC0C00A37725 /* ViewController.m */; };
+		D31DF30F19CEFC0C00A37725 /* ViewCasesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D31DF30E19CEFC0C00A37725 /* ViewCasesViewController.m */; };
 		D31DF31119CEFC0C00A37725 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D31DF31019CEFC0C00A37725 /* Images.xcassets */; };
 		D3207AFF19E9B01200085B7C /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D3207AFE19E9B01200085B7C /* MBProgressHUD.m */; };
 		D3207B0219E9CBCE00085B7C /* NewPropertyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3207B0119E9CBCE00085B7C /* NewPropertyViewController.m */; };
@@ -60,6 +60,8 @@
 		EC0822FD1A0EE7F0000B6684 /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0822EB1A0EE7F0000B6684 /* UIImageView+HighlightedWebCache.m */; };
 		EC0822FE1A0EE7F0000B6684 /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0822ED1A0EE7F0000B6684 /* UIImageView+WebCache.m */; };
 		EC0822FF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0822EF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m */; };
+		EC0823011A18689C000B6684 /* cityLightsBG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC0823001A18689C000B6684 /* cityLightsBG.jpg */; };
+		EC0823041A186B13000B6684 /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0823031A186B13000B6684 /* HomePageViewController.m */; };
 		ECE6B1631A069AC3007F4A19 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1621A069AC3007F4A19 /* Bolts.framework */; };
 		ECE6B1671A069B69007F4A19 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1661A069B69007F4A19 /* Parse.framework */; };
 		ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B1691A069C1D007F4A19 /* findmeInfo.plist */; };
@@ -92,8 +94,8 @@
 		D31DF30519CEFC0C00A37725 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		D31DF30819CEFC0C00A37725 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		D31DF30B19CEFC0C00A37725 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		D31DF30D19CEFC0C00A37725 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		D31DF30E19CEFC0C00A37725 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		D31DF30D19CEFC0C00A37725 /* ViewCasesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewCasesViewController.h; sourceTree = "<group>"; };
+		D31DF30E19CEFC0C00A37725 /* ViewCasesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewCasesViewController.m; sourceTree = "<group>"; };
 		D31DF31019CEFC0C00A37725 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D31DF31F19CEFC0C00A37725 /* findmeInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = findmeInfo.plist; sourceTree = "<group>"; };
 		D31DF32119CEFC0C00A37725 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -161,6 +163,9 @@
 		EC0822ED1A0EE7F0000B6684 /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+WebCache.m"; sourceTree = "<group>"; };
 		EC0822EE1A0EE7F0000B6684 /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
 		EC0822EF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
+		EC0823001A18689C000B6684 /* cityLightsBG.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cityLightsBG.jpg; sourceTree = "<group>"; };
+		EC0823021A186B13000B6684 /* HomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomePageViewController.h; path = ../HomePageViewController.h; sourceTree = "<group>"; };
+		EC0823031A186B13000B6684 /* HomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomePageViewController.m; path = ../HomePageViewController.m; sourceTree = "<group>"; };
 		ECE6B1621A069AC3007F4A19 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = findMe/Bolts.framework; sourceTree = "<group>"; };
 		ECE6B1661A069B69007F4A19 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = findMe/Parse.framework; sourceTree = "<group>"; };
 		ECE6B1681A069C1D007F4A19 /* findme-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "findme-Prefix.pch"; sourceTree = "<group>"; };
@@ -270,8 +275,10 @@
 				D31DF30519CEFC0C00A37725 /* AppDelegate.m */,
 				D31DF30719CEFC0C00A37725 /* Main_iPhone.storyboard */,
 				D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */,
-				D31DF30D19CEFC0C00A37725 /* ViewController.h */,
-				D31DF30E19CEFC0C00A37725 /* ViewController.m */,
+				D31DF30D19CEFC0C00A37725 /* ViewCasesViewController.h */,
+				D31DF30E19CEFC0C00A37725 /* ViewCasesViewController.m */,
+				EC0823021A186B13000B6684 /* HomePageViewController.h */,
+				EC0823031A186B13000B6684 /* HomePageViewController.m */,
 				ECE6B1741A0D8AE5007F4A19 /* newCaseViewController.h */,
 				ECE6B1751A0D8AE5007F4A19 /* newCaseViewController.m */,
 				D318324E19D1828B003D51A3 /* CaseDetailsViewController.h */,
@@ -337,6 +344,7 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				EC0823001A18689C000B6684 /* cityLightsBG.jpg */,
 				ECE6B16D1A06AD0E007F4A19 /* sawyousubway.jpg */,
 				ECE6B16F1A06B8A9007F4A19 /* alwaysloveyou.png */,
 				ECE6B1701A06B8A9007F4A19 /* thinkingaboutyou.jpg */,
@@ -486,6 +494,7 @@
 				ECE6B1721A06B8A9007F4A19 /* thinkingaboutyou.jpg in Resources */,
 				ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */,
 				ECE6B1711A06B8A9007F4A19 /* alwaysloveyou.png in Resources */,
+				EC0823011A18689C000B6684 /* cityLightsBG.jpg in Resources */,
 				D3207B0419E9CF8B00085B7C /* green-checkmark.jpg in Resources */,
 				D31DF30019CEFC0C00A37725 /* InfoPlist.strings in Resources */,
 			);
@@ -500,7 +509,8 @@
 			files = (
 				EC0822FA1A0EE7F0000B6684 /* UIImage+GIF.m in Sources */,
 				ECE6B1801A0D9FF3007F4A19 /* UIImageView+Scaling.m in Sources */,
-				D31DF30F19CEFC0C00A37725 /* ViewController.m in Sources */,
+				EC0823041A186B13000B6684 /* HomePageViewController.m in Sources */,
+				D31DF30F19CEFC0C00A37725 /* ViewCasesViewController.m in Sources */,
 				D3FBD13D19D0505D008240F5 /* Case.m in Sources */,
 				D318324919D06173003D51A3 /* CaseItem.m in Sources */,
 				EC0822FC1A0EE7F0000B6684 /* UIImage+WebP.m in Sources */,

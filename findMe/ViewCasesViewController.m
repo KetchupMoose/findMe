@@ -1,12 +1,12 @@
 //
-//  ViewController.m
+//  ViewCasesViewController.m
 //  findMe
 //
 //  Created by Brian Allen on 2014-09-21.
 //  Copyright (c) 2014 Avial Ltd. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "ViewCasesViewController.h"
 #import <Parse/Parse.h>
 #import "XMLWriter.h"
 #import "CaseBuilder.h"
@@ -14,11 +14,11 @@
 #import "MBProgressHUD.h"
 
 
-@interface ViewController ()
+@interface ViewCasesViewController ()
 
 @end
 
-@implementation ViewController
+@implementation ViewCasesViewController
 NSArray *caseListJSON;
 @synthesize casesTableView;
 NSString *userName = @"exTJgfgotY";

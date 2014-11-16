@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  ViewCasesViewController.h
 //  findMe
 //
 //  Created by Brian Allen on 2014-09-21.
@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
 
-@interface ViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,MBProgressHUDDelegate>
+@interface ViewCasesViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,MBProgressHUDDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *testLabel;
 @property (weak,nonatomic) IBOutlet UITableView *casesTableView;
 -(IBAction)newCase:(id)sender;

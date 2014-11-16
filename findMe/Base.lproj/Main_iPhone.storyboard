@@ -5,10 +5,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--View Cases View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="vcvc" id="vXZ-lx-hvc" customClass="ViewCasesViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -399,6 +399,90 @@
             </objects>
             <point key="canvasLocation" x="-238" y="-122"/>
         </scene>
+        <!--Home Page View Controller-->
+        <scene sceneID="au7-rL-zJ3">
+            <objects>
+                <viewController id="e02-Df-S4d" customClass="HomePageViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Tb4-2a-sUH"/>
+                        <viewControllerLayoutGuide type="bottom" id="Krm-WE-cPr"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xB4-rQ-0uT">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="cityLightsBG.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="Nhv-8P-ZdO">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="575"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X8y-lr-Rgb">
+                                <rect key="frame" x="48" y="357" width="225" height="50"/>
+                                <color key="backgroundColor" red="0.15785804326544917" green="0.54924624909909792" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <state key="normal" title="View My Cases">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="ViewMyCases:" destination="e02-Df-S4d" eventType="touchUpInside" id="i01-xE-ypT"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q8k-HY-oqm">
+                                <rect key="frame" x="48" y="439" width="225" height="50"/>
+                                <color key="backgroundColor" red="0.1578580433" green="0.54924624909999997" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <state key="normal" title="My Matches">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="MyMatches:" destination="e02-Df-S4d" eventType="touchUpInside" id="gjG-Yq-0YS"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u9u-7r-VT7">
+                                <rect key="frame" x="48" y="274" width="225" height="50"/>
+                                <color key="backgroundColor" red="0.1578580433" green="0.54924624909999997" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <state key="normal" title="Create A New Case">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="CreateNewCase:" destination="e02-Df-S4d" eventType="touchUpInside" id="Qb5-h0-GIe"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Find Me" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R0s-zy-q0f">
+                                <rect key="frame" x="27" y="145" width="267" height="48"/>
+                                <fontDescription key="fontDescription" name="BodoniSvtyTwoITCTT-Book" family="Bodoni 72" pointSize="60"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J5a-Uy-HSq">
+                                <rect key="frame" x="0.0" y="25" width="97" height="39"/>
+                                <color key="backgroundColor" red="0.1578580433" green="0.54924624909999997" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <state key="normal" title="My Profile">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="MyProfile:" destination="e02-Df-S4d" eventType="touchUpInside" id="DOk-P4-bVG"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="x2f-f4-azN"/>
+                    <connections>
+                        <outlet property="CreateNewCaseButton" destination="u9u-7r-VT7" id="OIP-LR-nif"/>
+                        <outlet property="MyMatchesButton" destination="Q8k-HY-oqm" id="e9P-MZ-9Lg"/>
+                        <outlet property="MyProfileButton" destination="J5a-Uy-HSq" id="o2e-ud-pWo"/>
+                        <outlet property="ViewMyCasesButton" destination="X8y-lr-Rgb" id="Uh9-PR-82j"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BrF-6S-tjR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-554" y="622"/>
+        </scene>
         <!--New Case View Controller-->
         <scene sceneID="vQY-S8-PK6">
             <objects>
@@ -457,30 +541,30 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sje-Fe-bZc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-365" y="587"/>
+            <point key="canvasLocation" x="-73" y="553"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="vRa-6d-R3J">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="zQX-A0-4m7" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="xEq-kl-s4b">
+                    <navigationBar key="navigationBar" alpha="0.20000000000000001" contentMode="scaleToFill" id="xEq-kl-s4b">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="yyG-9N-8Fb" kind="relationship" relationship="rootViewController" id="wfb-ae-mIX"/>
+                        <segue destination="e02-Df-S4d" kind="relationship" relationship="rootViewController" id="t1O-w6-xMq"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hyc-iO-QcB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-828" y="-32"/>
+            <point key="canvasLocation" x="-980" y="24"/>
         </scene>
     </scenes>
     <resources>
         <image name="ManButton.png" width="135" height="136"/>
+        <image name="cityLightsBG.jpg" width="640" height="1136"/>
         <image name="green-checkmark.jpg" width="425" height="425"/>
         <image name="womanbutton.png" width="135" height="135"/>
     </resources>
