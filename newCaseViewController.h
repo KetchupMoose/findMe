@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
-@interface newCaseViewController : UIViewController <UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate>
+@interface newCaseViewController : UIViewController <UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate,MBProgressHUDDelegate>
 
 
 @property (weak,nonatomic) IBOutlet UICollectionView *CaseOptionsCollectionView;

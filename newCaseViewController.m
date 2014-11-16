@@ -13,6 +13,9 @@
 #import "UIImageView+Scaling.h"
 #import "UIView+Animation.h"
 #import "XMLWriter.h"
+#import "MBProgressHUD.h"
+#import "CaseDetailsViewController.h"
+
 
 @interface newCaseViewController ()
 
@@ -30,6 +33,8 @@ NSString *selectedTemplate1;
 NSString *selectedTemplate2;
 PFObject *itsMTLObject;
 int timerTickCheck =0;
+
+MBProgressHUD *HUD;
 
 @synthesize CaseOptionsCollectionView;
 @synthesize TemplateSecondLevelTableView;
@@ -508,6 +513,18 @@ int timerTickCheck =0;
     
     NSString *xmlGeneratedString = [self createTemplateXMLFunction:itsMTLObjectID];
     
+    
+    //show progress HUD
+      HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Creating Parse Case";
+    [HUD show:YES];
+
+    
+    
  
     //use parse cloud code function to update with appropriate XML
     [PFCloud callFunctionInBackground:@"inboundZITSMTL"
@@ -517,6 +534,7 @@ int timerTickCheck =0;
                                         
                                         NSString *responseText = responseString;
                                         NSLog(responseText);
+                                        [HUD hide:NO];
                                         
                                        
                                         if([responseText isEqualToString:@"ok"])
@@ -532,7 +550,7 @@ int timerTickCheck =0;
                                     else
                                     {
                                         NSLog(error.localizedDescription);
-                                        
+                                         [HUD hide:NO];
                                         
                                     }
                                 }];
@@ -545,9 +563,13 @@ int timerTickCheck =0;
 -(void)pollForTemplateMaker
 {
     //run a timer in the background to look for the moment the case is updated with a template maker
-    
-    //show progress HUD
    
+    //show progress HUD
+  
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Polling for New Case";
+    [HUD show:YES];
     
     [NSTimer scheduledTimerWithTimeInterval:5.0
                                      target:self
@@ -564,21 +586,40 @@ int timerTickCheck =0;
     
     [itsMTLObject fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         //do stuff with object.
-        PFObject *templateMakerObj = [object objectForKey:@"templateMaker"];
+        NSArray *caseList = [object objectForKey:@"cases"];
+        
         
         //note November 1
         //look at timestamp at time of sending request for profile maker, then poll every few seconds until the updatedTimestamp for the itsMTLObject is changed
         //Make sure the updated timestamp for templateMakerObject is
         
-        if(templateMakerObj != nil)
+        if(caseList != nil)
         {
+            
+            if(caseList.count ==0)
+            {
+                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Templates", nil) message:NSLocalizedString(@"There are currently no templates for this case type", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+                //stop the timer
+                [timer invalidate];
+                timerTickCheck = 0;
+                [HUD hide:YES];
+            }
             //stop the timer
             [timer invalidate];
             timerTickCheck = 0;
-            NSString *tempMakerID = templateMakerObj.objectId;
-            
-            NSLog(@"got a template maker with this ID: %@", tempMakerID);
           
+            
+            NSLog(@"got this many cases: %i", caseList.count);
+            [HUD hide:YES];
+            
+            //get the latest case from the itsMTLObject, for now getting the first index.
+            //brian note 11-15-2014:
+            //need to change this logic to be based on timestamps of cases in the itsMTL object so the app returns
+            //the last created cases for selecting the index
+            
+            [self ShowCaseDetails:caseList LastCreatedCaseIndex:0];
+            
+            
             
         }
     }];
@@ -588,9 +629,26 @@ int timerTickCheck =0;
     {
         [timer invalidate];
         NSLog(@"ran into maximum time");
-        //[HUD hide:YES];
+        [HUD hide:YES];
     }
     
+}
+
+-(void) ShowCaseDetails:(NSArray *) itsMTLCases LastCreatedCaseIndex:(int) lastCaseInt
+{
+    //send the latest case information to
+    NSNumber *selectedIndex = [NSNumber numberWithInt:lastCaseInt];
+    
+    
+    
+    CaseDetailsViewController *cdvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdvc"];
+    
+    cdvc.selectedCaseIndex=selectedIndex;
+    cdvc.caseListData = itsMTLCases;
+    cdvc.userName = itsMTLObject.objectId;
+    
+    
+    [self.navigationController pushViewController:cdvc animated:YES];
 }
 
 
