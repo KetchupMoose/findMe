@@ -31,13 +31,14 @@ int pickedParentTemplateIndex;
 
 NSString *selectedTemplate1;
 NSString *selectedTemplate2;
-PFObject *itsMTLObject;
+
 int timerTickCheck =0;
 
 MBProgressHUD *HUD;
 
 @synthesize CaseOptionsCollectionView;
 @synthesize TemplateSecondLevelTableView;
+@synthesize itsMTLObject;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -446,12 +447,7 @@ MBProgressHUD *HUD;
     choice1ImageView.image = [UIImage imageNamed:@"thinkingaboutyou.jpg"];
     
     //templateDescLabel.text = [[templatePickerActiveChoices objectAtIndex:indexPath.row] objectForKey:@"description"];
-    
- 
-    
-    
     return cell;
-    
     
 }
 
@@ -480,6 +476,7 @@ MBProgressHUD *HUD;
     PFObject *secondTemplate = [templatePickerActiveChoices objectAtIndex:indexOfButton];
     selectedTemplate2 = secondTemplate.objectId;
     
+    /*
     //create parse objects and create the new case for the template
     PFUser *currentUser = [PFUser currentUser];
     
@@ -502,6 +499,11 @@ MBProgressHUD *HUD;
     [currentUser setObject:@"4" forKey:@"cellNumber"];
     [currentUser setObject:@"F" forKey:@"gender"];
     [currentUser save];
+    */
+    
+    //return the current itsMTLObject for the currentParseUser
+    
+    
     
     
     //get the ID and run the XML with the case info.
@@ -588,10 +590,21 @@ MBProgressHUD *HUD;
         //do stuff with object.
         NSArray *caseList = [object objectForKey:@"cases"];
         
+        //check to see if the new case has been created yet, look for a case ID where case is = nil.
+        NSLog(@"got this many cases %i",caseList.count);
         
-        //note November 1
-        //look at timestamp at time of sending request for profile maker, then poll every few seconds until the updatedTimestamp for the itsMTLObject is changed
-        //Make sure the updated timestamp for templateMakerObject is
+        int newCaseFound = 0;
+        for (PFObject *caseObj in caseList)
+        {
+            NSString *caseID = [caseObj objectForKey:@"caseId"];
+            NSLog(@"case ID is :%@",caseID);
+            
+            if(caseID ==nil)
+            {
+                newCaseFound = 1;
+                
+            }
+        }
         
         if(caseList != nil)
         {
@@ -681,11 +694,11 @@ MBProgressHUD *HUD;
     [xmlWriter writeEndElement];
     
     [xmlWriter writeStartElement:@"SHOWNAME"];
-    [xmlWriter writeCharacters:@"newTempTest"];
+    [xmlWriter writeCharacters:@"newTest"];
     [xmlWriter writeEndElement];
     
     [xmlWriter writeStartElement:@"CELLNUMBER"];
-    [xmlWriter writeCharacters:@"4"];
+    [xmlWriter writeCharacters:@"5"];
     [xmlWriter writeEndElement];
     
     [xmlWriter writeStartElement:@"TEMPLATEID1"];

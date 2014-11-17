@@ -19,7 +19,8 @@
 
 @implementation HomePageViewController
 
-NSString *HomePageuserName = @"exTJgfgotY";
+NSString *HomePageuserName;
+PFObject *HomePageITSMTLObject;
 MBProgressHUD *HUD;
 @synthesize ViewMyCasesButton;
 
@@ -32,6 +33,10 @@ MBProgressHUD *HUD;
     //add a progress HUD to show it is retrieving list of cases
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:HUD];
+    
+    //create an itsMTL Object if necessary
+    [self createParseUser];
+    
     
     // Set determinate mode
     HUD.mode = MBProgressHUDModeDeterminate;
@@ -50,7 +55,7 @@ MBProgressHUD *HUD;
         //do some logic to sort through these cases and see how many have matches, how many are awaiting more info.
         NSArray *cases = [latestCaseList objectForKey:@"cases"];
         
-        int caseCount = cases.count;
+        int caseCount = (int)cases.count;
         
         UIView *bubbleIndicatorCases = [[UIView alloc] init];
         int bubbleWidth = 20;
@@ -74,6 +79,7 @@ MBProgressHUD *HUD;
         [self.view addSubview:bubbleIndicatorCases];
         
         
+        
     }];
     
 }
@@ -81,6 +87,73 @@ MBProgressHUD *HUD;
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void) createParseUser {
+    
+     //create parse objects and create the new case for the template
+     PFUser *currentUser = [PFUser currentUser];
+    
+    //query to see if there is an ITSMTLObject for this user already
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Checking if there's an MTL Object";
+    [HUD show:YES];
+    
+    PFQuery *newQuery = [PFQuery queryWithClassName:@"ItsMTL"];
+    
+    [newQuery whereKey:@"ParseUser" equalTo:currentUser];
+    
+    NSArray *returnedMTLObjects = [newQuery findObjects];
+    
+    if(returnedMTLObjects.count >=1)
+    {
+        NSLog(@"already have an itsMTL user");
+        
+        //do nothing, don't create an itsMTLObject
+        PFObject *returnedMTLObject = [returnedMTLObjects objectAtIndex:0];
+        HomePageuserName = returnedMTLObject.objectId;
+        [HUD hide:NO];
+        
+    }
+    else
+    {
+        //create new case with this user.
+        
+        NSLog(@"creating a new its mtl user");
+        
+        
+        HomePageITSMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
+        [HomePageITSMTLObject setObject:currentUser forKey:@"ParseUser"];
+        [HomePageITSMTLObject setObject:@"newHomeScreenUser" forKey:@"showName"];
+        
+        // Set the access control list to current user for security purposes
+        PFACL *itsMTLACL = [PFACL ACLWithUser:[PFUser currentUser]];
+        [itsMTLACL setPublicReadAccess:YES];
+        [itsMTLACL setPublicWriteAccess:YES];
+        
+        HomePageITSMTLObject.ACL = itsMTLACL;
+        
+        [HomePageITSMTLObject save];
+        
+         HomePageuserName = HomePageITSMTLObject.objectId;
+        
+        //need to grab these properties later to save them on the user
+        /*
+         //set user properties to parse true user account
+         [currentUser setObject:@"newHomeScreenUser" forKey:@"showName"];
+         [currentUser setObject:@"5" forKey:@"cellNumber"];
+         [currentUser setObject:@"F" forKey:@"gender"];
+         [currentUser save];
+         */
+        
+        [HUD hide:NO];
+    }
+    
+
+    
 }
 
 /*
@@ -97,6 +170,9 @@ MBProgressHUD *HUD;
     
     
     newCaseViewController *ncvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ncvc"];
+    
+    ncvc.itsMTLObject = HomePageITSMTLObject;
+    
     
     //UINavigationController *uinc = self.navigationController;
     

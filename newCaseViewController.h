@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
+#import <Parse/Parse.h>
 
 @interface newCaseViewController : UIViewController <UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate,MBProgressHUDDelegate>
 
@@ -15,6 +16,8 @@
 @property (weak,nonatomic) IBOutlet UICollectionView *CaseOptionsCollectionView;
 
 @property (strong,nonatomic) UITableView *TemplateSecondLevelTableView;
+
+@property (strong,nonatomic) PFObject *itsMTLObject;
 
 
 
