@@ -21,9 +21,9 @@
 @implementation ViewCasesViewController
 NSArray *caseListJSON;
 @synthesize casesTableView;
-NSString *userName = @"exTJgfgotY";
 MBProgressHUD *HUD;
 UIRefreshControl *refreshControl;
+@synthesize userName;
 
 
 - (void)viewDidLoad
@@ -34,7 +34,6 @@ UIRefreshControl *refreshControl;
     refreshControl = [[UIRefreshControl alloc]init];
     [self.casesTableView addSubview:refreshControl];
     [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
-    
     
     [casesTableView setDataSource:self];
     [casesTableView setDelegate:self];

@@ -457,7 +457,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J5a-Uy-HSq">
-                                <rect key="frame" x="0.0" y="25" width="97" height="39"/>
+                                <rect key="frame" x="0.0" y="60" width="97" height="39"/>
                                 <color key="backgroundColor" red="0.1578580433" green="0.54924624909999997" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <state key="normal" title="My Profile">
@@ -471,7 +471,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="x2f-f4-azN"/>
+                    <navigationItem key="navigationItem" id="9d8-5R-RBm"/>
                     <connections>
                         <outlet property="CreateNewCaseButton" destination="u9u-7r-VT7" id="OIP-LR-nif"/>
                         <outlet property="MyMatchesButton" destination="Q8k-HY-oqm" id="e9P-MZ-9Lg"/>

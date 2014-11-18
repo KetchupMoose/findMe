@@ -590,51 +590,46 @@ MBProgressHUD *HUD;
         //do stuff with object.
         NSArray *caseList = [object objectForKey:@"cases"];
         
-        //check to see if the new case has been created yet, look for a case ID where case is = nil.
-        NSLog(@"got this many cases %i",caseList.count);
+         if(caseList != nil)
+    {
         
-        int newCaseFound = 0;
-        for (PFObject *caseObj in caseList)
+        if(caseList.count ==0)
         {
-            NSString *caseID = [caseObj objectForKey:@"caseId"];
-            NSLog(@"case ID is :%@",caseID);
-            
-            if(caseID ==nil)
-            {
-                newCaseFound = 1;
-                
-            }
-        }
-        
-        if(caseList != nil)
-        {
-            
-            if(caseList.count ==0)
-            {
-                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Templates", nil) message:NSLocalizedString(@"There are currently no templates for this case type", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
-                //stop the timer
-                [timer invalidate];
-                timerTickCheck = 0;
-                [HUD hide:YES];
-            }
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Templates", nil) message:NSLocalizedString(@"There are currently no templates for this case type", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
             //stop the timer
             [timer invalidate];
             timerTickCheck = 0;
-          
-            
-            NSLog(@"got this many cases: %i", caseList.count);
             [HUD hide:YES];
-            
-            //get the latest case from the itsMTLObject, for now getting the first index.
-            //brian note 11-15-2014:
-            //need to change this logic to be based on timestamps of cases in the itsMTL object so the app returns
-            //the last created cases for selecting the index
-            
-            [self ShowCaseDetails:caseList LastCreatedCaseIndex:0];
-            
-            
-            
         }
+        else
+        {
+            //check to see if the new case has been created yet, look for a case ID where case is = nil.
+            NSLog(@"got this many cases %i",caseList.count);
+            
+                int i = 0;
+                for (PFObject *caseObj in caseList)
+                {
+                    i = i+1;
+                    
+                    NSString *caseID = [caseObj objectForKey:@"caseId"];
+                    NSLog(@"case ID is :%@",caseID);
+                
+                    if(caseID ==nil)
+                    {
+                    
+                    //stop the timer
+                    [timer invalidate];
+                    timerTickCheck = 0;
+                    NSLog(@"got the blank caseID, showing the case details page");
+                    [HUD hide:YES];
+                    [self ShowCaseDetails:caseList LastCreatedCaseIndex:i-1];
+                    
+                    }
+                }
+        }
+        
+    }
+       
     }];
     
     timerTickCheck=timerTickCheck+1;

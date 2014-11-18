@@ -26,6 +26,8 @@ NSArray *questionItems;
 NSArray *answersList;
 NSArray *optionsArray;
 NSArray *ansStaticArray;
+NSArray *propsArray;
+NSMutableArray *propertyIDSArray;
 NSMutableArray *answersArray;
 //need to set selectedPropertyQuestion from the question picked by the pickerView
 NSString *selectedPropertyQuestion;
@@ -57,6 +59,19 @@ MBProgressHUD *HUD;
     
    questionItems= [caseItemObject objectForKey:@"caseItems"];
     
+    propertyIDSArray = [[NSMutableArray alloc] init];
+    for (PFObject *eachQuestion in questionItems)
+    {
+        NSString *propNum = [eachQuestion objectForKey:@"propertyNum"];
+        [propertyIDSArray addObject:propNum];
+        
+    }
+    
+    PFQuery *propertsQuery = [PFQuery queryWithClassName:@"Properts"];
+    [propertsQuery whereKey:@"objectId" containedIn:propertyIDSArray];
+    
+    propsArray = [propertsQuery findObjects];
+    
     PFObject *lastQuestion = [questionItems objectAtIndex:(questionItems.count-1)];
     selectedItemForUpdate = questionItems.count-1;
     
@@ -72,7 +87,6 @@ MBProgressHUD *HUD;
         NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
         
         [answersArray addObject:ansNum];
-        
     }
     
     ansStaticArray = [answersArray mutableCopy];
@@ -88,8 +102,6 @@ MBProgressHUD *HUD;
     HUD.delegate = self;
     HUD.labelText = @"Retrieving List of Properts";
     [HUD show:YES];
-
-    
     
      PFQuery *query = [PFQuery queryWithClassName:@"Properts"];
     
@@ -651,7 +663,9 @@ numberOfRowsInComponent:(NSInteger)component
     
     // Fill the label text here
     PFObject *questionItem = questionItems[row];
-    NSString *questionPropertyNum = [questionItem objectForKey:@"propertyNum"];
+        PFObject *propObject = propsArray[row];
+        NSString *PropertyString = [propObject objectForKey:@"propertyDescr"];
+        
     
     NSString *origin = [questionItem objectForKey:@"origin"];
     
@@ -659,11 +673,11 @@ numberOfRowsInComponent:(NSInteger)component
     NSString *stringWithOrigin;
     if([origin isEqualToString:@"S"])
     {
-        stringWithOrigin = [@"Suggested Property: " stringByAppendingString:questionPropertyNum];
+        stringWithOrigin = [@"Suggested Property: " stringByAppendingString:PropertyString];
     }
     else
     {
-        stringWithOrigin = questionPropertyNum;
+        stringWithOrigin = PropertyString;
         
     }
     NSArray *answers = [questionItem objectForKey:@"answers"];

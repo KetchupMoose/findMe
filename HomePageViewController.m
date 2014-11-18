@@ -77,9 +77,7 @@ MBProgressHUD *HUD;
         bubbleIndicatorCases.layer.masksToBounds = YES;
         
         [self.view addSubview:bubbleIndicatorCases];
-        
-        
-        
+                
     }];
     
 }
@@ -115,6 +113,8 @@ MBProgressHUD *HUD;
         //do nothing, don't create an itsMTLObject
         PFObject *returnedMTLObject = [returnedMTLObjects objectAtIndex:0];
         HomePageuserName = returnedMTLObject.objectId;
+        HomePageITSMTLObject = returnedMTLObject;
+        
         [HUD hide:NO];
         
     }
@@ -168,11 +168,9 @@ MBProgressHUD *HUD;
 
 - (IBAction)CreateNewCase:(id)sender {
     
-    
     newCaseViewController *ncvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ncvc"];
     
     ncvc.itsMTLObject = HomePageITSMTLObject;
-    
     
     //UINavigationController *uinc = self.navigationController;
     
@@ -181,10 +179,13 @@ MBProgressHUD *HUD;
 }
 - (IBAction)ViewMyCases:(id)sender {
     ViewCasesViewController *vcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"vcvc"];
-     [self.navigationController pushViewController:vcvc animated:YES];
+    vcvc.userName = HomePageITSMTLObject.objectId;
+    
+    [self.navigationController pushViewController:vcvc animated:YES];
     
 }
 - (IBAction)MyMatches:(id)sender {
+    
     
 }
 - (IBAction)MyProfile:(id)sender {

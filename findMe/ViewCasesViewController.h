@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *testLabel;
 @property (weak,nonatomic) IBOutlet UITableView *casesTableView;
 -(IBAction)newCase:(id)sender;
+@property (strong,nonatomic) NSString *userName;
 
 
 @end
