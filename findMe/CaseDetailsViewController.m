@@ -197,6 +197,9 @@ MBProgressHUD *HUD;
    for (NSNumber *eachAns in answersArray)
    {
        int ansInt = [eachAns integerValue];
+       //adjusting index down 1 since George's values start at 1
+       ansInt = ansInt-1;
+       
        if(ansInt==indexPath.row)
        {
            //highlight this cell in the table as one of the selected answers
@@ -248,20 +251,29 @@ MBProgressHUD *HUD;
     if(cell.backgroundColor==[UIColor greenColor])
     {
         //remove this answer from the list.
+        int i = 0;
+        int indexToRemove = 0;
         for (NSNumber *eachAns in answersArray)
         {
             int ansInt = [eachAns integerValue];
-            if(ansInt==indexPath.row)
+            
+           
+            //making sure to compare to a number +1 since the answersArray has a 1 higher index
+            if(ansInt==indexPath.row+1)
             {
-                [answersArray removeObject:eachAns];
+                indexToRemove = i;
                 cell.backgroundColor = [UIColor whiteColor];
+                
             }
+             i = i+1;
         }
+        [answersArray removeObjectAtIndex:indexToRemove];
+        
     }
     else
             
         {
-            NSNumber *newAns = [NSNumber numberWithInteger:indexPath.row];
+            NSNumber *newAns = [NSNumber numberWithInteger:indexPath.row+1];
             [answersArray addObject:newAns];
             cell.backgroundColor = [UIColor greenColor];
             
@@ -421,9 +433,14 @@ NSString *propertyDesc = self.questionLabel.text;
         [xmlWriter writeCharacters:@"EN"];
         [xmlWriter writeEndElement];
     
+    if(caseObjID != nil)
+    {
+        
+    
         [xmlWriter writeStartElement:@"CASEOBJECTID"];
         [xmlWriter writeCharacters:caseObjID];
         [xmlWriter writeEndElement];
+    }
     
         [xmlWriter writeStartElement:@"CASENAME"];
         [xmlWriter writeCharacters:caseName];
@@ -486,7 +503,7 @@ NSString *propertyDesc = self.questionLabel.text;
         //build a new answer element
         NSInteger myInt = [ansNumber integerValue];
         
-        myInt = myInt+1;
+        myInt = myInt;
         
         NSString *ansString = [NSString stringWithFormat:@"%i",myInt];
         
@@ -623,8 +640,7 @@ numberOfRowsInComponent:(NSInteger)component
         self.questionLabel.text = questionString;
         
         [self.caseDetailsTableView reloadData];
-        
-        
+
     }
      ];
     }

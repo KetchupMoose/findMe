@@ -15,6 +15,7 @@
 {
     // Override point for customization after application launch.
     
+   
     [Parse setApplicationId:@"XaleNqb8plMKReJIkuAwbokajOkcKo1RkOGdPUcN" clientKey:@"EqxiSF75OYaPQcOMYRR3K8yJursh6sbyHSLpldTT"];
     
     [PFUser enableAutomaticUser];
@@ -27,7 +28,41 @@
     
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
+    PFUser *currentUser = [PFUser currentUser];
+    [currentUser save];
+    
+    
+    //-- Set Notification
+    if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
+    {
+        // iOS 8 Notifications
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+        
+        [application registerForRemoteNotifications];
+    }
+    else
+    {
+        // iOS < 8 Notifications
+        [application registerForRemoteNotificationTypes:
+         (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
+    }
+   
     return YES;
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [PFPush handlePush:userInfo];
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    
+    // Store the deviceToken in the current installation and save it to Parse.
+    
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    currentInstallation.channels = @[ @"global" ];
+    [currentInstallation saveInBackground];
+    
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application
