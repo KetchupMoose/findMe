@@ -20,6 +20,8 @@
 
 @implementation ViewCasesViewController
 NSArray *caseListJSON;
+NSMutableArray *caseListPruned;
+
 @synthesize casesTableView;
 MBProgressHUD *HUD;
 UIRefreshControl *refreshControl;
@@ -60,24 +62,21 @@ UIRefreshControl *refreshControl;
         
         
         //this represents the overall list of cases
+        caseListPruned = [[NSMutableArray alloc] init];
         
-    /*
+    
         for (PFObject *caseObject in caseListJSON)
         {
-            NSArray *caseItems = [caseObject objectForKey:@"caseItems"];
             
-            PFObject *caseItemObject = [caseItems objectAtIndex:0];
-            
-            //here are the contents of each case item object
-            NSArray *answerList = [caseItemObject objectForKey:@"answers"];
-            NSString *caseItem = [caseItemObject objectForKey:@"caseItem"];
-            NSString *priority =[caseItemObject objectForKey:@"priority"];
-            NSString *propertyNum = [caseItemObject objectForKey:@"propertyNum"];
-
-            
+            NSString *caseID = [caseObject objectForKey:@"caseId"];
+            if (caseID !=nil)
+            {
+                [caseListPruned addObject:caseObject];
+                
+            }
             
         }
-       */
+       
         
         [casesTableView reloadData];
         
@@ -139,7 +138,7 @@ UIRefreshControl *refreshControl;
 #pragma mark UITableViewDelegateMethods
 -(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [caseListJSON count];
+    return [caseListPruned count];
     
 }
 
@@ -153,7 +152,7 @@ UIRefreshControl *refreshControl;
     
     UILabel *caseNameLabel = (UILabel *)[cell viewWithTag:2];
     UILabel *caseIDLabel = (UILabel *)[cell viewWithTag:3];
-    PFObject *caseObject = [caseListJSON objectAtIndex:indexPath.row];
+    PFObject *caseObject = [caseListPruned objectAtIndex:indexPath.row];
     
     NSString *caseName = [caseObject objectForKey:@"caseName"];
     caseNameLabel.text = caseName;
@@ -175,7 +174,7 @@ UIRefreshControl *refreshControl;
     CaseDetailsViewController *cdvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdvc"];
     
     cdvc.selectedCaseIndex=selectedIndex;
-    cdvc.caseListData = caseListJSON;
+    cdvc.caseListData = caseListPruned;
     cdvc.userName = userName;
     
     

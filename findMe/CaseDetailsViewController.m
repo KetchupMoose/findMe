@@ -365,7 +365,8 @@ MBProgressHUD *HUD;
     
     PFObject *itemObjectToUpdate = questionItems [selectedItemForUpdate];
   
-    NSString *generatedXMLString = [self createXMLFunction:itemObjectToUpdate];
+    
+    NSString *generatedXMLString = [self createXMLFunction:itemObjectToUpdate CreatingNewProperty:NO];
     
     //add a progress HUD to show it is retrieving list of properts
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -405,7 +406,7 @@ MBProgressHUD *HUD;
     
 }
 
--(NSString *)createXMLFunction:(PFObject *)itemObject
+-(NSString *)createXMLFunction:(PFObject *)itemObject CreatingNewProperty:(BOOL) NewProp
 {
     int *selectedCaseInt = (NSInteger *)[selectedCaseIndex integerValue];
     PFObject *caseObject = [caseListData objectAtIndex:selectedCaseInt];
@@ -448,6 +449,11 @@ NSString *propertyDesc = self.questionLabel.text;
     
     
     //build strings for adding properties
+    //Nov 24 2014
+    //changing logic so that it only creates a new property portion if the user really chose to create a new one.
+    if(NewProp ==TRUE)
+    {
+        
         [xmlWriter writeStartElement:@"PROPERTY"];
     
     
@@ -459,29 +465,31 @@ NSString *propertyDesc = self.questionLabel.text;
             [xmlWriter writeCharacters:propertyDesc];
             [xmlWriter writeEndElement];
     
-    //go through the list of options for the selected case.
+        //go through the list of options for the selected case.
 
             [xmlWriter writeStartElement:@"OPTIONS"];
     
-    //generate list of strings from options
-    int i = 0;
-    NSString *fullCharsString = @"";
-    for(NSString *optionString in optionsArray)
-    {
-        i = i+1;
-     
-        fullCharsString = [fullCharsString stringByAppendingString:optionString];
-        
-        if(i!= [optionsArray count])
+        //generate list of strings from options
+        int i = 0;
+        NSString *fullCharsString = @"";
+        for(NSString *optionString in optionsArray)
         {
-            fullCharsString = [fullCharsString stringByAppendingString:@";"];
-        }
+            i = i+1;
+     
+            fullCharsString = [fullCharsString stringByAppendingString:optionString];
         
-    }
+            if  (i!= [optionsArray count])
+            {
+            fullCharsString = [fullCharsString stringByAppendingString:@";"];
+            }
+        
+        }
             [xmlWriter writeCharacters:fullCharsString];
             [xmlWriter writeEndElement];
     
         [xmlWriter writeEndElement];
+        
+    }
     
     //build strings for building item
     [xmlWriter writeStartElement:@"ITEM"];
