@@ -35,7 +35,10 @@ NSInteger newTextFieldIndex;
 NSInteger selectedItemForUpdate;
 MBProgressHUD *HUD;
 
-
+//location manager variables
+CLLocationManager *locationManager;
+CLGeocoder *geocoder;
+CLPlacemark *placemark;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -49,6 +52,12 @@ MBProgressHUD *HUD;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //location manager instance variable allocs
+    locationManager = [[CLLocationManager alloc] init];
+    geocoder = [[CLGeocoder alloc] init];
+    
+    
     // Do any additional setup after loading the view.
     int *selectedCaseInt = (NSInteger *)[selectedCaseIndex integerValue];
     //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
@@ -359,13 +368,8 @@ MBProgressHUD *HUD;
     //send an xml function with the updated answers and options.
     
     NSString *xmlString = @"<PAYLOAD><USEROBJECTID>exTJgfgotY</USEROBJECTID><LAISO>EN</LAISO><CASEOBJECTID>ZRfwJYgFYe</CASEOBJECTID><CASENAME>Sparks on my way to school yesterday</CASENAME><ITEM><CASEITEM>403</CASEITEM><PROPERTYNUM>GbietFwjDh</PROPERTYNUM><ANSWER><A>4</A></ANSWER></ITEM></PAYLOAD>";
-    
-    
-    
-    
-    PFObject *itemObjectToUpdate = questionItems [selectedItemForUpdate];
+        PFObject *itemObjectToUpdate = questionItems [selectedItemForUpdate];
   
-    
     NSString *generatedXMLString = [self createXMLFunction:itemObjectToUpdate CreatingNewProperty:NO];
     
     //add a progress HUD to show it is retrieving list of properts
@@ -765,5 +769,56 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     }
 }
 
+-(IBAction)getLocation:(id)sender
+{
+    locationManager.delegate = self;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    [locationManager startUpdatingLocation];
+}
+
+#pragma mark - CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSLog(@"didFailWithError: %@", error);
+    UIAlertView *errorAlert = [[UIAlertView alloc]
+                               initWithTitle:@"Error" message:@"Failed to Get Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [errorAlert show];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    NSLog(@"didUpdateToLocation: %@", newLocation);
+    CLLocation *currentLocation = newLocation;
+    
+    if (currentLocation != nil) {
+        //longitudeLabel.text = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude];
+        //latitudeLabel.text = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude];
+    }
+    
+    // Stop Location Manager
+    [locationManager stopUpdatingLocation];
+    
+    // Reverse Geocoding
+    NSLog(@"Resolving the Address");
+    [geocoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+        NSLog(@"Found placemarks: %@, error: %@", placemarks, error);
+        if (error == nil && [placemarks count] > 0) {
+            placemark = [placemarks lastObject];
+            
+            _questionLabel.text = [NSString stringWithFormat:@"%@ %@\n%@ %@\n%@\n%@",
+                                 placemark.subThoroughfare, placemark.thoroughfare,
+                                 placemark.postalCode, placemark.locality,
+                                 placemark.administrativeArea,
+                                 placemark.country];
+            
+            
+        } else {
+            NSLog(@"%@", error.debugDescription);
+        }
+    } ];
+    
+}
 
 @end

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
+#import <CoreLocation/CoreLocation.h>
 
-@interface CaseDetailsViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate,MBProgressHUDDelegate,UIAlertViewDelegate>
+@interface CaseDetailsViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate,MBProgressHUDDelegate,UIAlertViewDelegate,CLLocationManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *backButton;
 
@@ -17,6 +18,7 @@
 
 -(IBAction)doUpdate:(id)sender;
 -(IBAction)NewProperty:(id)sender;
+-(IBAction)getLocation:(id)sender;
 @property(weak,nonatomic) IBOutlet UIPickerView *pickerView;
 
 
