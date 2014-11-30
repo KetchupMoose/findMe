@@ -69,19 +69,51 @@ CLPlacemark *placemark;
    questionItems= [caseItemObject objectForKey:@"caseItems"];
     
     propertyIDSArray = [[NSMutableArray alloc] init];
+    
+    int suggestedQIndex = -1;
+    int j = 0;
     for (PFObject *eachQuestion in questionItems)
     {
+       
+        
         NSString *propNum = [eachQuestion objectForKey:@"propertyNum"];
         [propertyIDSArray addObject:propNum];
         
+        //show the case in the suggested Question box if there are no answers
+        
+        NSArray *answerList = [eachQuestion objectForKey:@"answers"];
+        
+        if(answerList.count == 0)
+        {
+            //show this as the question to bring up for the suggested question
+            suggestedQIndex = j;
+            
+        }
+     j = j+1;
     }
     
     PFQuery *propertsQuery = [PFQuery queryWithClassName:@"Properts"];
     [propertsQuery whereKey:@"objectId" containedIn:propertyIDSArray];
     
     propsArray = [propertsQuery findObjects];
-    
-    PFObject *lastQuestion = [questionItems objectAtIndex:(questionItems.count-1)];
+    PFObject *lastQuestion;
+    if (suggestedQIndex >-1)
+    {
+           lastQuestion = [questionItems objectAtIndex:suggestedQIndex];
+        
+    }
+    else
+    {
+           lastQuestion = [questionItems objectAtIndex:(questionItems.count-1)];
+            //show the list of answers
+        
+        self.pickerView.alpha =1;
+        self.suggestedQuestion.alpha = 0;
+        
+        self.checkPreviousAnswersButton.titleLabel.text = @"Showing Previous Answers";
+        
+    }
+ 
     selectedItemForUpdate = questionItems.count-1;
     
     NSString *lastQPropertyNum = [lastQuestion objectForKey:@"propertyNum"];
@@ -119,6 +151,17 @@ CLPlacemark *placemark;
     [query getObjectInBackgroundWithId:lastQPropertyNum block:^(PFObject *PropertsObject, NSError *error) {
         
         NSString *questionString = [PropertsObject objectForKey:@"propertyDescr"];
+        
+        if (suggestedQIndex >-1)
+        {
+            NSString *suggestedQString = @"Suggested Question: ";
+            
+            self.suggestedQuestion.text = [suggestedQString stringByAppendingString:questionString];
+            
+            self.pickerView.alpha =0;
+            
+        }
+        
         
         NSString *optionsString = [PropertsObject objectForKey:@"options"];
         
@@ -167,9 +210,11 @@ CLPlacemark *placemark;
 */
 
 #pragma mark UITableViewDelegateMethods
--(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [optionsArray count] +1;
+    int optsCount = (int)[optionsArray count];
+    
+    return optsCount +1;
     
 }
 
@@ -645,6 +690,8 @@ numberOfRowsInComponent:(NSInteger)component
         
         NSString *optionsString = [PropertsObject objectForKey:@"options"];
         
+        NSLog(@"%@",optionsString);
+        
         //need to convert options string to an array of objects with ; separators.
         
         optionsArray = [optionsString componentsSeparatedByString:@";"];
@@ -670,6 +717,12 @@ numberOfRowsInComponent:(NSInteger)component
         tView.textAlignment = NSTextAlignmentCenter;
         
         tView.font = [UIFont systemFontOfSize:12];
+        
+        tView.backgroundColor = [UIColor whiteColor];
+        tView.alpha =1;
+        
+        //tView.alpha = 0.95;
+        
     }
     
     //show a label to create a new property if it's the final questionItem
@@ -818,6 +871,13 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
             NSLog(@"%@", error.debugDescription);
         }
     } ];
+    
+}
+
+-(IBAction)getPreviousAnswers:(id)sender
+{
+    self.suggestedQuestion.alpha = 0;
+    self.pickerView.alpha = 1;
     
 }
 

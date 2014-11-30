@@ -62,6 +62,9 @@
 		EC0822FF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0822EF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m */; };
 		EC0823011A18689C000B6684 /* cityLightsBG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC0823001A18689C000B6684 /* cityLightsBG.jpg */; };
 		EC0823041A186B13000B6684 /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0823031A186B13000B6684 /* HomePageViewController.m */; };
+		EC9F51DB1A2AC53B00CFED6E /* longexposurestreetlights.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DA1A2AC53B00CFED6E /* longexposurestreetlights.jpeg */; };
+		EC9F51DD1A2AC63F00CFED6E /* gaussianblur.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DC1A2AC63F00CFED6E /* gaussianblur.jpg */; };
+		EC9F51DF1A2AC68B00CFED6E /* blurredlights.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DE1A2AC68B00CFED6E /* blurredlights.jpg */; };
 		ECE6B1631A069AC3007F4A19 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1621A069AC3007F4A19 /* Bolts.framework */; };
 		ECE6B1671A069B69007F4A19 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1661A069B69007F4A19 /* Parse.framework */; };
 		ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B1691A069C1D007F4A19 /* findmeInfo.plist */; };
@@ -166,6 +169,9 @@
 		EC0823001A18689C000B6684 /* cityLightsBG.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cityLightsBG.jpg; sourceTree = "<group>"; };
 		EC0823021A186B13000B6684 /* HomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomePageViewController.h; path = ../HomePageViewController.h; sourceTree = "<group>"; };
 		EC0823031A186B13000B6684 /* HomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomePageViewController.m; path = ../HomePageViewController.m; sourceTree = "<group>"; };
+		EC9F51DA1A2AC53B00CFED6E /* longexposurestreetlights.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = longexposurestreetlights.jpeg; sourceTree = "<group>"; };
+		EC9F51DC1A2AC63F00CFED6E /* gaussianblur.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = gaussianblur.jpg; sourceTree = "<group>"; };
+		EC9F51DE1A2AC68B00CFED6E /* blurredlights.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = blurredlights.jpg; sourceTree = "<group>"; };
 		ECE6B1621A069AC3007F4A19 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = findMe/Bolts.framework; sourceTree = "<group>"; };
 		ECE6B1661A069B69007F4A19 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = findMe/Parse.framework; sourceTree = "<group>"; };
 		ECE6B1681A069C1D007F4A19 /* findme-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "findme-Prefix.pch"; sourceTree = "<group>"; };
@@ -344,6 +350,9 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				EC9F51DE1A2AC68B00CFED6E /* blurredlights.jpg */,
+				EC9F51DC1A2AC63F00CFED6E /* gaussianblur.jpg */,
+				EC9F51DA1A2AC53B00CFED6E /* longexposurestreetlights.jpeg */,
 				EC0823001A18689C000B6684 /* cityLightsBG.jpg */,
 				ECE6B16D1A06AD0E007F4A19 /* sawyousubway.jpg */,
 				ECE6B16F1A06B8A9007F4A19 /* alwaysloveyou.png */,
@@ -489,13 +498,16 @@
 				D31DF30C19CEFC0C00A37725 /* Main_iPad.storyboard in Resources */,
 				D3F4574B1A003772000EDF25 /* stockphotoguy1.jpg in Resources */,
 				D31DF31119CEFC0C00A37725 /* Images.xcassets in Resources */,
+				EC9F51DF1A2AC68B00CFED6E /* blurredlights.jpg in Resources */,
 				D3F457491A0031F0000EDF25 /* stockphotowoman1.jpg in Resources */,
 				D31DF30919CEFC0C00A37725 /* Main_iPhone.storyboard in Resources */,
 				ECE6B1721A06B8A9007F4A19 /* thinkingaboutyou.jpg in Resources */,
 				ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */,
+				EC9F51DD1A2AC63F00CFED6E /* gaussianblur.jpg in Resources */,
 				ECE6B1711A06B8A9007F4A19 /* alwaysloveyou.png in Resources */,
 				EC0823011A18689C000B6684 /* cityLightsBG.jpg in Resources */,
 				D3207B0419E9CF8B00085B7C /* green-checkmark.jpg in Resources */,
+				EC9F51DB1A2AC53B00CFED6E /* longexposurestreetlights.jpeg in Resources */,
 				D31DF30019CEFC0C00A37725 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

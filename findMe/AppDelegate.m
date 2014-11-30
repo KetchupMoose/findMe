@@ -29,7 +29,7 @@
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
     PFUser *currentUser = [PFUser currentUser];
-    [currentUser save];
+    //[currentUser save];
     
     
     //-- Set Notification

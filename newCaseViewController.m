@@ -61,17 +61,41 @@ MBProgressHUD *HUD;
     //retrieve the five parent templatePickerChoices from Parse
     //templatePickerChoices =
     PFQuery *templateQuery = [PFQuery queryWithClassName:@"Templates"];
+    //[templateQuery selectKeys:@[@"parenttemplateid"]];
+    
     
     [templateQuery whereKey:@"laiso" equalTo:@"EN"];
     
-    
     templatePickerChoices = [templateQuery findObjects];
+    
     templatePickerParentChoices = [[NSMutableArray alloc] init];
     templatePickerActiveChoices = [[NSMutableArray alloc] init];
     
     for(PFObject *templateObject in templatePickerChoices)
     {
-        if([templateObject objectForKey:@"parenttemplateid"]==nil)
+        NSLog(@"numberofKeys");
+        NSLog(@"%i",templateObject.allKeys.count);
+    
+        
+     
+       PFObject *theParentObj = [templateObject objectForKey:@"parenttemplateid"];
+        
+        /*
+        NSString *objID = [templateObject valueForKey:@"parentemplateid"];
+        
+       if(objID==Nil)
+       {
+          objID = @"no";
+           
+       }
+        else
+        {
+            objID = @"yes";
+            
+        }
+        */
+        
+        if([theParentObj isEqual:[NSNull null]])
         {
             [templatePickerParentChoices addObject:templateObject];
             
@@ -177,11 +201,18 @@ MBProgressHUD *HUD;
     for (PFObject *templateObj in templatePickerChoices)
     {
         PFObject *pointerObj = [templateObj objectForKey:@"parenttemplateid"];
-        if([pointerObj.objectId isEqualToString:selectedParentTemplateObj.objectId])
-        {
-            [templatePickerActiveChoices addObject:templateObj];
+            if ([pointerObj isEqual:[NSNull null]])
+                {
+                 
+                }
+                else
+                {
+                if([pointerObj.objectId isEqualToString:selectedParentTemplateObj.objectId])
+                {
+                    [templatePickerActiveChoices addObject:templateObj];
             
-        }
+                }
+             }
     }
     if(templatePickerActiveChoices.count ==0)
     {

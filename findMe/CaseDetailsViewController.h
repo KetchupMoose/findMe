@@ -19,6 +19,12 @@
 -(IBAction)doUpdate:(id)sender;
 -(IBAction)NewProperty:(id)sender;
 -(IBAction)getLocation:(id)sender;
+-(IBAction)getPreviousAnswers:(id)sender;
+
+@property (weak,nonatomic) IBOutlet UIButton *checkPreviousAnswersButton;
+
+@property (weak,nonatomic) IBOutlet UILabel *suggestedQuestion;
+
 @property(weak,nonatomic) IBOutlet UIPickerView *pickerView;
 
 
