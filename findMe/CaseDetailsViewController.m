@@ -22,8 +22,18 @@
 @synthesize pickerView;
 @synthesize userName;
 
-NSArray *questionItems;
-NSArray *answersList;
+NSArray *caseItems;
+
+NSMutableArray *suggestedProperties;
+NSMutableArray *suggestedCases;
+NSMutableArray *answeredProperties;
+NSMutableArray *answeredCases;
+NSMutableArray *answeredPropertiesIndex;
+NSMutableArray *infoMessageProperties;
+NSMutableArray *infoCases;
+
+
+NSArray *selectedCaseItemAnswersList;
 NSArray *optionsArray;
 NSArray *ansStaticArray;
 NSArray *propsArray;
@@ -66,104 +76,123 @@ CLPlacemark *placemark;
     
     //get the LAST (latest) QuestionItem to display that information.
     
-   questionItems= [caseItemObject objectForKey:@"caseItems"];
+    caseItems= [caseItemObject objectForKey:@"caseItems"];
+    
+    //setting up arrays for storing three sets of properties and cases based on type: info messages, already answered properties, and new suggested properties
     
     propertyIDSArray = [[NSMutableArray alloc] init];
+    answeredPropertiesIndex =[[NSMutableArray alloc] init];
+    answeredProperties = [[NSMutableArray alloc] init];
+    answeredCases = [[NSMutableArray alloc] init];
+    infoCases = [[NSMutableArray alloc] init];
+    infoMessageProperties = [[NSMutableArray alloc] init];
+    suggestedProperties = [[NSMutableArray alloc] init];
+    suggestedCases = [[NSMutableArray alloc] init];
     
-    int suggestedQIndex = -1;
+    //get all the property ID's from each item in the selected case.
     int j = 0;
-    for (PFObject *eachQuestion in questionItems)
+    for (PFObject *eachCaseItem in caseItems)
     {
        
         
-        NSString *propNum = [eachQuestion objectForKey:@"propertyNum"];
+        NSString *propNum = [eachCaseItem objectForKey:@"propertyNum"];
         [propertyIDSArray addObject:propNum];
         
         //show the case in the suggested Question box if there are no answers
         
-        NSArray *answerList = [eachQuestion objectForKey:@"answers"];
+        NSArray *answerList = [eachCaseItem objectForKey:@"answers"];
         
         if(answerList.count == 0)
         {
-            //show this as the question to bring up for the suggested question
-            suggestedQIndex = j;
+            //do nothing, further down we determine whether it's an info message or a suggested question
+           
+            
+        }
+        
+        else
+        {
+            NSNumber *indexNum = [[NSNumber alloc] initWithInt:j];
+            //array for keeping track of the properties with answers.  Some of these may be info messages so that is dealt with further down.  It is assumed info messages can not have answers.
+            [answeredPropertiesIndex addObject:indexNum];
             
         }
      j = j+1;
     }
     
+    //get all the property information for the list of properties to consider
     PFQuery *propertsQuery = [PFQuery queryWithClassName:@"Properts"];
     [propertsQuery whereKey:@"objectId" containedIn:propertyIDSArray];
     
     propsArray = [propertsQuery findObjects];
-    PFObject *lastQuestion;
-    if (suggestedQIndex >-1)
+    
+    //sort the properties into three categories based on their type: info messages, answeredQuestions, and new suggestions
+    int g = 0;
+    for (PFObject *property in propsArray)
     {
-           lastQuestion = [questionItems objectAtIndex:suggestedQIndex];
+         NSString *propType = [property objectForKey:@"propertyType"];
         
+        if([propType  isEqual:@"I"])
+            {
+                //property is an info message
+                [infoMessageProperties addObject:property];
+                [infoCases addObject:caseItems[g]];
+            }
+        else if ([answeredPropertiesIndex containsObject:[NSNumber numberWithInt:g]])
+        
+            {
+                //add the property to the list of answeredProperties
+                [answeredProperties addObject:property];
+                [answeredCases addObject:caseItems[g]];
+                
+            }
+        else
+            {
+                [suggestedProperties addObject:property];
+                [suggestedCases addObject:caseItems[g]];
+                
+            }
+        
+        
+        
+        g=g+1;
     }
-    else
+    
+    
+    PFObject *firstSuggestedCaseToShow;
+    if (suggestedCases.count >0)
     {
-           lastQuestion = [questionItems objectAtIndex:(questionItems.count-1)];
-            //show the list of answers
+           firstSuggestedCaseToShow = [suggestedCases objectAtIndex:0];
         
-        self.pickerView.alpha =1;
-        self.suggestedQuestion.alpha = 0;
+        selectedItemForUpdate = caseItems.count-1;
         
-        self.checkPreviousAnswersButton.titleLabel.text = @"Showing Previous Answers";
+        NSString *lastQPropertyNum = [firstSuggestedCaseToShow objectForKey:@"propertyNum"];
+        selectedCaseItemAnswersList = [firstSuggestedCaseToShow objectForKey:@"answers"];
         
-    }
- 
-    selectedItemForUpdate = questionItems.count-1;
-    
-    NSString *lastQPropertyNum = [lastQuestion objectForKey:@"propertyNum"];
-    answersList = [lastQuestion objectForKey:@"answers"];
-    
-    answersArray = [[NSMutableArray alloc] init];
-    
-    [answersArray removeAllObjects];
-    
-    for (PFObject *eachAnsObj in answersList)
-    {
-        NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
+        answersArray = [[NSMutableArray alloc] init];
         
-        [answersArray addObject:ansNum];
-    }
-    
-    ansStaticArray = [answersArray mutableCopy];
-    
-    //retrieve the property choices for this caseItemObject from Parse.
-    
-    //add a progress HUD to show it is retrieving list of properts
-    HUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:HUD];
-    
-    // Set determinate mode
-    HUD.mode = MBProgressHUDModeDeterminate;
-    HUD.delegate = self;
-    HUD.labelText = @"Retrieving List of Properts";
-    [HUD show:YES];
-    
-     PFQuery *query = [PFQuery queryWithClassName:@"Properts"];
-    
-    //hardcoded string with 3 answers
-    //eI4q4TycPu
-    [query getObjectInBackgroundWithId:lastQPropertyNum block:^(PFObject *PropertsObject, NSError *error) {
+        [answersArray removeAllObjects];
         
-        NSString *questionString = [PropertsObject objectForKey:@"propertyDescr"];
-        
-        if (suggestedQIndex >-1)
+        for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
         {
-            NSString *suggestedQString = @"Suggested Question: ";
+            NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
             
-            self.suggestedQuestion.text = [suggestedQString stringByAppendingString:questionString];
-            
-            self.pickerView.alpha =0;
-            
+            [answersArray addObject:ansNum];
         }
         
+        ansStaticArray = [answersArray mutableCopy];
         
-        NSString *optionsString = [PropertsObject objectForKey:@"options"];
+        //show the property's information for options
+        
+        PFObject *propertsObject = [suggestedProperties objectAtIndex:0];
+        
+        NSString *questionString = [propertsObject objectForKey:@"propertyDescr"];
+        NSString *suggestedQString = @"Suggested Question: ";
+        
+        self.suggestedQuestion.text = [suggestedQString stringByAppendingString:questionString];
+        
+        self.pickerView.alpha =0;
+        
+        NSString *optionsString = [propertsObject objectForKey:@"options"];
         
         //need to convert options string to an array of objects with ; separators.
         
@@ -172,22 +201,24 @@ CLPlacemark *placemark;
         self.questionLabel.text = questionString;
         
         [self.caseDetailsTableView reloadData];
-        
-        [HUD hide:YES];
-        
+    }
+    else
+    {
+        //show no suggested question popup and don't populate the answers tableview
+        self.checkPreviousAnswersButton.titleLabel.text = @"Showing Previous Answers";
+        self.pickerView.alpha =1;
+        self.suggestedQuestion.alpha = 0;
         
     }
-     ];
+ 
+   
     
-    //here are the contents of each case item object
-   answersList = [caseItemObject objectForKey:@"answers"];
-    
+
     self.caseDetailsTableView.dataSource = self;
     self.caseDetailsTableView.delegate = self;
     
     self.pickerView.dataSource = self;
     self.pickerView.delegate = self;
-    
     
     
 }
@@ -246,8 +277,6 @@ CLPlacemark *placemark;
     //check to see if the answer should be highlighted
     cell.backgroundColor = [UIColor clearColor];
 
-    
-    
    for (NSNumber *eachAns in answersArray)
    {
        int ansInt = [eachAns integerValue];
@@ -265,8 +294,6 @@ CLPlacemark *placemark;
     
     NSInteger myIndexRow = indexPath.row;
     NSInteger optionsCount = [optionsArray count];
-    
-
     
     //for the last cell, make it show text saying "Tap Here to Add"
     if(myIndexRow == optionsCount)
@@ -413,7 +440,7 @@ CLPlacemark *placemark;
     //send an xml function with the updated answers and options.
     
     NSString *xmlString = @"<PAYLOAD><USEROBJECTID>exTJgfgotY</USEROBJECTID><LAISO>EN</LAISO><CASEOBJECTID>ZRfwJYgFYe</CASEOBJECTID><CASENAME>Sparks on my way to school yesterday</CASENAME><ITEM><CASEITEM>403</CASEITEM><PROPERTYNUM>GbietFwjDh</PROPERTYNUM><ANSWER><A>4</A></ANSWER></ITEM></PAYLOAD>";
-        PFObject *itemObjectToUpdate = questionItems [selectedItemForUpdate];
+        PFObject *itemObjectToUpdate = caseItems [selectedItemForUpdate];
   
     NSString *generatedXMLString = [self createXMLFunction:itemObjectToUpdate CreatingNewProperty:NO];
     
@@ -603,7 +630,7 @@ NSString *propertyDesc = self.questionLabel.text;
 - (NSInteger)pickerView:(UIPickerView *)pickerView
 numberOfRowsInComponent:(NSInteger)component
 {
-    return questionItems.count +1;
+    return answeredProperties.count +1;
 }
 
 /*
@@ -625,7 +652,7 @@ numberOfRowsInComponent:(NSInteger)component
 {
  
     //if they pick the very last row on the wheel, they are selecting to create a new question.
-    if(row==questionItems.count)
+    if(row==answeredProperties.count)
     {
         //show a dialogue asking if they want to create a new question
         // Customize Alert View
@@ -654,11 +681,11 @@ numberOfRowsInComponent:(NSInteger)component
     
     //query for a new set of selected answers based on this property num.
     
-    PFObject *questionItemPicked = [questionItems objectAtIndex:row];
+    PFObject *questionItemPicked = [answeredProperties objectAtIndex:row];
     selectedItemForUpdate = row;
     
     NSString *lastQPropertyNum = [questionItemPicked objectForKey:@"propertyNum"];
-    answersList = [questionItemPicked objectForKey:@"answers"];
+    selectedCaseItemAnswersList = [questionItemPicked objectForKey:@"answers"];
     //setting global var
     selectedPropertyQuestion = [questionItemPicked objectForKey:@"propertyNum"];
     
@@ -666,7 +693,7 @@ numberOfRowsInComponent:(NSInteger)component
     
     [answersArray removeAllObjects];
     
-    for (PFObject *eachAnsObj in answersList)
+    for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
     {
         NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
   
@@ -726,7 +753,7 @@ numberOfRowsInComponent:(NSInteger)component
     }
     
     //show a label to create a new property if it's the final questionItem
-    if(row ==questionItems.count)
+    if(row ==caseItems.count)
     {
         //show a button
         tView.text = @"Create New Question";
@@ -739,11 +766,8 @@ numberOfRowsInComponent:(NSInteger)component
     
     else
     {
-        
-    
-    
     // Fill the label text here
-    PFObject *questionItem = questionItems[row];
+    PFObject *questionItem = caseItems[row];
         PFObject *propObject = propsArray[row];
         NSString *PropertyString = [propObject objectForKey:@"propertyDescr"];
         
