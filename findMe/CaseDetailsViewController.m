@@ -10,6 +10,7 @@
 #import <Parse/Parse.h>
 #import "XMLWriter.h"
 #import "NewPropertyViewController.h"
+#import "UIView+Animation.h"
 
 
 @interface CaseDetailsViewController ()
@@ -23,6 +24,7 @@
 @synthesize userName;
 
 NSArray *caseItems;
+NSArray *sortedCaseItems;
 
 NSMutableArray *suggestedProperties;
 NSMutableArray *suggestedCases;
@@ -50,6 +52,9 @@ CLLocationManager *locationManager;
 CLGeocoder *geocoder;
 CLPlacemark *placemark;
 
+//used for calcaulting swipe gestures
+CGPoint startLocation;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -76,7 +81,16 @@ CLPlacemark *placemark;
     
     //get the LAST (latest) QuestionItem to display that information.
     
+    NSSortDescriptor *sortDescriptor;
+    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
+                                                 ascending:NO];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    
+ 
+    
     caseItems= [caseItemObject objectForKey:@"caseItems"];
+    
+    sortedCaseItems = [caseItems sortedArrayUsingDescriptors:sortDescriptors];
     
     //setting up arrays for storing three sets of properties and cases based on type: info messages, already answered properties, and new suggested properties
     
@@ -91,7 +105,7 @@ CLPlacemark *placemark;
     
     //get all the property ID's from each item in the selected case.
     int j = 0;
-    for (PFObject *eachCaseItem in caseItems)
+    for (PFObject *eachCaseItem in sortedCaseItems)
     {
        
         
@@ -135,20 +149,20 @@ CLPlacemark *placemark;
             {
                 //property is an info message
                 [infoMessageProperties addObject:property];
-                [infoCases addObject:caseItems[g]];
+                [infoCases addObject:sortedCaseItems[g]];
             }
         else if ([answeredPropertiesIndex containsObject:[NSNumber numberWithInt:g]])
         
             {
                 //add the property to the list of answeredProperties
                 [answeredProperties addObject:property];
-                [answeredCases addObject:caseItems[g]];
+                [answeredCases addObject:sortedCaseItems[g]];
                 
             }
         else
             {
                 [suggestedProperties addObject:property];
-                [suggestedCases addObject:caseItems[g]];
+                [suggestedCases addObject:sortedCaseItems[g]];
                 
             }
         
@@ -163,7 +177,7 @@ CLPlacemark *placemark;
     {
            firstSuggestedCaseToShow = [suggestedCases objectAtIndex:0];
         
-        selectedItemForUpdate = caseItems.count-1;
+        selectedItemForUpdate = sortedCaseItems.count-1;
         
         NSString *lastQPropertyNum = [firstSuggestedCaseToShow objectForKey:@"propertyNum"];
         selectedCaseItemAnswersList = [firstSuggestedCaseToShow objectForKey:@"answers"];
@@ -190,8 +204,6 @@ CLPlacemark *placemark;
         
         self.suggestedQuestion.text = [suggestedQString stringByAppendingString:questionString];
         
-        self.pickerView.alpha =0;
-        
         NSString *optionsString = [propertsObject objectForKey:@"options"];
         
         //need to convert options string to an array of objects with ; separators.
@@ -210,9 +222,6 @@ CLPlacemark *placemark;
         self.suggestedQuestion.alpha = 0;
         
     }
- 
-   
-    
 
     self.caseDetailsTableView.dataSource = self;
     self.caseDetailsTableView.delegate = self;
@@ -220,7 +229,83 @@ CLPlacemark *placemark;
     self.pickerView.dataSource = self;
     self.pickerView.delegate = self;
     
+    //add gesture recognizer for the suggestedQuestionBox
+   
+    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panDetected:)];
+  
+    UISwipeGestureRecognizer * swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft:)];
     
+     UISwipeGestureRecognizer * swipeRight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight:)];
+    swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
+    //[self.suggestedQuestion addGestureRecognizer:swipeLeft];
+   // [self.suggestedQuestion addGestureRecognizer:swipeRight];
+    [self.suggestedQuestion setUserInteractionEnabled:YES];
+
+    [self.suggestedQuestion addGestureRecognizer:panRecognizer];
+    
+    
+}
+- (void)swipeLeft:(UISwipeGestureRecognizer *)swipeRecognizer
+{
+    if (swipeRecognizer.state == UIGestureRecognizerStateBegan) {
+        startLocation = [swipeRecognizer locationInView:self.view];
+    }
+    else if (swipeRecognizer.state == UIGestureRecognizerStateEnded) {
+        CGPoint stopLocation = [swipeRecognizer locationInView:self.view];
+        
+        CGFloat dx = stopLocation.x - startLocation.x;
+        CGFloat dy = stopLocation.y - startLocation.y;
+        CGFloat distance = sqrt(dx*dx + dy*dy );
+        NSLog(@"Distance: %f", distance);
+        CGRect newLabelFrame =  CGRectMake(self.suggestedQuestion.frame.origin.x-dx,self.suggestedQuestion.frame.origin.y,self.suggestedQuestion.frame.size.width,self.suggestedQuestion.frame.size.height);
+        
+        self.suggestedQuestion.frame = newLabelFrame;
+    }
+    
+}
+
+- (void)swipeRight:(UISwipeGestureRecognizer *)swipeRecognizer
+{
+    if (swipeRecognizer.state == UIGestureRecognizerStateBegan) {
+        startLocation = [swipeRecognizer locationInView:self.view];
+    }
+    else if (swipeRecognizer.state == UIGestureRecognizerStateEnded) {
+        CGPoint stopLocation = [swipeRecognizer locationInView:self.view];
+        
+        CGFloat dx = stopLocation.x - startLocation.x;
+        CGFloat dy = stopLocation.y - startLocation.y;
+        CGFloat distance = sqrt(dx*dx + dy*dy );
+        NSLog(@"Distance: %f", distance);
+        CGRect newLabelFrame =  CGRectMake(self.suggestedQuestion.frame.origin.x+dx,self.suggestedQuestion.frame.origin.y,self.suggestedQuestion.frame.size.width,self.suggestedQuestion.frame.size.height);
+        
+        self.suggestedQuestion.frame = newLabelFrame;
+    }
+    
+}
+
+
+- (void)panDetected:(UIPanGestureRecognizer *)panRecognizer
+{
+    CGPoint translation = [panRecognizer translationInView:self.view];
+    //CGPoint labelViewPosition = self.suggestedQuestion.center;
+    
+    CGPoint originalOrigin= self.suggestedQuestion.frame.origin;
+    
+    
+    CGRect newLabelFrame =  CGRectMake(self.suggestedQuestion.frame.origin.x +translation.x,self.suggestedQuestion.frame.origin.y,self.suggestedQuestion.frame.size.width,self.suggestedQuestion.frame.size.height);
+    
+    self.suggestedQuestion.frame = newLabelFrame;
+    
+    [panRecognizer setTranslation:CGPointZero inView:self.view];
+    
+    //if the difference is less than 50 pixels from the original x position of the view, play an animation to "snap it back" to its original position.
+    
+    if(translation.x<=20)
+    {
+        [self.suggestedQuestion moveTo:originalOrigin duration:1.0 option:UIViewAnimationOptionCurveEaseInOut];
+        
+        
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -440,7 +525,7 @@ CLPlacemark *placemark;
     //send an xml function with the updated answers and options.
     
     NSString *xmlString = @"<PAYLOAD><USEROBJECTID>exTJgfgotY</USEROBJECTID><LAISO>EN</LAISO><CASEOBJECTID>ZRfwJYgFYe</CASEOBJECTID><CASENAME>Sparks on my way to school yesterday</CASENAME><ITEM><CASEITEM>403</CASEITEM><PROPERTYNUM>GbietFwjDh</PROPERTYNUM><ANSWER><A>4</A></ANSWER></ITEM></PAYLOAD>";
-        PFObject *itemObjectToUpdate = caseItems [selectedItemForUpdate];
+        PFObject *itemObjectToUpdate = sortedCaseItems [selectedItemForUpdate];
   
     NSString *generatedXMLString = [self createXMLFunction:itemObjectToUpdate CreatingNewProperty:NO];
     
@@ -677,11 +762,9 @@ numberOfRowsInComponent:(NSInteger)component
     else
     
     {
-    
-    
     //query for a new set of selected answers based on this property num.
     
-    PFObject *questionItemPicked = [answeredProperties objectAtIndex:row];
+    PFObject *questionItemPicked = [sortedCaseItems objectAtIndex:row];
     selectedItemForUpdate = row;
     
     NSString *lastQPropertyNum = [questionItemPicked objectForKey:@"propertyNum"];
@@ -753,7 +836,7 @@ numberOfRowsInComponent:(NSInteger)component
     }
     
     //show a label to create a new property if it's the final questionItem
-    if(row ==caseItems.count)
+    if(row ==sortedCaseItems.count)
     {
         //show a button
         tView.text = @"Create New Question";
@@ -767,12 +850,12 @@ numberOfRowsInComponent:(NSInteger)component
     else
     {
     // Fill the label text here
-    PFObject *questionItem = caseItems[row];
-        PFObject *propObject = propsArray[row];
-        NSString *PropertyString = [propObject objectForKey:@"propertyDescr"];
-        
+    PFObject *caseItem = sortedCaseItems[row];
+    PFObject *propObject = propsArray[row];
+    NSString *PropertyString = [propObject objectForKey:@"propertyDescr"];
+    NSString *propertyType = [propObject objectForKey:@"propertyType"];
     
-    NSString *origin = [questionItem objectForKey:@"origin"];
+    NSString *origin = [caseItem objectForKey:@"origin"];
     
     //If a system suggested case item, add to text.
     NSString *stringWithOrigin;
@@ -785,9 +868,25 @@ numberOfRowsInComponent:(NSInteger)component
         stringWithOrigin = PropertyString;
         
     }
-    NSArray *answers = [questionItem objectForKey:@"answers"];
+        
+        NSString *new = [caseItem objectForKey:@"new"];
+        if([new isEqualToString:@"X"])
+        {
+            tView.textColor = [UIColor blueColor];
+            
+        }
     
-    NSString *answerCount = [NSString stringWithFormat:@"%i",answers.count];
+        if([propertyType isEqualToString:@"I"])
+        {
+            stringWithOrigin = @"Info Message--Click To View";
+            tView.textColor = [UIColor redColor];
+            
+        }
+        
+    NSArray *answers = [caseItem objectForKey:@"answers"];
+    NSInteger ansCount = answers.count;
+        
+    NSString *answerCount = [NSString stringWithFormat:@"%i",(int)ansCount];
     
     NSString *stringToReturn;
     
