@@ -23,7 +23,7 @@
 
 @property (weak,nonatomic) IBOutlet UIButton *checkPreviousAnswersButton;
 
-@property (weak,nonatomic) IBOutlet UILabel *suggestedQuestion;
+@property (strong,nonatomic) IBOutlet UILabel *suggestedQuestion;
 
 @property(weak,nonatomic) IBOutlet UIPickerView *pickerView;
 

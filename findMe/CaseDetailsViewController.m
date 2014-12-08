@@ -55,6 +55,9 @@ CLPlacemark *placemark;
 //used for calcaulting swipe gestures
 CGPoint startLocation;
 
+int panningEnabled = 1;
+
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -74,7 +77,7 @@ CGPoint startLocation;
     
     
     // Do any additional setup after loading the view.
-    int *selectedCaseInt = (NSInteger *)[selectedCaseIndex integerValue];
+    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
     //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
     
     PFObject *caseItemObject = [caseListData objectAtIndex:selectedCaseInt];
@@ -286,11 +289,19 @@ CGPoint startLocation;
 
 - (void)panDetected:(UIPanGestureRecognizer *)panRecognizer
 {
+    if(panningEnabled==0)
+    {
+        NSLog(@"panning not enabled");
+        
+        return;
+        
+    }
+    
     CGPoint translation = [panRecognizer translationInView:self.view];
     //CGPoint labelViewPosition = self.suggestedQuestion.center;
     
     CGPoint originalOrigin= self.suggestedQuestion.frame.origin;
-    
+     CGRect originalQuestionFrame = self.suggestedQuestion.frame;
     
     CGRect newLabelFrame =  CGRectMake(self.suggestedQuestion.frame.origin.x +translation.x,self.suggestedQuestion.frame.origin.y,self.suggestedQuestion.frame.size.width,self.suggestedQuestion.frame.size.height);
     
@@ -300,12 +311,246 @@ CGPoint startLocation;
     
     //if the difference is less than 50 pixels from the original x position of the view, play an animation to "snap it back" to its original position.
     
-    if(translation.x<=20)
+    if(translation.x<=25)
     {
-        [self.suggestedQuestion moveTo:originalOrigin duration:1.0 option:UIViewAnimationOptionCurveEaseInOut];
+        [self.suggestedQuestion moveTo:originalOrigin duration:0.2 option:UIViewAnimationOptionCurveEaseInOut];
         
         
     }
+    else
+    {
+        NSLog(@"Starting process of removing the suggestedQuestion Label");
+        
+        //setting this variable to 0 to restrict the panning from doing anything until the timer goes off to re-enable that UI
+        panningEnabled = 0;
+        
+        
+        NSTimer *timer = [NSTimer timerWithTimeInterval:0.3
+                                                 target:self
+                                               selector:@selector(PanningEnabled:)
+                                               userInfo:nil repeats:NO];
+        [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+        
+       
+        
+        //animate the questionLabel being removed
+        [self.suggestedQuestion removeWithZoomOutAnimation:0.2 option:UIViewAnimationOptionCurveEaseInOut];
+        
+        //remove the suggestedCase from relevant arrays
+        PFObject *caseToRemove = [suggestedCases objectAtIndex:0];
+        [suggestedCases removeObjectAtIndex:0];
+        [suggestedProperties removeObjectAtIndex:0];
+        
+        //send to the backend to delete this suggestion from the case
+        //only do this if the caseObjectID is not nil (it's not just a returned template)
+        int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+        //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
+        
+        PFObject *caseObject = [caseListData objectAtIndex:selectedCaseInt];
+        NSString *caseObjectID = [caseObject objectForKey:@"caseId"];
+        
+        int length = (int)[caseObjectID length];
+        
+        if(length==0)
+        {
+            NSLog(@"caseObject Nil");
+            
+        }
+        else
+        {
+           [self deleteACaseItem:caseToRemove];
+        }
+        
+        
+        //check to see if there is another object still in the suggestedCases
+        //update the options in the tableview below to reflect the suggested cases information
+        
+        int suggestedCaseArrayCount = (int)[suggestedCases count];
+        
+        
+        if(suggestedCaseArrayCount >0)
+            
+            {
+            //create and animate in another suggestedQuestionLabel
+            //change the color so it's clear it's new.
+            self.suggestedQuestion = [[UILabel alloc] init];
+                UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panDetected:)];
+            [self.suggestedQuestion setUserInteractionEnabled:YES];
+            [self.suggestedQuestion addGestureRecognizer:panRecognizer];
+                
+            self.suggestedQuestion.backgroundColor = [UIColor blueColor];
+            self.suggestedQuestion.alpha = 0.8;
+            self.suggestedQuestion.textAlignment = NSTextAlignmentCenter;
+            self.suggestedQuestion.frame = originalQuestionFrame;
+            
+            [self.view SlideFromLeft:self.suggestedQuestion duration:0.2 option:UIViewAnimationOptionCurveEaseInOut];
+                
+           
+            
+        //update options based on this new suggestedQuestion
+            
+            PFObject *newSuggestedCaseToShow = [suggestedCases objectAtIndex:0];
+            
+            selectedCaseItemAnswersList = [newSuggestedCaseToShow objectForKey:@"answers"];
+            
+            answersArray = [[NSMutableArray alloc] init];
+            
+            [answersArray removeAllObjects];
+            
+            for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
+            {
+                NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
+                
+                [answersArray addObject:ansNum];
+            }
+            
+            ansStaticArray = [answersArray mutableCopy];
+            
+            //show the property's information for options
+            
+            PFObject *propertsObject = [suggestedProperties objectAtIndex:0];
+            
+            NSString *questionString = [propertsObject objectForKey:@"propertyDescr"];
+            NSString *suggestedQString = @"Suggested Question: ";
+            
+            self.suggestedQuestion.text = [suggestedQString stringByAppendingString:questionString];
+            
+            NSString *optionsString = [propertsObject objectForKey:@"options"];
+            
+            //need to convert options string to an array of objects with ; separators.
+            
+            optionsArray = [optionsString componentsSeparatedByString:@";"];
+            
+            self.questionLabel.text = questionString;
+            
+            [self.caseDetailsTableView reloadData];
+            
+            }
+        else
+        {
+            //no more suggestions to show
+            NSLog(@"setting pickerview alpha to 1");
+               self.pickerView.alpha = 1;
+        }
+     
+        
+    }
+}
+
+-(void)PanningEnabled:(id)sender
+{
+   panningEnabled = 1;
+}
+
+
+
+- (void)deleteACaseItem:(PFObject *)itemObject
+{
+    //construct XML to delete the caseItemObject
+    //hardcoded example:
+    /*
+    <PAYLOAD>
+    <USEROBJECTID>iGsK0mxn1A</USEROBJECTID>
+    <LAISO>EN</LAISO>
+    <CASEOBJECTID>kqIKYJnTj8</CASEOBJECTID>
+    <CASENAME>Multiple answers example</CASENAME>
+    <ITEM>
+    <CASEITEM>1</CASEITEM>
+    <PROPERTYNUM>cpJqMRQnSs</PROPERTYNUM>
+    <DELETIONFLAG>X</DELETIONFLAG>
+    </ITEM>
+    </PAYLOAD>
+     */
+    
+    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+    //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
+    
+    PFObject *caseObject = [caseListData objectAtIndex:selectedCaseInt];
+    NSString *caseObjectID = [caseObject objectForKey:@"caseId"];
+    
+    NSString *caseItem = [itemObject objectForKey:@"caseItem"];
+    NSString *propertyNum = [itemObject objectForKey:@"propertyNum"];
+     NSString *caseName = [caseObject objectForKey:@"caseName"];
+    
+    //get the selected property from the chooser element.
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:userName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"CASEOBJECTID"];
+    [xmlWriter writeCharacters:caseObjectID];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:caseName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"ITEM"];
+    
+    [xmlWriter writeStartElement:@"CASEITEM"];
+    [xmlWriter writeCharacters:caseItem];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"PROPERTYNUM"];
+    [xmlWriter writeCharacters:propertyNum];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"DELETIONFLAG"];
+    [xmlWriter writeCharacters:@"X"];
+    [xmlWriter writeEndElement];
+    
+    // close ITEM element
+    [xmlWriter writeEndElement];
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    //add a progress HUD to show it is retrieving list of properts
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Deleting the CaseItem";
+    [HUD show:YES];
+    
+    //use parse cloud code function
+    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+                       withParameters:@{@"payload": xml}
+                                block:^(NSString *responseString, NSError *error) {
+                                    if (!error) {
+                                        
+                                        NSString *responseText = responseString;
+                                        NSLog(responseText);
+                                        
+                                        [HUD hide:YES];
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSLog(error.localizedDescription);
+                                        [HUD hide:YES];
+                                        
+                                    }
+                                }];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -715,7 +960,7 @@ NSString *propertyDesc = self.questionLabel.text;
 - (NSInteger)pickerView:(UIPickerView *)pickerView
 numberOfRowsInComponent:(NSInteger)component
 {
-    return answeredProperties.count +1;
+    return propsArray.count +1;
 }
 
 /*
@@ -737,7 +982,7 @@ numberOfRowsInComponent:(NSInteger)component
 {
  
     //if they pick the very last row on the wheel, they are selecting to create a new question.
-    if(row==answeredProperties.count)
+    if(row==propsArray.count)
     {
         //show a dialogue asking if they want to create a new question
         // Customize Alert View
@@ -764,7 +1009,7 @@ numberOfRowsInComponent:(NSInteger)component
     {
     //query for a new set of selected answers based on this property num.
     
-    PFObject *questionItemPicked = [sortedCaseItems objectAtIndex:row];
+    PFObject *questionItemPicked = [sortedCaseItems objectAtIndex:row-1];
     selectedItemForUpdate = row;
     
     NSString *lastQPropertyNum = [questionItemPicked objectForKey:@"propertyNum"];

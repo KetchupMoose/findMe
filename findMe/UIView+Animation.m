@@ -126,9 +126,6 @@
 {
     //[UIView setAnimationDuration:0.3/1.5];
     [UIView setAnimationDelegate:self];
-    
-    
-   
   
     [UIView animateWithDuration:0.2 animations:^{
         view.transform =  view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.001, 0.001);
