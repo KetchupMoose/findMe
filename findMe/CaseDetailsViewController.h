@@ -22,6 +22,8 @@
 -(IBAction)getPreviousAnswers:(id)sender;
 
 @property (weak,nonatomic) IBOutlet UIButton *checkPreviousAnswersButton;
+@property (weak,nonatomic) IBOutlet UIButton *submitAnswersButton;
+
 
 @property (strong,nonatomic) IBOutlet UILabel *suggestedQuestion;
 

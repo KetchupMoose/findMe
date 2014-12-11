@@ -630,7 +630,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = findMe;
-				PROVISIONING_PROFILE = "99a2510b-9bb0-4114-98e0-c0f0e4581f50";
+				PROVISIONING_PROFILE = "b848f95e-31fd-43b1-9d6a-9ee077d5fa64";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -666,7 +666,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = findMe;
-				PROVISIONING_PROFILE = "99a2510b-9bb0-4114-98e0-c0f0e4581f50";
+				PROVISIONING_PROFILE = "b848f95e-31fd-43b1-9d6a-9ee077d5fa64";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -689,7 +689,7 @@
 				GCC_PREFIX_HEADER = "findMe/findme-Prefix.pch";
 				INFOPLIST_FILE = findMe/findmeInfo.plist;
 				PRODUCT_NAME = findme;
-				PROVISIONING_PROFILE = "99a2510b-9bb0-4114-98e0-c0f0e4581f50";
+				PROVISIONING_PROFILE = "b848f95e-31fd-43b1-9d6a-9ee077d5fa64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -710,7 +710,7 @@
 				GCC_PREFIX_HEADER = "findMe/findme-Prefix.pch";
 				INFOPLIST_FILE = findMe/findmeInfo.plist;
 				PRODUCT_NAME = findme;
-				PROVISIONING_PROFILE = "99a2510b-9bb0-4114-98e0-c0f0e4581f50";
+				PROVISIONING_PROFILE = "b848f95e-31fd-43b1-9d6a-9ee077d5fa64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

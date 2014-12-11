@@ -678,14 +678,11 @@ MBProgressHUD *HUD;
     //send the latest case information to
     NSNumber *selectedIndex = [NSNumber numberWithInt:lastCaseInt];
     
-    
-    
     CaseDetailsViewController *cdvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdvc"];
     
     cdvc.selectedCaseIndex=selectedIndex;
     cdvc.caseListData = itsMTLCases;
     cdvc.userName = itsMTLObject.objectId;
-    
     
     [self.navigationController pushViewController:cdvc animated:YES];
 }

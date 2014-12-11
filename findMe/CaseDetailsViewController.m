@@ -24,7 +24,7 @@
 @synthesize userName;
 
 NSArray *caseItems;
-NSArray *sortedCaseItems;
+NSMutableArray *sortedCaseItems;
 
 NSMutableArray *suggestedProperties;
 NSMutableArray *suggestedCases;
@@ -33,12 +33,16 @@ NSMutableArray *answeredCases;
 NSMutableArray *answeredPropertiesIndex;
 NSMutableArray *infoMessageProperties;
 NSMutableArray *infoCases;
+NSMutableArray *NoAnswerCases;
+NSMutableArray *NoAnswerProperties;
+NSMutableArray *suggestedCaseIndex;
+
 
 
 NSArray *selectedCaseItemAnswersList;
 NSArray *optionsArray;
 NSArray *ansStaticArray;
-NSArray *propsArray;
+NSMutableArray *propsArray;
 NSMutableArray *propertyIDSArray;
 NSMutableArray *answersArray;
 //need to set selectedPropertyQuestion from the question picked by the pickerView
@@ -82,6 +86,15 @@ int panningEnabled = 1;
     
     PFObject *caseItemObject = [caseListData objectAtIndex:selectedCaseInt];
     
+    NSString *caseObjectID = [caseItemObject objectForKey:@"caseId"];
+    
+    int length = (int)[caseObjectID length];
+    
+    if(length==0)
+    {
+        self.submitAnswersButton.titleLabel.text = @"Create Case";
+        
+    }
     //get the LAST (latest) QuestionItem to display that information.
     
     NSSortDescriptor *sortDescriptor;
@@ -89,11 +102,9 @@ int panningEnabled = 1;
                                                  ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     
- 
-    
     caseItems= [caseItemObject objectForKey:@"caseItems"];
     
-    sortedCaseItems = [caseItems sortedArrayUsingDescriptors:sortDescriptors];
+    sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
     
     //setting up arrays for storing three sets of properties and cases based on type: info messages, already answered properties, and new suggested properties
     
@@ -105,13 +116,13 @@ int panningEnabled = 1;
     infoMessageProperties = [[NSMutableArray alloc] init];
     suggestedProperties = [[NSMutableArray alloc] init];
     suggestedCases = [[NSMutableArray alloc] init];
+    suggestedCaseIndex = [[NSMutableArray alloc] init];
+    
     
     //get all the property ID's from each item in the selected case.
     int j = 0;
     for (PFObject *eachCaseItem in sortedCaseItems)
     {
-       
-        
         NSString *propNum = [eachCaseItem objectForKey:@"propertyNum"];
         [propertyIDSArray addObject:propNum];
         
@@ -139,8 +150,9 @@ int panningEnabled = 1;
     //get all the property information for the list of properties to consider
     PFQuery *propertsQuery = [PFQuery queryWithClassName:@"Properts"];
     [propertsQuery whereKey:@"objectId" containedIn:propertyIDSArray];
+    [propertsQuery orderByDescending:@"priority"];
     
-    propsArray = [propertsQuery findObjects];
+    propsArray = [[propertsQuery findObjects] mutableCopy];
     
     //sort the properties into three categories based on their type: info messages, answeredQuestions, and new suggestions
     int g = 0;
@@ -162,10 +174,18 @@ int panningEnabled = 1;
                 [answeredCases addObject:sortedCaseItems[g]];
                 
             }
+        else if([propType isEqual:@"N"])
+        {
+            [NoAnswerProperties addObject:property];
+            [NoAnswerCases addObject:sortedCaseItems[g]];
+        }
+        
         else
             {
                 [suggestedProperties addObject:property];
                 [suggestedCases addObject:sortedCaseItems[g]];
+                NSNumber *caseIndex = [NSNumber numberWithInt:g];
+                [suggestedCaseIndex addObject:caseIndex];
                 
             }
         
@@ -178,11 +198,13 @@ int panningEnabled = 1;
     PFObject *firstSuggestedCaseToShow;
     if (suggestedCases.count >0)
     {
-           firstSuggestedCaseToShow = [suggestedCases objectAtIndex:0];
+        firstSuggestedCaseToShow = [suggestedCases objectAtIndex:0];
         
-        selectedItemForUpdate = sortedCaseItems.count-1;
+        NSNumber *firstSuggestionIndex = [suggestedCaseIndex objectAtIndex:0];
         
-        NSString *lastQPropertyNum = [firstSuggestedCaseToShow objectForKey:@"propertyNum"];
+        selectedItemForUpdate = [firstSuggestionIndex integerValue];
+        
+        //NSString *lastQPropertyNum = [firstSuggestedCaseToShow objectForKey:@"propertyNum"];
         selectedCaseItemAnswersList = [firstSuggestedCaseToShow objectForKey:@"answers"];
         
         answersArray = [[NSMutableArray alloc] init];
@@ -340,6 +362,19 @@ int panningEnabled = 1;
         PFObject *caseToRemove = [suggestedCases objectAtIndex:0];
         [suggestedCases removeObjectAtIndex:0];
         [suggestedProperties removeObjectAtIndex:0];
+        NSNumber *indexNum = suggestedCaseIndex[0];
+        NSInteger indexInt = [indexNum integerValue];
+        
+        //remove this case from the overall arrays also
+        [sortedCaseItems removeObjectAtIndex:indexInt];
+        [propsArray removeObjectAtIndex:indexInt];
+        
+        //remove the selected data for this suggestion from the tableView, make Tableview invisible
+        self.caseDetailsTableView.alpha = 0;
+        
+        //reload the pickerview data to reflect this exiting the array
+        [self.pickerView reloadAllComponents];
+        
         
         //send to the backend to delete this suggestion from the case
         //only do this if the caseObjectID is not nil (it's not just a returned template)
@@ -354,13 +389,13 @@ int panningEnabled = 1;
         if(length==0)
         {
             NSLog(@"caseObject Nil");
+            //dont do any backend removal, just ensure it's removed from the information that will be sent to create the new case.
             
         }
         else
         {
            [self deleteACaseItem:caseToRemove];
         }
-        
         
         //check to see if there is another object still in the suggestedCases
         //update the options in the tableview below to reflect the suggested cases information
@@ -382,10 +417,11 @@ int panningEnabled = 1;
             self.suggestedQuestion.alpha = 0.8;
             self.suggestedQuestion.textAlignment = NSTextAlignmentCenter;
             self.suggestedQuestion.frame = originalQuestionFrame;
+            self.suggestedQuestion.numberOfLines = 5;
+            self.suggestedQuestion.lineBreakMode = NSLineBreakByWordWrapping;
+                
             
             [self.view SlideFromLeft:self.suggestedQuestion duration:0.2 option:UIViewAnimationOptionCurveEaseInOut];
-                
-           
             
         //update options based on this new suggestedQuestion
             
@@ -442,7 +478,10 @@ int panningEnabled = 1;
    panningEnabled = 1;
 }
 
-
+-(void)deleteCaseItemLocally
+{
+    
+}
 
 - (void)deleteACaseItem:(PFObject *)itemObject
 {
@@ -767,6 +806,12 @@ int panningEnabled = 1;
 
 -(IBAction)doUpdate:(id)sender
 {
+    if(selectedItemForUpdate ==-1)
+    {
+        //you must select an item to update first.
+        
+    }
+    
     //send an xml function with the updated answers and options.
     
     NSString *xmlString = @"<PAYLOAD><USEROBJECTID>exTJgfgotY</USEROBJECTID><LAISO>EN</LAISO><CASEOBJECTID>ZRfwJYgFYe</CASEOBJECTID><CASENAME>Sparks on my way to school yesterday</CASENAME><ITEM><CASEITEM>403</CASEITEM><PROPERTYNUM>GbietFwjDh</PROPERTYNUM><ANSWER><A>4</A></ANSWER></ITEM></PAYLOAD>";
@@ -1009,13 +1054,40 @@ numberOfRowsInComponent:(NSInteger)component
     {
     //query for a new set of selected answers based on this property num.
     
-    PFObject *questionItemPicked = [sortedCaseItems objectAtIndex:row-1];
+   
+    PFObject *questionItemPicked = [sortedCaseItems objectAtIndex:row];
     selectedItemForUpdate = row;
     
-    NSString *lastQPropertyNum = [questionItemPicked objectForKey:@"propertyNum"];
     selectedCaseItemAnswersList = [questionItemPicked objectForKey:@"answers"];
     //setting global var
-    selectedPropertyQuestion = [questionItemPicked objectForKey:@"propertyNum"];
+    
+    
+    PFObject *selectedProperty = [propsArray objectAtIndex:row];
+    
+    NSString *propertyType = [selectedProperty objectForKey:@"propertyType"];
+        
+    if([propertyType isEqualToString:@"I"])
+    {
+        //display an info message, hide the options view
+        self.caseDetailsTableView.alpha = 0;
+        
+        NSString *infoMsg = [selectedProperty objectForKey:@"propertyDescr"];
+        
+         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Info Message", nil) message:NSLocalizedString(infoMsg, nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        
+    }
+    else
+        if([propertyType isEqualToString:@"N"])
+    {
+        //do nothing, hide the options view
+        self.caseDetailsTableView.alpha = 0;
+        
+    }
+    else
+    {
+        self.caseDetailsTableView.alpha = 1;
+        
+    
     
     answersArray = [[NSMutableArray alloc] init];
     
@@ -1032,18 +1104,12 @@ numberOfRowsInComponent:(NSInteger)component
 
     //retrieve the property choices for this caseItemObject from Parse.
     
-    PFQuery *query = [PFQuery queryWithClassName:@"Properts"];
-    
-    //hardcoded string with 3 answers
-    //eI4q4TycPu
-    [query getObjectInBackgroundWithId:lastQPropertyNum block:^(PFObject *PropertsObject, NSError *error) {
-        
-        NSString *questionString = [PropertsObject objectForKey:@"propertyDescr"];
+        NSString *questionString = [selectedProperty objectForKey:@"propertyDescr"];
         
         self.questionLabel.text = questionString;
         
         
-        NSString *optionsString = [PropertsObject objectForKey:@"options"];
+        NSString *optionsString = [selectedProperty objectForKey:@"options"];
         
         NSLog(@"%@",optionsString);
         
@@ -1056,7 +1122,7 @@ numberOfRowsInComponent:(NSInteger)component
         [self.caseDetailsTableView reloadData];
 
     }
-     ];
+        
     }
     
 }
@@ -1107,6 +1173,8 @@ numberOfRowsInComponent:(NSInteger)component
     if([origin isEqualToString:@"S"])
     {
         stringWithOrigin = [@"Suggested Property: " stringByAppendingString:PropertyString];
+        //tView.font = [UIFont boldSystemFontOfSize:12];
+        
     }
     else
     {
@@ -1128,6 +1196,12 @@ numberOfRowsInComponent:(NSInteger)component
             
         }
         
+        if ([propertyType isEqualToString:@"N"])
+        {
+            tView.textColor = [UIColor lightGrayColor];
+            
+        }
+        
     NSArray *answers = [caseItem objectForKey:@"answers"];
     NSInteger ansCount = answers.count;
         
@@ -1146,10 +1220,7 @@ numberOfRowsInComponent:(NSInteger)component
         stringToReturn = stringWithOrigin;
         
     }
-    
-    
-    
-    //Inefficient design here with lots of parse queries; need a better way to do an include query that includes all of the property titles.
+  
     tView.text = stringToReturn;
     
     return tView;
