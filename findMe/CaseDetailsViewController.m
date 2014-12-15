@@ -36,6 +36,9 @@ NSMutableArray *infoCases;
 NSMutableArray *NoAnswerCases;
 NSMutableArray *NoAnswerProperties;
 NSMutableArray *suggestedCaseIndex;
+NSMutableArray *updatedPropertiesIndex;
+
+
 
 
 
@@ -117,6 +120,8 @@ int panningEnabled = 1;
     suggestedProperties = [[NSMutableArray alloc] init];
     suggestedCases = [[NSMutableArray alloc] init];
     suggestedCaseIndex = [[NSMutableArray alloc] init];
+    updatedPropertiesIndex = [[NSMutableArray alloc] init];
+    
     
     
     //get all the property ID's from each item in the selected case.
@@ -245,6 +250,50 @@ int panningEnabled = 1;
         self.checkPreviousAnswersButton.titleLabel.text = @"Showing Previous Answers";
         self.pickerView.alpha =1;
         self.suggestedQuestion.alpha = 0;
+        self.caseDetailsTableView.alpha =0;
+        
+        //check to see if the first priority case in case items is an answered question.  If so, display the list of options.
+        
+        if ([answeredPropertiesIndex containsObject:[NSNumber numberWithInt:0]])
+        {
+            //display the list of options & answers for this case on the first index
+            
+            firstSuggestedCaseToShow = [sortedCaseItems objectAtIndex:0];
+            
+            //selectedItemForUpdate = [firstSuggestionIndex integerValue];
+            
+            //NSString *lastQPropertyNum = [firstSuggestedCaseToShow objectForKey:@"propertyNum"];
+            selectedCaseItemAnswersList = [firstSuggestedCaseToShow objectForKey:@"answers"];
+            
+            answersArray = [[NSMutableArray alloc] init];
+            
+            [answersArray removeAllObjects];
+            
+            for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
+            {
+                NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
+                
+                [answersArray addObject:ansNum];
+            }
+            
+            ansStaticArray = [answersArray mutableCopy];
+            
+            //show the property's information for options
+            
+            PFObject *propertsObject = [propsArray objectAtIndex:0];
+            
+            NSString *optionsString = [propertsObject objectForKey:@"options"];
+            
+            //need to convert options string to an array of objects with ; separators.
+            
+            optionsArray = [optionsString componentsSeparatedByString:@";"];
+                        
+            self.caseDetailsTableView.alpha = 1;
+            
+            [self.caseDetailsTableView reloadData];
+
+            
+        }
         
     }
 
@@ -646,20 +695,15 @@ int panningEnabled = 1;
     //check to see if the answer should be highlighted
     cell.backgroundColor = [UIColor clearColor];
 
-   for (NSNumber *eachAns in answersArray)
-   {
-       int ansInt = [eachAns integerValue];
-       //adjusting index down 1 since George's values start at 1
-       ansInt = ansInt-1;
-       
-       if(ansInt==indexPath.row)
-       {
-           //highlight this cell in the table as one of the selected answers
-           cell.backgroundColor = [UIColor greenColor];
-           
-       }
-      
-   }
+    //change this logic to check if the index path is present in the answers array, then color it green color.
+    NSString *rowNumber = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
+    
+    if([answersArray containsObject:rowNumber])
+    {
+        cell.backgroundColor = [UIColor greenColor];
+        
+    }
+   
     
     NSInteger myIndexRow = indexPath.row;
     NSInteger optionsCount = [optionsArray count];
@@ -806,18 +850,18 @@ int panningEnabled = 1;
 
 -(IBAction)doUpdate:(id)sender
 {
-    if(selectedItemForUpdate ==-1)
-    {
-        //you must select an item to update first.
-        
-    }
+    //if in setting answers mode, just update the internal arrays of answers for caseItems
+    
     
     //send an xml function with the updated answers and options.
-    
+    //hardcoded XML example
+    /*
     NSString *xmlString = @"<PAYLOAD><USEROBJECTID>exTJgfgotY</USEROBJECTID><LAISO>EN</LAISO><CASEOBJECTID>ZRfwJYgFYe</CASEOBJECTID><CASENAME>Sparks on my way to school yesterday</CASENAME><ITEM><CASEITEM>403</CASEITEM><PROPERTYNUM>GbietFwjDh</PROPERTYNUM><ANSWER><A>4</A></ANSWER></ITEM></PAYLOAD>";
-        PFObject *itemObjectToUpdate = sortedCaseItems [selectedItemForUpdate];
+     */
+    
+    //brian dec 14--change this to update all objects instead
   
-    NSString *generatedXMLString = [self createXMLFunction:itemObjectToUpdate CreatingNewProperty:NO];
+    NSString *generatedXMLString = [self createXMLFunction];
     
     //add a progress HUD to show it is retrieving list of properts
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -857,16 +901,18 @@ int panningEnabled = 1;
     
 }
 
--(NSString *)createXMLFunction:(PFObject *)itemObject CreatingNewProperty:(BOOL) NewProp
+-(NSString *)createXMLFunction
 {
-    int *selectedCaseInt = (NSInteger *)[selectedCaseIndex integerValue];
+    //iterate through all items still in the caseitems and property arrays and send XML to update all of these (either with their original contents or the modifications/new entries)
+    
+   NSInteger selectedCaseInt = [selectedCaseIndex integerValue];
     PFObject *caseObject = [caseListData objectAtIndex:selectedCaseInt];
     
     
 NSString *caseName = [caseObject objectForKey:@"caseName"];
 NSString *caseObjID = [caseObject objectForKey:@"caseId"];
-NSString *propertyNum = [itemObject objectForKey:@"propertyNum"];
-NSString *propertyDesc = self.questionLabel.text;
+//NSString *propertyNum = [itemObject objectForKey:@"propertyNum"];
+//NSString *propertyDesc = self.questionLabel.text;
     
     
     //get the selected property from the chooser element.
@@ -902,82 +948,105 @@ NSString *propertyDesc = self.questionLabel.text;
     //build strings for adding properties
     //Nov 24 2014
     //changing logic so that it only creates a new property portion if the user really chose to create a new one.
-    if(NewProp ==TRUE)
+    //Dec 14 2014
+    //changing logic to iterate through all properties and case items in the array and update with their contents.  New properties will need to be added to these arrays.
+    
+    int g = 0;
+    for (PFObject *eachCaseItem in sortedCaseItems)
     {
+        PFObject *updatedProperty = [propsArray objectAtIndex:g];
+        NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
+        NSString *propertyDescr = [updatedProperty objectForKey:@"propertyDescr"];
+
         
-        [xmlWriter writeStartElement:@"PROPERTY"];
-    
-    
+        //check to see if this item is in the array of new properties
+        NSNumber *LoopIndexNum = [NSNumber numberWithInt:g];
+        if([updatedPropertiesIndex containsObject:LoopIndexNum])
+        
+        {
+            //add the XML for a new or updated property here
+            
+            [xmlWriter writeStartElement:@"PROPERTY"];
+            
+            
             [xmlWriter writeStartElement:@"PROPERTYNUM"];
             [xmlWriter writeCharacters:propertyNum];
             [xmlWriter writeEndElement];
-    
+            
             [xmlWriter writeStartElement:@"PROPERTYDESCR"];
-            [xmlWriter writeCharacters:propertyDesc];
+            [xmlWriter writeCharacters:propertyDescr];
             [xmlWriter writeEndElement];
-    
-        //go through the list of options for the selected case.
-
+            
+            //go through the list of options for the selected case.
+            
             [xmlWriter writeStartElement:@"OPTIONS"];
-    
-        //generate list of strings from options
-        int i = 0;
-        NSString *fullCharsString = @"";
-        for(NSString *optionString in optionsArray)
-        {
-            i = i+1;
-     
-            fullCharsString = [fullCharsString stringByAppendingString:optionString];
-        
-            if  (i!= [optionsArray count])
+            
+            //generate list of strings from options
+            int i = 0;
+            NSString *fullCharsString = @"";
+            for(NSString *optionString in optionsArray)
             {
-            fullCharsString = [fullCharsString stringByAppendingString:@";"];
+                i = i+1;
+                
+                fullCharsString = [fullCharsString stringByAppendingString:optionString];
+                
+                if  (i!= [optionsArray count])
+                {
+                    fullCharsString = [fullCharsString stringByAppendingString:@";"];
+                }
+                
             }
-        
-        }
             [xmlWriter writeCharacters:fullCharsString];
             [xmlWriter writeEndElement];
-    
-        [xmlWriter writeEndElement];
+            
+            //close property element
+            [xmlWriter writeEndElement];
+
+        }
         
-    }
-    
-    //build strings for building item
-    [xmlWriter writeStartElement:@"ITEM"];
-    
+        //write logic for updating the caseItem
+        //build strings for building item
+        [xmlWriter writeStartElement:@"ITEM"];
+        
         [xmlWriter writeStartElement:@"CASEITEM"];
         [xmlWriter writeCharacters:@"9000"];
         [xmlWriter writeEndElement];
-    
+        
         [xmlWriter writeStartElement:@"PROPERTYNUM"];
         [xmlWriter writeCharacters:propertyNum];
         [xmlWriter writeEndElement];
-    
-    
-    //write all the possible answers
-    //Nov-01-2014--this will be changing in the future to show CUSTOM instead of A and show the actual strings instead of the answer index.
-    
-    for (NSNumber *ansNumber in answersArray)
-    {
-        //build a new answer element
-        NSInteger myInt = [ansNumber integerValue];
         
-        myInt = myInt;
+        //write all the possible answers
         
-        NSString *ansString = [NSString stringWithFormat:@"%i",myInt];
         
-        [xmlWriter writeStartElement:@"ANSWER"];
+        for (NSNumber *ansNumber in answersArray)
+        {
+            //build a new answer element
+            NSInteger myInt = [ansNumber integerValue];
+            
+            myInt = myInt;
+            
+            NSString *ansString = [NSString stringWithFormat:@"%i",myInt];
+            
+            [xmlWriter writeStartElement:@"ANSWER"];
+            
+            [xmlWriter writeStartElement:@"A"];
+            [xmlWriter writeCharacters:ansString];
+            [xmlWriter writeEndElement];
+            
+            [xmlWriter writeEndElement];
+            
+        }
         
-        [xmlWriter writeStartElement:@"A"];
-        [xmlWriter writeCharacters:ansString];
+        //close item element
         [xmlWriter writeEndElement];
+
+        //iterate to the next item in the sortedCasesArray
+        g =g+1;
         
-        [xmlWriter writeEndElement];
         
     }
     
-    //close item element
-    [xmlWriter writeEndElement];
     
     
     // close payload element
