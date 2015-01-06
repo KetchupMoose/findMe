@@ -18,5 +18,7 @@
 - (IBAction)MyMatches:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *MyProfileButton;
 - (IBAction)MyProfile:(id)sender;
+- (IBAction)TestProfileButton:(id)sender;
+
 
 @end

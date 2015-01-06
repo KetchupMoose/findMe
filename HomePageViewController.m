@@ -179,7 +179,7 @@ MBProgressHUD *HUD;
 }
 - (IBAction)ViewMyCases:(id)sender {
     ViewCasesViewController *vcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"vcvc"];
-    vcvc.userName = HomePageITSMTLObject.objectId;
+    vcvc.userName = HomePageuserName;
     
     [self.navigationController pushViewController:vcvc animated:YES];
     
@@ -191,4 +191,70 @@ MBProgressHUD *HUD;
 - (IBAction)MyProfile:(id)sender {
     
 }
+
+- (IBAction)TestProfileButton:(id)sender
+{
+    //set hardcoded value for homepageusername
+    //yh5YoZSXRW
+    //e9eAifIkyD
+    HomePageuserName = @"yh5YoZSXRW";
+    
+    //query for data based on this itsMTLobject and reload data on the home page
+    
+    [self ReloadHomePageData];
+    
+}
+
+-(void)ReloadHomePageData {
+
+    //add a progress HUD to show it is retrieving list of cases
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+ 
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Retrieving Cases";
+    [HUD show:YES];
+    
+    //needs to query for the user and pull some info
+    PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
+    [query getObjectInBackgroundWithId:HomePageuserName block:^(PFObject *latestCaseList, NSError *error) {
+        // Do something with the returned PFObject
+        NSLog(@"%@", latestCaseList);
+        
+        [HUD hide:NO];
+        
+        //do some logic to sort through these cases and see how many have matches, how many are awaiting more info.
+        NSArray *cases = [latestCaseList objectForKey:@"cases"];
+        
+        int caseCount = (int)cases.count;
+        
+        UIView *bubbleIndicatorCases = [[UIView alloc] init];
+        int bubbleWidth = 20;
+        int bubbleHeight = 20;
+        
+        [bubbleIndicatorCases setFrame:CGRectMake(ViewMyCasesButton.frame.origin.x+ViewMyCasesButton.frame.size.width-bubbleWidth/2,ViewMyCasesButton.frame.origin.y-bubbleHeight/2,bubbleWidth,bubbleHeight)];
+        
+        bubbleIndicatorCases.backgroundColor = [UIColor redColor];
+        
+        UILabel *bubbleNumber = [[UILabel alloc] initWithFrame:bubbleIndicatorCases.bounds];
+        
+        bubbleNumber.text = [NSString stringWithFormat:@"%i",caseCount];
+        
+        [bubbleNumber setTextAlignment:NSTextAlignmentCenter];
+        
+        [bubbleIndicatorCases addSubview:bubbleNumber];
+        
+        bubbleIndicatorCases.layer.cornerRadius = 9.0;
+        bubbleIndicatorCases.layer.masksToBounds = YES;
+        
+        [self.view addSubview:bubbleIndicatorCases];
+        
+    }];
+
+    
+}
+
 @end

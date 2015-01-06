@@ -55,8 +55,6 @@ UIRefreshControl *refreshControl;
     [query getObjectInBackgroundWithId:userName block:^(PFObject *latestCaseList, NSError *error) {
         // Do something with the returned PFObject
         
-       
-        
         NSLog(@"%@", latestCaseList);
        caseListJSON = [latestCaseList objectForKey:@"cases"];
         
@@ -77,9 +75,7 @@ UIRefreshControl *refreshControl;
             
         }
        
-        
         [casesTableView reloadData];
-        
         
         [HUD hide:YES];
         
@@ -89,15 +85,10 @@ UIRefreshControl *refreshControl;
         
         //NSString *jsonBlob1 = [jsonBlobArray objectAtIndex:0];
         
-        
        // NSLog(jsonBlob1);
-        
         
     }];
     
-   
-    
-  
 }
 
 - (void)didReceiveMemoryWarning
@@ -136,9 +127,9 @@ UIRefreshControl *refreshControl;
 
 
 #pragma mark UITableViewDelegateMethods
--(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [caseListPruned count];
+    return (NSInteger)[caseListPruned count];
     
 }
 
