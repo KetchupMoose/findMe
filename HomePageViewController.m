@@ -241,7 +241,9 @@ MBProgressHUD *HUD;
         
         UILabel *bubbleNumber = [[UILabel alloc] initWithFrame:bubbleIndicatorCases.bounds];
         
-        bubbleNumber.text = [NSString stringWithFormat:@"%i",caseCount];
+        NSString *bubbleCountString = [latestCaseList objectForKey:@"bubbleCount"];
+        
+        bubbleNumber.text = [NSString stringWithFormat:@"%@",bubbleCountString];
         
         [bubbleNumber setTextAlignment:NSTextAlignmentCenter];
         

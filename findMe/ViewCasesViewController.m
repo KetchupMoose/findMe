@@ -116,6 +116,19 @@ UIRefreshControl *refreshControl;
     
     NSLog(@"%@", latestCaseList);
     caseListJSON = [latestCaseList objectForKey:@"cases"];
+    [caseListPruned removeAllObjects];
+    
+    for (PFObject *caseObject in caseListJSON)
+    {
+        
+        NSString *caseID = [caseObject objectForKey:@"caseId"];
+        if (caseID !=nil)
+        {
+            [caseListPruned addObject:caseObject];
+            
+        }
+        
+    }
     
     [refreshControl endRefreshing];
     

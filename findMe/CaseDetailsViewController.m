@@ -218,9 +218,19 @@ int panningEnabled = 1;
         
         for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
         {
-            NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
+            NSString *ansNum = [eachAnsObj valueForKey:@"a"];
             
-            [answersArray addObject:ansNum];
+            if (ansNum==nil)
+            {
+                NSString *ans = [eachAnsObj valueForKey:@"custom"];
+                [answersArray addObject:ans];
+                
+            }
+            else
+            {
+               [answersArray addObject:ansNum];
+            }
+         
         }
         
         ansStaticArray = [answersArray mutableCopy];
@@ -271,9 +281,16 @@ int panningEnabled = 1;
             
             for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
             {
-                NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
-                
-                [answersArray addObject:ansNum];
+                NSString *ansNum = [eachAnsObj valueForKey:@"a"];
+                if (ansNum==nil)
+                {
+                    NSString *ans = [eachAnsObj valueForKey:@"custom"];
+                    [answersArray addObject:ans];
+                }
+                else
+                {
+                    [answersArray addObject:ansNum];
+                }
             }
             
             ansStaticArray = [answersArray mutableCopy];
@@ -408,15 +425,18 @@ int panningEnabled = 1;
         [self.suggestedQuestion removeWithZoomOutAnimation:0.2 option:UIViewAnimationOptionCurveEaseInOut];
         
         //remove the suggestedCase from relevant arrays
-        PFObject *caseToRemove = [suggestedCases objectAtIndex:0];
+        
+        //brian jan 7 turning swipe case delete off for now
+        //PFObject *caseToRemove = [suggestedCases objectAtIndex:0];
         [suggestedCases removeObjectAtIndex:0];
         [suggestedProperties removeObjectAtIndex:0];
         NSNumber *indexNum = suggestedCaseIndex[0];
         NSInteger indexInt = [indexNum integerValue];
         
         //remove this case from the overall arrays also
-        [sortedCaseItems removeObjectAtIndex:indexInt];
-        [propsArray removeObjectAtIndex:indexInt];
+         //brian jan 7 turning swipe case delete off for now
+        //[sortedCaseItems removeObjectAtIndex:indexInt];
+        //[propsArray removeObjectAtIndex:indexInt];
         
         //remove the selected data for this suggestion from the tableView, make Tableview invisible
         self.caseDetailsTableView.alpha = 0;
@@ -443,14 +463,14 @@ int panningEnabled = 1;
         }
         else
         {
-           [self deleteACaseItem:caseToRemove];
+          //brian jan 7 turning swipe case delete off for now
+          // [self deleteACaseItem:caseToRemove];
         }
         
         //check to see if there is another object still in the suggestedCases
         //update the options in the tableview below to reflect the suggested cases information
         
         int suggestedCaseArrayCount = (int)[suggestedCases count];
-        
         
         if(suggestedCaseArrayCount >0)
             
@@ -462,7 +482,7 @@ int panningEnabled = 1;
             [self.suggestedQuestion setUserInteractionEnabled:YES];
             [self.suggestedQuestion addGestureRecognizer:panRecognizer];
                 
-            self.suggestedQuestion.backgroundColor = [UIColor blueColor];
+            self.suggestedQuestion.backgroundColor = [UIColor whiteColor];
             self.suggestedQuestion.alpha = 0.8;
             self.suggestedQuestion.textAlignment = NSTextAlignmentCenter;
             self.suggestedQuestion.frame = originalQuestionFrame;
@@ -482,12 +502,20 @@ int panningEnabled = 1;
             
             [answersArray removeAllObjects];
             
-            for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
-            {
-                NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
-                
-                [answersArray addObject:ansNum];
-            }
+                for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
+                {
+                    NSString *ansNum = [eachAnsObj valueForKey:@"a"];
+                    if (ansNum==nil)
+                    {
+                        NSString *ans = [eachAnsObj valueForKey:@"custom"];
+                        [answersArray addObject:ans];
+                    }
+                    else
+                    {
+                        [answersArray addObject:ansNum];
+                    }
+                }
+
             
             ansStaticArray = [answersArray mutableCopy];
             
@@ -515,7 +543,46 @@ int panningEnabled = 1;
         {
             //no more suggestions to show
             NSLog(@"setting pickerview alpha to 1");
-               self.pickerView.alpha = 1;
+            self.pickerView.alpha = 1;
+            
+            //show the answers/options for the first case item in the list
+         
+            [self.pickerView selectRow:0 inComponent:0 animated:YES];
+            // The delegate method isn't called if the row is selected programmatically
+            [self pickerView:self.pickerView didSelectRow:0 inComponent:0];
+           
+           //this code block not necessary, can just pick the first row of pickerview programatically
+            /*
+            PFObject *firstCaseItem = [sortedCaseItems objectAtIndex:0];
+            
+            selectedCaseItemAnswersList = [firstCaseItem objectForKey:@"answers"];
+            
+            answersArray = [[NSMutableArray alloc] init];
+            
+            [answersArray removeAllObjects];
+            
+            for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
+            {
+                NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
+                
+                [answersArray addObject:ansNum];
+            }
+            
+            ansStaticArray = [answersArray mutableCopy];
+            
+            NSString *optionsString = [firstCaseItem objectForKey:@"options"];
+            
+            //need to convert options string to an array of objects with ; separators.
+            
+            optionsArray = [optionsString componentsSeparatedByString:@";"];
+           
+            if(answersArray.count >0)
+            {
+                self.caseDetailsTableView.alpha = 1;
+                
+                [self.caseDetailsTableView reloadData];
+            }
+        */
         }
      
         
@@ -744,6 +811,7 @@ int panningEnabled = 1;
     
     if(cell.backgroundColor==[UIColor greenColor])
     {
+      
         //remove this answer from the list.
         int i = 0;
         int indexToRemove = 0;
@@ -767,7 +835,7 @@ int panningEnabled = 1;
     else
             
         {
-            NSNumber *newAns = [NSNumber numberWithInteger:indexPath.row+1];
+            NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
             [answersArray addObject:newAns];
             cell.backgroundColor = [UIColor greenColor];
             
@@ -1162,13 +1230,20 @@ numberOfRowsInComponent:(NSInteger)component
     
     [answersArray removeAllObjects];
     
-    for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
-    {
-        NSNumber *ansNum = [eachAnsObj valueForKey:@"a"];
-  
-        [answersArray addObject:ansNum];
-        
-    }
+        for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
+        {
+            NSString *ansNum = [eachAnsObj valueForKey:@"a"];
+            if (ansNum==nil)
+            {
+                NSString *ans = [eachAnsObj valueForKey:@"custom"];
+                [answersArray addObject:ans];
+            }
+            else
+            {
+                [answersArray addObject:ansNum];
+            }
+        }
+
     ansStaticArray = [answersArray mutableCopy];
 
     //retrieve the property choices for this caseItemObject from Parse.
