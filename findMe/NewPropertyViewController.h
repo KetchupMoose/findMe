@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol MyDataDelegate
+
+- (void)recieveData:(NSArray *)OptionsList AcceptableAnswersList:(NSArray *)Answers QuestionText:(NSString *) question;
+
+@end
+
 @interface NewPropertyViewController : UIViewController <UITextFieldDelegate,UITableViewDataSource, UITableViewDelegate>
 
 -(IBAction)addAnswerToList:(id)sender;
@@ -25,4 +31,7 @@
 @property (weak,nonatomic) IBOutlet UIImageView *checkMark3;
 
 @property (weak,nonatomic) NSString *userName;
+
+@property (nonatomic, weak) id<MyDataDelegate> delegate;
+
 @end

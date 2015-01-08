@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
 #import <CoreLocation/CoreLocation.h>
+#import "NewPropertyViewController.h"
 
-@interface CaseDetailsViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate,MBProgressHUDDelegate,UIAlertViewDelegate,CLLocationManagerDelegate>
+@interface CaseDetailsViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate,MBProgressHUDDelegate,UIAlertViewDelegate,CLLocationManagerDelegate,MyDataDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *backButton;
 
@@ -37,5 +38,7 @@
 @property (weak,nonatomic) IBOutlet UILabel *percentMatchingLabel;
 
 @property (weak,nonatomic) NSString *userName;
+
+
 
 @end

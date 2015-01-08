@@ -87,13 +87,33 @@ NSString *questionText;
 }
 -(IBAction)addNewProperty:(id)sender
 {
+    //add the question text, acceptable answers, and options array as a new case item on the casedetails screen.
+    
+    //add 1 to the value of each acceptableAnswerIndex to match the backend which starts from index 1.
+    
+    for (NSNumber *ans in acceptableAnswers)
+    {
+        int num = [ans intValue];
+        num = num+1;
+        
+        [acceptableAnswers removeObject:ans];
+        
+        NSNumber *newans = [NSNumber numberWithInteger:num];
+        [acceptableAnswers addObject:newans];
+    }
+    
+    //fill out the
+    [self.delegate recieveData:answersListArray AcceptableAnswersList:acceptableAnswers QuestionText:questionText];
+    
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
     
 }
 
 #pragma mark UITableViewDelegateMethods
 -(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [answersListArray count];
+    return (int)[answersListArray count];
     
     
 }
@@ -162,10 +182,10 @@ NSString *questionText;
         cell.backgroundColor = [UIColor greenColor];
         
         
-        if(self.checkMark2.alpha==0)
+        if(self.checkMark3.alpha==0)
         {
-            self.checkMark2.alpha =1;
-            self.addNewPropertyButton.enabled = true;
+            self.checkMark3.alpha =1;
+            self.addNewPropertyButton.enabled = 1;
             
         }
 
@@ -184,6 +204,14 @@ NSString *questionText;
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     [self animateTextField:textField up:NO];
+    if(textField.tag ==44)
+    {
+        //set the question text.
+        questionText = textField.text;
+        self.checkMark1.alpha = 1;
+        
+    }
+    
 }
 
 
@@ -224,8 +252,8 @@ NSString *questionText;
     if(textField.tag ==44)
     {
         //set the question text.
-        questionText = textField.text;
-        self.checkMark1.alpha = 1;
+       // questionText = textField.text;
+       // self.checkMark1.alpha = 1;
         
     }
     

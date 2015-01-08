@@ -38,10 +38,6 @@ NSMutableArray *NoAnswerProperties;
 NSMutableArray *suggestedCaseIndex;
 NSMutableArray *updatedPropertiesIndex;
 
-
-
-
-
 NSArray *selectedCaseItemAnswersList;
 NSArray *optionsArray;
 NSArray *ansStaticArray;
@@ -77,6 +73,8 @@ int panningEnabled = 1;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+   
     
     //location manager instance variable allocs
     locationManager = [[CLLocationManager alloc] init];
@@ -165,6 +163,7 @@ int panningEnabled = 1;
     {
          NSString *propType = [property objectForKey:@"propertyType"];
         
+        
         if([propType  isEqual:@"I"])
             {
                 //property is an info message
@@ -193,9 +192,6 @@ int panningEnabled = 1;
                 [suggestedCaseIndex addObject:caseIndex];
                 
             }
-        
-        
-        
         g=g+1;
     }
     
@@ -333,6 +329,11 @@ int panningEnabled = 1;
     [self.suggestedQuestion setUserInteractionEnabled:YES];
 
     [self.suggestedQuestion addGestureRecognizer:panRecognizer];
+    
+    //the submit answers button should be disabled until the user actually makes a change
+    
+    self.submitAnswersButton.enabled = 0;
+    self.submitAnswersButton.backgroundColor = [UIColor lightGrayColor];
     
     
 }
@@ -1377,6 +1378,7 @@ numberOfRowsInComponent:(NSInteger)component
    NewPropertyViewController *npvc = [self.storyboard instantiateViewControllerWithIdentifier:@"npvc"];
     
    npvc.userName = userName;
+    npvc.delegate = self;
     
     
     [self.navigationController pushViewController:npvc animated:YES];
@@ -1461,6 +1463,14 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
 {
     self.suggestedQuestion.alpha = 0;
     self.pickerView.alpha = 1;
+    
+}
+
+#pragma mark DataDelegateMethods
+- (void)recieveData:(NSArray *)OptionsList AcceptableAnswersList:(NSArray *)Answers QuestionText:(NSString *) question {
+    
+    //Do something with data here
+    NSLog(@"this fired");
     
 }
 
