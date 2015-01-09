@@ -22,6 +22,8 @@
 @synthesize selectedCaseIndex;
 @synthesize pickerView;
 @synthesize userName;
+@synthesize customAnswerTextField;
+
 
 NSArray *caseItems;
 NSMutableArray *sortedCaseItems;
@@ -37,6 +39,12 @@ NSMutableArray *NoAnswerCases;
 NSMutableArray *NoAnswerProperties;
 NSMutableArray *suggestedCaseIndex;
 NSMutableArray *updatedPropertiesIndex;
+NSMutableArray *customAnsweredCases;
+NSMutableArray *customAnsweredProperties;
+NSMutableArray *customAnsweredPropertiesIndex;
+NSMutableArray *browseCases;
+NSMutableArray *browseProperties;
+NSMutableArray *browsePropertiesIndex;
 
 NSArray *selectedCaseItemAnswersList;
 NSArray *optionsArray;
@@ -74,7 +82,8 @@ int panningEnabled = 1;
 {
     [super viewDidLoad];
     
-   
+    self.customAnswerTextField.delegate = self;
+    
     
     //location manager instance variable allocs
     locationManager = [[CLLocationManager alloc] init];
@@ -119,36 +128,22 @@ int panningEnabled = 1;
     suggestedCases = [[NSMutableArray alloc] init];
     suggestedCaseIndex = [[NSMutableArray alloc] init];
     updatedPropertiesIndex = [[NSMutableArray alloc] init];
-    
+   customAnsweredCases = [[NSMutableArray alloc] init];
+   customAnsweredProperties = [[NSMutableArray alloc] init];
+   customAnsweredPropertiesIndex = [[NSMutableArray alloc] init];
+    browseCases = [[NSMutableArray alloc] init];
+   browseProperties = [[NSMutableArray alloc] init];
+    browsePropertiesIndex = [[NSMutableArray alloc] init];
     
     
     //get all the property ID's from each item in the selected case.
-    int j = 0;
+    
     for (PFObject *eachCaseItem in sortedCaseItems)
     {
         NSString *propNum = [eachCaseItem objectForKey:@"propertyNum"];
         [propertyIDSArray addObject:propNum];
-        
-        //show the case in the suggested Question box if there are no answers
-        
-        NSArray *answerList = [eachCaseItem objectForKey:@"answers"];
-        
-        if(answerList.count == 0)
-        {
-            //do nothing, further down we determine whether it's an info message or a suggested question
-           
-            
-        }
-        
-        else
-        {
-            NSNumber *indexNum = [[NSNumber alloc] initWithInt:j];
-            //array for keeping track of the properties with answers.  Some of these may be info messages so that is dealt with further down.  It is assumed info messages can not have answers.
-            [answeredPropertiesIndex addObject:indexNum];
-            
-        }
-     j = j+1;
     }
+    
     
     //get all the property information for the list of properties to consider
     PFQuery *propertsQuery = [PFQuery queryWithClassName:@"Properts"];
@@ -157,11 +152,12 @@ int panningEnabled = 1;
     
     propsArray = [[propertsQuery findObjects] mutableCopy];
     
-    //sort the properties into three categories based on their type: info messages, answeredQuestions, and new suggestions
+    //sort the properties into four categories based on their type: info messages, answerableQuestions, customAnswerableQuestions, and new suggestions
     int g = 0;
     for (PFObject *property in propsArray)
     {
          NSString *propType = [property objectForKey:@"propertyType"];
+        NSString *options = [property objectForKey:@"options"];
         
         
         if([propType  isEqual:@"I"])
@@ -170,27 +166,46 @@ int panningEnabled = 1;
                 [infoMessageProperties addObject:property];
                 [infoCases addObject:sortedCaseItems[g]];
             }
-        else if ([answeredPropertiesIndex containsObject:[NSNumber numberWithInt:g]])
-        
-            {
-                //add the property to the list of answeredProperties
-                [answeredProperties addObject:property];
-                [answeredCases addObject:sortedCaseItems[g]];
-                
-            }
         else if([propType isEqual:@"N"])
         {
             [NoAnswerProperties addObject:property];
             [NoAnswerCases addObject:sortedCaseItems[g]];
         }
         
+        else if([propType isEqual:@"B"])
+        {
+            [browseProperties addObject:property];
+            [browseCases addObject:sortedCaseItems[g]];
+        }
+        
+        else if([options length]==0)
+        {
+            [customAnsweredProperties addObject:property];
+            [customAnsweredProperties addObject:sortedCaseItems[g]];
+        }
         else
+        
             {
-                [suggestedProperties addObject:property];
-                [suggestedCases addObject:sortedCaseItems[g]];
-                NSNumber *caseIndex = [NSNumber numberWithInt:g];
-                [suggestedCaseIndex addObject:caseIndex];
+                PFObject *caseItemObject = sortedCaseItems[g];
+                NSArray *answers = [caseItemObject objectForKey:@"answers"];
                 
+                if(answers.count>=1)
+                {
+                     NSNumber *indexNum = [[NSNumber alloc] initWithInt:g];
+                    [answeredPropertiesIndex addObject:indexNum];
+                    //array for keeping track of the properties with answers.  Some of these may be info messages so that is dealt with further down.  It is assumed info messages can not have answers.
+                    //add the property to the list of answeredProperties
+                    [answeredProperties addObject:property];
+                    [answeredCases addObject:sortedCaseItems[g]];
+
+                }
+                else
+                {
+                    [suggestedProperties addObject:property];
+                    [suggestedCases addObject:sortedCaseItems[g]];
+                    NSNumber *caseIndex = [NSNumber numberWithInt:g];
+                    [suggestedCaseIndex addObject:caseIndex];
+                }
             }
         g=g+1;
     }
@@ -742,7 +757,7 @@ int panningEnabled = 1;
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"caseDetailsCell" forIndexPath:indexPath];
-    UITextField *textEnter = (UITextField *)[cell viewWithTag:4];
+    UITextField *textEnter = (UITextField *)[cell viewWithTag:99];
     textEnter.frame = cell.bounds;
     
     if(textEnter==nil)
@@ -772,7 +787,6 @@ int panningEnabled = 1;
         
     }
    
-    
     NSInteger myIndexRow = indexPath.row;
     NSInteger optionsCount = [optionsArray count];
     
@@ -818,7 +832,7 @@ int panningEnabled = 1;
         int indexToRemove = 0;
         for (NSNumber *eachAns in answersArray)
         {
-            int ansInt = [eachAns integerValue];
+            int ansInt = (int)[eachAns integerValue];
             
            
             //making sure to compare to a number +1 since the answersArray has a 1 higher index
@@ -841,6 +855,11 @@ int panningEnabled = 1;
             cell.backgroundColor = [UIColor greenColor];
             
         }
+    
+    //get the selectedCaseItem from the selected row of the pickerView
+    PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:[self.pickerView selectedRowInComponent:0]];
+    
+    [selectedCaseItem setObject:[answersArray copy] forKey:@"answers"];
     
 }
 
@@ -892,30 +911,80 @@ int panningEnabled = 1;
     
     //put the string of the text field onto a label now in the same cell
     //put -100 so it doesn't interfere with the uilabel tag of 3 in every cell
-    NSIndexPath *cellIndexPath = [NSIndexPath indexPathForRow:newTextFieldIndex inSection:0];
     
-    UIView *cell = [self.caseDetailsTableView cellForRowAtIndexPath:cellIndexPath];
-    
-    UILabel *label = (UILabel *)[cell viewWithTag:3];
-    
-    label.text = textField.text;
-    
-    //add field to options array
-    NSMutableArray *curarray = [optionsArray mutableCopy];
-    [curarray addObject:textField.text];
-    optionsArray = [curarray copy];
-    
-    //remove the text field from the table view
-    
-    [textField resignFirstResponder];
-    
-    textField.alpha =0;
-    
-    
-    [self.caseDetailsTableView reloadData];
-    
-    return YES;
-}
+    if(textField.tag ==99)
+    {
+        NSIndexPath *cellIndexPath = [NSIndexPath indexPathForRow:newTextFieldIndex inSection:0];
+        
+        UIView *cell = [self.caseDetailsTableView cellForRowAtIndexPath:cellIndexPath];
+        
+        UILabel *label = (UILabel *)[cell viewWithTag:3];
+        
+        label.text = textField.text;
+        
+        //add field to options array
+        NSMutableArray *curarray = [optionsArray mutableCopy];
+        [curarray addObject:textField.text];
+        optionsArray = [curarray copy];
+        
+        //add the field to the answersArray.  Add 1 to it.
+        newTextFieldIndex=newTextFieldIndex+1;
+        NSNumber *newAnsNumber = [[NSNumber alloc] initWithInteger:newTextFieldIndex];
+        
+        [answersArray addObject:newAnsNumber];
+        
+        //update the options in the property area and update the answers in the caseItem answers section for the internal arrays of data.
+        PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:[self.pickerView selectedRowInComponent:0]];
+        [selectedCaseItem setObject:answersArray forKey:@"answers"];
+        
+        PFObject *propertyObject = [propsArray objectAtIndex:[self.pickerView selectedRowInComponent:0]];
+        NSString *options = [propertyObject objectForKey:@"options"];
+        NSString *updatedOptions = [[options stringByAppendingString:textField.text] stringByAppendingString:@";"];
+        [propertyObject setObject:updatedOptions forKey:@"options"];
+        
+        
+        //remove the text field from the table view
+        textField.alpha =0;
+        [self.caseDetailsTableView reloadData];
+    }
+    else if(textField.tag ==72)
+    {
+       //add answer to json array of cases with a custom tag.
+        
+        //get the currently selected index of the pickerview to establish which caseItem is being edited.
+        
+        PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:[self.pickerView selectedRowInComponent:0]];
+        
+        //edit the answers key of the selectedCaseItem
+        
+        NSArray *answersList = [selectedCaseItem objectForKey:@"answers"];
+        NSMutableArray *answersListMutable = [answersList mutableCopy];
+        
+        if(answersListMutable.count ==0)
+        {
+            NSMutableDictionary *ansKey = [NSMutableDictionary alloc];
+            [ansKey setObject:textField.text forKey:@"custom"];
+            
+            [answersListMutable addObject:ansKey];
+            
+            answersList = [answersListMutable copy];
+            [selectedCaseItem setObject:answersList forKey:@"answers"];
+            
+        }
+        else
+        {
+            PFObject *customAns = [answersList objectAtIndex:0];
+            [customAns setObject:textField.text forKey:@"custom"];
+            [answersListMutable removeAllObjects];
+            [answersListMutable addObject:customAns];
+            answersList = [answersListMutable copy];
+            [selectedCaseItem setObject:answersList forKey:@"answers"];
+            
+        }
+    }
+     [textField resignFirstResponder];
+     return YES;
+   }
 
 -(IBAction)doUpdate:(id)sender
 {
@@ -964,10 +1033,6 @@ int panningEnabled = 1;
     
     
     //XML needs to take in the new case information and new
-    
-    
-    
-    
 }
 
 -(NSString *)createXMLFunction
@@ -1203,6 +1268,8 @@ numberOfRowsInComponent:(NSInteger)component
     PFObject *selectedProperty = [propsArray objectAtIndex:row];
     
     NSString *propertyType = [selectedProperty objectForKey:@"propertyType"];
+    NSString *options = [selectedProperty objectForKey:@"options"];
+        
         
     if([propertyType isEqualToString:@"I"])
     {
@@ -1221,51 +1288,68 @@ numberOfRowsInComponent:(NSInteger)component
         self.caseDetailsTableView.alpha = 0;
         
     }
+    else if([propertyType isEqualToString:@"B"])
+        {
+            //do nothing for now.  in the future, query for match information based on shown fields.
+            self.caseDetailsTableView.alpha =0;
+            
+        }
     else
     {
-        self.caseDetailsTableView.alpha = 1;
-        
+    //check to see if this row is one of the custom answer types.  It is if option length is 0.
     
-    
-    answersArray = [[NSMutableArray alloc] init];
-    
-    [answersArray removeAllObjects];
-    
-        for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
+        if([options length] ==0)
         {
-            NSString *ansNum = [eachAnsObj valueForKey:@"a"];
-            if (ansNum==nil)
-            {
-                NSString *ans = [eachAnsObj valueForKey:@"custom"];
-                [answersArray addObject:ans];
-            }
-            else
-            {
-                [answersArray addObject:ansNum];
-            }
+        //display just one custom answer
+        self.customAnswerTextField.alpha = 1;
+        self.caseDetailsTableView.alpha =0;
+        NSString *customAns;
+        //check to see if the custom answer is there
+            for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
+                {
+                    customAns = [eachAnsObj valueForKey:@"custom"];
+                }
+        self.customAnswerTextField.text = customAns;
+        
         }
-
-    ansStaticArray = [answersArray mutableCopy];
-
-    //retrieve the property choices for this caseItemObject from Parse.
-    
-        NSString *questionString = [selectedProperty objectForKey:@"propertyDescr"];
         
-        self.questionLabel.text = questionString;
+    else
+        {
+            self.caseDetailsTableView.alpha = 1;
+            answersArray = [[NSMutableArray alloc] init];
+        
+            [answersArray removeAllObjects];
+        
+            for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
+            {
+            NSString *ansNum = [eachAnsObj valueForKey:@"a"];
+            [answersArray addObject:ansNum];
+            
+            }
+        
+            ansStaticArray = [answersArray mutableCopy];
+        
+            //retrieve the property choices for this caseItemObject from Parse.
+        
+            NSString *questionString = [selectedProperty objectForKey:@"propertyDescr"];
+        
+            self.questionLabel.text = questionString;
         
         
-        NSString *optionsString = [selectedProperty objectForKey:@"options"];
+            NSString *optionsString = [selectedProperty objectForKey:@"options"];
         
-        NSLog(@"%@",optionsString);
+            NSLog(@"%@",optionsString);
         
-        //need to convert options string to an array of objects with ; separators.
+            //need to convert options string to an array of objects with ; separators.
         
-        optionsArray = [optionsString componentsSeparatedByString:@";"];
+            optionsArray = [optionsString componentsSeparatedByString:@";"];
         
-        self.questionLabel.text = questionString;
+            self.questionLabel.text = questionString;
         
-        [self.caseDetailsTableView reloadData];
-
+            [self.caseDetailsTableView reloadData];
+        }
+   
+      
     }
         
     }
@@ -1344,6 +1428,12 @@ numberOfRowsInComponent:(NSInteger)component
         if ([propertyType isEqualToString:@"N"])
         {
             tView.textColor = [UIColor lightGrayColor];
+            
+        }
+        
+        if ([propertyType isEqualToString:@"B"])
+        {
+            tView.textColor = [UIColor purpleColor];
             
         }
         
@@ -1463,6 +1553,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
 {
     self.suggestedQuestion.alpha = 0;
     self.pickerView.alpha = 1;
+    
     
 }
 

@@ -39,6 +39,7 @@
 
 @property (weak,nonatomic) NSString *userName;
 
+@property (weak,nonatomic) IBOutlet UITextField *customAnswerTextField;
 
 
 @end
