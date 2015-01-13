@@ -46,6 +46,8 @@ NSMutableArray *browseCases;
 NSMutableArray *browseProperties;
 NSMutableArray *browsePropertiesIndex;
 
+int suggestedCaseDisplayedIndex;
+
 NSArray *selectedCaseItemAnswersList;
 NSArray *optionsArray;
 NSArray *ansStaticArray;
@@ -135,7 +137,7 @@ int panningEnabled = 1;
    browseProperties = [[NSMutableArray alloc] init];
     browsePropertiesIndex = [[NSMutableArray alloc] init];
     
-    
+    suggestedCaseDisplayedIndex = -1;
     //get all the property ID's from each item in the selected case.
     
     for (PFObject *eachCaseItem in sortedCaseItems)
@@ -158,7 +160,6 @@ int panningEnabled = 1;
     {
          NSString *propType = [property objectForKey:@"propertyType"];
         NSString *options = [property objectForKey:@"options"];
-        
         
         if([propType  isEqual:@"I"])
             {
@@ -217,6 +218,7 @@ int panningEnabled = 1;
         firstSuggestedCaseToShow = [suggestedCases objectAtIndex:0];
         
         NSNumber *firstSuggestionIndex = [suggestedCaseIndex objectAtIndex:0];
+        suggestedCaseDisplayedIndex = [firstSuggestionIndex intValue];
         
         selectedItemForUpdate = [firstSuggestionIndex integerValue];
         
@@ -445,9 +447,10 @@ int panningEnabled = 1;
         //brian jan 7 turning swipe case delete off for now
         //PFObject *caseToRemove = [suggestedCases objectAtIndex:0];
         [suggestedCases removeObjectAtIndex:0];
+        [suggestedCaseIndex removeObjectAtIndex:0];
+        
         [suggestedProperties removeObjectAtIndex:0];
-        NSNumber *indexNum = suggestedCaseIndex[0];
-        NSInteger indexInt = [indexNum integerValue];
+     
         
         //remove this case from the overall arrays also
          //brian jan 7 turning swipe case delete off for now
@@ -511,6 +514,10 @@ int panningEnabled = 1;
         //update options based on this new suggestedQuestion
             
             PFObject *newSuggestedCaseToShow = [suggestedCases objectAtIndex:0];
+                
+            //get the index in terms of overall cases;
+            NSNumber *nextCaseIndex = [suggestedCaseIndex objectAtIndex:0];
+            suggestedCaseDisplayedIndex = [nextCaseIndex intValue];
             
             selectedCaseItemAnswersList = [newSuggestedCaseToShow objectForKey:@"answers"];
             
@@ -560,6 +567,8 @@ int panningEnabled = 1;
             //no more suggestions to show
             NSLog(@"setting pickerview alpha to 1");
             self.pickerView.alpha = 1;
+            suggestedCaseDisplayedIndex = -1;
+            
             
             //show the answers/options for the first case item in the list
          
@@ -856,10 +865,42 @@ int panningEnabled = 1;
             
         }
     
-    //get the selectedCaseItem from the selected row of the pickerView
-    PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:[self.pickerView selectedRowInComponent:0]];
+    //get the selectedCaseItem from the selected row of the pickerView OR get the index of the displayed suggested caseItem if there's currently a displayed suggestion
     
-    [selectedCaseItem setObject:[answersArray copy] forKey:@"answers"];
+    NSInteger sortedCaseItemsIndexToDisplay;
+    
+    if(suggestedCaseDisplayedIndex>-1)
+    {
+        //there's a suggested case being displayed, show it now
+
+        sortedCaseItemsIndexToDisplay = suggestedCaseDisplayedIndex;
+    }
+    else
+    {
+        sortedCaseItemsIndexToDisplay = [self.pickerView selectedRowInComponent:0];
+        
+    }
+    
+     PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:sortedCaseItemsIndexToDisplay];
+ 
+        //set the answers for this case to an array of a-value NSDicts
+        
+        NSMutableArray *newAnsArray = [[NSMutableArray alloc] init];
+        
+        for(NSNumber *eachAns in answersArray)
+        {
+            NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+            [AnsObj setValue:eachAns forKey:@"a"];
+            [newAnsArray addObject:AnsObj];
+            
+        }
+    
+    [selectedCaseItem setObject:[newAnsArray copy] forKey:@"answers"];
+    
+    [self.pickerView reloadAllComponents];
+    
+    self.submitAnswersButton.enabled = 1;
+    self.submitAnswersButton.backgroundColor = [UIColor blueColor];
     
 }
 
@@ -935,7 +976,20 @@ int panningEnabled = 1;
         
         //update the options in the property area and update the answers in the caseItem answers section for the internal arrays of data.
         PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:[self.pickerView selectedRowInComponent:0]];
-        [selectedCaseItem setObject:answersArray forKey:@"answers"];
+        //change object to be an NSMutableArray with keyValues a
+        //bugfixhere
+        NSMutableArray *newAnsArray = [[NSMutableArray alloc] init];
+        
+        for(NSNumber *eachAns in answersArray)
+        {
+            NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+            [AnsObj setValue:eachAns forKey:@"a"];
+            [newAnsArray addObject:AnsObj];
+            
+        }
+        
+        [selectedCaseItem setObject:[newAnsArray copy] forKey:@"answers"];
+        
         
         PFObject *propertyObject = [propsArray objectAtIndex:[self.pickerView selectedRowInComponent:0]];
         NSString *options = [propertyObject objectForKey:@"options"];
@@ -983,6 +1037,9 @@ int panningEnabled = 1;
         }
     }
      [textField resignFirstResponder];
+    
+     self.submitAnswersButton.enabled = 1;
+    self.submitAnswersButton.backgroundColor = [UIColor blueColor];
      return YES;
    }
 
@@ -1022,6 +1079,7 @@ int panningEnabled = 1;
                                         
                                         [HUD hide:YES];
                                         
+                                        //need to poll for a response to the case
                                     }
                                     else
                                     {
@@ -1032,23 +1090,22 @@ int panningEnabled = 1;
                                 }];
     
     
-    //XML needs to take in the new case information and new
+    
 }
 
 -(NSString *)createXMLFunction
 {
     //iterate through all items still in the caseitems and property arrays and send XML to update all of these (either with their original contents or the modifications/new entries)
     
-   NSInteger selectedCaseInt = [selectedCaseIndex integerValue];
+    
+    NSInteger selectedCaseInt = [selectedCaseIndex integerValue];
+    //the case object includes the list of all caseItems and the caseId
     PFObject *caseObject = [caseListData objectAtIndex:selectedCaseInt];
     
     
-NSString *caseName = [caseObject objectForKey:@"caseName"];
-NSString *caseObjID = [caseObject objectForKey:@"caseId"];
-//NSString *propertyNum = [itemObject objectForKey:@"propertyNum"];
-//NSString *propertyDesc = self.questionLabel.text;
-    
-    
+    NSString *caseName = [caseObject objectForKey:@"caseName"];
+    NSString *caseObjID = [caseObject objectForKey:@"caseId"];
+
     //get the selected property from the chooser element.
     // allocate serializer
     XMLWriter *xmlWriter = [[XMLWriter alloc] init];
@@ -1065,10 +1122,10 @@ NSString *caseObjID = [caseObject objectForKey:@"caseId"];
         [xmlWriter writeCharacters:@"EN"];
         [xmlWriter writeEndElement];
     
+    //if it's a brand new case, this will be nil
     if(caseObjID != nil)
     {
         
-    
         [xmlWriter writeStartElement:@"CASEOBJECTID"];
         [xmlWriter writeCharacters:caseObjID];
         [xmlWriter writeEndElement];
@@ -1091,17 +1148,9 @@ NSString *caseObjID = [caseObject objectForKey:@"caseId"];
         PFObject *updatedProperty = [propsArray objectAtIndex:g];
         NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
         NSString *propertyDescr = [updatedProperty objectForKey:@"propertyDescr"];
-
         
-        //check to see if this item is in the array of new properties
-        NSNumber *LoopIndexNum = [NSNumber numberWithInt:g];
-        if([updatedPropertiesIndex containsObject:LoopIndexNum])
-        
-        {
             //add the XML for a new or updated property here
-            
             [xmlWriter writeStartElement:@"PROPERTY"];
-            
             
             [xmlWriter writeStartElement:@"PROPERTYNUM"];
             [xmlWriter writeCharacters:propertyNum];
@@ -1110,66 +1159,94 @@ NSString *caseObjID = [caseObject objectForKey:@"caseId"];
             [xmlWriter writeStartElement:@"PROPERTYDESCR"];
             [xmlWriter writeCharacters:propertyDescr];
             [xmlWriter writeEndElement];
+        
+            //get the options value from the property object
+            NSString *fullCharsString = [updatedProperty objectForKey:@"options"];
+        
+        if([fullCharsString length]>0)
+        {
             
-            //go through the list of options for the selected case.
-            
+       
             [xmlWriter writeStartElement:@"OPTIONS"];
-            
-            //generate list of strings from options
-            int i = 0;
-            NSString *fullCharsString = @"";
-            for(NSString *optionString in optionsArray)
-            {
-                i = i+1;
-                
-                fullCharsString = [fullCharsString stringByAppendingString:optionString];
-                
-                if  (i!= [optionsArray count])
-                {
-                    fullCharsString = [fullCharsString stringByAppendingString:@";"];
-                }
-                
-            }
             [xmlWriter writeCharacters:fullCharsString];
             [xmlWriter writeEndElement];
-            
+        }
             //close property element
             [xmlWriter writeEndElement];
-
-        }
+    
         
         //write logic for updating the caseItem
         //build strings for building item
         [xmlWriter writeStartElement:@"ITEM"];
         
+        //check to see if this caseItem has a number.  Otherwise give it a number of 9000 to indicate it is a brand new caseItem.
+        NSString *myCaseItem = [eachCaseItem objectForKey:@"caseItem"];
+        NSString *caseItemNumber;
+        if(myCaseItem==nil)
+        {
+            caseItemNumber =@"9000";
+            
+        }
+        else
+        {
+            caseItemNumber = myCaseItem;
+            
+        }
+        
         [xmlWriter writeStartElement:@"CASEITEM"];
-        [xmlWriter writeCharacters:@"9000"];
+        [xmlWriter writeCharacters:caseItemNumber];
         [xmlWriter writeEndElement];
         
         [xmlWriter writeStartElement:@"PROPERTYNUM"];
         [xmlWriter writeCharacters:propertyNum];
         [xmlWriter writeEndElement];
         
-        //write all the possible answers
+        //write out the answers value of this case Item
         
+        //need to check if the case type is custom answers
         
-        for (NSNumber *ansNumber in answersArray)
+        //if case type is I or N, don't update anything for answers
+         NSString *propertyType = [updatedProperty objectForKey:@"propertyType"];
+        NSString *optionText = [updatedProperty objectForKey:@"options"];
+        
+        if([propertyType isEqualToString:@"I"] || [propertyType isEqualToString:@"N"] || [propertyType isEqualToString:@"B"])
         {
-            //build a new answer element
-            NSInteger myInt = [ansNumber integerValue];
-            
-            myInt = myInt;
-            
-            NSString *ansString = [NSString stringWithFormat:@"%i",myInt];
-            
-            [xmlWriter writeStartElement:@"ANSWER"];
-            
-            [xmlWriter writeStartElement:@"A"];
-            [xmlWriter writeCharacters:ansString];
-            [xmlWriter writeEndElement];
-            
-            [xmlWriter writeEndElement];
-            
+            //do nothing
+        }
+        else if([optionText length] == 0)
+        {
+            //write the answer as type Custom
+            NSArray *caseAnswers = [eachCaseItem objectForKey:@"answers"];
+            for (PFObject *ansObj in caseAnswers)
+            {
+                NSString *ansString = [ansObj objectForKey:@"custom"];
+                [xmlWriter writeStartElement:@"ANSWER"];
+                
+                [xmlWriter writeStartElement:@"Custom"];
+                [xmlWriter writeCharacters:ansString];
+                [xmlWriter writeEndElement];
+                
+                [xmlWriter writeEndElement];
+                
+            }
+
+        }
+        else
+        {
+           NSArray *caseAnswers = [eachCaseItem objectForKey:@"answers"];
+            for (PFObject *ansObj in caseAnswers)
+            {
+                NSString *ansString = [ansObj objectForKey:@"a"];
+                [xmlWriter writeStartElement:@"ANSWER"];
+                
+                [xmlWriter writeStartElement:@"A"];
+                [xmlWriter writeCharacters:ansString];
+                [xmlWriter writeEndElement];
+                
+                [xmlWriter writeEndElement];
+                
+            }
+
         }
         
         //close item element
@@ -1180,7 +1257,6 @@ NSString *caseObjID = [caseObject objectForKey:@"caseId"];
         
         
     }
-    
     
     
     // close payload element
@@ -1264,7 +1340,6 @@ numberOfRowsInComponent:(NSInteger)component
     selectedCaseItemAnswersList = [questionItemPicked objectForKey:@"answers"];
     //setting global var
     
-    
     PFObject *selectedProperty = [propsArray objectAtIndex:row];
     
     NSString *propertyType = [selectedProperty objectForKey:@"propertyType"];
@@ -1278,6 +1353,25 @@ numberOfRowsInComponent:(NSInteger)component
         
         NSString *infoMsg = [selectedProperty objectForKey:@"propertyDescr"];
         
+        //for the caseItem of this index, take the params value
+        NSString *params = [questionItemPicked objectForKey:@"params"];
+        
+        NSArray * paramsArray = [params componentsSeparatedByString:@";"];
+        
+        //loop through the infoMsg and replace instances of &# with the values in the param array.
+        
+        int i = 1;
+        if (paramsArray.count>=1)
+        {
+            for (i=1;i<paramsArray.count+1;i++)
+            {
+            NSString *numString = [NSString stringWithFormat:@"%i",i];
+            NSLog(numString);
+            NSString *stringToReplace = [@"&" stringByAppendingString:numString];
+            
+            [infoMsg stringByReplacingOccurrencesOfString:stringToReplace withString:[paramsArray objectAtIndex:i-1]];
+            }
+         }
          [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Info Message", nil) message:NSLocalizedString(infoMsg, nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
         
     }
@@ -1320,15 +1414,14 @@ numberOfRowsInComponent:(NSInteger)component
         
             [answersArray removeAllObjects];
         
-            for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
+            for (NSString *eachAnsObj in selectedCaseItemAnswersList)
             {
             NSString *ansNum = [eachAnsObj valueForKey:@"a"];
             [answersArray addObject:ansNum];
             
             }
-        
             ansStaticArray = [answersArray mutableCopy];
-        
+            
             //retrieve the property choices for this caseItemObject from Parse.
         
             NSString *questionString = [selectedProperty objectForKey:@"propertyDescr"];
@@ -1562,6 +1655,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     
     //Do something with data here
     NSLog(@"this fired");
+    self.submitAnswersButton.enabled = 1;
+    self.submitAnswersButton.backgroundColor = [UIColor blueColor];
     
 }
 

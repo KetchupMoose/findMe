@@ -249,8 +249,6 @@ MBProgressHUD *HUD;
         {
            [templateCell BounceViewThenFadeAlpha:templateCell shouldRemoveParentView:@"no"];
         }
-        
-        
     }
     
    
@@ -261,9 +259,6 @@ MBProgressHUD *HUD;
 //create 2nd tier template option views
 -(void) showSecondTierTemplateOptions
 {
-    
-    
-    
     //add a UIImageView, Button, and Text section based on the selected case.
     int startyMargin = 140;
     int startxMargin = 20;
@@ -568,17 +563,12 @@ MBProgressHUD *HUD;
                                         NSString *responseText = responseString;
                                         NSLog(responseText);
                                         [HUD hide:NO];
-                                        
-                                       
                                         if([responseText isEqualToString:@"ok"])
                                         {
                                             
                                             NSLog(@"starting to poll for template maker update");
                                             [self pollForTemplateMaker];
-                                            
                                         }
-                                        
-                                        
                                     }
                                     else
                                     {
@@ -587,9 +577,6 @@ MBProgressHUD *HUD;
                                         
                                     }
                                 }];
-
-    
-    
 }
 
 
@@ -604,7 +591,7 @@ MBProgressHUD *HUD;
     HUD.labelText = @"Polling for New Case";
     [HUD show:YES];
     
-    [NSTimer scheduledTimerWithTimeInterval:5.0
+    [NSTimer scheduledTimerWithTimeInterval:1.0
                                      target:self
                                    selector:@selector(timerFired:)
                                    userInfo:nil
