@@ -551,9 +551,6 @@ MBProgressHUD *HUD;
     HUD.labelText = @"Creating Parse Case";
     [HUD show:YES];
 
-    
-    
- 
     //use parse cloud code function to update with appropriate XML
     [PFCloud callFunctionInBackground:@"inboundZITSMTL"
                        withParameters:@{@"payload": xmlGeneratedString}
@@ -603,6 +600,7 @@ MBProgressHUD *HUD;
     
     NSLog(@"timer fired");
     //check the parse object to see if it is updated
+    
     
     [itsMTLObject fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         //do stuff with object.

@@ -10,7 +10,7 @@
 
 @protocol MyDataDelegate
 
-- (void)recieveData:(NSArray *)OptionsList AcceptableAnswersList:(NSArray *)Answers QuestionText:(NSString *) question;
+- (void)recieveData:(NSString *)OptionsList AcceptableAnswersList:(NSArray *)Answers QuestionText:(NSString *) question;
 
 @end
 

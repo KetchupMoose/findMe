@@ -90,24 +90,28 @@ NSString *questionText;
     //add the question text, acceptable answers, and options array as a new case item on the casedetails screen.
     
     //add 1 to the value of each acceptableAnswerIndex to match the backend which starts from index 1.
+    NSMutableArray *acceptableAnswersKeyPairValues = [[NSMutableArray alloc] init];
     
     for (NSNumber *ans in acceptableAnswers)
     {
+        
         int num = [ans intValue];
         num = num+1;
         
-        [acceptableAnswers removeObject:ans];
-        
         NSNumber *newans = [NSNumber numberWithInteger:num];
-        [acceptableAnswers addObject:newans];
+        NSString *newansString = [newans stringValue];
+        
+        //add the acceptableAnswers in the format of NSMutableDictionary's with the key a
+        NSMutableDictionary *answerKeyPair = [[NSMutableDictionary alloc] init];
+        [answerKeyPair setObject:newansString forKey:@"a"];
+        [acceptableAnswersKeyPairValues addObject:answerKeyPair];
+        
     }
     
-    //fill out the
-    [self.delegate recieveData:answersListArray AcceptableAnswersList:acceptableAnswers QuestionText:questionText];
-    
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
+    NSString *optionsList = [[answersListArray copy] componentsJoinedByString:@";"];
+        
+    [self.delegate recieveData:optionsList AcceptableAnswersList:[acceptableAnswersKeyPairValues copy]QuestionText:questionText];
+
 }
 
 #pragma mark UITableViewDelegateMethods

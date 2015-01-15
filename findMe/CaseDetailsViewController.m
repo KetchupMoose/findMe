@@ -46,6 +46,9 @@ NSMutableArray *browseCases;
 NSMutableArray *browseProperties;
 NSMutableArray *browsePropertiesIndex;
 
+NSMutableArray *newlyCreatedPropertiesIndex;
+
+
 int suggestedCaseDisplayedIndex;
 
 NSArray *selectedCaseItemAnswersList;
@@ -136,7 +139,7 @@ int panningEnabled = 1;
     browseCases = [[NSMutableArray alloc] init];
    browseProperties = [[NSMutableArray alloc] init];
     browsePropertiesIndex = [[NSMutableArray alloc] init];
-    
+    newlyCreatedPropertiesIndex= [[NSMutableArray alloc] init];
     suggestedCaseDisplayedIndex = -1;
     //get all the property ID's from each item in the selected case.
     
@@ -145,7 +148,6 @@ int panningEnabled = 1;
         NSString *propNum = [eachCaseItem objectForKey:@"propertyNum"];
         [propertyIDSArray addObject:propNum];
     }
-    
     
     //get all the property information for the list of properties to consider
     PFQuery *propertsQuery = [PFQuery queryWithClassName:@"Properts"];
@@ -1088,9 +1090,6 @@ int panningEnabled = 1;
                                         
                                     }
                                 }];
-    
-    
-    
 }
 
 -(NSString *)createXMLFunction
@@ -1131,6 +1130,7 @@ int panningEnabled = 1;
         [xmlWriter writeEndElement];
     }
     
+    
         [xmlWriter writeStartElement:@"CASENAME"];
         [xmlWriter writeCharacters:caseName];
         [xmlWriter writeEndElement];
@@ -1149,31 +1149,35 @@ int panningEnabled = 1;
         NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
         NSString *propertyDescr = [updatedProperty objectForKey:@"propertyDescr"];
         
-            //add the XML for a new or updated property here
-            [xmlWriter writeStartElement:@"PROPERTY"];
-            
-            [xmlWriter writeStartElement:@"PROPERTYNUM"];
-            [xmlWriter writeCharacters:propertyNum];
-            [xmlWriter writeEndElement];
-            
-            [xmlWriter writeStartElement:@"PROPERTYDESCR"];
-            [xmlWriter writeCharacters:propertyDescr];
-            [xmlWriter writeEndElement];
+        //check to see if this caseItem is a brand new property
         
-            //get the options value from the property object
-            NSString *fullCharsString = [updatedProperty objectForKey:@"options"];
+         if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:g]])
         
-        if([fullCharsString length]>0)
-        {
+         {
+             //add the XML for a new or updated property here
+             [xmlWriter writeStartElement:@"PROPERTY"];
             
+             [xmlWriter writeStartElement:@"PROPERTYNUM"];
+             [xmlWriter writeCharacters:@"1"];
+             [xmlWriter writeEndElement];
+            
+             [xmlWriter writeStartElement:@"PROPERTYDESCR"];
+             [xmlWriter writeCharacters:propertyDescr];
+             [xmlWriter writeEndElement];
+        
+             //get the options value from the property object
+             NSString *fullCharsString = [updatedProperty objectForKey:@"options"];
+        
+             if([fullCharsString length]>0)
+             {
        
-            [xmlWriter writeStartElement:@"OPTIONS"];
-            [xmlWriter writeCharacters:fullCharsString];
-            [xmlWriter writeEndElement];
-        }
+                 [xmlWriter writeStartElement:@"OPTIONS"];
+                 [xmlWriter writeCharacters:fullCharsString];
+                 [xmlWriter writeEndElement];
+             }
             //close property element
             [xmlWriter writeEndElement];
-    
+         }
         
         //write logic for updating the caseItem
         //build strings for building item
@@ -1197,6 +1201,11 @@ int panningEnabled = 1;
         [xmlWriter writeCharacters:caseItemNumber];
         [xmlWriter writeEndElement];
         
+        if(propertyNum==nil)
+        {
+            propertyNum =@"1";
+            
+        }
         [xmlWriter writeStartElement:@"PROPERTYNUM"];
         [xmlWriter writeCharacters:propertyNum];
         [xmlWriter writeEndElement];
@@ -1651,12 +1660,40 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
 }
 
 #pragma mark DataDelegateMethods
-- (void)recieveData:(NSArray *)OptionsList AcceptableAnswersList:(NSArray *)Answers QuestionText:(NSString *) question {
+- (void)recieveData:(NSString *)OptionsList AcceptableAnswersList:(NSArray *)Answers QuestionText:(NSString *) question {
+    
+    //add the data to the list sortedCaseList and propertiesArray
+    
+    NSMutableDictionary *propertyObject = [[NSMutableDictionary alloc] init];
+    [propertyObject setObject:OptionsList forKey:@"options"];
+    [propertyObject setObject:question forKey:@"propertyDescr"];
+    [propertyObject setObject:@"9000" forKey:@"propertyNum"];
+    [propertyObject setObject:@"U" forKey:@"propertyType"];
+    
+    
+    NSMutableDictionary *caseItemObject = [[NSMutableDictionary alloc] init];
+    [caseItemObject setObject:@"9000" forKey:@"caseItem"];
+    [caseItemObject setObject:Answers forKey:@"answers"];
+    
+    int g = (int)sortedCaseItems.count;
+    
+    [sortedCaseItems addObject:caseItemObject];
+    [propsArray addObject:propertyObject];
+    
+        
+    NSNumber *indexNum = [[NSNumber alloc] initWithInt:g];
+    [newlyCreatedPropertiesIndex addObject:indexNum];
+    
+    [self.pickerView reloadAllComponents];
+    [self.caseDetailsTableView reloadData];
+    
     
     //Do something with data here
     NSLog(@"this fired");
     self.submitAnswersButton.enabled = 1;
     self.submitAnswersButton.backgroundColor = [UIColor blueColor];
+    
+   [self.navigationController popViewControllerAnimated:NO];
     
 }
 

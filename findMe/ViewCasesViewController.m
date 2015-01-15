@@ -200,10 +200,6 @@ UIRefreshControl *refreshControl;
     [HUD show:YES];
     
     
-    
-    
-    
-    
     //create a new case via XML
     NSString *generatedXMLString = [self createXMLFunction];
     
@@ -214,9 +210,7 @@ UIRefreshControl *refreshControl;
                                     if (!error) {
                                         
                                         [HUD hide:YES];
-                                        
-                                        
-                                        
+                                                                                
                                         NSString *responseText = responseString;
                                         NSLog(responseText);
                                         
