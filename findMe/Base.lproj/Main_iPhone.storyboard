@@ -611,11 +611,12 @@
                     <navigationItem key="navigationItem" id="j3d-u2-3sV"/>
                     <connections>
                         <outlet property="CaseOptionsCollectionView" destination="xa7-5B-BZ6" id="frd-sW-gvl"/>
+                        <segue destination="ubz-9T-mj9" kind="push" id="uUO-Il-KEk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sje-Fe-bZc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-73" y="553"/>
+            <point key="canvasLocation" x="97" y="531"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="vRa-6d-R3J">
@@ -648,4 +649,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="uUO-Il-KEk"/>
+    </inferredMetricsTieBreakers>
 </document>

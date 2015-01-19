@@ -45,8 +45,8 @@ NSMutableArray *customAnsweredPropertiesIndex;
 NSMutableArray *browseCases;
 NSMutableArray *browseProperties;
 NSMutableArray *browsePropertiesIndex;
-
 NSMutableArray *newlyCreatedPropertiesIndex;
+
 
 
 int suggestedCaseDisplayedIndex;
@@ -141,6 +141,9 @@ int panningEnabled = 1;
     browsePropertiesIndex = [[NSMutableArray alloc] init];
     newlyCreatedPropertiesIndex= [[NSMutableArray alloc] init];
     suggestedCaseDisplayedIndex = -1;
+    
+
+    
     //get all the property ID's from each item in the selected case.
     
     for (PFObject *eachCaseItem in sortedCaseItems)
@@ -976,19 +979,24 @@ int panningEnabled = 1;
         
         [answersArray addObject:newAnsNumber];
         
+        
+        
+        
         //update the options in the property area and update the answers in the caseItem answers section for the internal arrays of data.
         PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:[self.pickerView selectedRowInComponent:0]];
         //change object to be an NSMutableArray with keyValues a
         //bugfixhere
         NSMutableArray *newAnsArray = [[NSMutableArray alloc] init];
         
-        for(NSNumber *eachAns in answersArray)
+        for(NSString *eachAns in answersArray)
         {
             NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
             [AnsObj setValue:eachAns forKey:@"a"];
             [newAnsArray addObject:AnsObj];
             
         }
+        
+       
         
         [selectedCaseItem setObject:[newAnsArray copy] forKey:@"answers"];
         
@@ -1135,6 +1143,46 @@ int panningEnabled = 1;
         [xmlWriter writeCharacters:caseName];
         [xmlWriter writeEndElement];
     
+    //Jan 18
+    //updating to put ALL property tags first before caseItem tags
+    int h = 0;
+    for (PFObject *eachCaseItem in sortedCaseItems)
+    {
+        PFObject *updatedProperty = [propsArray objectAtIndex:h];
+        NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
+        NSString *propertyDescr = [updatedProperty objectForKey:@"propertyDescr"];
+        
+        //check to see if this caseItem is a brand new property
+        
+        if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:h]])
+            
+        {
+            //add the XML for a new or updated property here
+            [xmlWriter writeStartElement:@"PROPERTY"];
+            
+            [xmlWriter writeStartElement:@"PROPERTYNUM"];
+            [xmlWriter writeCharacters:@"1"];
+            [xmlWriter writeEndElement];
+            
+            [xmlWriter writeStartElement:@"PROPERTYDESCR"];
+            [xmlWriter writeCharacters:propertyDescr];
+            [xmlWriter writeEndElement];
+            
+            //get the options value from the property object
+            NSString *fullCharsString = [updatedProperty objectForKey:@"options"];
+            
+            if([fullCharsString length]>0)
+            {
+                
+                [xmlWriter writeStartElement:@"OPTIONS"];
+                [xmlWriter writeCharacters:fullCharsString];
+                [xmlWriter writeEndElement];
+            }
+            //close property element
+            [xmlWriter writeEndElement];
+        }
+    }
+    
     
     //build strings for adding properties
     //Nov 24 2014
@@ -1150,7 +1198,8 @@ int panningEnabled = 1;
         NSString *propertyDescr = [updatedProperty objectForKey:@"propertyDescr"];
         
         //check to see if this caseItem is a brand new property
-        
+        //Jan 18, commenting this part out since properties are created further above now
+        /*
          if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:g]])
         
          {
@@ -1178,7 +1227,7 @@ int panningEnabled = 1;
             //close property element
             [xmlWriter writeEndElement];
          }
-        
+        */
         //write logic for updating the caseItem
         //build strings for building item
         [xmlWriter writeStartElement:@"ITEM"];
@@ -1587,6 +1636,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
         NewPropertyViewController *npvc = [self.storyboard instantiateViewControllerWithIdentifier:@"npvc"];
         
         npvc.userName = userName;
+        npvc.delegate = self;
         
         
         [self.navigationController pushViewController:npvc animated:YES];
