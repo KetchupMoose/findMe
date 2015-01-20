@@ -62,7 +62,8 @@ NSString *selectedPropertyQuestion;
 NSInteger newTextFieldIndex;
 NSInteger selectedItemForUpdate;
 MBProgressHUD *HUD;
-
+NSDate *updateDate;
+int timerTickCaseDetails =0;
 //location manager variables
 CLLocationManager *locationManager;
 CLGeocoder *geocoder;
@@ -100,6 +101,7 @@ int panningEnabled = 1;
     //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
     
     PFObject *caseItemObject = [caseListData objectAtIndex:selectedCaseInt];
+    updateDate = self.itsMTLObject.updatedAt;
     
     NSString *caseObjectID = [caseItemObject objectForKey:@"caseId"];
     
@@ -1089,7 +1091,10 @@ int panningEnabled = 1;
                                         
                                         [HUD hide:YES];
                                         
-                                        //need to poll for a response to the case
+                                        [self pollForCaseRefresh];
+                                        
+                                       
+                                        
                                     }
                                     else
                                     {
@@ -1621,7 +1626,6 @@ numberOfRowsInComponent:(NSInteger)component
    npvc.userName = userName;
     npvc.delegate = self;
     
-    
     [self.navigationController pushViewController:npvc animated:YES];
 }
 
@@ -1744,6 +1748,67 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     self.submitAnswersButton.backgroundColor = [UIColor blueColor];
     
    [self.navigationController popViewControllerAnimated:NO];
+    
+}
+
+-(void)pollForCaseRefresh
+{
+    //run a timer in the background to look for the moment the case is updated with a template maker
+    
+    //show progress HUD
+    
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Polling for Case Update";
+    [HUD show:YES];
+    
+    [NSTimer scheduledTimerWithTimeInterval:1.0
+                                     target:self
+                                   selector:@selector(timerFired:)
+                                   userInfo:nil
+                                    repeats:YES];
+    
+}
+
+
+- (void)timerFired:(NSTimer *)timer {
+    
+    NSLog(@"timer fired");
+  
+    //check the parse object to see if it is updated
+   
+    
+    
+    
+    [self.itsMTLObject fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        //compare the timestamp to the last saved timestamp
+        
+       if( [object.updatedAt timeIntervalSinceDate:updateDate] > 0 )
+        {
+            NSInteger timeInterval = [object.updatedAt timeIntervalSinceDate:updateDate];
+            
+            //do stuff
+            NSLog(@"greater than");
+            NSLog(@"%ld",(long)timeInterval);
+            NSLog(object.updatedAt);
+           
+            //stop the timer
+            [timer invalidate];
+            timerTickCaseDetails = 0;
+            
+            [HUD hide:YES];
+            
+        }
+        
+    }];
+    
+    timerTickCaseDetails=timerTickCaseDetails+1;
+    if(timerTickCaseDetails==12)
+    {
+        [timer invalidate];
+        NSLog(@"ran into maximum time");
+        [HUD hide:YES];
+    }
     
 }
 

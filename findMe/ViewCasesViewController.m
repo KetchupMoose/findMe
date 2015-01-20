@@ -180,10 +180,9 @@ UIRefreshControl *refreshControl;
     cdvc.selectedCaseIndex=selectedIndex;
     cdvc.caseListData = caseListPruned;
     cdvc.userName = userName;
-    
+    cdvc.itsMTLObject = self.itsMTLObject;
     
     [self.navigationController pushViewController:cdvc animated:YES];
-    
     
 }
 
@@ -215,7 +214,6 @@ UIRefreshControl *refreshControl;
                                         NSLog(responseText);
                                         
                                          [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Case Uploaded Successfully!", nil) message:NSLocalizedString(@"Case Uploaded Correctly.  Pull Down To Refresh And View", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
-                                        
                                         
                                     }
                                     else

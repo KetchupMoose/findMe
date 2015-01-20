@@ -180,7 +180,7 @@ MBProgressHUD *HUD;
 - (IBAction)ViewMyCases:(id)sender {
     ViewCasesViewController *vcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"vcvc"];
     vcvc.userName = HomePageuserName;
-    
+    vcvc.itsMTLObject = HomePageITSMTLObject;
     [self.navigationController pushViewController:vcvc animated:YES];
     
 }

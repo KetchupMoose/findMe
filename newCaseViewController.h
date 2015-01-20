@@ -17,8 +17,8 @@
 
 @property (strong,nonatomic) UITableView *TemplateSecondLevelTableView;
 
-@property (strong,nonatomic) PFObject *itsMTLObject;
 
+@property (strong,nonatomic) PFObject *itsMTLObject;
 
 
 @end

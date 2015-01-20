@@ -10,6 +10,7 @@
 #import "MBProgressHUD.h"
 #import <CoreLocation/CoreLocation.h>
 #import "NewPropertyViewController.h"
+#import <Parse/Parse.h>
 
 @interface CaseDetailsViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate,MBProgressHUDDelegate,UIAlertViewDelegate,CLLocationManagerDelegate,MyDataDelegate>
 
@@ -33,6 +34,8 @@
 
 @property (weak,nonatomic) NSArray *caseListData;
 @property (weak,nonatomic) NSNumber *selectedCaseIndex;
+
+@property (strong,nonatomic) PFObject *itsMTLObject;
 
 @property (weak,nonatomic) IBOutlet UILabel *questionLabel;
 @property (weak,nonatomic) IBOutlet UILabel *percentMatchingLabel;

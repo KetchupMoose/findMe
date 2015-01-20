@@ -668,6 +668,7 @@ MBProgressHUD *HUD;
     cdvc.selectedCaseIndex=selectedIndex;
     cdvc.caseListData = itsMTLCases;
     cdvc.userName = itsMTLObject.objectId;
+    cdvc.itsMTLObject = self.itsMTLObject;
     
     [self.navigationController pushViewController:cdvc animated:YES];
 }
