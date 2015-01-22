@@ -46,7 +46,15 @@ NSMutableArray *browseCases;
 NSMutableArray *browseProperties;
 NSMutableArray *browsePropertiesIndex;
 NSMutableArray *newlyCreatedPropertiesIndex;
+NSMutableArray *changedCaseItemsIndex;
+NSMutableArray *priorCaseIDS;
 
+PFObject *returnedITSMTLObject;
+
+
+//this variable stores the case being updated so it's clear which one to show when the json returns.  Used for a case where we're not in "template mode".
+NSString *caseBeingUpdated;
+BOOL templateMode;
 
 
 int suggestedCaseDisplayedIndex;
@@ -63,7 +71,11 @@ NSInteger newTextFieldIndex;
 NSInteger selectedItemForUpdate;
 MBProgressHUD *HUD;
 NSDate *updateDate;
+NSDate *secondUpdateCompare;
+NSNumber *lastTimestamp;
 int timerTickCaseDetails =0;
+int secondaryTimerTicks = 0;
+
 //location manager variables
 CLLocationManager *locationManager;
 CLGeocoder *geocoder;
@@ -101,7 +113,7 @@ int panningEnabled = 1;
     //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
     
     PFObject *caseItemObject = [caseListData objectAtIndex:selectedCaseInt];
-    updateDate = self.itsMTLObject.updatedAt;
+   
     
     NSString *caseObjectID = [caseItemObject objectForKey:@"caseId"];
     
@@ -120,6 +132,17 @@ int panningEnabled = 1;
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     
     caseItems= [caseItemObject objectForKey:@"caseItems"];
+    
+    caseBeingUpdated = [caseItemObject objectForKey:@"caseId"];
+    if([caseBeingUpdated length] ==0)
+    {
+        templateMode = 1;
+    }
+    else
+    {
+        templateMode = 0;
+        
+    }
     
     sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
     
@@ -143,9 +166,21 @@ int panningEnabled = 1;
     browsePropertiesIndex = [[NSMutableArray alloc] init];
     newlyCreatedPropertiesIndex= [[NSMutableArray alloc] init];
     suggestedCaseDisplayedIndex = -1;
+    changedCaseItemsIndex =[[NSMutableArray alloc] init];
+    priorCaseIDS = [[NSMutableArray alloc] init];
     
-
+    NSArray *cases = [self.itsMTLObject objectForKey:@"cases"];
     
+    for (PFObject *eachCase in cases)
+    {
+        NSString *caseID = [eachCase objectForKey:@"caseId"];
+        if([caseID length] >0)
+        [priorCaseIDS addObject:caseID];
+        
+    }
+   
+    NSLog(@"case List Count 1");
+    NSLog(@"%ld",[cases count]);
     //get all the property ID's from each item in the selected case.
     
     for (PFObject *eachCaseItem in sortedCaseItems)
@@ -328,8 +363,6 @@ int panningEnabled = 1;
             self.caseDetailsTableView.alpha = 1;
             
             [self.caseDetailsTableView reloadData];
-
-            
         }
         
     }
@@ -358,6 +391,26 @@ int panningEnabled = 1;
     
     self.submitAnswersButton.enabled = 0;
     self.submitAnswersButton.backgroundColor = [UIColor lightGrayColor];
+    
+    //set the last timestamp value for cases where it's not the first template
+    NSArray *casesArray = [self.itsMTLObject objectForKey:@"cases"];
+    
+    if(templateMode==0)
+    {
+        updateDate = self.itsMTLObject.updatedAt;
+        
+        for (PFObject *eachReturnedCase in casesArray)
+        {
+            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+            if([caseString length] <=0)
+            {
+                
+                lastTimestamp = [eachReturnedCase objectForKey:@"timestamp"];
+            }
+        }
+        
+    }
+
     
     
 }
@@ -906,6 +959,16 @@ int panningEnabled = 1;
     
     [self.pickerView reloadAllComponents];
     
+    //add the row of this table to the array of changed rows so it knows to include it on the update
+    
+    //get the row from the selected PickerView Item
+    NSNumber *rowNumber = [NSNumber numberWithInteger:sortedCaseItemsIndexToDisplay];
+    
+    //add it to the array
+    [changedCaseItemsIndex addObject:rowNumber];
+    
+    
+    
     self.submitAnswersButton.enabled = 1;
     self.submitAnswersButton.backgroundColor = [UIColor blueColor];
     
@@ -981,9 +1044,6 @@ int panningEnabled = 1;
         
         [answersArray addObject:newAnsNumber];
         
-        
-        
-        
         //update the options in the property area and update the answers in the caseItem answers section for the internal arrays of data.
         PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:[self.pickerView selectedRowInComponent:0]];
         //change object to be an NSMutableArray with keyValues a
@@ -997,8 +1057,6 @@ int panningEnabled = 1;
             [newAnsArray addObject:AnsObj];
             
         }
-        
-       
         
         [selectedCaseItem setObject:[newAnsArray copy] forKey:@"answers"];
         
@@ -1052,6 +1110,16 @@ int panningEnabled = 1;
     
      self.submitAnswersButton.enabled = 1;
     self.submitAnswersButton.backgroundColor = [UIColor blueColor];
+    
+    
+    //for both of these cases, show that this case should be included in the updates:
+    NSInteger rowInt = (NSInteger)[self.pickerView selectedRowInComponent:0];
+    //get the row from indexPath
+    NSNumber *rowNumber = [NSNumber numberWithInteger:rowInt];
+    
+    //add it to the array
+    [changedCaseItemsIndex addObject:rowNumber];
+    
      return YES;
    }
 
@@ -1089,11 +1157,14 @@ int panningEnabled = 1;
                                         NSString *responseText = responseString;
                                         NSLog(responseText);
                                         
-                                        [HUD hide:YES];
+                                        [HUD hide:NO];
+                                        
+                                       //set update date to this exact moment
+                                        //updateDate = [[NSDate alloc] initWithTimeIntervalSinceNow:0];
+                                        
+                                        //loop through the cases to find the previously submitted timestamp
                                         
                                         [self pollForCaseRefresh];
-                                        
-                                       
                                         
                                     }
                                     else
@@ -1148,11 +1219,21 @@ int panningEnabled = 1;
         [xmlWriter writeCharacters:caseName];
         [xmlWriter writeEndElement];
     
+    
+    
     //Jan 18
     //updating to put ALL property tags first before caseItem tags
     int h = 0;
     for (PFObject *eachCaseItem in sortedCaseItems)
+{
+        //before checking anything, check to see if the value h is in the changedIndexArray
+        NSNumber *indexCheck = [NSNumber numberWithInt:h];
+        
+        if([changedCaseItemsIndex containsObject:indexCheck])
     {
+            //do update
+        
+        
         PFObject *updatedProperty = [propsArray objectAtIndex:h];
         NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
         NSString *propertyDescr = [updatedProperty objectForKey:@"propertyDescr"];
@@ -1186,53 +1267,7 @@ int panningEnabled = 1;
             //close property element
             [xmlWriter writeEndElement];
         }
-    }
-    
-    
-    //build strings for adding properties
-    //Nov 24 2014
-    //changing logic so that it only creates a new property portion if the user really chose to create a new one.
-    //Dec 14 2014
-    //changing logic to iterate through all properties and case items in the array and update with their contents.  New properties will need to be added to these arrays.
-    
-    int g = 0;
-    for (PFObject *eachCaseItem in sortedCaseItems)
-    {
-        PFObject *updatedProperty = [propsArray objectAtIndex:g];
-        NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
-        NSString *propertyDescr = [updatedProperty objectForKey:@"propertyDescr"];
         
-        //check to see if this caseItem is a brand new property
-        //Jan 18, commenting this part out since properties are created further above now
-        /*
-         if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:g]])
-        
-         {
-             //add the XML for a new or updated property here
-             [xmlWriter writeStartElement:@"PROPERTY"];
-            
-             [xmlWriter writeStartElement:@"PROPERTYNUM"];
-             [xmlWriter writeCharacters:@"1"];
-             [xmlWriter writeEndElement];
-            
-             [xmlWriter writeStartElement:@"PROPERTYDESCR"];
-             [xmlWriter writeCharacters:propertyDescr];
-             [xmlWriter writeEndElement];
-        
-             //get the options value from the property object
-             NSString *fullCharsString = [updatedProperty objectForKey:@"options"];
-        
-             if([fullCharsString length]>0)
-             {
-       
-                 [xmlWriter writeStartElement:@"OPTIONS"];
-                 [xmlWriter writeCharacters:fullCharsString];
-                 [xmlWriter writeEndElement];
-             }
-            //close property element
-            [xmlWriter writeEndElement];
-         }
-        */
         //write logic for updating the caseItem
         //build strings for building item
         [xmlWriter writeStartElement:@"ITEM"];
@@ -1315,11 +1350,13 @@ int panningEnabled = 1;
         //close item element
         [xmlWriter writeEndElement];
 
-        //iterate to the next item in the sortedCasesArray
-        g =g+1;
-        
-        
     }
+        
+        //iterate to the next item in the sortedCasesArray
+        h =h+1;
+        
+        
+}
     
     
     // close payload element
@@ -1737,6 +1774,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
         
     NSNumber *indexNum = [[NSNumber alloc] initWithInt:g];
     [newlyCreatedPropertiesIndex addObject:indexNum];
+     [changedCaseItemsIndex addObject:indexNum];
     
     [self.pickerView reloadAllComponents];
     [self.caseDetailsTableView reloadData];
@@ -1748,6 +1786,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     self.submitAnswersButton.backgroundColor = [UIColor blueColor];
     
    [self.navigationController popViewControllerAnimated:NO];
+    
+    
     
 }
 
@@ -1773,42 +1813,467 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
 
 - (void)timerFired:(NSTimer *)timer {
     
-    NSLog(@"timer fired");
-  
-    //check the parse object to see if it is updated
-   
+        NSLog(@"timer fired tick %i", timerTickCaseDetails);
     
-    
-    
-    [self.itsMTLObject fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-        //compare the timestamp to the last saved timestamp
+        //check the parse object to see if it is updated
         
-       if( [object.updatedAt timeIntervalSinceDate:updateDate] > 0 )
+        //[self.itsMTLObject fetch];
+    
+    NSArray *cases = [self.itsMTLObject objectForKey:@"cases"];
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
+    [query includeKey:@"cases"];
+    
+    returnedITSMTLObject = [query getObjectWithId:self.itsMTLObject.objectId];
+    
+    
+    NSArray *returnedCases = [returnedITSMTLObject objectForKey:@"cases"];
+    
+    BOOL updateSuccess = 0;
+    
+    if(templateMode ==1)
+    {
+        for (PFObject *eachReturnedCase in returnedCases)
         {
-            NSInteger timeInterval = [object.updatedAt timeIntervalSinceDate:updateDate];
+            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+            //make sure CaseString is not nil/blank
+            if([caseString length] >0)
+            {
+                if([priorCaseIDS containsObject:caseString])
+                {
+                    //continue
+                }
+                else
+                {
+                    updateSuccess=1;
+                    
+                    break;
+                }
+            }
             
-            //do stuff
-            NSLog(@"greater than");
-            NSLog(@"%ld",(long)timeInterval);
-            NSLog(object.updatedAt);
+        }
+    }
+    else if (templateMode ==0)
+    {
+        for (PFObject *eachReturnedCase in returnedCases)
+        {
+            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+            if([caseString length] <=0)
+            {
+                //check the timestamp, see if newer than prior timestamp
+                NSNumber *timestamp = [eachReturnedCase objectForKey:@"timestamp"];
+                
+                if(timestamp > lastTimestamp)
+                {
+                    NSLog(@"newer timestamp found");
+                   
+                    
+                    //the update was newer and we verified it from actual case data, set boolean to true
+                    updateSuccess =1;
+                    
+                }
+                
+                break;
+            }
+            else
+            {
+                //continue
+            }
+           
+        }
+        
+    }
+    
+    if(updateSuccess ==1)
+        {
+            NSLog(@"update successful");
+           
+            secondUpdateCompare = self.itsMTLObject.updatedAt;
            
             //stop the timer
             [timer invalidate];
             timerTickCaseDetails = 0;
             
-            [HUD hide:YES];
+            //clear out the changedCaseItemsIndex
+            [changedCaseItemsIndex removeAllObjects];
+            
+            /*[NSTimer scheduledTimerWithTimeInterval:1.0
+                                             target:self
+                                           selector:@selector(secondaryTimerFired:)
+                                           userInfo:nil
+                                            repeats:YES];
+            */
+           [self reloadItsMTLObject];
+            
             
         }
-        
-    }];
     
+    else
+    {
+        NSLog(@"running the loop again to query again");
+        
+    }
+        
     timerTickCaseDetails=timerTickCaseDetails+1;
-    if(timerTickCaseDetails==12)
+    if(timerTickCaseDetails==40)
     {
         [timer invalidate];
         NSLog(@"ran into maximum time");
         [HUD hide:YES];
     }
+    
+}
+
+- (void)secondaryTimerFired:(NSTimer *)timer {
+    
+    NSLog(@"secondary timer fired");
+    
+    [self.itsMTLObject fetch];
+    //compare the timestamp to the last saved timestamp
+    
+    if( [self.itsMTLObject.updatedAt timeIntervalSinceDate:secondUpdateCompare] > 0 )
+        
+    {
+    NSInteger timeInterval = [self.itsMTLObject.updatedAt timeIntervalSinceDate:secondUpdateCompare];
+    //do stuff
+    
+    NSLog(@"greater than on secondary (return from backend)");
+    NSLog(@"%ld",(long)timeInterval);
+    //reload data
+    
+    //stop the timer
+    [timer invalidate];
+    timerTickCaseDetails = 0;
+    
+    //clear out the changedCaseItemsIndex
+    //[changedCaseItemsIndex removeAllObjects];
+    
+    //[self reloadItsMTLObject];
+    }
+    
+    secondaryTimerTicks=secondaryTimerTicks+1;
+    if(secondaryTimerTicks==30)
+    {
+        [timer invalidate];
+        NSLog(@"ran into maximum time");
+        [HUD hide:YES];
+    }
+
+    
+}
+
+-(void) reloadItsMTLObject
+{
+    //loop through self.itsMTLObject and refresh all the data
+    
+    // selected case is remembered from the property
+    
+    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+    //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
+    
+    //caseListData is retrieved from the ITSMTLObject
+    NSArray *reloadCaseListData = [returnedITSMTLObject objectForKey:@"cases"];
+    
+    NSLog(@"case List Count 2");
+    NSLog(@"%ld",[reloadCaseListData count]);
+    
+    //two different methods for retrieving the exact case for show
+    //method 1: in template mode.  loop through the array of prior case ID's and look for the one that is new and wasn't there before.  That's the new case!
+    //method 2: pre-existing case update.  //loop through the caseID's and look for that exact one.
+    int i = 0;
+    int indexOfCase = 0;
+    if(templateMode ==1)
+    {
+        for (PFObject *eachReturnedCase in reloadCaseListData)
+        {
+            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+            //make sure CaseString is not nil/blank
+            if([caseString length] >0)
+            {
+                    if([priorCaseIDS containsObject:caseString])
+                    {
+                    //continue
+                    }
+                    else
+                    {
+                        indexOfCase = i;
+                        break;
+                    }
+            }
+                i = i+1;
+        }
+    }
+    else if (templateMode ==0)
+    {
+        for (PFObject *eachReturnedCase in reloadCaseListData)
+        {
+            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+            if([caseBeingUpdated isEqualToString:caseString])
+            {
+                indexOfCase = i;
+                break;
+            }
+            else
+            {
+               //continue
+            }
+            i = i+1;
+        }
+
+    }
+    PFObject *caseItemObject = [reloadCaseListData objectAtIndex:indexOfCase];
+    
+    templateMode =0;
+    caseBeingUpdated = [caseItemObject objectForKey:@"caseId"];
+    
+    //get the LAST (latest) QuestionItem to display that information.
+    
+    NSSortDescriptor *sortDescriptor;
+    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
+                                                 ascending:NO];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    
+    caseItems= [caseItemObject objectForKey:@"caseItems"];
+    
+    sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+    
+    //setting up arrays for storing three sets of properties and cases based on type: info messages, already answered properties, and new suggested properties
+    
+    [propertyIDSArray removeAllObjects];
+    [answeredPropertiesIndex removeAllObjects];
+   [answeredProperties removeAllObjects];
+    [answeredCases removeAllObjects];
+    [infoCases removeAllObjects];
+    [infoMessageProperties removeAllObjects];
+    [suggestedProperties removeAllObjects];
+    [suggestedCases removeAllObjects];
+    [suggestedCaseIndex removeAllObjects];
+    [updatedPropertiesIndex removeAllObjects];
+    [customAnsweredCases removeAllObjects];
+    [customAnsweredProperties removeAllObjects];
+    [customAnsweredPropertiesIndex removeAllObjects];
+    [browseCases removeAllObjects];
+    [browseProperties removeAllObjects];
+    [browsePropertiesIndex removeAllObjects];
+    [newlyCreatedPropertiesIndex removeAllObjects];
+    suggestedCaseDisplayedIndex = -1;
+    [changedCaseItemsIndex removeAllObjects];
+    
+    //get all the property ID's from each item in the selected case.
+    
+    for (PFObject *eachCaseItem in sortedCaseItems)
+    {
+        NSString *propNum = [eachCaseItem objectForKey:@"propertyNum"];
+        [propertyIDSArray addObject:propNum];
+    }
+    
+    //get all the property information for the list of properties to consider
+    PFQuery *propertsQuery = [PFQuery queryWithClassName:@"Properts"];
+    [propertsQuery whereKey:@"objectId" containedIn:propertyIDSArray];
+    [propertsQuery orderByDescending:@"priority"];
+    
+    propsArray = [[propertsQuery findObjects] mutableCopy];
+    
+    //sort the properties into four categories based on their type: info messages, answerableQuestions, customAnswerableQuestions, and new suggestions
+    int g = 0;
+    for (PFObject *property in propsArray)
+    {
+        NSString *propType = [property objectForKey:@"propertyType"];
+        NSString *options = [property objectForKey:@"options"];
+        
+        if([propType  isEqual:@"I"])
+        {
+            //property is an info message
+            [infoMessageProperties addObject:property];
+            [infoCases addObject:sortedCaseItems[g]];
+        }
+        else if([propType isEqual:@"N"])
+        {
+            [NoAnswerProperties addObject:property];
+            [NoAnswerCases addObject:sortedCaseItems[g]];
+        }
+        
+        else if([propType isEqual:@"B"])
+        {
+            [browseProperties addObject:property];
+            [browseCases addObject:sortedCaseItems[g]];
+        }
+        
+        else if([options length]==0)
+        {
+            [customAnsweredProperties addObject:property];
+            [customAnsweredProperties addObject:sortedCaseItems[g]];
+        }
+        else
+            
+        {
+            PFObject *caseItemObject = sortedCaseItems[g];
+            NSArray *answers = [caseItemObject objectForKey:@"answers"];
+            
+            if(answers.count>=1)
+            {
+                NSNumber *indexNum = [[NSNumber alloc] initWithInt:g];
+                [answeredPropertiesIndex addObject:indexNum];
+                //array for keeping track of the properties with answers.  Some of these may be info messages so that is dealt with further down.  It is assumed info messages can not have answers.
+                //add the property to the list of answeredProperties
+                [answeredProperties addObject:property];
+                [answeredCases addObject:sortedCaseItems[g]];
+                
+            }
+            else
+            {
+                [suggestedProperties addObject:property];
+                [suggestedCases addObject:sortedCaseItems[g]];
+                NSNumber *caseIndex = [NSNumber numberWithInt:g];
+                [suggestedCaseIndex addObject:caseIndex];
+            }
+        }
+        g=g+1;
+    }
+    
+    PFObject *firstSuggestedCaseToShow;
+    if (suggestedCases.count >0)
+    {
+        firstSuggestedCaseToShow = [suggestedCases objectAtIndex:0];
+        
+        NSNumber *firstSuggestionIndex = [suggestedCaseIndex objectAtIndex:0];
+        suggestedCaseDisplayedIndex = [firstSuggestionIndex intValue];
+        
+        selectedItemForUpdate = [firstSuggestionIndex integerValue];
+        
+        //NSString *lastQPropertyNum = [firstSuggestedCaseToShow objectForKey:@"propertyNum"];
+        selectedCaseItemAnswersList = [firstSuggestedCaseToShow objectForKey:@"answers"];
+        
+        answersArray = [[NSMutableArray alloc] init];
+        
+        [answersArray removeAllObjects];
+        
+        for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
+        {
+            NSString *ansNum = [eachAnsObj valueForKey:@"a"];
+            
+            if (ansNum==nil)
+            {
+                NSString *ans = [eachAnsObj valueForKey:@"custom"];
+                [answersArray addObject:ans];
+                
+            }
+            else
+            {
+                [answersArray addObject:ansNum];
+            }
+            
+        }
+        
+        ansStaticArray = [answersArray mutableCopy];
+        
+        //show the property's information for options
+        
+        PFObject *propertsObject = [suggestedProperties objectAtIndex:0];
+        
+        NSString *questionString = [propertsObject objectForKey:@"propertyDescr"];
+        NSString *suggestedQString = @"Suggested Question: ";
+        
+        self.suggestedQuestion.text = [suggestedQString stringByAppendingString:questionString];
+        
+        NSString *optionsString = [propertsObject objectForKey:@"options"];
+        
+        //need to convert options string to an array of objects with ; separators.
+        
+        optionsArray = [optionsString componentsSeparatedByString:@";"];
+        
+        self.questionLabel.text = questionString;
+        
+        [self.caseDetailsTableView reloadData];
+    }
+    else
+    {
+        //show no suggested question popup and don't populate the answers tableview
+        self.checkPreviousAnswersButton.titleLabel.text = @"Showing Previous Answers";
+        self.pickerView.alpha =1;
+        self.suggestedQuestion.alpha = 0;
+        self.caseDetailsTableView.alpha =0;
+        
+        //check to see if the first priority case in case items is an answered question.  If so, display the list of options.
+        
+        if ([answeredPropertiesIndex containsObject:[NSNumber numberWithInt:0]])
+        {
+            //display the list of options & answers for this case on the first index
+            
+            firstSuggestedCaseToShow = [sortedCaseItems objectAtIndex:0];
+            
+            //selectedItemForUpdate = [firstSuggestionIndex integerValue];
+            
+            //NSString *lastQPropertyNum = [firstSuggestedCaseToShow objectForKey:@"propertyNum"];
+            selectedCaseItemAnswersList = [firstSuggestedCaseToShow objectForKey:@"answers"];
+            
+            answersArray = [[NSMutableArray alloc] init];
+            
+            [answersArray removeAllObjects];
+            
+            for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
+            {
+                NSString *ansNum = [eachAnsObj valueForKey:@"a"];
+                if (ansNum==nil)
+                {
+                    NSString *ans = [eachAnsObj valueForKey:@"custom"];
+                    [answersArray addObject:ans];
+                }
+                else
+                {
+                    [answersArray addObject:ansNum];
+                }
+            }
+            
+            ansStaticArray = [answersArray mutableCopy];
+            
+            //show the property's information for options
+            
+            PFObject *propertsObject = [propsArray objectAtIndex:0];
+            
+            NSString *optionsString = [propertsObject objectForKey:@"options"];
+            
+            //need to convert options string to an array of objects with ; separators.
+            
+            optionsArray = [optionsString componentsSeparatedByString:@";"];
+            
+            self.caseDetailsTableView.alpha = 1;
+            
+            [self.caseDetailsTableView reloadData];
+            
+            
+        }
+        
+    }
+    
+    [self.pickerView reloadAllComponents];
+    
+    self.submitAnswersButton.enabled = 0;
+    self.submitAnswersButton.backgroundColor = [UIColor lightGrayColor];
+    
+    
+    //remove the updating HUD
+    [HUD hide:YES];
+    
+    //set the last timestamp value for cases where it's not the first template
+    NSArray *casesArray = [returnedITSMTLObject objectForKey:@"cases"];
+    
+    if(templateMode==0)
+    {
+        updateDate = self.itsMTLObject.updatedAt;
+        
+        for (PFObject *eachReturnedCase in casesArray)
+        {
+            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+            if([caseString length] <=0)
+            {
+                
+                lastTimestamp = [eachReturnedCase objectForKey:@"timestamp"];
+            }
+        }
+        
+    }
+
     
 }
 
