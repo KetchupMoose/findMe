@@ -102,6 +102,8 @@ int panningEnabled = 1;
     
     self.customAnswerTextField.delegate = self;
     
+    //adding a comment for Tuesday commit
+    
     
     //location manager instance variable allocs
     locationManager = [[CLLocationManager alloc] init];
