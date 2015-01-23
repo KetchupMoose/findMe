@@ -178,7 +178,7 @@ UIRefreshControl *refreshControl;
     CaseDetailsViewController *cdvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdvc"];
     
     cdvc.selectedCaseIndex=selectedIndex;
-    cdvc.caseListData = caseListPruned;
+   
     cdvc.userName = userName;
     cdvc.itsMTLObject = self.itsMTLObject;
     

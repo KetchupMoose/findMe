@@ -199,6 +199,12 @@ MBProgressHUD *HUD;
     //e9eAifIkyD
     HomePageuserName = @"yh5YoZSXRW";
     
+    //set the HomePageITSMTLOject to this object.
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
+    [query includeKey:@"cases"];
+    
+    HomePageITSMTLObject = [query getObjectWithId:HomePageuserName];
     //query for data based on this itsMTLobject and reload data on the home page
     
     [self ReloadHomePageData];

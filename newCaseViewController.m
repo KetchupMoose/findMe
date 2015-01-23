@@ -32,6 +32,9 @@ int pickedParentTemplateIndex;
 NSString *selectedTemplate1;
 NSString *selectedTemplate2;
 
+NSNumber *previousTemplateTimestamp;
+PFObject *queryReturnPFObject;
+
 int timerTickCheck =0;
 
 MBProgressHUD *HUD;
@@ -579,6 +582,42 @@ MBProgressHUD *HUD;
 
 -(void)pollForTemplateMaker
 {
+    //set the previous timestamp of the template to the current value.  If there is no data at all yet, set it to 0.
+    //set the last timestamp value for cases where it's not the first template
+    
+   
+    
+    NSArray *casesArray = [self.itsMTLObject objectForKey:@"cases"];
+    //set the previous timestamp so it knows what to compare against.
+    
+    if([casesArray count] >0)
+    {
+        
+    
+    
+        for (PFObject *eachReturnedCase in casesArray)
+        {
+            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+            if([caseString length] <=0)
+            {
+                NSString *timeStampReturn = [eachReturnedCase objectForKey:@"timestamp"];
+                NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                f.numberStyle = NSNumberFormatterDecimalStyle;
+                previousTemplateTimestamp = [f numberFromString:timeStampReturn];
+                
+            }
+        }
+        
+    }
+    else
+        
+    {
+        previousTemplateTimestamp = [NSNumber numberWithInt:0];
+        
+        
+    }
+    
+    
     //run a timer in the background to look for the moment the case is updated with a template maker
    
     //show progress HUD
@@ -600,11 +639,15 @@ MBProgressHUD *HUD;
     
     NSLog(@"timer fired");
     //check the parse object to see if it is updated
+    PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
+    [query includeKey:@"cases"];
     
+    queryReturnPFObject = [query getObjectWithId:self.itsMTLObject.objectId];
     
-    [itsMTLObject fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+    self.itsMTLObject = queryReturnPFObject;
+    
         //do stuff with object.
-        NSArray *caseList = [object objectForKey:@"cases"];
+        NSArray *caseList = [queryReturnPFObject objectForKey:@"cases"];
         
          if(caseList != nil)
     {
@@ -620,36 +663,48 @@ MBProgressHUD *HUD;
         else
         {
             //check to see if the new case has been created yet, look for a case ID where case is = nil.
-            NSLog(@"got this many cases %i",caseList.count);
-            
-                int i = 0;
-                for (PFObject *caseObj in caseList)
+        
+            //check to see if the timestamp returned on the template case is newer than the previous timestamp.
+            int i = 0;
+            for (PFObject *eachReturnedCase in caseList)
+            {
+                NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+                if([caseString length] <=0)
                 {
-                    i = i+1;
+                    //check the timestamp, see if newer than prior timestamp
+                    NSString *timeStampReturn = [eachReturnedCase objectForKey:@"timestamp"];
+                    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                    f.numberStyle = NSNumberFormatterDecimalStyle;
                     
-                    NSString *caseID = [caseObj objectForKey:@"caseId"];
-                    NSLog(@"case ID is :%@",caseID);
-                
-                    if(caseID ==nil)
+                    NSNumber *timestamp = [f numberFromString:timeStampReturn];
+                    
+                    if([timestamp doubleValue] > [previousTemplateTimestamp doubleValue])
                     {
-                    
-                    //stop the timer
-                    [timer invalidate];
-                    timerTickCheck = 0;
-                    NSLog(@"got the blank caseID, showing the case details page");
-                    [HUD hide:YES];
-                    [self ShowCaseDetails:caseList LastCreatedCaseIndex:i-1];
-                    
+                        NSLog(@"newer timestamp found");
+                       
+                        //stop the timer
+                        [timer invalidate];
+                        timerTickCheck = 0;
+                        NSLog(@"got the blank caseID, showing the case details page");
+                        [HUD hide:YES];
+                        [self ShowCaseDetails:caseList LastCreatedCaseIndex:i];
+                        break;
+                    }
+                    else
+                    {
+                        NSLog(@"timestamp not greater");
+                        
                     }
                 }
+                   i = i+1;
+            }
         }
-        
     }
        
-    }];
+    
     
     timerTickCheck=timerTickCheck+1;
-    if(timerTickCheck==6)
+    if(timerTickCheck==15)
     {
         [timer invalidate];
         NSLog(@"ran into maximum time");
@@ -666,9 +721,9 @@ MBProgressHUD *HUD;
     CaseDetailsViewController *cdvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdvc"];
     
     cdvc.selectedCaseIndex=selectedIndex;
-    cdvc.caseListData = itsMTLCases;
+
     cdvc.userName = itsMTLObject.objectId;
-    cdvc.itsMTLObject = self.itsMTLObject;
+    cdvc.itsMTLObject = queryReturnPFObject;
     
     [self.navigationController pushViewController:cdvc animated:YES];
 }

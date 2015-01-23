@@ -18,7 +18,7 @@
 @end
 
 @implementation CaseDetailsViewController
-@synthesize caseListData;
+
 @synthesize selectedCaseIndex;
 @synthesize pickerView;
 @synthesize userName;
@@ -86,6 +86,10 @@ CGPoint startLocation;
 
 int panningEnabled = 1;
 
+NSString *locationRetrieved;
+NSString *locationLatitude;
+NSString *locationLongitude;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -114,7 +118,9 @@ int panningEnabled = 1;
     int selectedCaseInt = (int)[selectedCaseIndex integerValue];
     //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
     
-    PFObject *caseItemObject = [caseListData objectAtIndex:selectedCaseInt];
+    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+    
+    PFObject *caseItemObject = [allCases objectAtIndex:selectedCaseInt];
    
     
     NSString *caseObjectID = [caseItemObject objectForKey:@"caseId"];
@@ -406,8 +412,11 @@ int panningEnabled = 1;
             NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
             if([caseString length] <=0)
             {
-                
-                lastTimestamp = [eachReturnedCase objectForKey:@"timestamp"];
+                NSString *timeStampReturn = [eachReturnedCase objectForKey:@"timestamp"];
+                NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                f.numberStyle = NSNumberFormatterDecimalStyle;
+             lastTimestamp = [f numberFromString:timeStampReturn];
+               
             }
         }
         
@@ -531,7 +540,9 @@ int panningEnabled = 1;
         int selectedCaseInt = (int)[selectedCaseIndex integerValue];
         //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
         
-        PFObject *caseObject = [caseListData objectAtIndex:selectedCaseInt];
+        NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+        
+        PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
         NSString *caseObjectID = [caseObject objectForKey:@"caseId"];
         
         int length = (int)[caseObjectID length];
@@ -631,6 +642,23 @@ int panningEnabled = 1;
             self.pickerView.alpha = 1;
             suggestedCaseDisplayedIndex = -1;
             
+            //add another suggestion but make it alpha 0
+            self.suggestedQuestion = [[UILabel alloc] init];
+            UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panDetected:)];
+            [self.suggestedQuestion setUserInteractionEnabled:YES];
+            [self.suggestedQuestion addGestureRecognizer:panRecognizer];
+            
+            self.suggestedQuestion.backgroundColor = [UIColor whiteColor];
+            self.suggestedQuestion.alpha = 0.8;
+            self.suggestedQuestion.textAlignment = NSTextAlignmentCenter;
+            self.suggestedQuestion.frame = originalQuestionFrame;
+            self.suggestedQuestion.numberOfLines = 5;
+            self.suggestedQuestion.lineBreakMode = NSLineBreakByWordWrapping;
+            self.suggestedQuestion.alpha = 0;
+            
+            
+            [self.view SlideFromLeft:self.suggestedQuestion duration:0.2 option:UIViewAnimationOptionCurveEaseInOut];
+
             
             //show the answers/options for the first case item in the list
          
@@ -707,7 +735,9 @@ int panningEnabled = 1;
     int selectedCaseInt = (int)[selectedCaseIndex integerValue];
     //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
     
-    PFObject *caseObject = [caseListData objectAtIndex:selectedCaseInt];
+    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+    
+    PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
     NSString *caseObjectID = [caseObject objectForKey:@"caseId"];
     
     NSString *caseItem = [itemObject objectForKey:@"caseItem"];
@@ -1127,6 +1157,31 @@ int panningEnabled = 1;
 
 -(IBAction)doUpdate:(id)sender
 {
+    //set the last timestamp value for cases where it's not the first template
+    NSArray *casesArray = [self.itsMTLObject objectForKey:@"cases"];
+    //set the previous timestamp so it knows what to compare against.
+    if(templateMode==0)
+    {
+        updateDate = self.itsMTLObject.updatedAt;
+        
+        for (PFObject *eachReturnedCase in casesArray)
+        {
+            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+            if([caseString length] <=0)
+            {
+                NSString *timeStampReturn = [eachReturnedCase objectForKey:@"timestamp"];
+                NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                f.numberStyle = NSNumberFormatterDecimalStyle;
+                lastTimestamp = [f numberFromString:timeStampReturn];
+                
+            }
+        }
+        
+    }
+
+    
+    
+    
     //if in setting answers mode, just update the internal arrays of answers for caseItems
     
     
@@ -1185,7 +1240,9 @@ int panningEnabled = 1;
     
     NSInteger selectedCaseInt = [selectedCaseIndex integerValue];
     //the case object includes the list of all caseItems and the caseId
-    PFObject *caseObject = [caseListData objectAtIndex:selectedCaseInt];
+    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+    
+    PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
     
     
     NSString *caseName = [caseObject objectForKey:@"caseName"];
@@ -1225,16 +1282,17 @@ int panningEnabled = 1;
     
     //Jan 18
     //updating to put ALL property tags first before caseItem tags
+    
+   
     int h = 0;
     for (PFObject *eachCaseItem in sortedCaseItems)
 {
         //before checking anything, check to see if the value h is in the changedIndexArray
         NSNumber *indexCheck = [NSNumber numberWithInt:h];
         
-        if([changedCaseItemsIndex containsObject:indexCheck])
+    if([changedCaseItemsIndex containsObject:indexCheck] || templateMode ==1)
     {
             //do update
-        
         
         PFObject *updatedProperty = [propsArray objectAtIndex:h];
         NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
@@ -1359,7 +1417,23 @@ int panningEnabled = 1;
         
         
 }
+    if([locationRetrieved length]>0)
+    {
+    [xmlWriter writeStartElement:@"locationText"];
+    [xmlWriter writeCharacters:locationRetrieved];
+    [xmlWriter writeEndElement];
+    }
     
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"locationLatitude"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"locationLongitude"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
     
     // close payload element
     [xmlWriter writeEndElement];
@@ -1697,6 +1771,14 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     locationManager.delegate = self;
     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     
+    //show progress HUD
+    
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Retrieving Location Data";
+    [HUD show:YES];
+    
+    
     [locationManager startUpdatingLocation];
 }
 
@@ -1718,6 +1800,10 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (currentLocation != nil) {
         //longitudeLabel.text = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude];
         //latitudeLabel.text = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude];
+        
+       
+        locationLongitude = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude];
+        locationLatitude =[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude];
     }
     
     // Stop Location Manager
@@ -1735,10 +1821,20 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
                                  placemark.postalCode, placemark.locality,
                                  placemark.administrativeArea,
                                  placemark.country];
+            NSString *locationText =[NSString stringWithFormat:@"%@ %@\n%@ %@\n%@\n%@",
+                                     placemark.subThoroughfare, placemark.thoroughfare,
+                                     placemark.postalCode, placemark.locality,
+                                     placemark.administrativeArea,
+                                     placemark.country];
+            UIAlertView *successAlert = [[UIAlertView alloc]
+                                       initWithTitle:@"Success" message:@"Retrieved Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [successAlert show];
             
-            
+            [HUD hide:YES];
         } else {
             NSLog(@"%@", error.debugDescription);
+            
+             [HUD hide:YES];
         }
     } ];
     
@@ -1863,9 +1959,13 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
             if([caseString length] <=0)
             {
                 //check the timestamp, see if newer than prior timestamp
-                NSNumber *timestamp = [eachReturnedCase objectForKey:@"timestamp"];
+                NSString *timeStampReturn = [eachReturnedCase objectForKey:@"timestamp"];
+                NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                f.numberStyle = NSNumberFormatterDecimalStyle;
+
+                NSNumber *timestamp = [f numberFromString:timeStampReturn];
                 
-                if(timestamp > lastTimestamp)
+                if([timestamp doubleValue] > [lastTimestamp doubleValue])
                 {
                     NSLog(@"newer timestamp found");
                    
@@ -1970,8 +2070,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     
     // selected case is remembered from the property
     
-    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
-    //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
+
     
     //caseListData is retrieved from the ITSMTLObject
     NSArray *reloadCaseListData = [returnedITSMTLObject objectForKey:@"cases"];
@@ -2013,6 +2112,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
             if([caseBeingUpdated isEqualToString:caseString])
             {
                 indexOfCase = i;
+                NSLog(@"match found on case");
                 break;
             }
             else
@@ -2024,6 +2124,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
 
     }
     PFObject *caseItemObject = [reloadCaseListData objectAtIndex:indexOfCase];
+    self.selectedCaseIndex = [NSNumber numberWithInt:indexOfCase];
+    
     
     templateMode =0;
     caseBeingUpdated = [caseItemObject objectForKey:@"caseId"];
@@ -2186,6 +2288,10 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
         
         self.questionLabel.text = questionString;
         
+        self.suggestedQuestion.alpha = 1;
+        self.pickerView.alpha =0;
+        
+        
         [self.caseDetailsTableView reloadData];
     }
     else
@@ -2247,18 +2353,19 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
         }
         
     }
-    
+    [self.caseDetailsTableView reloadData];
+
     [self.pickerView reloadAllComponents];
     
     self.submitAnswersButton.enabled = 0;
     self.submitAnswersButton.backgroundColor = [UIColor lightGrayColor];
-    
     
     //remove the updating HUD
     [HUD hide:YES];
     
     //set the last timestamp value for cases where it's not the first template
     NSArray *casesArray = [returnedITSMTLObject objectForKey:@"cases"];
+    self.itsMTLObject = returnedITSMTLObject;
     
     if(templateMode==0)
     {
@@ -2269,9 +2376,12 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
             NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
             if([caseString length] <=0)
             {
-                
-                lastTimestamp = [eachReturnedCase objectForKey:@"timestamp"];
-            }
+                NSString *timeStampReturn = [eachReturnedCase objectForKey:@"timestamp"];
+                NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                f.numberStyle = NSNumberFormatterDecimalStyle;
+                lastTimestamp = [f numberFromString:timeStampReturn];
+
+                    }
         }
         
     }

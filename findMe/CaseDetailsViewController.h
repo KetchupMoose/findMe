@@ -26,13 +26,10 @@
 @property (weak,nonatomic) IBOutlet UIButton *checkPreviousAnswersButton;
 @property (weak,nonatomic) IBOutlet UIButton *submitAnswersButton;
 
-
 @property (strong,nonatomic) IBOutlet UILabel *suggestedQuestion;
 
 @property(weak,nonatomic) IBOutlet UIPickerView *pickerView;
 
-
-@property (weak,nonatomic) NSArray *caseListData;
 @property (weak,nonatomic) NSNumber *selectedCaseIndex;
 
 @property (strong,nonatomic) PFObject *itsMTLObject;
