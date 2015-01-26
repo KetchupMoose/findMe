@@ -106,7 +106,8 @@ NSString *locationLongitude;
     
     self.customAnswerTextField.delegate = self;
     
-    //adding a comment for Tuesday commit
+    //changing suggestedQuestion alpha to 0.
+    self.suggestedQuestion.alpha =0;
     
     
     //location manager instance variable allocs
@@ -305,7 +306,7 @@ NSString *locationLongitude;
         NSString *questionString = [propertsObject objectForKey:@"propertyDescr"];
         NSString *suggestedQString = @"Suggested Question: ";
         
-        self.suggestedQuestion.text = [suggestedQString stringByAppendingString:questionString];
+        //self.suggestedQuestion.text = [suggestedQString stringByAppendingString:questionString];
         
         NSString *optionsString = [propertsObject objectForKey:@"options"];
         
@@ -322,7 +323,7 @@ NSString *locationLongitude;
         //show no suggested question popup and don't populate the answers tableview
         self.checkPreviousAnswersButton.titleLabel.text = @"Showing Previous Answers";
         self.pickerView.alpha =1;
-        self.suggestedQuestion.alpha = 0;
+        //self.suggestedQuestion.alpha = 0;
         self.caseDetailsTableView.alpha =0;
         
         //check to see if the first priority case in case items is an answered question.  If so, display the list of options.
@@ -391,9 +392,9 @@ NSString *locationLongitude;
     swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
     //[self.suggestedQuestion addGestureRecognizer:swipeLeft];
    // [self.suggestedQuestion addGestureRecognizer:swipeRight];
-    [self.suggestedQuestion setUserInteractionEnabled:YES];
+    //[self.suggestedQuestion setUserInteractionEnabled:YES];
 
-    [self.suggestedQuestion addGestureRecognizer:panRecognizer];
+    //[self.suggestedQuestion addGestureRecognizer:panRecognizer];
     
     //the submit answers button should be disabled until the user actually makes a change
     
@@ -422,6 +423,7 @@ NSString *locationLongitude;
         
     }
 
+    self.pickerView.alpha = 1;
     
     
 }
@@ -961,6 +963,7 @@ NSString *locationLongitude;
     
     NSInteger sortedCaseItemsIndexToDisplay;
     
+    /*
     if(suggestedCaseDisplayedIndex>-1)
     {
         //there's a suggested case being displayed, show it now
@@ -972,6 +975,9 @@ NSString *locationLongitude;
         sortedCaseItemsIndexToDisplay = [self.pickerView selectedRowInComponent:0];
         
     }
+    */
+    
+    sortedCaseItemsIndexToDisplay = [self.pickerView selectedRowInComponent:0];
     
      PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:sortedCaseItemsIndexToDisplay];
  
@@ -2278,7 +2284,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
         NSString *questionString = [propertsObject objectForKey:@"propertyDescr"];
         NSString *suggestedQString = @"Suggested Question: ";
         
-        self.suggestedQuestion.text = [suggestedQString stringByAppendingString:questionString];
+        //self.suggestedQuestion.text = [suggestedQString stringByAppendingString:questionString];
         
         NSString *optionsString = [propertsObject objectForKey:@"options"];
         
@@ -2288,8 +2294,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
         
         self.questionLabel.text = questionString;
         
-        self.suggestedQuestion.alpha = 1;
-        self.pickerView.alpha =0;
+        //self.suggestedQuestion.alpha = 1;
+        //self.pickerView.alpha =0;
         
         
         [self.caseDetailsTableView reloadData];
@@ -2299,7 +2305,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
         //show no suggested question popup and don't populate the answers tableview
         self.checkPreviousAnswersButton.titleLabel.text = @"Showing Previous Answers";
         self.pickerView.alpha =1;
-        self.suggestedQuestion.alpha = 0;
+        //self.suggestedQuestion.alpha = 0;
         self.caseDetailsTableView.alpha =0;
         
         //check to see if the first priority case in case items is an answered question.  If so, display the list of options.
@@ -2356,6 +2362,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     [self.caseDetailsTableView reloadData];
 
     [self.pickerView reloadAllComponents];
+    
+    self.pickerView.alpha = 1;
     
     self.submitAnswersButton.enabled = 0;
     self.submitAnswersButton.backgroundColor = [UIColor lightGrayColor];

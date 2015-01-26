@@ -113,6 +113,7 @@ UIRefreshControl *refreshControl;
     [HUD show:YES];
     
     PFObject *latestCaseList = [query getObjectWithId:userName];
+    self.itsMTLObject = latestCaseList;
     
     NSLog(@"%@", latestCaseList);
     caseListJSON = [latestCaseList objectForKey:@"cases"];
@@ -136,6 +137,13 @@ UIRefreshControl *refreshControl;
     
     [HUD hide:YES];
 
+}
+
+-(void) viewDidAppear:(BOOL)animated
+{
+    //refresh the itsMTLObject so it grabs the latest data
+    [self refreshTable];
+    
 }
 
 
