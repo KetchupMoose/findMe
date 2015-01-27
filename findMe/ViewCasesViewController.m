@@ -11,6 +11,7 @@
 #import "XMLWriter.h"
 #import "CaseBuilder.h"
 #import "CaseDetailsViewController.h"
+#import "CaseDetailsEmailViewController.h"
 #import "MBProgressHUD.h"
 
 
@@ -180,8 +181,41 @@ UIRefreshControl *refreshControl;
  
     //bring up the case details view controller
     
-    NSNumber *selectedIndex = [NSNumber numberWithInteger:indexPath.row];
+    UIView *caseDetailsSelectorPopup = [[UIView alloc] initWithFrame:CGRectMake(25,50,250,250)];
     
+    UIButton *classicViewButton = [[UIButton alloc] initWithFrame:CGRectMake(15,25,100,100)];
+    UIButton *emailViewButton = [[UIButton alloc] initWithFrame:CGRectMake(140,25,100,100)];
+
+    
+    [classicViewButton setTitle:@"Classic View" forState:UIControlStateNormal];
+    [emailViewButton setTitle:@"Email View" forState:UIControlStateNormal];
+    
+    classicViewButton.tag = indexPath.row;
+    emailViewButton.tag = indexPath.row;
+    
+    classicViewButton.backgroundColor = [UIColor blueColor];
+    emailViewButton.backgroundColor = [UIColor greenColor];
+    
+    classicViewButton.titleLabel.textColor = [UIColor blackColor];
+    emailViewButton.titleLabel.textColor = [UIColor blackColor];
+    
+    [classicViewButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
+    [emailViewButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
+    
+    [classicViewButton addTarget:self action:@selector(classicButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [emailViewButton addTarget:self action:@selector(emailButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [caseDetailsSelectorPopup addSubview:classicViewButton];
+    [caseDetailsSelectorPopup  addSubview:emailViewButton];
+
+    
+    caseDetailsSelectorPopup.backgroundColor = [UIColor lightGrayColor];
+    
+    [self.view addSubview:caseDetailsSelectorPopup];
+    
+    
+    /*
+    NSNumber *selectedIndex = [NSNumber numberWithInteger:indexPath.row];
     
     CaseDetailsViewController *cdvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdvc"];
     
@@ -191,7 +225,53 @@ UIRefreshControl *refreshControl;
     cdvc.itsMTLObject = self.itsMTLObject;
     
     [self.navigationController pushViewController:cdvc animated:YES];
+    */
+}
+
+-(void) classicButtonClick:(id)sender;
+{
+    //get index from tag
+    UIButton *sendingButton = (UIButton *) sender;
+    int buttonTag = (int)sendingButton.tag;
     
+    NSNumber *selectedIndex = [NSNumber numberWithInteger:buttonTag];
+    
+    CaseDetailsViewController *cdvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdvc"];
+    
+    cdvc.selectedCaseIndex=selectedIndex;
+    
+    cdvc.userName = userName;
+    cdvc.itsMTLObject = self.itsMTLObject;
+    
+    //close the popupView
+    UIView *popupView = sendingButton.superview;
+    [popupView removeFromSuperview];
+    
+    
+    [self.navigationController pushViewController:cdvc animated:YES];
+    
+}
+
+-(void) emailButtonClick:(id)sender;
+{
+    //get index from tag
+    UIButton *sendingButton = (UIButton *) sender;
+    int buttonTag = (int)sendingButton.tag;
+    
+    NSNumber *selectedIndex = [NSNumber numberWithInteger:buttonTag];
+    
+    CaseDetailsEmailViewController *cdevc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdevc"];
+    
+    cdevc.selectedCaseIndex=selectedIndex;
+    
+    cdevc.userName = userName;
+    cdevc.itsMTLObject = self.itsMTLObject;
+    
+    //close the popupView
+    UIView *popupView = sendingButton.superview;
+    [popupView removeFromSuperview];
+    
+    [self.navigationController pushViewController:cdevc animated:YES];
 }
 
 -(IBAction)newCase:(id)sender
@@ -307,11 +387,6 @@ UIRefreshControl *refreshControl;
     return hardcodedXML;
     
 }
-
-
-
-
-
 
 
 @end
