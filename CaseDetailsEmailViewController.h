@@ -23,4 +23,6 @@
 @property (strong,nonatomic) PFObject *itsMTLObject;
 @property (weak,nonatomic) NSString *userName;
 
+-(void)reloadData:(PFObject *) newITSMTLObject;
+
 @end

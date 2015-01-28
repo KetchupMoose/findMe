@@ -363,12 +363,12 @@
                                                 <rect key="frame" x="17" y="46" width="233" height="300"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <prototypes>
-                                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="dK4-Zu-gyH">
+                                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="popupCell" id="dK4-Zu-gyH">
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dK4-Zu-gyH" id="oPb-2C-WAM">
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OsX-0k-Wx7">
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OsX-0k-Wx7">
                                                                     <rect key="frame" x="8" y="11" width="217" height="21"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -384,7 +384,15 @@
                                                 <state key="normal" title="Confirm Answers">
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="updateAnswers:" destination="4YK-dg-iiY" eventType="touchUpInside" id="pRJ-uD-Z8R"/>
+                                                </connections>
                                             </button>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Api-pu-xdU">
+                                                <rect key="frame" x="58" y="181" width="150" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
                                         </subviews>
                                         <color key="backgroundColor" red="1" green="0.99285472067516067" blue="0.15018028417055462" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
@@ -395,7 +403,10 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="answersTableView" destination="mJQ-Mg-VJo" id="qRB-Rn-AgI"/>
+                        <outlet property="customAnswerTextField" destination="Api-pu-xdU" id="ACQ-Gc-DVa"/>
                         <outlet property="testView" destination="TSw-Oc-zHD" id="FMH-n5-cf5"/>
+                        <outlet property="updateButton" destination="nR5-Sa-NuX" id="pyx-zd-1k5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C9F-Sz-M6S" userLabel="First Responder" sceneMemberID="firstResponder"/>

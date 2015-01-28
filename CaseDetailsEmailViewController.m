@@ -70,15 +70,16 @@ int EmailsecondaryTimerTicks = 0;
 CLLocationManager *locationManager;
 CLGeocoder *geocoder;
 CLPlacemark *placemark;
+NSString *locationRetrieved;
+NSString *locationLatitude;
+NSString *locationLongitude;
 
 //used for calcaulting swipe gestures
 CGPoint startLocation;
 
 
 
-NSString *locationRetrieved;
-NSString *locationLatitude;
-NSString *locationLongitude;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -247,6 +248,11 @@ NSString *locationLongitude;
     [self.caseDetailsEmailTableView reloadData];
     
 
+}
+
+-(void) viewDidAppear:(BOOL)animated
+{
+        
 }
 
 - (void)didReceiveMemoryWarning {
@@ -422,10 +428,7 @@ NSString *locationLongitude;
                     }
                       indexMatcher = indexMatcher+1;
                 }
-                    
                 answersLabel.text = finalAnsString;
-                
-                    
             }
               
     }
@@ -441,13 +444,80 @@ NSString *locationLongitude;
     UIColor *lightYellowColor = [UIColor colorWithRed:252.0f/255.0f green:252.0f/255.0f blue:150.0f/255.0f alpha:1];
     popupView.backgroundColor = lightYellowColor;
     
-    UIViewController *popVC = [self.storyboard instantiateViewControllerWithIdentifier:@"popupvc"];
-
+    popupViewController *popVC = [self.storyboard instantiateViewControllerWithIdentifier:@"popupvc"];
     
-    [self setPresentationStyleForSelfController:self presentingController:popVC];
+    //set data for popupViewController
+     NSNumber *selectedCaseItem = [NSNumber numberWithInteger:indexPath.row];
     
-    [self presentViewController:popVC animated:NO completion:nil];
+    popVC.popupitsMTLObject = self.itsMTLObject;
+    popVC.selectedCase = self.selectedCaseIndex;
+    popVC.selectedCaseItem = selectedCaseItem;
+    popVC.selectedPropertyObject = [propsArray objectAtIndex:indexPath.row];
+    popVC.cdevc = self;
     
+    
+    //check the property type of the property at this selected index and set different modes on the popup accordingly.
+    PFObject *selectedProperty = [propsArray objectAtIndex:indexPath.row];
+    PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:indexPath.row];
+    
+    //check the property type and show different UI accordingly.
+    NSString *propType = [popVC.selectedPropertyObject objectForKey:@"propertyType"];
+    NSString *options = [selectedProperty objectForKey:@"options"];
+    
+    //If the property is type I, show an info Message
+    //If the property is type N, do nothing.
+    //If the property is type B, show the matches view controller
+    if([propType  isEqual:@"I"])
+    {
+        //property is an info message
+        //display a UI alert with the info in the info message
+        NSString *infoMsg = [selectedProperty objectForKey:@"propertyDescr"];
+        
+        //for the caseItem of this index, take the params value
+        NSString *params = [selectedCaseItemObject objectForKey:@"params"];
+        
+        NSArray * paramsArray = [params componentsSeparatedByString:@";"];
+        
+        //loop through the infoMsg and replace instances of &# with the values in the param array.
+        
+        int i = 1;
+        if (paramsArray.count>=1)
+        {
+            for (i=1;i<paramsArray.count+1;i++)
+            {
+                NSString *numString = [NSString stringWithFormat:@"%i",i];
+                NSLog(numString);
+                NSString *stringToReplace = [@"&" stringByAppendingString:numString];
+                
+                [infoMsg stringByReplacingOccurrencesOfString:stringToReplace withString:[paramsArray objectAtIndex:i-1]];
+            }
+        }
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Info Message", nil) message:NSLocalizedString(infoMsg, nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+    }
+    else if([propType isEqual:@"N"])
+    {
+        
+    }
+    
+    else if([propType isEqual:@"B"])
+    {
+       //display matches view controller (to be created)
+    }
+    else if([options length]==0)
+    {
+        //show the popup in custom answer mode
+       popVC.displayMode = @"custom";
+        [self setPresentationStyleForSelfController:self presentingController:popVC];
+        [self presentViewController:popVC animated:NO completion:nil];
+    }
+    else
+    {
+        //show the popup in the normal mode with the tableView
+        popVC.displayMode = @"table";
+        [self setPresentationStyleForSelfController:self presentingController:popVC];
+        [self presentViewController:popVC animated:NO completion:nil];
+        
+    }
     
 }
 
@@ -467,6 +537,159 @@ NSString *locationLongitude;
         [selfController setModalPresentationStyle:UIModalPresentationCurrentContext];
         [selfController.navigationController setModalPresentationStyle:UIModalPresentationCurrentContext];
     }
+}
+
+-(void)reloadData:(PFObject *) newITSMTLObject
+{
+    self.itsMTLObject = newITSMTLObject;
+    
+    //caseListData is retrieved from the ITSMTLObject
+    NSArray *reloadCaseListData = [self.itsMTLObject objectForKey:@"cases"];
+    
+    NSLog(@"case List Count 2");
+    NSLog(@"%ld",[reloadCaseListData count]);
+    
+    //two different methods for retrieving the exact case for show
+    //method 1: in template mode.  loop through the array of prior case ID's and look for the one that is new and wasn't there before.  That's the new case!
+    //method 2: pre-existing case update.  //loop through the caseID's and look for that exact one.
+    int i = 0;
+    int indexOfCase = 0;
+   
+    NSSortDescriptor *sortDescriptor;
+    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
+                                                 ascending:NO];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    NSArray *casesArray = [self.itsMTLObject objectForKey:@"cases"];
+    PFObject *caseItemObject = [casesArray objectAtIndex:[selectedCaseIndex integerValue]];
+    
+    caseItems= [caseItemObject objectForKey:@"caseItems"];
+    
+    sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+    
+    //setting up arrays for storing three sets of properties and cases based on type: info messages, already answered properties, and new suggested properties
+    
+    [propertyIDSArray removeAllObjects];
+    [answeredPropertiesIndex removeAllObjects];
+    [answeredProperties removeAllObjects];
+    [answeredCases removeAllObjects];
+    [infoCases removeAllObjects];
+    [infoMessageProperties removeAllObjects];
+    [suggestedProperties removeAllObjects];
+    [suggestedCases removeAllObjects];
+    [suggestedCaseIndex removeAllObjects];
+    [updatedPropertiesIndex removeAllObjects];
+    [customAnsweredCases removeAllObjects];
+    [customAnsweredProperties removeAllObjects];
+    [customAnsweredPropertiesIndex removeAllObjects];
+    [browseCases removeAllObjects];
+    [browseProperties removeAllObjects];
+    [browsePropertiesIndex removeAllObjects];
+    [newlyCreatedPropertiesIndex removeAllObjects];
+    suggestedCaseDisplayedIndex = -1;
+    [changedCaseItemsIndex removeAllObjects];
+    
+    //get all the property ID's from each item in the selected case.
+    
+    for (PFObject *eachCaseItem in sortedCaseItems)
+    {
+        NSString *propNum = [eachCaseItem objectForKey:@"propertyNum"];
+        [propertyIDSArray addObject:propNum];
+    }
+    
+    //get all the property information for the list of properties to consider
+    PFQuery *propertsQuery = [PFQuery queryWithClassName:@"Properts"];
+    [propertsQuery whereKey:@"objectId" containedIn:propertyIDSArray];
+    [propertsQuery orderByDescending:@"priority"];
+    
+    propsArray = [[propertsQuery findObjects] mutableCopy];
+    
+    //sort the properties into four categories based on their type: info messages, answerableQuestions, customAnswerableQuestions, and new suggestions
+    int g = 0;
+    for (PFObject *property in propsArray)
+    {
+        NSString *propType = [property objectForKey:@"propertyType"];
+        NSString *options = [property objectForKey:@"options"];
+        
+        if([propType  isEqual:@"I"])
+        {
+            //property is an info message
+            [infoMessageProperties addObject:property];
+            [infoCases addObject:sortedCaseItems[g]];
+        }
+        else if([propType isEqual:@"N"])
+        {
+            [NoAnswerProperties addObject:property];
+            [NoAnswerCases addObject:sortedCaseItems[g]];
+        }
+        
+        else if([propType isEqual:@"B"])
+        {
+            [browseProperties addObject:property];
+            [browseCases addObject:sortedCaseItems[g]];
+        }
+        
+        else if([options length]==0)
+        {
+            [customAnsweredProperties addObject:property];
+            [customAnsweredProperties addObject:sortedCaseItems[g]];
+        }
+        else
+            
+        {
+            PFObject *caseItemObject = sortedCaseItems[g];
+            NSArray *answers = [caseItemObject objectForKey:@"answers"];
+            
+            if(answers.count>=1)
+            {
+                NSNumber *indexNum = [[NSNumber alloc] initWithInt:g];
+                [answeredPropertiesIndex addObject:indexNum];
+                //array for keeping track of the properties with answers.  Some of these may be info messages so that is dealt with further down.  It is assumed info messages can not have answers.
+                //add the property to the list of answeredProperties
+                [answeredProperties addObject:property];
+                [answeredCases addObject:sortedCaseItems[g]];
+                
+            }
+            else
+            {
+                [suggestedProperties addObject:property];
+                [suggestedCases addObject:sortedCaseItems[g]];
+                NSNumber *caseIndex = [NSNumber numberWithInt:g];
+                [suggestedCaseIndex addObject:caseIndex];
+            }
+        }
+        g=g+1;
+    }
+    
+    [self.caseDetailsEmailTableView reloadData];
+    
+    
+    
+    //remove the updating HUD
+    [HUD hide:YES];
+    
+    //set the last timestamp value for cases where it's not the first template
+    
+   
+        updateDate = self.itsMTLObject.updatedAt;
+        
+        for (PFObject *eachReturnedCase in casesArray)
+        {
+            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+            if([caseString length] <=0)
+            {
+                NSString *timeStampReturn = [eachReturnedCase objectForKey:@"timestamp"];
+                NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                f.numberStyle = NSNumberFormatterDecimalStyle;
+                lastTimestamp = [f numberFromString:timeStampReturn];
+                
+            }
+        }
+   
+
+    
+    [self dismissViewControllerAnimated:NO completion:nil];
+    
+    
 }
 
 

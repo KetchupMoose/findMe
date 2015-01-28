@@ -80,15 +80,16 @@ int secondaryTimerTicks = 0;
 CLLocationManager *locationManager;
 CLGeocoder *geocoder;
 CLPlacemark *placemark;
+NSString *locationRetrieved;
+NSString *locationLatitude;
+NSString *locationLongitude;
 
 //used for calcaulting swipe gestures
 CGPoint startLocation;
 
 int panningEnabled = 1;
 
-NSString *locationRetrieved;
-NSString *locationLatitude;
-NSString *locationLongitude;
+
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -1004,8 +1005,6 @@ NSString *locationLongitude;
     
     //add it to the array
     [changedCaseItemsIndex addObject:rowNumber];
-    
-    
     
     self.submitAnswersButton.enabled = 1;
     self.submitAnswersButton.backgroundColor = [UIColor blueColor];
