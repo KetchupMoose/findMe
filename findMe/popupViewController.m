@@ -30,6 +30,9 @@ NSMutableArray *answersDictionary;
 NSArray *sortedCaseItems;
 NSNumber *lastTimestamp;
 MBProgressHUD *HUD;
+NSString *caseIDBeingUpdated;
+
+BOOL templateMode = 0;
 
 int popUpTimerTicks =0;
 
@@ -61,6 +64,16 @@ int popUpTimerTicks =0;
     
     PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:[selectedCaseItem integerValue]];
     
+    NSString *caseObjectID = [selectedCaseItemObject objectForKey:@"caseId"];
+    
+    int length = (int)[caseObjectID length];
+    
+    if(length==0)
+    {
+        self.updateButton.titleLabel.text = @"Select These Answers";
+        templateMode = 1;
+    }
+
     NSArray *selectedCaseItemAnswersList = [selectedCaseItemObject objectForKey:@"answers"];
     answersArray = [[NSMutableArray alloc] init];
     answersDictionary = [[NSMutableArray alloc] init];
@@ -318,43 +331,34 @@ int popUpTimerTicks =0;
     [PFCloud callFunctionInBackground:@"inboundZITSMTL"
                        withParameters:@{@"payload": generatedXMLString}
                                 block:^(NSString *responseString, NSError *error) {
-                                    if (!error) {
+                                    
+            if (!error)
+            {
                                         
-                                        NSString *responseText = responseString;
-                                        NSLog(responseText);
+            NSString *responseText = responseString;
+            NSLog(responseText);
                                         
-                                        [HUD hide:NO];
+            [HUD hide:NO];
+                              
+            NSArray *allCases = [self.popupitsMTLObject objectForKey:@"cases"];
+            PFObject *caseObject = [allCases objectAtIndex:[selectedCase integerValue]];
+            caseIDBeingUpdated = [caseObject objectForKey:@"caseId"];
+                
+                
+            NSString *timeStampReturn = [caseObject objectForKey:@"timestamp"];
+            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+            f.numberStyle = NSNumberFormatterDecimalStyle;
+            lastTimestamp = [f numberFromString:timeStampReturn];
                                         
-                                        //set update date to this exact moment
-                                        //updateDate = [[NSDate alloc] initWithTimeIntervalSinceNow:0];
+            [self pollForCaseRefresh];
                                         
-                                        //loop through the cases to find the previously submitted timestamp
-                                        NSArray *allCases = [self.popupitsMTLObject objectForKey:@"cases"];
-                                        
-                                        for (PFObject *eachReturnedCase in allCases)
-                                        {
-                                            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
-                                            if([caseString length] <=0)
-                                            {
-                                                NSString *timeStampReturn = [eachReturnedCase objectForKey:@"timestamp"];
-                                                NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-                                                f.numberStyle = NSNumberFormatterDecimalStyle;
-                                                lastTimestamp = [f numberFromString:timeStampReturn];
-                                                
-                                            }
-                                        }
-
-                                        
-                                        [self pollForCaseRefresh];
-                                        
-                                    }
-                                    else
-                                    {
-                                        NSLog(error.localizedDescription);
-                                        [HUD hide:YES];
-                                        
-                                    }
-                                }];
+            }
+            else
+            {
+            NSLog(error.localizedDescription);
+            [HUD hide:YES];
+            }
+    }];
 }
 
 -(void)pollForCaseRefresh
@@ -396,33 +400,31 @@ int popUpTimerTicks =0;
         for (PFObject *eachReturnedCase in returnedCases)
         {
             NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
-            if([caseString length] <=0)
+            if([caseString length] >0)
             {
-                //check the timestamp, see if newer than prior timestamp
-                NSString *timeStampReturn = [eachReturnedCase objectForKey:@"timestamp"];
-                NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-                f.numberStyle = NSNumberFormatterDecimalStyle;
-                
-                NSNumber *timestamp = [f numberFromString:timeStampReturn];
-                
-                if([timestamp doubleValue] > [lastTimestamp doubleValue])
+                if([caseIDBeingUpdated isEqualToString:caseString])
                 {
-                    NSLog(@"newer timestamp found");
-                    
-                    
-                    //the update was newer and we verified it from actual case data, set boolean to true
-                    updateSuccess =1;
-                      break;
-                }
+                    //check the timestamp, see if newer than prior timestamp
+                    NSString *timeStampReturn = [eachReturnedCase objectForKey:@"timestamp"];
+                    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                    f.numberStyle = NSNumberFormatterDecimalStyle;
                 
-              
-                }
-                else
-                {
+                    NSNumber *timestamp = [f numberFromString:timeStampReturn];
+                
+                    if([timestamp doubleValue] > [lastTimestamp doubleValue])
+                        {
+                            NSLog(@"newer timestamp found");
+                            //the update was newer and we verified it from actual case data, set boolean to true
+                            updateSuccess =1;
+                            break;
+                        }
+                 }
+            }
+            else
+            {
                 //continue
-                }
+            }
         }
-    
     if(updateSuccess ==1)
     {
         NSLog(@"update successful");
@@ -436,7 +438,6 @@ int popUpTimerTicks =0;
         
         //trigger caseDetailsEmailViewController to reload its data
         [self.cdevc reloadData:returnedITSMTLObject];
-        
     }
     
     else

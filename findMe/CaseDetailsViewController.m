@@ -2074,9 +2074,6 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     //loop through self.itsMTLObject and refresh all the data
     
     // selected case is remembered from the property
-    
-
-    
     //caseListData is retrieved from the ITSMTLObject
     NSArray *reloadCaseListData = [returnedITSMTLObject objectForKey:@"cases"];
     

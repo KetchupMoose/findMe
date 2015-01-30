@@ -8,6 +8,7 @@
 
 #import "CaseDetailsEmailViewController.h"
 #import "popupViewController.h"
+#import "XMLWriter.h"
 
 @interface CaseDetailsEmailViewController ()
 
@@ -228,8 +229,13 @@ CGPoint startLocation;
     
     if(templateMode==0)
     {
-        updateDate = self.itsMTLObject.updatedAt;
+       //do nothing, the popupViewController will control refreshing
         
+    }
+    else
+        
+    //this view controller will control refreshing after all data is entered
+    {
         for (PFObject *eachReturnedCase in casesArray)
         {
             NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
@@ -242,7 +248,7 @@ CGPoint startLocation;
                 
             }
         }
-        
+
     }
     
     [self.caseDetailsEmailTableView reloadData];
@@ -662,13 +668,10 @@ CGPoint startLocation;
     
     [self.caseDetailsEmailTableView reloadData];
     
-    
-    
     //remove the updating HUD
     [HUD hide:YES];
     
     //set the last timestamp value for cases where it's not the first template
-    
    
         updateDate = self.itsMTLObject.updatedAt;
         
@@ -684,13 +687,240 @@ CGPoint startLocation;
                 
             }
         }
-   
-
     
     [self dismissViewControllerAnimated:NO completion:nil];
     
     
 }
 
+-(NSString *)createXMLTemplateModeFunction
+{
+    //iterate through all items still in the caseitems and property arrays and send XML to update all of these (either with their original contents or the modifications/new entries)
+    
+    NSInteger selectedCaseInt = [selectedCaseIndex integerValue];
+    //the case object includes the list of all caseItems and the caseId
+    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+    
+    PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
+    
+    NSString *caseName = [caseObject objectForKey:@"caseName"];
+    NSString *caseObjID = [caseObject objectForKey:@"caseId"];
+    
+    //get the selected property from the chooser element.
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:_userName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    //if it's a brand new case, this will be nil
+    if(caseObjID != nil)
+    {
+        
+        [xmlWriter writeStartElement:@"CASEOBJECTID"];
+        [xmlWriter writeCharacters:caseObjID];
+        [xmlWriter writeEndElement];
+    }
+    
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:caseName];
+    [xmlWriter writeEndElement];
+    
+    //Jan 18
+    //updating to put ALL property tags first before caseItem tags
+    
+    int h = 0;
+    for (PFObject *eachCaseItem in sortedCaseItems)
+    {
+        
+            //do update
+            
+            PFObject *updatedProperty = [propsArray objectAtIndex:h];
+            NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
+            NSString *propertyDescr = [updatedProperty objectForKey:@"propertyDescr"];
+            
+            //check to see if this caseItem is a brand new property
+            
+            if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:h]])
+                
+            {
+                //add the XML for a new or updated property here
+                [xmlWriter writeStartElement:@"PROPERTY"];
+                
+                [xmlWriter writeStartElement:@"PROPERTYNUM"];
+                [xmlWriter writeCharacters:@"1"];
+                [xmlWriter writeEndElement];
+                
+                [xmlWriter writeStartElement:@"PROPERTYDESCR"];
+                [xmlWriter writeCharacters:propertyDescr];
+                [xmlWriter writeEndElement];
+                
+                //get the options value from the property object
+                NSString *fullCharsString = [updatedProperty objectForKey:@"options"];
+                
+                if([fullCharsString length]>0)
+                {
+                    
+                    [xmlWriter writeStartElement:@"OPTIONS"];
+                    [xmlWriter writeCharacters:fullCharsString];
+                    [xmlWriter writeEndElement];
+                }
+                //close property element
+                [xmlWriter writeEndElement];
+            }
+            
+            //write logic for updating the caseItem
+            //build strings for building item
+            [xmlWriter writeStartElement:@"ITEM"];
+            
+            //check to see if this caseItem has a number.  Otherwise give it a number of 9000 to indicate it is a brand new caseItem.
+            NSString *myCaseItem = [eachCaseItem objectForKey:@"caseItem"];
+            NSString *caseItemNumber;
+            if(myCaseItem==nil)
+            {
+                caseItemNumber =@"9000";
+                
+            }
+            else
+            {
+                caseItemNumber = myCaseItem;
+                
+            }
+            
+            [xmlWriter writeStartElement:@"CASEITEM"];
+            [xmlWriter writeCharacters:caseItemNumber];
+            [xmlWriter writeEndElement];
+            
+            if(propertyNum==nil)
+            {
+                propertyNum =@"1";
+                
+            }
+            [xmlWriter writeStartElement:@"PROPERTYNUM"];
+            [xmlWriter writeCharacters:propertyNum];
+            [xmlWriter writeEndElement];
+            
+            //write out the answers value of this case Item
+            
+            //need to check if the case type is custom answers
+            
+            //if case type is I or N, don't update anything for answers
+            NSString *propertyType = [updatedProperty objectForKey:@"propertyType"];
+            NSString *optionText = [updatedProperty objectForKey:@"options"];
+            
+            if([propertyType isEqualToString:@"I"] || [propertyType isEqualToString:@"N"] || [propertyType isEqualToString:@"B"])
+            {
+                //do nothing
+            }
+            else if([optionText length] == 0)
+            {
+                //write the answer as type Custom
+                NSArray *caseAnswers = [eachCaseItem objectForKey:@"answers"];
+                for (PFObject *ansObj in caseAnswers)
+                {
+                    NSString *ansString = [ansObj objectForKey:@"custom"];
+                    [xmlWriter writeStartElement:@"ANSWER"];
+                    
+                    [xmlWriter writeStartElement:@"Custom"];
+                    [xmlWriter writeCharacters:ansString];
+                    [xmlWriter writeEndElement];
+                    
+                    [xmlWriter writeEndElement];
+                    
+                }
+                
+            }
+            else
+            {
+                NSArray *caseAnswers = [eachCaseItem objectForKey:@"answers"];
+                for (PFObject *ansObj in caseAnswers)
+                {
+                    NSString *ansString = [ansObj objectForKey:@"a"];
+                    [xmlWriter writeStartElement:@"ANSWER"];
+                    
+                    [xmlWriter writeStartElement:@"A"];
+                    [xmlWriter writeCharacters:ansString];
+                    [xmlWriter writeEndElement];
+                    
+                    [xmlWriter writeEndElement];
+                    
+                }
+                
+            }
+            
+            //close item element
+            [xmlWriter writeEndElement];
+        
+        h=h+1;
+        
+    }
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"locationText"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"locationLatitude"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"locationLongitude"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    return xml;
+    
+    
+}
+
+- (void)updateCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers
+{
+    
+    
+}
+- (void)updateNewCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers NewPropertyDescr:(NSString *) newPropDescr optionsList:(NSArray *) optionList
+{
+    NSMutableDictionary *propertyObject = [[NSMutableDictionary alloc] init];
+    [propertyObject setObject:optionList forKey:@"options"];
+    [propertyObject setObject:newPropDescr forKey:@"propertyDescr"];
+    [propertyObject setObject:@"9000" forKey:@"propertyNum"];
+    [propertyObject setObject:@"U" forKey:@"propertyType"];
+    
+    NSMutableDictionary *caseItemObject = [[NSMutableDictionary alloc] init];
+    [caseItemObject setObject:@"9000" forKey:@"caseItem"];
+    [caseItemObject setObject:Answers forKey:@"answers"];
+    
+    int g = (int)sortedCaseItems.count;
+    
+    [sortedCaseItems addObject:caseItemObject];
+    [propsArray addObject:propertyObject];
+    
+    NSNumber *indexNum = [[NSNumber alloc] initWithInt:g];
+    [newlyCreatedPropertiesIndex addObject:indexNum];
+    [changedCaseItemsIndex addObject:indexNum];
+
+}
 
 @end

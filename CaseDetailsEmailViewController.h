@@ -11,8 +11,9 @@
 #import <CoreLocation/CoreLocation.h>
 #import "NewPropertyViewController.h"
 #import <Parse/Parse.h>
+#import "popupViewController.h"
 
-@interface CaseDetailsEmailViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,MBProgressHUDDelegate,UIAlertViewDelegate,CLLocationManagerDelegate,MyDataDelegate>
+@interface CaseDetailsEmailViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,MBProgressHUDDelegate,UIAlertViewDelegate,CLLocationManagerDelegate,UpdateCaseItemDelegate>
 
 @property (weak,nonatomic) IBOutlet UITableView *caseDetailsEmailTableView;
 

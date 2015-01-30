@@ -10,7 +10,21 @@
 #import <Parse/Parse.h>
 #import "MBProgressHUD.h"
 #import "CaseDetailsEmailViewController.h"
+
+@protocol UpdateCaseItemDelegate
+
+//The popup sends back data to the CaseDetailsEmailViewController in these ways:
+//1)The popup sends back an array of answers which are just indexes
+//2)The popup sends back an array of answers, some indexes, some custom
+//3)The popup sends back an array of answers and a new property
+- (void)updateCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers;
+- (void)updateCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers NewPropertyDescr:(NSString *) newPropDescr optionsList:(NSArray *) optionList;
+
+@end
+
 @interface popupViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,MBProgressHUDDelegate>
+
+
 
 
 @property (weak, nonatomic) IBOutlet UIView *testView;
