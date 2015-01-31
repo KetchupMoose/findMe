@@ -64,7 +64,7 @@ MBProgressHUD *HUD;
 NSDate *updateDate;
 NSDate *secondUpdateCompare;
 NSNumber *lastTimestamp;
-int EmailtimerTickCaseDetails =0;
+int EmailTimerTickCaseDetails =0;
 int EmailsecondaryTimerTicks = 0;
 
 //location manager variables
@@ -107,6 +107,12 @@ CGPoint startLocation;
     {
         self.submitAnswersButton.titleLabel.text = @"Create Case";
         templateMode = 1;
+    }
+    else
+    {
+        templateMode= 0;
+        caseBeingUpdated = caseObjectID;
+        
     }
     caseItems= [caseItemObject objectForKey:@"caseItems"];
     
@@ -233,7 +239,6 @@ CGPoint startLocation;
         
     }
     else
-        
     //this view controller will control refreshing after all data is entered
     {
         for (PFObject *eachReturnedCase in casesArray)
@@ -250,15 +255,34 @@ CGPoint startLocation;
         }
 
     }
-    
     [self.caseDetailsEmailTableView reloadData];
-    
 
 }
 
 -(void) viewDidAppear:(BOOL)animated
 {
+    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+    
+    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+    
+    PFObject *caseItemObject = [allCases objectAtIndex:selectedCaseInt];
+    
+    NSString *caseObjectID = [caseItemObject objectForKey:@"caseId"];
+    
+    int length = (int)[caseObjectID length];
+    
+    if(length==0)
+    {
+        self.submitAnswersButton.titleLabel.text = @"Create Case";
+        templateMode = 1;
+    }
+    else
+    {
+        templateMode= 0;
+        caseBeingUpdated = caseObjectID;
         
+    }
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -459,7 +483,7 @@ CGPoint startLocation;
     popVC.selectedCase = self.selectedCaseIndex;
     popVC.selectedCaseItem = selectedCaseItem;
     popVC.selectedPropertyObject = [propsArray objectAtIndex:indexPath.row];
-    popVC.cdevc = self;
+    popVC.UCIdelegate = self;
     
     
     //check the property type of the property at this selected index and set different modes on the popup accordingly.
@@ -545,29 +569,68 @@ CGPoint startLocation;
     }
 }
 
--(void)reloadData:(PFObject *) newITSMTLObject
+- (void)reloadData:(PFObject *) myObject
 {
-    self.itsMTLObject = newITSMTLObject;
     
-    //caseListData is retrieved from the ITSMTLObject
-    NSArray *reloadCaseListData = [self.itsMTLObject objectForKey:@"cases"];
+    self.itsMTLObject = myObject;
     
-    NSLog(@"case List Count 2");
-    NSLog(@"%ld",[reloadCaseListData count]);
-    
-    //two different methods for retrieving the exact case for show
-    //method 1: in template mode.  loop through the array of prior case ID's and look for the one that is new and wasn't there before.  That's the new case!
-    //method 2: pre-existing case update.  //loop through the caseID's and look for that exact one.
-    int i = 0;
-    int indexOfCase = 0;
-   
     NSSortDescriptor *sortDescriptor;
     sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
                                                  ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     NSArray *casesArray = [self.itsMTLObject objectForKey:@"cases"];
-    PFObject *caseItemObject = [casesArray objectAtIndex:[selectedCaseIndex integerValue]];
+    PFObject *caseItemObject;
     
+    int i = 0;
+    int indexOfCase = 0;
+    if(templateMode ==1)
+    {
+        for (PFObject *eachReturnedCase in casesArray)
+        {
+            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+            //make sure CaseString is not nil/blank
+            if([caseString length] >0)
+            {
+                if([priorCaseIDS containsObject:caseString])
+                {
+                    //continue
+                }
+                else
+                {
+                    indexOfCase = i;
+                    break;
+                }
+            }
+            i = i+1;
+        }
+    }
+    else if (templateMode ==0)
+    {
+        for (PFObject *eachReturnedCase in casesArray)
+        {
+            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+            if([caseBeingUpdated isEqualToString:caseString])
+            {
+                indexOfCase = i;
+                NSLog(@"match found on case");
+                break;
+            }
+            else
+            {
+                //continue
+            }
+            i = i+1;
+        }
+        
+    }
+    
+    templateMode =0;
+    
+    caseItemObject = [casesArray objectAtIndex:indexOfCase];
+    self.selectedCaseIndex = [NSNumber numberWithInt:indexOfCase];
+    
+    caseBeingUpdated = [caseItemObject objectForKey:@"caseId"];
+  
     caseItems= [caseItemObject objectForKey:@"caseItems"];
     
     sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
@@ -692,6 +755,141 @@ CGPoint startLocation;
     
     
 }
+-(IBAction)doUpdate:(id)sender
+{
+    
+    NSString *xmlForUpdate = [self createXMLTemplateModeFunction];
+    
+    //add a progress HUD to show it is retrieving list of properts
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Updating The Properties And Answers";
+    [HUD show:YES];
+
+    //use parse cloud code function
+    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+                   withParameters:@{@"payload": xmlForUpdate}
+                            block:^(NSString *responseString, NSError *error) {
+                                
+                                if (!error)
+                                {
+                                    
+                                    NSString *responseText = responseString;
+                                    NSLog(responseText);
+                                    
+                                    [HUD hide:NO];
+                                    
+                                    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+                                    PFObject *caseObject = [allCases objectAtIndex:[selectedCaseIndex integerValue]];
+                                    caseBeingUpdated = [caseObject objectForKey:@"caseId"];
+                                    
+                                    NSString *timeStampReturn = [caseObject objectForKey:@"timestamp"];
+                                    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                                    f.numberStyle = NSNumberFormatterDecimalStyle;
+                                    lastTimestamp = [f numberFromString:timeStampReturn];
+                                    
+                                    [self pollForCaseRefresh];
+                                    
+                                }
+                                else
+                                {
+                                    NSLog(error.localizedDescription);
+                                    [HUD hide:YES];
+                                }
+        }];
+}
+
+-(void)pollForCaseRefresh
+{
+    //run a timer in the background to look for the moment the case is updated with a template maker
+    
+    //show progress HUD
+    
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Polling for Case Update";
+    [HUD show:YES];
+    
+    [NSTimer scheduledTimerWithTimeInterval:1.0
+                                     target:self
+                                   selector:@selector(timerFired:)
+                                   userInfo:nil
+                                    repeats:YES];
+    
+}
+
+- (void)timerFired:(NSTimer *)timer {
+    
+    NSLog(@"timer fired tick %i", EmailTimerTickCaseDetails);
+    
+    //check the parse object to see if it is updated
+    PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
+    [query includeKey:@"cases"];
+    
+    PFObject *returnedITSMTLObject = [query getObjectWithId:self.itsMTLObject.objectId];
+    
+    NSArray *returnedCases = [returnedITSMTLObject objectForKey:@"cases"];
+    
+    BOOL updateSuccess = 0;
+    
+    if(templateMode ==1)
+    {
+        for (PFObject *eachReturnedCase in returnedCases)
+        {
+            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+            //make sure CaseString is not nil/blank
+            if([caseString length] >0)
+            {
+                if([priorCaseIDS containsObject:caseString])
+                {
+                    //continue
+                }
+                else
+                {
+                    updateSuccess=1;
+                    
+                    break;
+                }
+            }
+            
+        }
+    }
+
+    if(updateSuccess ==1)
+    {
+        NSLog(@"update successful");
+        
+        //stop the timer
+        [timer invalidate];
+        EmailTimerTickCaseDetails = 0;
+        
+        //clear the progress hud
+        [HUD hide:NO];
+        
+        //trigger caseDetailsEmailViewController to reload its data
+        [self reloadData:returnedITSMTLObject];
+    
+    }
+    else
+    {
+        NSLog(@"running the loop again to query again");
+        
+    }
+    
+    EmailTimerTickCaseDetails=EmailTimerTickCaseDetails+1;
+    if(EmailTimerTickCaseDetails==40)
+    {
+        [timer invalidate];
+        NSLog(@"ran into maximum time");
+        [HUD hide:YES];
+    }
+    
+}
+
 
 -(NSString *)createXMLTemplateModeFunction
 {
@@ -822,42 +1020,42 @@ CGPoint startLocation;
             {
                 //do nothing
             }
-            else if([optionText length] == 0)
+            else
+            
             {
-                //write the answer as type Custom
+                //write the answer array
                 NSArray *caseAnswers = [eachCaseItem objectForKey:@"answers"];
                 for (PFObject *ansObj in caseAnswers)
                 {
                     NSString *ansString = [ansObj objectForKey:@"custom"];
-                    [xmlWriter writeStartElement:@"ANSWER"];
-                    
-                    [xmlWriter writeStartElement:@"Custom"];
-                    [xmlWriter writeCharacters:ansString];
-                    [xmlWriter writeEndElement];
-                    
-                    [xmlWriter writeEndElement];
+                    if([ansString length] ==0)
+                    {
+                        ansString = [ansObj objectForKey:@"a"];
+                        
+                        [xmlWriter writeStartElement:@"ANSWER"];
+                        
+                        [xmlWriter writeStartElement:@"A"];
+                        [xmlWriter writeCharacters:ansString];
+                        [xmlWriter writeEndElement];
+                        
+                        [xmlWriter writeEndElement];
+
+                    }
+                    else
+                    {
+                        [xmlWriter writeStartElement:@"ANSWER"];
+                        
+                        [xmlWriter writeStartElement:@"CUSTOM"];
+                        [xmlWriter writeCharacters:ansString];
+                        [xmlWriter writeEndElement];
+                        
+                        [xmlWriter writeEndElement];
+                    }
                     
                 }
                 
             }
-            else
-            {
-                NSArray *caseAnswers = [eachCaseItem objectForKey:@"answers"];
-                for (PFObject *ansObj in caseAnswers)
-                {
-                    NSString *ansString = [ansObj objectForKey:@"a"];
-                    [xmlWriter writeStartElement:@"ANSWER"];
-                    
-                    [xmlWriter writeStartElement:@"A"];
-                    [xmlWriter writeCharacters:ansString];
-                    [xmlWriter writeEndElement];
-                    
-                    [xmlWriter writeEndElement];
-                    
-                }
-                
-            }
-            
+    
             //close item element
             [xmlWriter writeEndElement];
         
@@ -897,7 +1095,31 @@ CGPoint startLocation;
 
 - (void)updateCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers
 {
+    NSLog(@"got this");
     
+    //update the data and modify the sortedCaseItems and propsArray to take on the new data coming back
+    
+    //loop through the caseItems and select the one with this caseItemID
+    PFObject *selectedCaseItem;
+    
+    for(PFObject *eachCaseItem in sortedCaseItems)
+    {
+        if([[eachCaseItem objectForKey:@"caseItem"] isEqualToString:caseItemID])
+        {
+            selectedCaseItem = eachCaseItem;
+        }
+    }
+    
+    //set the answers for this case to an array of a-value NSDicts
+    
+    [selectedCaseItem setObject:Answers forKey:@"answers"];
+    
+    self.submitAnswersButton.enabled = 1;
+    self.submitAnswersButton.backgroundColor = [UIColor blueColor];
+    
+    [self.caseDetailsEmailTableView reloadData];
+    
+    [self dismissViewControllerAnimated:NO completion:nil];
     
 }
 - (void)updateNewCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers NewPropertyDescr:(NSString *) newPropDescr optionsList:(NSArray *) optionList

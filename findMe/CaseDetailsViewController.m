@@ -1929,7 +1929,6 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     
     returnedITSMTLObject = [query getObjectWithId:self.itsMTLObject.objectId];
     
-    
     NSArray *returnedCases = [returnedITSMTLObject objectForKey:@"cases"];
     
     BOOL updateSuccess = 0;
@@ -1973,8 +1972,6 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
                 if([timestamp doubleValue] > [lastTimestamp doubleValue])
                 {
                     NSLog(@"newer timestamp found");
-                   
-                    
                     //the update was newer and we verified it from actual case data, set boolean to true
                     updateSuccess =1;
                     
@@ -2350,7 +2347,6 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
             self.caseDetailsTableView.alpha = 1;
             
             [self.caseDetailsTableView reloadData];
-            
             
         }
         

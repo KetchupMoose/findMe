@@ -15,6 +15,7 @@
 #import "XMLWriter.h"
 #import "MBProgressHUD.h"
 #import "CaseDetailsViewController.h"
+#import "CaseDetailsEmailViewController.h"
 
 
 @interface newCaseViewController ()
@@ -532,9 +533,6 @@ MBProgressHUD *HUD;
     
     //return the current itsMTLObject for the currentParseUser
     
-    
-    
-    
     //get the ID and run the XML with the case info.
     NSString *itsMTLObjectID = itsMTLObject.objectId;
     
@@ -543,7 +541,6 @@ MBProgressHUD *HUD;
     NSString *hardcodedXMLString = @"<PAYLOAD><USEROBJECTID>4OvTmAzGE7</USEROBJECTID><LAISO>EN</LAISO><PREFERENCES><SHOWNAME>Rose</SHOWNAME><COUNTRY>CA</COUNTRY><GENDER>F</GENDER><TEMPLATEID1>01VURH6zGz</TEMPLATEID1><TEMPLATEID2>9XXwNvkFTI</TEMPLATEID2></PREFERENCES></PAYLOAD>";
     
     NSString *xmlGeneratedString = [self createTemplateXMLFunction:itsMTLObjectID];
-    
     
     //show progress HUD
       HUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -584,8 +581,6 @@ MBProgressHUD *HUD;
 {
     //set the previous timestamp of the template to the current value.  If there is no data at all yet, set it to 0.
     //set the last timestamp value for cases where it's not the first template
-    
-   
     
     NSArray *casesArray = [self.itsMTLObject objectForKey:@"cases"];
     //set the previous timestamp so it knows what to compare against.
@@ -700,8 +695,6 @@ MBProgressHUD *HUD;
             }
         }
     }
-       
-    
     
     timerTickCheck=timerTickCheck+1;
     if(timerTickCheck==15)
@@ -718,14 +711,15 @@ MBProgressHUD *HUD;
     //send the latest case information to
     NSNumber *selectedIndex = [NSNumber numberWithInt:lastCaseInt];
     
-    CaseDetailsViewController *cdvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdvc"];
+    //CaseDetailsViewController *cdvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdvc"];
+    CaseDetailsEmailViewController *cdevc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdevc"];
     
-    cdvc.selectedCaseIndex=selectedIndex;
+    cdevc.selectedCaseIndex=selectedIndex;
 
-    cdvc.userName = itsMTLObject.objectId;
-    cdvc.itsMTLObject = queryReturnPFObject;
+    cdevc.userName = itsMTLObject.objectId;
+    cdevc.itsMTLObject = queryReturnPFObject;
     
-    [self.navigationController pushViewController:cdvc animated:YES];
+    [self.navigationController pushViewController:cdevc animated:YES];
 }
 
 

@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import "MBProgressHUD.h"
-#import "CaseDetailsEmailViewController.h"
 
 @protocol UpdateCaseItemDelegate
 
@@ -19,12 +18,11 @@
 //3)The popup sends back an array of answers and a new property
 - (void)updateCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers;
 - (void)updateCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers NewPropertyDescr:(NSString *) newPropDescr optionsList:(NSArray *) optionList;
+- (void)reloadData:(PFObject *) myObject;
 
 @end
 
 @interface popupViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,MBProgressHUDDelegate>
-
-
 
 
 @property (weak, nonatomic) IBOutlet UIView *testView;
@@ -43,7 +41,8 @@
 @property (weak,nonatomic) NSString *displayMode;
 
 @property (weak,nonatomic) IBOutlet UITextField *customAnswerTextField;
-@property (weak,nonatomic) CaseDetailsEmailViewController *cdevc;
+
+@property (weak,nonatomic) id<UpdateCaseItemDelegate> UCIdelegate;
 
 
 @end

@@ -9,7 +9,7 @@
 #import "popupViewController.h"
 #import "XMLWriter.h"
 #import "MBProgressHUD.h"
-
+#import <QuartzCore/QuartzCore.h>
 
 
 @interface popupViewController ()
@@ -45,6 +45,9 @@ int popUpTimerTicks =0;
     self.answersTableView.delegate = self;
     self.answersTableView.dataSource = self;
     
+    self.customAnswerTextField.delegate = self;
+    
+    
     //load the options array
     NSString *options = [self.selectedPropertyObject objectForKey:@"options"];
     optionsArray = [[options componentsSeparatedByString:@";"] mutableCopy];
@@ -52,6 +55,17 @@ int popUpTimerTicks =0;
     //load the answers array
     NSArray *cases = [self.popupitsMTLObject objectForKey:@"cases"];
     PFObject *selectedCaseObject = [cases objectAtIndex:[selectedCase integerValue]];
+   
+    NSString *caseObjectID = [selectedCaseObject objectForKey:@"caseId"];
+    
+    int length = (int)[caseObjectID length];
+    
+    if(length==0)
+    {
+        self.updateButton.titleLabel.text = @"Select These Answers";
+        templateMode = 1;
+    }
+    
     NSArray *caseItems = [selectedCaseObject objectForKey:@"caseItems"];
     
     //sort caseItems by priority
@@ -64,16 +78,7 @@ int popUpTimerTicks =0;
     
     PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:[selectedCaseItem integerValue]];
     
-    NSString *caseObjectID = [selectedCaseItemObject objectForKey:@"caseId"];
     
-    int length = (int)[caseObjectID length];
-    
-    if(length==0)
-    {
-        self.updateButton.titleLabel.text = @"Select These Answers";
-        templateMode = 1;
-    }
-
     NSArray *selectedCaseItemAnswersList = [selectedCaseItemObject objectForKey:@"answers"];
     answersArray = [[NSMutableArray alloc] init];
     answersDictionary = [[NSMutableArray alloc] init];
@@ -117,6 +122,85 @@ int popUpTimerTicks =0;
     [self.updateButton.titleLabel setTextColor:[UIColor lightGrayColor]];
     
     
+}
+
+-(void) viewWillAppear:(BOOL)animated
+{
+    self.answersTableView.delegate = self;
+    self.answersTableView.dataSource = self;
+    
+    //load the options array
+    NSString *options = [self.selectedPropertyObject objectForKey:@"options"];
+    optionsArray = [[options componentsSeparatedByString:@";"] mutableCopy];
+    
+    //load the answers array
+    NSArray *cases = [self.popupitsMTLObject objectForKey:@"cases"];
+    PFObject *selectedCaseObject = [cases objectAtIndex:[selectedCase integerValue]];
+    
+    NSString *caseObjectID = [selectedCaseObject objectForKey:@"caseId"];
+    
+    int length = (int)[caseObjectID length];
+    
+    if(length==0)
+    {
+        self.updateButton.titleLabel.text = @"Select These Answers";
+        templateMode = 1;
+    }
+
+    NSArray *caseItems = [selectedCaseObject objectForKey:@"caseItems"];
+    
+    //sort caseItems by priority
+    NSSortDescriptor *sortDescriptor;
+    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
+                                                 ascending:NO];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    
+    NSArray *sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+    
+    PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:[selectedCaseItem integerValue]];
+    
+    
+    NSArray *selectedCaseItemAnswersList = [selectedCaseItemObject objectForKey:@"answers"];
+    answersArray = [[NSMutableArray alloc] init];
+    answersDictionary = [[NSMutableArray alloc] init];
+    
+    [answersArray removeAllObjects];
+    
+    for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
+    {
+        NSString *ansNum = [eachAnsObj valueForKey:@"a"];
+        if (ansNum==nil)
+        {
+            NSString *ans = [eachAnsObj valueForKey:@"custom"];
+            [answersArray addObject:ans];
+        }
+        else
+        {
+            [answersArray addObject:ansNum];
+        }
+    }
+    
+    if([self.displayMode isEqualToString:@"custom"])
+    {
+        self.answersTableView.alpha = 0;
+        self.customAnswerTextField.alpha =1;
+        
+        if([answersArray count]>0)
+        {
+            self.customAnswerTextField.text = [answersArray objectAtIndex:0];
+            
+        }
+    }
+    else
+    {
+        self.answersTableView.alpha = 1;
+        self.customAnswerTextField.alpha =0;
+        [self.answersTableView reloadData];
+    }
+    
+    //set the update button to disabled by default until a change is made:
+    self.updateButton.enabled = 0;
+    [self.updateButton.titleLabel setTextColor:[UIColor lightGrayColor]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -196,7 +280,26 @@ int popUpTimerTicks =0;
     //for the last cell, show a keyboard to type a new option
     if(indexPath.row==optionsArray.count)
     {
-        //add keyboard for adding a new option
+        UIView *newOptionView = [[UIView alloc] initWithFrame:CGRectMake(27,50,265,250)];
+        newOptionView.backgroundColor = [UIColor whiteColor];
+       
+        
+        UITextField *newAnsTextField = [[UITextField alloc] initWithFrame:CGRectMake(20,50,200,50)];
+        [[newAnsTextField layer] setBorderColor:[[UIColor colorWithRed:171.0/255.0
+                                                           green:171.0/255.0
+                                                            blue:171.0/255.0
+                                                           alpha:1.0] CGColor]];
+        newAnsTextField.layer.borderWidth = 1;
+        newAnsTextField.layer.cornerRadius = 5;
+       newAnsTextField.layer.masksToBounds = YES;
+        newAnsTextField.tag = 88;
+        
+        UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(newOptionView.frame.size.width-30,2,30,30)];
+        [closeButton setTitle:@"Close" forState:UIControlStateNormal];
+        
+        [newOptionView addSubview:closeButton];
+        [newOptionView addSubview:newAnsTextField];
+         [self.view addSubview:newOptionView];
     }
     
     UIView *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -258,12 +361,17 @@ int popUpTimerTicks =0;
     textField.text = @"";
     
     [self animateTextField:textField up:YES];
+    
+    self.updateButton.enabled = 1;
+    [self.updateButton.titleLabel setTextColor:[UIColor blueColor]];
 }
+
 
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     [self animateTextField:textField up:NO];
+
 }
 
 
@@ -299,22 +407,47 @@ int popUpTimerTicks =0;
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
     
-    [answersDictionary removeAllObjects];
-    
-    NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
-    [AnsObj setValue:textField.text forKey:@"custom"];
-    [answersDictionary addObject:AnsObj];
-    
-    self.updateButton.enabled = 1;
-    [self.updateButton.titleLabel setTextColor:[UIColor blueColor]];
-    
+    [textField resignFirstResponder];
+
     return YES;
-    
     
 }
 
 -(IBAction)updateAnswers:(id)sender
 {
+   if([displayMode isEqualToString:@"custom"])
+   {
+    [answersDictionary removeAllObjects];
+    
+    NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+    [AnsObj setValue:self.customAnswerTextField.text forKey:@"custom"];
+    [answersDictionary addObject:AnsObj];
+}
+    //prepare the array of sortedCaseItems
+    NSArray *cases = [self.popupitsMTLObject objectForKey:@"cases"];
+    PFObject *selectedCaseObject = [cases objectAtIndex:[selectedCase integerValue]];
+    NSArray *caseItems = [selectedCaseObject objectForKey:@"caseItems"];
+    
+    //sort caseItems by priority
+    NSSortDescriptor *sortDescriptor;
+    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
+                                                 ascending:NO];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    
+    NSArray *sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+    
+    PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:[selectedCaseItem integerValue]];
+    
+    if(templateMode ==1)
+    {
+        //update the data for sortedCaseItems and propsArray to prepare for updating on the CaseDetailsEmailViewController
+        
+        caseIDBeingUpdated = [selectedCaseItemObject objectForKey:@"caseItem"];
+        
+        [self.UCIdelegate updateCaseItem:caseIDBeingUpdated AcceptableAnswersList:answersDictionary];
+        return;
+    }
+    
     NSString *generatedXMLString = [self createXMLFunction];
     
     //add a progress HUD to show it is retrieving list of properts
@@ -340,12 +473,11 @@ int popUpTimerTicks =0;
                                         
             [HUD hide:NO];
                               
-            NSArray *allCases = [self.popupitsMTLObject objectForKey:@"cases"];
-            PFObject *caseObject = [allCases objectAtIndex:[selectedCase integerValue]];
-            caseIDBeingUpdated = [caseObject objectForKey:@"caseId"];
+         
+            caseIDBeingUpdated = [selectedCaseObject objectForKey:@"caseId"];
                 
                 
-            NSString *timeStampReturn = [caseObject objectForKey:@"timestamp"];
+            NSString *timeStampReturn = [selectedCaseObject  objectForKey:@"timestamp"];
             NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
             f.numberStyle = NSNumberFormatterDecimalStyle;
             lastTimestamp = [f numberFromString:timeStampReturn];
@@ -372,7 +504,6 @@ int popUpTimerTicks =0;
     HUD.labelText = @"Polling for Case Update";
     [HUD show:YES];
     
-    
     [NSTimer scheduledTimerWithTimeInterval:1.0
                                      target:self
                                    selector:@selector(timerFired:)
@@ -386,7 +517,6 @@ int popUpTimerTicks =0;
     NSLog(@"timer fired tick %i", popUpTimerTicks);
     
     //check the parse object to see if it is updated
-    
     PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
     [query includeKey:@"cases"];
     
@@ -395,7 +525,6 @@ int popUpTimerTicks =0;
     NSArray *returnedCases = [returnedITSMTLObject objectForKey:@"cases"];
     
     BOOL updateSuccess = 0;
-    
     
         for (PFObject *eachReturnedCase in returnedCases)
         {
@@ -437,7 +566,8 @@ int popUpTimerTicks =0;
         [HUD hide:NO];
         
         //trigger caseDetailsEmailViewController to reload its data
-        [self.cdevc reloadData:returnedITSMTLObject];
+        
+        [self.UCIdelegate reloadData:returnedITSMTLObject];
     }
     
     else
