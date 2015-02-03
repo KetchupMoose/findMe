@@ -1741,7 +1741,7 @@ numberOfRowsInComponent:(NSInteger)component
 {
    NewPropertyViewController *npvc = [self.storyboard instantiateViewControllerWithIdentifier:@"npvc"];
     
-   npvc.userName = userName;
+    npvc.userName = userName;
     npvc.delegate = self;
     
     [self.navigationController pushViewController:npvc animated:YES];

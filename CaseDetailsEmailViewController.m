@@ -468,6 +468,22 @@ CGPoint startLocation;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+   
+    //if the selected row is greater than the count of caseItems, show the NewPropertyViewController
+    
+    if(indexPath.row==sortedCaseItems.count)
+    {
+        NSLog(@"create a new case");
+        NewPropertyViewController *npvc = [self.storyboard instantiateViewControllerWithIdentifier:@"npvc"];
+        npvc.userName = self.itsMTLObject.objectId;
+        npvc.delegate = self;
+        
+        [self.navigationController pushViewController:npvc animated:YES];
+        
+        return;
+        
+    }
+    
     //popup a small window for editing the selection of this entry
     
     UIView *popupView = [[UIView alloc] initWithFrame:CGRectMake(20,50,280,400)];
@@ -858,6 +874,34 @@ CGPoint startLocation;
             
         }
     }
+    else
+        //check for a non template mode successful update
+    {
+        for (PFObject *eachReturnedCase in returnedCases)
+        {
+            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+            if([caseString length] >0)
+            {
+                if([caseBeingUpdated isEqualToString:caseString])
+                {
+                    //check the timestamp, see if newer than prior timestamp
+                    NSString *timeStampReturn = [eachReturnedCase objectForKey:@"timestamp"];
+                    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                    f.numberStyle = NSNumberFormatterDecimalStyle;
+                    
+                    NSNumber *timestamp = [f numberFromString:timeStampReturn];
+                    
+                    if([timestamp doubleValue] > [lastTimestamp doubleValue])
+                    {
+                        NSLog(@"newer timestamp found");
+                        //the update was newer and we verified it from actual case data, set boolean to true
+                        updateSuccess =1;
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     if(updateSuccess ==1)
     {
@@ -936,47 +980,59 @@ CGPoint startLocation;
     
     //Jan 18
     //updating to put ALL property tags first before caseItem tags
+    int j = 0;
+    
+    for (PFObject *eachCaseItem in sortedCaseItems)
+    {
+        
+        //do update
+        
+        PFObject *updatedProperty = [propsArray objectAtIndex:j];
+        NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
+        NSString *propertyDescr = [updatedProperty objectForKey:@"propertyDescr"];
+        
+        //check to see if this caseItem is a brand new property
+        
+        if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:j]])
+            
+        {
+            //add the XML for a new or updated property here
+            [xmlWriter writeStartElement:@"PROPERTY"];
+            
+            [xmlWriter writeStartElement:@"PROPERTYNUM"];
+            [xmlWriter writeCharacters:@"1"];
+            [xmlWriter writeEndElement];
+            
+            [xmlWriter writeStartElement:@"PROPERTYDESCR"];
+            [xmlWriter writeCharacters:propertyDescr];
+            [xmlWriter writeEndElement];
+            
+            //get the options value from the property object
+            NSString *fullCharsString = [updatedProperty objectForKey:@"options"];
+            
+            if([fullCharsString length]>0)
+            {
+                
+                [xmlWriter writeStartElement:@"OPTIONS"];
+                [xmlWriter writeCharacters:fullCharsString];
+                [xmlWriter writeEndElement];
+            }
+            //close property element
+            [xmlWriter writeEndElement];
+        }
+        j = j+1;
+        
+    }
     
     int h = 0;
     for (PFObject *eachCaseItem in sortedCaseItems)
     {
         
             //do update
-            
             PFObject *updatedProperty = [propsArray objectAtIndex:h];
             NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
             NSString *propertyDescr = [updatedProperty objectForKey:@"propertyDescr"];
-            
-            //check to see if this caseItem is a brand new property
-            
-            if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:h]])
-                
-            {
-                //add the XML for a new or updated property here
-                [xmlWriter writeStartElement:@"PROPERTY"];
-                
-                [xmlWriter writeStartElement:@"PROPERTYNUM"];
-                [xmlWriter writeCharacters:@"1"];
-                [xmlWriter writeEndElement];
-                
-                [xmlWriter writeStartElement:@"PROPERTYDESCR"];
-                [xmlWriter writeCharacters:propertyDescr];
-                [xmlWriter writeEndElement];
-                
-                //get the options value from the property object
-                NSString *fullCharsString = [updatedProperty objectForKey:@"options"];
-                
-                if([fullCharsString length]>0)
-                {
-                    
-                    [xmlWriter writeStartElement:@"OPTIONS"];
-                    [xmlWriter writeCharacters:fullCharsString];
-                    [xmlWriter writeEndElement];
-                }
-                //close property element
-                [xmlWriter writeEndElement];
-            }
-            
+        
             //write logic for updating the caseItem
             //build strings for building item
             [xmlWriter writeStartElement:@"ITEM"];
@@ -1143,6 +1199,52 @@ CGPoint startLocation;
     [newlyCreatedPropertiesIndex addObject:indexNum];
     [changedCaseItemsIndex addObject:indexNum];
 
+}
+
+#pragma mark DataDelegateMethods
+- (void)recieveData:(NSString *)OptionsList AcceptableAnswersList:(NSArray *)Answers QuestionText:(NSString *) question {
+    
+    //loop through the incoming array of answers and set them to an array of NSMutableDictionaries
+    
+    
+    //add the data to the list sortedCaseList and propertiesArray
+    
+    NSMutableDictionary *propertyObject = [[NSMutableDictionary alloc] init];
+    [propertyObject setObject:OptionsList forKey:@"options"];
+    [propertyObject setObject:question forKey:@"propertyDescr"];
+    [propertyObject setObject:@"9000" forKey:@"propertyNum"];
+    [propertyObject setObject:@"U" forKey:@"propertyType"];
+    
+    
+    NSMutableDictionary *caseItemObject = [[NSMutableDictionary alloc] init];
+    [caseItemObject setObject:@"9000" forKey:@"caseItem"];
+    [caseItemObject setObject:Answers forKey:@"answers"];
+    
+    int g = (int)sortedCaseItems.count;
+    
+    [sortedCaseItems addObject:caseItemObject];
+    [propsArray addObject:propertyObject];
+    
+    NSNumber *indexNum = [[NSNumber alloc] initWithInt:g];
+    [newlyCreatedPropertiesIndex addObject:indexNum];
+    [changedCaseItemsIndex addObject:indexNum];
+    
+    //[self.pickerView reloadAllComponents];
+  //  [self.caseDetailsTableView reloadData];
+    
+    //Do something with data here
+    NSLog(@"this fired");
+    self.submitAnswersButton.enabled = 1;
+    self.submitAnswersButton.backgroundColor = [UIColor blueColor];
+    
+    //reload data
+    [self.caseDetailsEmailTableView reloadData];
+    
+    
+    [self.navigationController popViewControllerAnimated:NO];
+    
+    
+    
 }
 
 @end

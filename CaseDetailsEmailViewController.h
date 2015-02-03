@@ -13,7 +13,7 @@
 #import <Parse/Parse.h>
 #import "popupViewController.h"
 
-@interface CaseDetailsEmailViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,MBProgressHUDDelegate,UIAlertViewDelegate,CLLocationManagerDelegate,UpdateCaseItemDelegate>
+@interface CaseDetailsEmailViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,MBProgressHUDDelegate,UIAlertViewDelegate,CLLocationManagerDelegate,UpdateCaseItemDelegate,MyDataDelegate>
 
 @property (weak,nonatomic) IBOutlet UITableView *caseDetailsEmailTableView;
 

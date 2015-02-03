@@ -33,9 +33,10 @@ MBProgressHUD *HUD;
 NSString *caseIDBeingUpdated;
 
 BOOL templateMode = 0;
+int originalAnswersCount;
 
 int popUpTimerTicks =0;
-
+UIView *bgDarkenView;
 
 - (void)viewDidLoad
 {
@@ -201,6 +202,9 @@ int popUpTimerTicks =0;
     //set the update button to disabled by default until a change is made:
     self.updateButton.enabled = 0;
     [self.updateButton.titleLabel setTextColor:[UIColor lightGrayColor]];
+    
+    originalAnswersCount = (int)[optionsArray count];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -268,7 +272,13 @@ int popUpTimerTicks =0;
         cell.backgroundColor = [UIColor whiteColor];
         
     }
+    NSString *optionTxt = optionLabel.text;
     
+    if ([answersArray containsObject:optionTxt])
+    {
+        cell.backgroundColor = [UIColor greenColor];
+        
+    }
     
     return cell;
     
@@ -280,11 +290,17 @@ int popUpTimerTicks =0;
     //for the last cell, show a keyboard to type a new option
     if(indexPath.row==optionsArray.count)
     {
-        UIView *newOptionView = [[UIView alloc] initWithFrame:CGRectMake(27,50,265,250)];
-        newOptionView.backgroundColor = [UIColor whiteColor];
-       
+        bgDarkenView = [[UIView alloc] initWithFrame:self.view.bounds];
+        bgDarkenView.backgroundColor = [UIColor blackColor];
+        bgDarkenView.alpha = 0.2;
+        [self.view addSubview:bgDarkenView];
         
-        UITextField *newAnsTextField = [[UITextField alloc] initWithFrame:CGRectMake(20,50,200,50)];
+        UIView *newOptionView = [[UIView alloc] initWithFrame:CGRectMake(27,150,266,210)];
+        newOptionView.backgroundColor = [UIColor whiteColor];
+        newOptionView.layer.cornerRadius = 5.0f;
+        [newOptionView.layer masksToBounds];
+        
+        UITextField *newAnsTextField = [[UITextField alloc] initWithFrame:CGRectMake(25,60,200,50)];
         [[newAnsTextField layer] setBorderColor:[[UIColor colorWithRed:171.0/255.0
                                                            green:171.0/255.0
                                                             blue:171.0/255.0
@@ -294,12 +310,34 @@ int popUpTimerTicks =0;
        newAnsTextField.layer.masksToBounds = YES;
         newAnsTextField.tag = 88;
         
-        UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(newOptionView.frame.size.width-30,2,30,30)];
+        UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(newOptionView.frame.size.width-60,4,55,40)];
         [closeButton setTitle:@"Close" forState:UIControlStateNormal];
+        [closeButton addTarget:self
+                   action:@selector(closeNewAnswerView:)
+         forControlEvents:UIControlEventTouchUpInside];
+        
+        
+        UILabel *btnLabel = closeButton.titleLabel;
+        btnLabel.font = [UIFont systemFontOfSize:12];
+        closeButton.backgroundColor = [UIColor redColor];
+        
+        
+        UIButton *addButton = [[UIButton alloc] initWithFrame:CGRectMake(110,125,50,50)];
+        [addButton setTitle:@"Add" forState:UIControlStateNormal];
+        UILabel *addBtnLabel = addButton.titleLabel;
+        addBtnLabel.font = [UIFont systemFontOfSize:12];
+        addButton.backgroundColor = [UIColor blueColor];
+        [addButton addTarget:self
+                        action:@selector(addNewAnswerView:)
+              forControlEvents:UIControlEventTouchUpInside];
         
         [newOptionView addSubview:closeButton];
+        [newOptionView addSubview:addButton];
         [newOptionView addSubview:newAnsTextField];
          [self.view addSubview:newOptionView];
+        
+        return;
+        
     }
     
     UIView *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -310,8 +348,17 @@ int popUpTimerTicks =0;
         //remove this answer from the list.
         int i = 0;
         int indexToRemove = 0;
-       
-        for (NSNumber *eachAns in answersArray)
+        
+        //check to see if the answersArray includes the string label
+        UILabel *optionLabel = (UILabel *)[cell viewWithTag:1];
+        NSString *optionTxt = optionLabel.text;
+        if ([answersArray containsObject:optionTxt])
+        {
+            [answersArray removeObject:optionTxt];
+            
+        }
+        
+        for (NSString *eachAns in answersArray)
         {
             int ansInt = (int)[eachAns integerValue];
             
@@ -329,29 +376,93 @@ int popUpTimerTicks =0;
        
     }
     else
-        
     {
-        NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
-        [answersArray addObject:newAns];
-        cell.backgroundColor = [UIColor greenColor];
+         if(indexPath.row +1 <originalAnswersCount)
+         {
+             NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
+             [answersArray addObject:newAns];
+             cell.backgroundColor = [UIColor greenColor];
+         }
+        else
+        {
+            UILabel *optionLabel = (UILabel *)[cell viewWithTag:1];
+            NSString *newAns = optionLabel.text;
+            [answersArray addObject:newAns];
+            cell.backgroundColor = [UIColor greenColor];
+        }
+       
         
     }
     
     //set the answers for this case to an array of a-value NSDicts
     
     [answersDictionary removeAllObjects];
-    
-    
-    for(NSNumber *eachAns in answersArray)
+    int g= 0;
+    for(NSString *eachAns in answersArray)
     {
+       if(g<=originalAnswersCount-1)
+       {
         NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
         [AnsObj setValue:eachAns forKey:@"a"];
         [answersDictionary addObject:AnsObj];
-        
+        }
+        else
+        {
+            NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+            [AnsObj setValue:eachAns forKey:@"custom"];
+            [answersDictionary addObject:AnsObj];
+        }
+        g=g+1;
     }
     
     self.updateButton.enabled = 1;
    [self.updateButton.titleLabel setTextColor:[UIColor blueColor]];
+    
+    
+}
+
+- (void)closeNewAnswerView:(id)sender
+{
+    UIButton *sendingButton = (UIButton *)sender;
+    UIView *NewAnswerView = sendingButton.superview;
+    
+    [NewAnswerView removeFromSuperview];
+    [bgDarkenView removeFromSuperview];
+    
+}
+
+- (void)addNewAnswerView:(id)sender
+{
+    UIButton *sendingButton = (UIButton *)sender;
+    UIView *NewAnswerView = sendingButton.superview;
+    
+    for (UIView *theView in NewAnswerView.subviews)
+    {
+        if(theView.tag ==88)
+        {
+             UITextField *newAnsTextField = (UITextField *) theView;
+            //add the answer from this text field.
+            
+            if([newAnsTextField.text length] >0)
+            {
+                NSString *newAnsString = newAnsTextField.text;
+                [answersArray addObject:@"newAnsString"];
+                NSMutableDictionary *newAnsCustom = [[NSMutableDictionary alloc] init];
+                [newAnsCustom setObject:newAnsString forKey:@"custom"];
+                [answersDictionary addObject:newAnsCustom];
+                [optionsArray addObject:newAnsString];
+                
+                
+            }
+        }
+        
+    }
+    [NewAnswerView removeFromSuperview];
+    [bgDarkenView removeFromSuperview];
+    
+    [self.answersTableView reloadData];
+    
+    [self updateAnswers:(self)];
     
     
 }
@@ -472,10 +583,8 @@ int popUpTimerTicks =0;
             NSLog(responseText);
                                         
             [HUD hide:NO];
-                              
-         
-            caseIDBeingUpdated = [selectedCaseObject objectForKey:@"caseId"];
                 
+            caseIDBeingUpdated = [selectedCaseObject objectForKey:@"caseId"];
                 
             NSString *timeStampReturn = [selectedCaseObject  objectForKey:@"timestamp"];
             NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
@@ -701,7 +810,26 @@ int popUpTimerTicks =0;
                
                 for (PFObject *ansObj in answersDictionary)
                 {
+                    
+                    //if the object responds to the key a, then write it as an answer a
                     NSString *ansString = [ansObj objectForKey:@"a"];
+                    if([ansString length] ==0)
+                    {
+                        ansString = [ansObj objectForKey:@"custom"];
+                        if([ansString length] >0)
+                        {
+                        [xmlWriter writeStartElement:@"ANSWER"];
+                        
+                        [xmlWriter writeStartElement:@"CUSTOM"];
+                        [xmlWriter writeCharacters:ansString];
+                        [xmlWriter writeEndElement];
+                        
+                        [xmlWriter writeEndElement];
+                        }
+                    }
+                    else
+                    {
+                        
                     [xmlWriter writeStartElement:@"ANSWER"];
                     
                     [xmlWriter writeStartElement:@"A"];
@@ -709,7 +837,7 @@ int popUpTimerTicks =0;
                     [xmlWriter writeEndElement];
                     
                     [xmlWriter writeEndElement];
-                    
+                    }
                 }
                 
             }
