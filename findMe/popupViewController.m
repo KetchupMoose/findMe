@@ -205,6 +205,26 @@ UIView *bgDarkenView;
     
     originalAnswersCount = (int)[optionsArray count];
     
+    [answersDictionary removeAllObjects];
+    int g= 0;
+    for(NSString *eachAns in answersArray)
+    {
+        if(g<=originalAnswersCount-1)
+        {
+            NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+            [AnsObj setValue:eachAns forKey:@"a"];
+            [answersDictionary addObject:AnsObj];
+        }
+        else
+        {
+            NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+            [AnsObj setValue:eachAns forKey:@"custom"];
+            [answersDictionary addObject:AnsObj];
+        }
+        g=g+1;
+    }
+
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -451,8 +471,6 @@ UIView *bgDarkenView;
                 [newAnsCustom setObject:newAnsString forKey:@"custom"];
                 [answersDictionary addObject:newAnsCustom];
                 [optionsArray addObject:newAnsString];
-                
-                
             }
         }
         
@@ -460,7 +478,9 @@ UIView *bgDarkenView;
     [NewAnswerView removeFromSuperview];
     [bgDarkenView removeFromSuperview];
     
-    [self.answersTableView reloadData];
+    
+    //NSIndexPath *path = [NSIndexPath indexPathForRow:[optionsArray count]-1 inSection:0];
+    //[self.answersTableView selectRowAtIndexPath:path animated:NO scrollPosition:UITableViewScrollPositionBottom];
     
     [self updateAnswers:(self)];
     
@@ -807,7 +827,11 @@ UIView *bgDarkenView;
             }
             else
             {
-               
+                NSString *semiColonDelimitedCustomAnswers;
+                NSString *semiColonDelimitedAAnswers;
+                NSMutableArray *arrayOfCustomAnswers = [[NSMutableArray alloc] init];
+                NSMutableArray *arrayOfAAnswers = [[NSMutableArray alloc] init];
+                
                 for (PFObject *ansObj in answersDictionary)
                 {
                     
@@ -818,30 +842,38 @@ UIView *bgDarkenView;
                         ansString = [ansObj objectForKey:@"custom"];
                         if([ansString length] >0)
                         {
-                        [xmlWriter writeStartElement:@"ANSWER"];
-                        
-                        [xmlWriter writeStartElement:@"CUSTOM"];
-                        [xmlWriter writeCharacters:ansString];
-                        [xmlWriter writeEndElement];
-                        
-                        [xmlWriter writeEndElement];
+                            [arrayOfCustomAnswers addObject:ansString];
                         }
                     }
                     else
                     {
+                        [arrayOfAAnswers addObject:ansString];
                         
-                    [xmlWriter writeStartElement:@"ANSWER"];
-                    
-                    [xmlWriter writeStartElement:@"A"];
-                    [xmlWriter writeCharacters:ansString];
-                    [xmlWriter writeEndElement];
-                    
-                    [xmlWriter writeEndElement];
                     }
                 }
+                semiColonDelimitedAAnswers = [arrayOfAAnswers componentsJoinedByString:@";"];
+                semiColonDelimitedCustomAnswers  = [arrayOfCustomAnswers componentsJoinedByString:@";"];
                 
+                 [xmlWriter writeStartElement:@"ANSWER"];
+                if([semiColonDelimitedAAnswers length]>0)
+                {
+                    [xmlWriter writeStartElement:@"A"];
+                    [xmlWriter writeCharacters:semiColonDelimitedAAnswers];
+                    [xmlWriter writeEndElement];
+                    
+                }
+                if([semiColonDelimitedCustomAnswers length]>0)
+                {
+                    [xmlWriter writeStartElement:@"CUSTOM"];
+                    [xmlWriter writeCharacters:semiColonDelimitedCustomAnswers];
+                    [xmlWriter writeEndElement];
+                    
+                }
+                
+                [xmlWriter writeEndElement];
+
             }
-            
+    
             //close item element
             [xmlWriter writeEndElement];
     

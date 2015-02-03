@@ -49,6 +49,7 @@ NSString *caseBeingUpdated;
 BOOL templateMode;
 
 int suggestedCaseDisplayedIndex;
+int updatedCaseTicker = 0;
 
 NSArray *selectedCaseItemAnswersList;
 NSArray *optionsArray;
@@ -435,7 +436,7 @@ CGPoint startLocation;
                 
                 NSString *optionsString = [propAtIndex objectForKey:@"options"];
                 
-                NSLog(@"%@",optionsString);
+                //NSLog(@"%@",optionsString);
                 
                 //need to convert options string to an array of objects with ; separators.
                 NSString *finalAnsString = @"";
@@ -686,7 +687,30 @@ CGPoint startLocation;
     [propertsQuery whereKey:@"objectId" containedIn:propertyIDSArray];
     [propertsQuery orderByDescending:@"priority"];
     
-    propsArray = [[propertsQuery findObjects] mutableCopy];
+    [propsArray removeAllObjects];
+    int gj = 0;
+    
+    while ([propsArray count] != [sortedCaseItems count]) {
+            propsArray = [[propertsQuery findObjects] mutableCopy];
+        
+            //check the propsArray and remove all objects if one of them doens't have a propertyDescr;
+            for (PFObject *property in propsArray)
+            {
+                NSString *propDescr =[property objectForKey:@"propertyDescr"];
+                if([propDescr length] ==0)
+                {
+                    [propsArray removeAllObjects];
+                    break;
+                    
+                }
+            }
+        NSLog(@"doing the props query again");
+        gj=gj+1;
+        NSLog(@"%d",gj);
+        
+        }
+    
+    
     
     //sort the properties into four categories based on their type: info messages, answerableQuestions, customAnswerableQuestions, and new suggestions
     int g = 0;
@@ -1000,7 +1024,8 @@ CGPoint startLocation;
             [xmlWriter writeStartElement:@"PROPERTY"];
             
             [xmlWriter writeStartElement:@"PROPERTYNUM"];
-            [xmlWriter writeCharacters:@"1"];
+            NSString *propNumString = [NSString stringWithFormat:@"%d",j];
+            [xmlWriter writeCharacters:propNumString];
             [xmlWriter writeEndElement];
             
             [xmlWriter writeStartElement:@"PROPERTYDESCR"];
@@ -1040,9 +1065,13 @@ CGPoint startLocation;
             //check to see if this caseItem has a number.  Otherwise give it a number of 9000 to indicate it is a brand new caseItem.
             NSString *myCaseItem = [eachCaseItem objectForKey:@"caseItem"];
             NSString *caseItemNumber;
+        
+        
+            int caseNum = 12000+h;
+        
             if(myCaseItem==nil)
             {
-                caseItemNumber =@"9000";
+                caseItemNumber =[NSString stringWithFormat:@"%d",caseNum];;
                 
             }
             else
@@ -1054,14 +1083,20 @@ CGPoint startLocation;
             [xmlWriter writeStartElement:@"CASEITEM"];
             [xmlWriter writeCharacters:caseItemNumber];
             [xmlWriter writeEndElement];
-            
-            if(propertyNum==nil)
+        
+        NSString *propNumString;
+           if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:h]])
+           {
+               propNumString = [NSString stringWithFormat:@"%d",h];
+           }
+           else
             {
-                propertyNum =@"1";
-                
+            propNumString = propertyNum;
             }
+        
+            h = h+1;
             [xmlWriter writeStartElement:@"PROPERTYNUM"];
-            [xmlWriter writeCharacters:propertyNum];
+            [xmlWriter writeCharacters:propNumString];
             [xmlWriter writeEndElement];
             
             //write out the answers value of this case Item
@@ -1071,51 +1106,84 @@ CGPoint startLocation;
             //if case type is I or N, don't update anything for answers
             NSString *propertyType = [updatedProperty objectForKey:@"propertyType"];
             NSString *optionText = [updatedProperty objectForKey:@"options"];
-            
+            NSArray *answersDictionary = [eachCaseItem objectForKey:@"answers"];
+        
             if([propertyType isEqualToString:@"I"] || [propertyType isEqualToString:@"N"] || [propertyType isEqualToString:@"B"])
             {
                 //do nothing
             }
-            else
-            
+            else if([optionText length] == 0)
             {
-                //write the answer array
-                NSArray *caseAnswers = [eachCaseItem objectForKey:@"answers"];
-                for (PFObject *ansObj in caseAnswers)
+                //write the answer as type Custom
+                
+                for (PFObject *ansObj in answersDictionary)
                 {
                     NSString *ansString = [ansObj objectForKey:@"custom"];
-                    if([ansString length] ==0)
-                    {
-                        ansString = [ansObj objectForKey:@"a"];
-                        
-                        [xmlWriter writeStartElement:@"ANSWER"];
-                        
-                        [xmlWriter writeStartElement:@"A"];
-                        [xmlWriter writeCharacters:ansString];
-                        [xmlWriter writeEndElement];
-                        
-                        [xmlWriter writeEndElement];
-
-                    }
-                    else
-                    {
-                        [xmlWriter writeStartElement:@"ANSWER"];
-                        
-                        [xmlWriter writeStartElement:@"CUSTOM"];
-                        [xmlWriter writeCharacters:ansString];
-                        [xmlWriter writeEndElement];
-                        
-                        [xmlWriter writeEndElement];
-                    }
+                    [xmlWriter writeStartElement:@"ANSWER"];
+                    
+                    [xmlWriter writeStartElement:@"Custom"];
+                    [xmlWriter writeCharacters:ansString];
+                    [xmlWriter writeEndElement];
+                    
+                    [xmlWriter writeEndElement];
                     
                 }
                 
             }
+            else
+            {
+                NSString *semiColonDelimitedCustomAnswers;
+                NSString *semiColonDelimitedAAnswers;
+                NSMutableArray *arrayOfCustomAnswers = [[NSMutableArray alloc] init];
+                NSMutableArray *arrayOfAAnswers = [[NSMutableArray alloc] init];
+                
+                for (PFObject *ansObj in answersDictionary)
+                {
+                    
+                    //if the object responds to the key a, then write it as an answer a
+                    NSString *ansString = [ansObj objectForKey:@"a"];
+                    if([ansString length] ==0)
+                    {
+                        ansString = [ansObj objectForKey:@"custom"];
+                        if([ansString length] >0)
+                        {
+                            [arrayOfCustomAnswers addObject:ansString];
+                        }
+                    }
+                    else
+                    {
+                        [arrayOfAAnswers addObject:ansString];
+                        
+                    }
+                }
+                semiColonDelimitedAAnswers = [arrayOfAAnswers componentsJoinedByString:@";"];
+                semiColonDelimitedCustomAnswers  = [arrayOfCustomAnswers componentsJoinedByString:@";"];
+                
+                [xmlWriter writeStartElement:@"ANSWER"];
+                if([semiColonDelimitedAAnswers length]>0)
+                {
+                    [xmlWriter writeStartElement:@"A"];
+                    [xmlWriter writeCharacters:semiColonDelimitedAAnswers];
+                    [xmlWriter writeEndElement];
+                    
+                }
+                if([semiColonDelimitedCustomAnswers length]>0)
+                {
+                    [xmlWriter writeStartElement:@"CUSTOM"];
+                    [xmlWriter writeCharacters:semiColonDelimitedAAnswers];
+                    [xmlWriter writeEndElement];
+                    
+                }
+                
+                [xmlWriter writeEndElement];
+                
+            }
+
     
             //close item element
             [xmlWriter writeEndElement];
         
-        h=h+1;
+        
         
     }
     if([locationRetrieved length]>0)
@@ -1181,13 +1249,21 @@ CGPoint startLocation;
 - (void)updateNewCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers NewPropertyDescr:(NSString *) newPropDescr optionsList:(NSArray *) optionList
 {
     NSMutableDictionary *propertyObject = [[NSMutableDictionary alloc] init];
+    
+    updatedCaseTicker = updatedCaseTicker +1;
+    int newCaseNumber = 9000 +updatedCaseTicker;
+    
+    NSString *newPropNum = [NSString stringWithFormat:@"%d",updatedCaseTicker];
+    NSString *newCaseNum = [NSString stringWithFormat:@"%d",newCaseNumber];
     [propertyObject setObject:optionList forKey:@"options"];
     [propertyObject setObject:newPropDescr forKey:@"propertyDescr"];
-    [propertyObject setObject:@"9000" forKey:@"propertyNum"];
+    [propertyObject setObject:newPropNum forKey:@"propertyNum"];
     [propertyObject setObject:@"U" forKey:@"propertyType"];
     
     NSMutableDictionary *caseItemObject = [[NSMutableDictionary alloc] init];
-    [caseItemObject setObject:@"9000" forKey:@"caseItem"];
+   
+    
+    [caseItemObject setObject:newCaseNum forKey:@"caseItem"];
     [caseItemObject setObject:Answers forKey:@"answers"];
     
     int g = (int)sortedCaseItems.count;
@@ -1204,6 +1280,12 @@ CGPoint startLocation;
 #pragma mark DataDelegateMethods
 - (void)recieveData:(NSString *)OptionsList AcceptableAnswersList:(NSArray *)Answers QuestionText:(NSString *) question {
     
+    updatedCaseTicker = updatedCaseTicker +1;
+    int newCaseNumber = 9000 +updatedCaseTicker;
+    
+    NSString *newPropNum = [NSString stringWithFormat:@"%d",updatedCaseTicker];
+    NSString *newCaseNum = [NSString stringWithFormat:@"%d",newCaseNumber];
+    
     //loop through the incoming array of answers and set them to an array of NSMutableDictionaries
     
     
@@ -1212,12 +1294,12 @@ CGPoint startLocation;
     NSMutableDictionary *propertyObject = [[NSMutableDictionary alloc] init];
     [propertyObject setObject:OptionsList forKey:@"options"];
     [propertyObject setObject:question forKey:@"propertyDescr"];
-    [propertyObject setObject:@"9000" forKey:@"propertyNum"];
+    [propertyObject setObject:newPropNum forKey:@"propertyNum"];
     [propertyObject setObject:@"U" forKey:@"propertyType"];
     
     
     NSMutableDictionary *caseItemObject = [[NSMutableDictionary alloc] init];
-    [caseItemObject setObject:@"9000" forKey:@"caseItem"];
+    [caseItemObject setObject:newCaseNum forKey:@"caseItem"];
     [caseItemObject setObject:Answers forKey:@"answers"];
     
     int g = (int)sortedCaseItems.count;
