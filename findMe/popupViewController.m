@@ -23,11 +23,12 @@
 @synthesize selectedCaseItem;
 @synthesize selectedPropertyObject;
 @synthesize displayMode;
+@synthesize sortedCaseItems;
 
 NSMutableArray *optionsArray;
 NSMutableArray *answersArray;
 NSMutableArray *answersDictionary;
-NSArray *sortedCaseItems;
+
 NSNumber *lastTimestamp;
 MBProgressHUD *HUD;
 NSString *caseIDBeingUpdated;
@@ -66,7 +67,9 @@ UIView *bgDarkenView;
         self.updateButton.titleLabel.text = @"Select These Answers";
         templateMode = 1;
     }
-    
+    //Feb5
+    //commenting this portion out to deal with sortedCaseItems on the property level instead
+    /*
     NSArray *caseItems = [selectedCaseObject objectForKey:@"caseItems"];
     
     //sort caseItems by priority
@@ -74,9 +77,7 @@ UIView *bgDarkenView;
     sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
                                                  ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    
-   NSArray *sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
-    
+    */
     PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:[selectedCaseItem integerValue]];
     
     
@@ -147,16 +148,18 @@ UIView *bgDarkenView;
         self.updateButton.titleLabel.text = @"Select These Answers";
         templateMode = 1;
     }
-
-    NSArray *caseItems = [selectedCaseObject objectForKey:@"caseItems"];
     
-    //sort caseItems by priority
-    NSSortDescriptor *sortDescriptor;
-    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
-                                                 ascending:NO];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    
-    NSArray *sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+    //Feb5
+    //commenting this portion out to deal with sortedCaseItems on the property level instead
+    /*
+     NSArray *caseItems = [selectedCaseObject objectForKey:@"caseItems"];
+     
+     //sort caseItems by priority
+     NSSortDescriptor *sortDescriptor;
+     sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
+     ascending:NO];
+     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+     */
     
     PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:[selectedCaseItem integerValue]];
     
@@ -397,7 +400,7 @@ UIView *bgDarkenView;
     }
     else
     {
-         if(indexPath.row +1 <originalAnswersCount)
+         if(indexPath.row +1 <=originalAnswersCount)
          {
              NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
              [answersArray addObject:newAns];
@@ -489,7 +492,7 @@ UIView *bgDarkenView;
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    textField.text = @"";
+    
     
     [self animateTextField:textField up:YES];
     
@@ -557,6 +560,9 @@ UIView *bgDarkenView;
     //prepare the array of sortedCaseItems
     NSArray *cases = [self.popupitsMTLObject objectForKey:@"cases"];
     PFObject *selectedCaseObject = [cases objectAtIndex:[selectedCase integerValue]];
+   
+    /*
+    //commenting out Feb 5
     NSArray *caseItems = [selectedCaseObject objectForKey:@"caseItems"];
     
     //sort caseItems by priority
@@ -564,8 +570,8 @@ UIView *bgDarkenView;
     sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
                                                  ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    
-    NSArray *sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+    */
+   
     
     PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:[selectedCaseItem integerValue]];
     
@@ -816,7 +822,7 @@ UIView *bgDarkenView;
                     NSString *ansString = [ansObj objectForKey:@"custom"];
                     [xmlWriter writeStartElement:@"ANSWER"];
                     
-                    [xmlWriter writeStartElement:@"Custom"];
+                    [xmlWriter writeStartElement:@"CUSTOM"];
                     [xmlWriter writeCharacters:ansString];
                     [xmlWriter writeEndElement];
                     
@@ -854,24 +860,38 @@ UIView *bgDarkenView;
                 semiColonDelimitedAAnswers = [arrayOfAAnswers componentsJoinedByString:@";"];
                 semiColonDelimitedCustomAnswers  = [arrayOfCustomAnswers componentsJoinedByString:@";"];
                 
-                 [xmlWriter writeStartElement:@"ANSWER"];
-                if([semiColonDelimitedAAnswers length]>0)
-                {
-                    [xmlWriter writeStartElement:@"A"];
-                    [xmlWriter writeCharacters:semiColonDelimitedAAnswers];
-                    [xmlWriter writeEndElement];
+                    if ([semiColonDelimitedAAnswers length] ==0 && [semiColonDelimitedCustomAnswers length] ==0)
+                    {
                     
-                }
-                if([semiColonDelimitedCustomAnswers length]>0)
-                {
-                    [xmlWriter writeStartElement:@"CUSTOM"];
-                    [xmlWriter writeCharacters:semiColonDelimitedCustomAnswers];
-                    [xmlWriter writeEndElement];
-                    
-                }
+                        
+                    }
+                    else
+                    {
+                        [xmlWriter writeStartElement:@"ANSWER"];
+                    }
                 
-                [xmlWriter writeEndElement];
-
+                    if([semiColonDelimitedAAnswers length]>0)
+                    {
+                        [xmlWriter writeStartElement:@"A"];
+                        [xmlWriter writeCharacters:semiColonDelimitedAAnswers];
+                        [xmlWriter writeEndElement];
+                    
+                    }
+                    if([semiColonDelimitedCustomAnswers length]>0)
+                    {
+                        [xmlWriter writeStartElement:@"CUSTOM"];
+                        [xmlWriter writeCharacters:semiColonDelimitedCustomAnswers];
+                        [xmlWriter writeEndElement];
+                    
+                    }
+                    if ([semiColonDelimitedAAnswers length] ==0 && [semiColonDelimitedCustomAnswers length] ==0)
+                    {
+                    
+                    }
+                    else
+                    {
+                        [xmlWriter writeEndElement];
+                    }
             }
     
             //close item element
@@ -887,11 +907,6 @@ UIView *bgDarkenView;
     NSString* xml = [xmlWriter toString];
     
     return xml;
-    
-    
 }
-
-
-
 
 @end

@@ -9,6 +9,8 @@
 #import "CaseDetailsEmailViewController.h"
 #import "popupViewController.h"
 #import "XMLWriter.h"
+#import "SWTableViewCell.h"
+
 
 @interface CaseDetailsEmailViewController ()
 
@@ -20,7 +22,6 @@
 
 NSArray *caseItems;
 NSMutableArray *sortedCaseItems;
-
 NSMutableArray *suggestedProperties;
 NSMutableArray *suggestedCases;
 NSMutableArray *answeredProperties;
@@ -43,7 +44,6 @@ NSMutableArray *changedCaseItemsIndex;
 NSMutableArray *priorCaseIDS;
 
 PFObject *returnedITSMTLObject;
-
 //this variable stores the case being updated so it's clear which one to show when the json returns.  Used for a case where we're not in "template mode".
 NSString *caseBeingUpdated;
 BOOL templateMode;
@@ -78,9 +78,6 @@ NSString *locationLongitude;
 
 //used for calcaulting swipe gestures
 CGPoint startLocation;
-
-
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -281,7 +278,6 @@ CGPoint startLocation;
     {
         templateMode= 0;
         caseBeingUpdated = caseObjectID;
-        
     }
 
 }
@@ -316,7 +312,13 @@ CGPoint startLocation;
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"caseDetailsEmailCell" forIndexPath:indexPath];
+   SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"caseDetailsEmailCell"];
+    
+    cell.leftUtilityButtons = [self leftButtons];
+    cell.rightUtilityButtons = [self rightButtons];
+    cell.delegate = self;
+    
+    
     UILabel *propertyDescrLabel = (UILabel *)[cell viewWithTag:1];
     UILabel *answersLabel = (UILabel *)[cell viewWithTag:2];
     UILabel *timeLabel = (UILabel *)[cell viewWithTag:3];
@@ -467,6 +469,39 @@ CGPoint startLocation;
     
 }
 
+- (NSArray *)rightButtons
+{
+    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
+                                                title:@"More"];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
+                                                title:@"Delete"];
+    
+    return rightUtilityButtons;
+}
+
+- (NSArray *)leftButtons
+{
+    NSMutableArray *leftUtilityButtons = [NSMutableArray new];
+    
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.07 green:0.75f blue:0.16f alpha:1.0]
+                                                icon:[UIImage imageNamed:@"check.png"]];
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0]
+                                                icon:[UIImage imageNamed:@"clock.png"]];
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0]
+                                                icon:[UIImage imageNamed:@"cross.png"]];
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0]
+                                                icon:[UIImage imageNamed:@"list.png"]];
+    
+    return leftUtilityButtons;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
    
@@ -500,6 +535,8 @@ CGPoint startLocation;
     popVC.selectedCase = self.selectedCaseIndex;
     popVC.selectedCaseItem = selectedCaseItem;
     popVC.selectedPropertyObject = [propsArray objectAtIndex:indexPath.row];
+    popVC.sortedCaseItems = sortedCaseItems;
+    
     popVC.UCIdelegate = self;
     
     
@@ -800,6 +837,12 @@ CGPoint startLocation;
     
     NSString *xmlForUpdate = [self createXMLTemplateModeFunction];
     
+    if([xmlForUpdate isEqualToString:@"no"])
+    {
+      [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invalid Update", nil) message:@"New Case Must Include At Least One Answered Question" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        return;
+        
+    }
     //add a progress HUD to show it is retrieving list of properts
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:HUD];
@@ -1066,7 +1109,6 @@ CGPoint startLocation;
             NSString *myCaseItem = [eachCaseItem objectForKey:@"caseItem"];
             NSString *caseItemNumber;
         
-        
             int caseNum = 12000+h;
         
             if(myCaseItem==nil)
@@ -1121,7 +1163,7 @@ CGPoint startLocation;
                     NSString *ansString = [ansObj objectForKey:@"custom"];
                     [xmlWriter writeStartElement:@"ANSWER"];
                     
-                    [xmlWriter writeStartElement:@"Custom"];
+                    [xmlWriter writeStartElement:@"CUSTOM"];
                     [xmlWriter writeCharacters:ansString];
                     [xmlWriter writeEndElement];
                     
@@ -1175,15 +1217,19 @@ CGPoint startLocation;
                     
                 }
                 
+                if ([semiColonDelimitedAAnswers length] ==0 && [semiColonDelimitedCustomAnswers length] ==0)
+                {
+                  
+                    return @"no";
+                    
+                }
+                
                 [xmlWriter writeEndElement];
                 
             }
 
-    
             //close item element
             [xmlWriter writeEndElement];
-        
-        
         
     }
     if([locationRetrieved length]>0)
@@ -1325,8 +1371,194 @@ CGPoint startLocation;
     
     [self.navigationController popViewControllerAnimated:NO];
     
+}
+
+#pragma mark swipableTableViewCellsDelegateMethods
+
+// click event on left utility button
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index
+{
+    
+}
+
+// click event on right utility button
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
+{
+    switch (index) {
+        case 0:
+            NSLog(@"More button was pressed");
+            break;
+        case 1:
+        {
+            // Delete button was pressed
+            NSIndexPath *cellIndexPath = [self.caseDetailsEmailTableView indexPathForCell:cell];
+            [self deleteItemAtIndex:(int)cellIndexPath.row];
+            
+            
+            //[_testArray removeObjectAtIndex:cellIndexPath.row];
+            /*
+            [self.tableView deleteRowsAtIndexPaths:@[cellIndexPath]
+                                  withRowAnimation:UITableViewRowAnimationAutomatic];
+             */
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+// utility button open/close event
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state
+{
+    
+}
+
+// prevent multiple cells from showing utilty buttons simultaneously
+- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell
+{
+    
+    return YES;
+}
+
+// prevent cell(s) from displaying left/right utility buttons
+- (BOOL)swipeableTableViewCell:(SWTableViewCell *)cell canSwipeToState:(SWCellState)state
+{
+    return YES;
+    
+}
+
+-(void)deleteItemAtIndex:(int) caseItemIndex
+{
+    PFObject *caseItemObject = [sortedCaseItems objectAtIndex:caseItemIndex];
+    
+    //if in template mode, remove the object locally.  If dealing with an already existing case, delete the item right away server-side.
+    
+    if(templateMode ==1)
+    {
+        //remove case item object locally
+        [sortedCaseItems removeObjectAtIndex:caseItemIndex];
+        [propsArray removeObjectAtIndex:caseItemIndex];
+        NSIndexPath *cellIndexPath = [NSIndexPath indexPathForRow:caseItemIndex inSection:0];
+        
+        [self.caseDetailsEmailTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:cellIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+        
+        [self.caseDetailsEmailTableView reloadData];
+        
+    }
     
     
 }
+
+- (void)deleteACaseItem:(PFObject *)itemObject
+{
+    //construct XML to delete the caseItemObject
+    //hardcoded example:
+    /*
+     <PAYLOAD>
+     <USEROBJECTID>iGsK0mxn1A</USEROBJECTID>
+     <LAISO>EN</LAISO>
+     <CASEOBJECTID>kqIKYJnTj8</CASEOBJECTID>
+     <CASENAME>Multiple answers example</CASENAME>
+     <ITEM>
+     <CASEITEM>1</CASEITEM>
+     <PROPERTYNUM>cpJqMRQnSs</PROPERTYNUM>
+     <DELETIONFLAG>X</DELETIONFLAG>
+     </ITEM>
+     </PAYLOAD>
+     */
+    
+    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+    //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
+    
+    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+    
+    PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
+    NSString *caseObjectID = [caseObject objectForKey:@"caseId"];
+    
+    NSString *caseItem = [itemObject objectForKey:@"caseItem"];
+    NSString *propertyNum = [itemObject objectForKey:@"propertyNum"];
+    NSString *caseName = [caseObject objectForKey:@"caseName"];
+    
+    //get the selected property from the chooser element.
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:self.itsMTLObject.objectId];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"CASEOBJECTID"];
+    [xmlWriter writeCharacters:caseObjectID];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:caseName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"ITEM"];
+    
+    [xmlWriter writeStartElement:@"CASEITEM"];
+    [xmlWriter writeCharacters:caseItem];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"PROPERTYNUM"];
+    [xmlWriter writeCharacters:propertyNum];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"DELETIONFLAG"];
+    [xmlWriter writeCharacters:@"X"];
+    [xmlWriter writeEndElement];
+    
+    // close ITEM element
+    [xmlWriter writeEndElement];
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    //add a progress HUD to show it is retrieving list of properts
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Deleting the CaseItem";
+    [HUD show:YES];
+    
+    //use parse cloud code function
+    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+                       withParameters:@{@"payload": xml}
+                                block:^(NSString *responseString, NSError *error) {
+                                    if (!error) {
+                                        
+                                        NSString *responseText = responseString;
+                                        NSLog(responseText);
+                                        
+                                        [HUD hide:YES];
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSLog(error.localizedDescription);
+                                        [HUD hide:YES];
+                                        
+                                    }
+                                }];
+    
+}
+
 
 @end

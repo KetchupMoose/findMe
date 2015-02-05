@@ -39,6 +39,8 @@
 @property (weak,nonatomic) NSNumber *selectedCaseItem;
 @property (weak,nonatomic) PFObject *selectedPropertyObject;
 @property (weak,nonatomic) NSString *displayMode;
+@property (weak,nonatomic) NSArray *sortedCaseItems;
+
 
 @property (weak,nonatomic) IBOutlet UITextField *customAnswerTextField;
 

@@ -79,6 +79,12 @@
 		ECE6B1841A0DA01D007F4A19 /* UIImage+Scaling.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE6B1831A0DA01D007F4A19 /* UIImage+Scaling.m */; };
 		ECE6B1891A0DAA4E007F4A19 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1791A0D9C83007F4A19 /* ImageIO.framework */; };
 		ECE6B18B1A0DAA54007F4A19 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B18A1A0DAA54007F4A19 /* MapKit.framework */; };
+		ECEF94481A832A4F0000A444 /* NSMutableArray+SWUtilityButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF943D1A832A4F0000A444 /* NSMutableArray+SWUtilityButtons.m */; };
+		ECEF94491A832A4F0000A444 /* SWCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF943F1A832A4F0000A444 /* SWCellScrollView.m */; };
+		ECEF944A1A832A4F0000A444 /* SWLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF94411A832A4F0000A444 /* SWLongPressGestureRecognizer.m */; };
+		ECEF944B1A832A4F0000A444 /* SWTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF94431A832A4F0000A444 /* SWTableViewCell.m */; };
+		ECEF944C1A832A4F0000A444 /* SWUtilityButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF94451A832A4F0000A444 /* SWUtilityButtonTapGestureRecognizer.m */; };
+		ECEF944D1A832A4F0000A444 /* SWUtilityButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF94471A832A4F0000A444 /* SWUtilityButtonView.m */; };
 		ECF19FB81A76DAF200607E6D /* CaseDetailsEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECF19FB71A76DAF200607E6D /* CaseDetailsEmailViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -194,6 +200,18 @@
 		ECE6B1821A0DA01D007F4A19 /* UIImage+Scaling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scaling.h"; sourceTree = "<group>"; };
 		ECE6B1831A0DA01D007F4A19 /* UIImage+Scaling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scaling.m"; sourceTree = "<group>"; };
 		ECE6B18A1A0DAA54007F4A19 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		ECEF943C1A832A4F0000A444 /* NSMutableArray+SWUtilityButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+SWUtilityButtons.h"; sourceTree = "<group>"; };
+		ECEF943D1A832A4F0000A444 /* NSMutableArray+SWUtilityButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+SWUtilityButtons.m"; sourceTree = "<group>"; };
+		ECEF943E1A832A4F0000A444 /* SWCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCellScrollView.h; sourceTree = "<group>"; };
+		ECEF943F1A832A4F0000A444 /* SWCellScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWCellScrollView.m; sourceTree = "<group>"; };
+		ECEF94401A832A4F0000A444 /* SWLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWLongPressGestureRecognizer.h; sourceTree = "<group>"; };
+		ECEF94411A832A4F0000A444 /* SWLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWLongPressGestureRecognizer.m; sourceTree = "<group>"; };
+		ECEF94421A832A4F0000A444 /* SWTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTableViewCell.h; sourceTree = "<group>"; };
+		ECEF94431A832A4F0000A444 /* SWTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTableViewCell.m; sourceTree = "<group>"; };
+		ECEF94441A832A4F0000A444 /* SWUtilityButtonTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWUtilityButtonTapGestureRecognizer.h; sourceTree = "<group>"; };
+		ECEF94451A832A4F0000A444 /* SWUtilityButtonTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButtonTapGestureRecognizer.m; sourceTree = "<group>"; };
+		ECEF94461A832A4F0000A444 /* SWUtilityButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWUtilityButtonView.h; sourceTree = "<group>"; };
+		ECEF94471A832A4F0000A444 /* SWUtilityButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButtonView.m; sourceTree = "<group>"; };
 		ECF19FB61A76DAF200607E6D /* CaseDetailsEmailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CaseDetailsEmailViewController.h; path = ../CaseDetailsEmailViewController.h; sourceTree = "<group>"; };
 		ECF19FB71A76DAF200607E6D /* CaseDetailsEmailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CaseDetailsEmailViewController.m; path = ../CaseDetailsEmailViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -278,6 +296,7 @@
 		D31DF2FB19CEFC0C00A37725 /* findMe */ = {
 			isa = PBXGroup;
 			children = (
+				ECEF943B1A832A1E0000A444 /* swipableTableViewCells */,
 				ECE6B17B1A0D9FAB007F4A19 /* commonControls */,
 				D3F4574419FD9215000EDF25 /* imageAssets */,
 				D3207AFC19E9AFE800085B7C /* progressHUD */,
@@ -444,6 +463,25 @@
 			name = commonControls;
 			sourceTree = "<group>";
 		};
+		ECEF943B1A832A1E0000A444 /* swipableTableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				ECEF943C1A832A4F0000A444 /* NSMutableArray+SWUtilityButtons.h */,
+				ECEF943D1A832A4F0000A444 /* NSMutableArray+SWUtilityButtons.m */,
+				ECEF943E1A832A4F0000A444 /* SWCellScrollView.h */,
+				ECEF943F1A832A4F0000A444 /* SWCellScrollView.m */,
+				ECEF94401A832A4F0000A444 /* SWLongPressGestureRecognizer.h */,
+				ECEF94411A832A4F0000A444 /* SWLongPressGestureRecognizer.m */,
+				ECEF94421A832A4F0000A444 /* SWTableViewCell.h */,
+				ECEF94431A832A4F0000A444 /* SWTableViewCell.m */,
+				ECEF94441A832A4F0000A444 /* SWUtilityButtonTapGestureRecognizer.h */,
+				ECEF94451A832A4F0000A444 /* SWUtilityButtonTapGestureRecognizer.m */,
+				ECEF94461A832A4F0000A444 /* SWUtilityButtonView.h */,
+				ECEF94471A832A4F0000A444 /* SWUtilityButtonView.m */,
+			);
+			name = swipableTableViewCells;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -534,13 +572,17 @@
 				EC0823041A186B13000B6684 /* HomePageViewController.m in Sources */,
 				D31DF30F19CEFC0C00A37725 /* ViewCasesViewController.m in Sources */,
 				D3FBD13D19D0505D008240F5 /* Case.m in Sources */,
+				ECEF94491A832A4F0000A444 /* SWCellScrollView.m in Sources */,
 				D318324919D06173003D51A3 /* CaseItem.m in Sources */,
 				EC0822FC1A0EE7F0000B6684 /* UIImage+WebP.m in Sources */,
 				EC0822F11A0EE7F0000B6684 /* NSData+ImageContentType.m in Sources */,
 				D31DF30619CEFC0C00A37725 /* AppDelegate.m in Sources */,
 				D3207B0219E9CBCE00085B7C /* NewPropertyViewController.m in Sources */,
+				ECEF944A1A832A4F0000A444 /* SWLongPressGestureRecognizer.m in Sources */,
 				EC0822F41A0EE7F0000B6684 /* SDWebImageDecoder.m in Sources */,
 				D3F4573F19F88199000EDF25 /* setProfileViewController.m in Sources */,
+				ECEF944D1A832A4F0000A444 /* SWUtilityButtonView.m in Sources */,
+				ECEF944B1A832A4F0000A444 /* SWTableViewCell.m in Sources */,
 				EC0822F91A0EE7F0000B6684 /* UIButton+WebCache.m in Sources */,
 				EC0822F71A0EE7F0000B6684 /* SDWebImageManager.m in Sources */,
 				ECE6B1811A0D9FF3007F4A19 /* UIImageView+UIActivityIndicatorForSDWebImage.m in Sources */,
@@ -548,6 +590,7 @@
 				D3207AFF19E9B01200085B7C /* MBProgressHUD.m in Sources */,
 				ECE6B1841A0DA01D007F4A19 /* UIImage+Scaling.m in Sources */,
 				D328EF7719DCA99B00838999 /* XMLWriter.m in Sources */,
+				ECEF944C1A832A4F0000A444 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				D318325019D1828B003D51A3 /* CaseDetailsViewController.m in Sources */,
 				EC0822FD1A0EE7F0000B6684 /* UIImageView+HighlightedWebCache.m in Sources */,
 				EC0822F51A0EE7F0000B6684 /* SDWebImageDownloader.m in Sources */,
@@ -555,6 +598,7 @@
 				D3F457471A0026EE000EDF25 /* UIView+Animation.m in Sources */,
 				EC0822F21A0EE7F0000B6684 /* SDImageCache.m in Sources */,
 				EC0822F61A0EE7F0000B6684 /* SDWebImageDownloaderOperation.m in Sources */,
+				ECEF94481A832A4F0000A444 /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				ECF19FB81A76DAF200607E6D /* CaseDetailsEmailViewController.m in Sources */,
 				ECB1D5111A7748B5008CC684 /* popupViewController.m in Sources */,
 				D31DF30219CEFC0C00A37725 /* main.m in Sources */,
