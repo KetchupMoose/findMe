@@ -11,6 +11,7 @@
 #import "MBProgressHUD.h"
 #import <Parse/Parse.h>
 #import "ViewCasesViewController.h"
+#import "setProfileViewController.h"
 
 @interface HomePageViewController ()
 
@@ -19,11 +20,12 @@
 
 @implementation HomePageViewController
 
-NSString *HomePageuserName;
-PFObject *HomePageITSMTLObject;
+
+
 MBProgressHUD *HUD;
 @synthesize ViewMyCasesButton;
-
+@synthesize HomePageITSMTLObject;
+@synthesize HomePageuserName;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -189,6 +191,10 @@ MBProgressHUD *HUD;
     
 }
 - (IBAction)MyProfile:(id)sender {
+    setProfileViewController *spvc = [self.storyboard instantiateViewControllerWithIdentifier:@"spvc"];
+    spvc.delegate = self;
+    
+    [self.navigationController pushViewController:spvc animated:YES];
     
 }
 
@@ -263,6 +269,15 @@ MBProgressHUD *HUD;
     }];
 
     
+}
+
+- (void)setNewProfile:(PFObject *)newITSMTLObject
+{
+    self.HomePageuserName = newITSMTLObject.objectId;
+    self.HomePageITSMTLObject = newITSMTLObject;
+    
+    [self ReloadHomePageData];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 @end

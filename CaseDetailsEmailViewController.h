@@ -24,7 +24,7 @@
 @property (weak,nonatomic) NSNumber *selectedCaseIndex;
 @property (strong,nonatomic) PFObject *itsMTLObject;
 @property (weak,nonatomic) NSString *userName;
-
+@property (strong, nonatomic) CLLocationManager *locationManager;
 -(void)reloadData:(PFObject *) newITSMTLObject;
 
 @end

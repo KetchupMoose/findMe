@@ -10,6 +10,7 @@
 #import <Parse/Parse.h>
 #import "MBProgressHUD.h"
 
+
 @protocol UpdateCaseItemDelegate
 
 //The popup sends back data to the CaseDetailsEmailViewController in these ways:
@@ -46,5 +47,7 @@
 
 @property (weak,nonatomic) id<UpdateCaseItemDelegate> UCIdelegate;
 
-
+@property (weak,nonatomic) NSString *locationRetrieved;
+@property (weak,nonatomic) NSString *locationLatitude;
+@property (weak,nonatomic) NSString *locationLongitude;
 @end

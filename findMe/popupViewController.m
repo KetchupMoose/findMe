@@ -24,6 +24,9 @@
 @synthesize selectedPropertyObject;
 @synthesize displayMode;
 @synthesize sortedCaseItems;
+@synthesize locationLatitude;
+@synthesize locationLongitude;
+@synthesize locationRetrieved;
 
 NSMutableArray *optionsArray;
 NSMutableArray *answersArray;
@@ -897,6 +900,24 @@ UIView *bgDarkenView;
             //close item element
             [xmlWriter writeEndElement];
     
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"locationText"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"locationLatitude"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"locationLongitude"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
+
     
     // close payload element
     [xmlWriter writeEndElement];

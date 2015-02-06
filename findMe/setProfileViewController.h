@@ -7,8 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
+#import <Parse/Parse.h>
+@protocol SetProfileDelegate
 
-@interface setProfileViewController : UIViewController <UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate,UITableViewDataSource,UITableViewDelegate>
+- (void)setNewProfile:(PFObject *)newITSMTLObject;
+
+@end
+
+@interface setProfileViewController : UIViewController <UITextFieldDelegate,MBProgressHUDDelegate>
 
 @property (weak,nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak,nonatomic) IBOutlet UITextField *phoneTextField;
@@ -17,16 +24,12 @@
 @property (weak,nonatomic) IBOutlet UIButton *femaleButton;
 @property (weak,nonatomic) IBOutlet UIButton *maleButton;
 
-@property (weak,nonatomic) IBOutlet UIPickerView *templatePickerView;
-@property (weak,nonatomic) IBOutlet UITableView *childTemplateTableView;
 
 @property (weak,nonatomic) IBOutlet UILabel *setProfileLabel;
 @property (weak,nonatomic) IBOutlet UILabel *chooseGenderLabel;
 @property (weak,nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak,nonatomic) IBOutlet UILabel *phoneLabel;
-
-
-
+@property (nonatomic, weak) id<SetProfileDelegate> delegate;
 
 -(IBAction)selectedMale:(id)sender;
 -(IBAction)selectedFemale:(id)sender;

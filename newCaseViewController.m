@@ -40,13 +40,27 @@ int timerTickCheck =0;
 
 MBProgressHUD *HUD;
 
+//location manager variables
+
+CLGeocoder *geocoder;
+CLPlacemark *placemark;
+NSString *locationRetrieved;
+NSString *locationLatitude;
+NSString *locationLongitude;
+
 @synthesize CaseOptionsCollectionView;
 @synthesize TemplateSecondLevelTableView;
 @synthesize itsMTLObject;
+@synthesize locationManager;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    //location manager instance variable allocs
+    locationManager = [[CLLocationManager alloc] init];
+    geocoder = [[CLGeocoder alloc] init];
+     locationManager.delegate = self;
     
     //populate the URL's of images from parse.
     [self queryForTemplates];
@@ -57,7 +71,12 @@ MBProgressHUD *HUD;
     
     [CaseOptionsCollectionView reloadData];
     
-    
+    [self getLocation:self];
+}
+
+-(void) viewWillAppear:(BOOL)animated
+{
+  
 }
 
 -(void) queryForTemplates
@@ -543,7 +562,7 @@ MBProgressHUD *HUD;
     NSString *xmlGeneratedString = [self createTemplateXMLFunction:itsMTLObjectID];
     
     //show progress HUD
-      HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:HUD];
     
     HUD.mode = MBProgressHUDModeDeterminate;
@@ -767,9 +786,26 @@ MBProgressHUD *HUD;
     [xmlWriter writeCharacters:selectedTemplate2];
     [xmlWriter writeEndElement];
     
-    
     //close preferences element
     [xmlWriter writeEndElement];
+    
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"locationText"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"locationLatitude"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"locationLongitude"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
     
     // close payload element
     [xmlWriter writeEndElement];
@@ -782,6 +818,77 @@ MBProgressHUD *HUD;
     return xml;
     
 }
+
+-(void)getLocation:(id)sender
+{
+    locationManager.delegate = self;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    //show progress HUD
+    /*
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Retrieving Location Data";
+    [HUD show:YES];
+    */
+    [self.locationManager requestWhenInUseAuthorization];
+    [self.locationManager requestAlwaysAuthorization];
+    
+    [locationManager startUpdatingLocation];
+}
+
+#pragma mark - CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSLog(@"didFailWithError: %@", error);
+    UIAlertView *errorAlert = [[UIAlertView alloc]
+                               initWithTitle:@"Error" message:@"Failed to Get Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [errorAlert show];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    NSLog(@"didUpdateToLocation: %@", newLocation);
+    CLLocation *currentLocation = newLocation;
+    
+    if (currentLocation != nil) {
+        //longitudeLabel.text = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude];
+        //latitudeLabel.text = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude];
+        
+        
+        locationLongitude = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude];
+        locationLatitude =[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude];
+    }
+    
+    // Stop Location Manager
+    [locationManager stopUpdatingLocation];
+    
+    // Reverse Geocoding
+    NSLog(@"Resolving the Address");
+    [geocoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+        NSLog(@"Found placemarks: %@, error: %@", placemarks, error);
+        if (error == nil && [placemarks count] > 0) {
+            placemark = [placemarks lastObject];
+            
+           
+            NSString *locationText =[NSString stringWithFormat:@"%@ %@\n%@ %@\n%@\n%@",
+                                     placemark.subThoroughfare, placemark.thoroughfare,
+                                     placemark.postalCode, placemark.locality,
+                                     placemark.administrativeArea,
+                                     placemark.country];
+            locationRetrieved = placemark.locality;
+            
+            //[HUD hide:YES];
+        } else {
+            NSLog(@"%@", error.debugDescription);
+            
+            //[HUD hide:YES];
+        }
+    } ];
+    
+}
+
 
 
 

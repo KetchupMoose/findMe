@@ -21,22 +21,13 @@
 NSString *gender;
 NSString *showName;
 NSString *phoneNum;
-
-
 MBProgressHUD *HUD;
-NSArray *templatePickerChoices;
-NSMutableArray *templatePickerParentChoices;
-NSMutableArray *templatePickerActiveChoices;
 
-NSString *selectedTemplate1;
-NSString *selectedTemplate2;
+
 PFObject *itsMTLObject;
 int timerTicks =0;
-
 UIImageView *phoneSearchersView;
 int selectedPic = 1;
-
-
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -65,7 +56,9 @@ int selectedPic = 1;
     
     [self.view addGestureRecognizer:tap];
     
-    
+    //brian feb 5
+    //commenting out template information as it's no longer relevant
+    /*
     //retrieve the five parent templatePickerChoices from Parse
     //templatePickerChoices =
     PFQuery *templateQuery = [PFQuery queryWithClassName:@"Templates"];
@@ -90,9 +83,9 @@ int selectedPic = 1;
   
     templatePickerActiveChoices = [[NSMutableArray alloc] init];
     
-    self.childTemplateTableView.delegate = self;
-    self.childTemplateTableView.dataSource = self;
-    
+    //self.childTemplateTableView.delegate = self;
+    //self.childTemplateTableView.dataSource = self;
+    */
     
 }
 
@@ -116,17 +109,41 @@ int selectedPic = 1;
 -(IBAction)selectedMale:(id)sender
 {
     gender = @"M";
-    [self removeViewsShowTemplateChoices:nil];
+    UIView *selectionView = [[UIView alloc] initWithFrame:self.maleButton.bounds];
+    selectionView.backgroundColor = [UIColor blackColor];
+    selectionView.alpha = 0.8;
+    selectionView.tag = 444;
+    [self.maleButton addSubview:selectionView];
     
-   
-    
-    
+    for(UIView *view in self.femaleButton.subviews)
+    {
+        if(view.tag ==444)
+        {
+             [view removeFromSuperview];
+        }
+      
+    }
 }
 
 -(IBAction)selectedFemale:(id)sender
 {
     gender =@"F";
+    UIView *selectionView = [[UIView alloc] initWithFrame:self.femaleButton.bounds];
+    selectionView.backgroundColor = [UIColor blackColor];
+    selectionView.alpha = 0.8;
+    selectionView.tag = 444;
     
+    [self.femaleButton addSubview:selectionView];
+    
+    for(UIView *view in self.maleButton.subviews)
+    {
+        if(view.tag ==444)
+        {
+            [view removeFromSuperview];
+        }
+        
+    }
+
 }
 -(IBAction)submitProfile:(id)sender
 {
@@ -146,7 +163,7 @@ int selectedPic = 1;
     {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Gender", nil) message:NSLocalizedString(@"Please select a gender before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
     }
-    
+    /*
     if(selectedTemplate1.length==0)
     {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Parent Template", nil) message:NSLocalizedString(@"Please select a parent template before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
@@ -156,16 +173,16 @@ int selectedPic = 1;
     {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Second Template", nil) message:NSLocalizedString(@"Please select a second template before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
     }
-    
+    */
     //passed validation, run xml to create new user
     
     showName = self.nameTextField.text;
     phoneNum = self.phoneTextField.text;
     
-    
     PFUser *currentUser = [PFUser currentUser];
     
     //create new case with this user.
+    
     itsMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
     [itsMTLObject setObject:currentUser forKey:@"ParseUser"];
     [itsMTLObject setObject:showName forKey:@"showName"];
@@ -316,8 +333,18 @@ int selectedPic = 1;
             [HUD hide:YES];
           
             //show button after this step
+             [phoneSearchersView removeWithSinkAnimation:3];
+            UIAlertView *templateSuccess =  [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Profile Info Set", nil) message:@"Profile Set" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            [templateSuccess show];
             
-            [self removeViewsShowTemplateChoices:(templateMakerObj)];
+            [self.delegate setNewProfile:object];
+            
+           
+            
+            return;
+            
+            
+           // [self removeViewsShowTemplateChoices:(templateMakerObj)];
         }
     }];
      
@@ -331,6 +358,7 @@ int selectedPic = 1;
     
 }
 
+/*
 -(void)removeViewsShowTemplateChoices:(PFObject *) tmpMaker
 {
     //remove views with animation
@@ -338,8 +366,6 @@ int selectedPic = 1;
     [self.maleButton removeWithSinkAnimation:2];
     [self.nameTextField removeWithSinkAnimation:2];
     [self.phoneTextField removeWithSinkAnimation:2];
-    [self.childTemplateTableView removeWithSinkAnimation:3];
-    [self.templatePickerView removeWithSinkAnimation:3];
     [self.nameTextField removeWithSinkAnimation:3];
      [self.setProfileLabel removeWithSinkAnimation:3];
      [self.chooseGenderLabel removeWithSinkAnimation:3];
@@ -396,7 +422,7 @@ int selectedPic = 1;
         
         UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(startxMargin-bgHorizMargin,startyMargin-10,imgWidth+textWidth+buttonWidth+textimgxmargin+textbuttonxmargin+bgHorizMargin*2,imgHeight+bgVertMargin*2)];
         
-        bgView.backgroundColor = [UIColor colorWithRed:0.902 green:0.98 blue:1 alpha:1] /*#e6faff*/;
+        bgView.backgroundColor = [UIColor colorWithRed:0.902 green:0.98 blue:1 alpha:1]
         
         
         
@@ -454,14 +480,10 @@ int selectedPic = 1;
         [self.view BounceAddTheView:createCaseButton];
         
         startyMargin = choice1ImageView.frame.origin.y+choice1ImageView.frame.size.height + verticalMargin;
-        
-        
-        
     }
-        
-    
     
 }
+*/
 
 -(NSString *)createTemplateXMLFunction:(NSString *)userName
 {
@@ -498,15 +520,6 @@ int selectedPic = 1;
     [xmlWriter writeStartElement:@"CELLNUMBER"];
     [xmlWriter writeCharacters:phoneNum];
     [xmlWriter writeEndElement];
-    
-    [xmlWriter writeStartElement:@"TEMPLATEID1"];
-    [xmlWriter writeCharacters:selectedTemplate1];
-    [xmlWriter writeEndElement];
-    
-    [xmlWriter writeStartElement:@"TEMPLATEID2"];
-    [xmlWriter writeCharacters:selectedTemplate2];
-    [xmlWriter writeEndElement];
-   
     
     //close preferences element
     [xmlWriter writeEndElement];
@@ -579,6 +592,8 @@ int selectedPic = 1;
     [self.view endEditing:YES];
 }
 
+//commenting out the pickerview and tableview delegate methods.  They are no longer needed as the app will not need to set the profile with templates anymore.
+/*
 #pragma mark -
 #pragma mark PickerView DataSource
 
@@ -593,6 +608,7 @@ numberOfRowsInComponent:(NSInteger)component
 {
    return templatePickerParentChoices.count;
 }
+
 
 #pragma mark PickerView Delegate
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row
@@ -684,5 +700,8 @@ numberOfRowsInComponent:(NSInteger)component
     
     
 }
+*/
+
+
 
 @end

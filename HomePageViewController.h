@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
+#import <Parse/Parse.h>
+#import "setProfileViewController.h"
 
-@interface HomePageViewController : UIViewController <MBProgressHUDDelegate>
+@interface HomePageViewController : UIViewController <MBProgressHUDDelegate,SetProfileDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *CreateNewCaseButton;
 - (IBAction)CreateNewCase:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *ViewMyCasesButton;
@@ -19,6 +21,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *MyProfileButton;
 - (IBAction)MyProfile:(id)sender;
 - (IBAction)TestProfileButton:(id)sender;
-
-
+@property (strong,nonatomic) PFObject *HomePageITSMTLObject;
+@property (strong,nonatomic) NSString *HomePageuserName;
 @end

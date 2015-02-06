@@ -19,6 +19,7 @@
 @implementation CaseDetailsEmailViewController
 @synthesize selectedCaseIndex;
 @synthesize itsMTLObject;
+@synthesize locationManager;
 
 NSArray *caseItems;
 NSMutableArray *sortedCaseItems;
@@ -69,7 +70,7 @@ int EmailTimerTickCaseDetails =0;
 int EmailsecondaryTimerTicks = 0;
 
 //location manager variables
-CLLocationManager *locationManager;
+
 CLGeocoder *geocoder;
 CLPlacemark *placemark;
 NSString *locationRetrieved;
@@ -280,6 +281,13 @@ CGPoint startLocation;
         caseBeingUpdated = caseObjectID;
     }
 
+    
+    
+}
+
+-(void) viewWillAppear:(BOOL)animated
+{
+    [self getLocation:self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -331,6 +339,7 @@ CGPoint startLocation;
         //show a button to create a new caseItem instead
         
         propertyDescrLabel.text = @"Create a New Case Item";
+        answersLabel.text = @"";
         return cell;
         
     }
@@ -536,9 +545,10 @@ CGPoint startLocation;
     popVC.selectedCaseItem = selectedCaseItem;
     popVC.selectedPropertyObject = [propsArray objectAtIndex:indexPath.row];
     popVC.sortedCaseItems = sortedCaseItems;
-    
+    popVC.locationLatitude = locationLatitude;
+    popVC.locationLongitude = locationLongitude;
+    popVC.locationRetrieved = locationRetrieved;
     popVC.UCIdelegate = self;
-    
     
     //check the property type of the property at this selected index and set different modes on the popup accordingly.
     PFObject *selectedProperty = [propsArray objectAtIndex:indexPath.row];
@@ -1126,7 +1136,7 @@ CGPoint startLocation;
             [xmlWriter writeCharacters:caseItemNumber];
             [xmlWriter writeEndElement];
         
-        NSString *propNumString;
+            NSString *propNumString;
            if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:h]])
            {
                propNumString = [NSString stringWithFormat:@"%d",h];
@@ -1198,6 +1208,7 @@ CGPoint startLocation;
                         
                     }
                 }
+            
                 semiColonDelimitedAAnswers = [arrayOfAAnswers componentsJoinedByString:@";"];
                 semiColonDelimitedCustomAnswers  = [arrayOfCustomAnswers componentsJoinedByString:@";"];
                 
@@ -1365,11 +1376,20 @@ CGPoint startLocation;
     self.submitAnswersButton.enabled = 1;
     self.submitAnswersButton.backgroundColor = [UIColor blueColor];
     
-    //reload data
-    [self.caseDetailsEmailTableView reloadData];
-    
-    
     [self.navigationController popViewControllerAnimated:NO];
+    
+    
+    //reload data
+    if(templateMode==0)
+    {
+        [self updateNewCaseItem];
+        
+    }
+    else
+    {
+          [self.caseDetailsEmailTableView reloadData];
+    }
+    
     
 }
 
@@ -1443,6 +1463,13 @@ CGPoint startLocation;
         [self.caseDetailsEmailTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:cellIndexPath] withRowAnimation:UITableViewRowAnimationTop];
         
         [self.caseDetailsEmailTableView reloadData];
+        
+    }
+    
+    else
+    {
+        //delete the item server side
+        [self deleteACaseItem:caseItemObject];
         
     }
     
@@ -1547,16 +1574,400 @@ CGPoint startLocation;
                                         NSString *responseText = responseString;
                                         NSLog(responseText);
                                         
-                                        [HUD hide:YES];
+                                        [HUD hide:NO];
+                                        
+                                        NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+                                        PFObject *caseObject = [allCases objectAtIndex:[selectedCaseIndex integerValue]];
+                                        caseBeingUpdated = [caseObject objectForKey:@"caseId"];
+                                        
+                                        NSString *timeStampReturn = [caseObject objectForKey:@"timestamp"];
+                                        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                                        f.numberStyle = NSNumberFormatterDecimalStyle;
+                                        lastTimestamp = [f numberFromString:timeStampReturn];
+                                        
+                                        [self pollForCaseRefresh];
+
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSLog(error.localizedDescription);
+                                        [HUD hide:NO];
+                                      
+                                        
+                                        
+                                    }
+                                }];
+    
+}
+
+-(NSString *)createXMLFunctionSingleCaseItem
+{
+    //iterate through all items still in the caseitems and property arrays and send XML to update all of these (either with their original contents or the modifications/new entries)
+    
+    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+    
+    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+    
+    PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
+    
+    //newCaseItem is always the last on sortedCaseItems because it was just added
+    PFObject *caseItemObject = [sortedCaseItems objectAtIndex:sortedCaseItems.count-1];
+    
+    NSString *caseName = [caseObject objectForKey:@"caseName"];
+    NSString *caseObjID = [caseObject objectForKey:@"caseId"];
+    
+    PFObject *selectedPropertyObject = [propsArray objectAtIndex:propsArray.count-1];
+    NSString *propertyNum = [selectedPropertyObject objectForKey:@"propertyNum"];
+    NSString *propertyDescr = [selectedPropertyObject objectForKey:@"propertyDescr"];
+    
+    if(propertyNum==nil)
+    {
+        propertyNum =@"1";
+        
+    }
+    
+    //get the selected property from the chooser element.
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    NSString *itsMTLObjectUserName = self.itsMTLObject.objectId;
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:itsMTLObjectUserName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    //if it's a brand new case, this will be nil
+    if(caseObjID != nil)
+    {
+        
+        [xmlWriter writeStartElement:@"CASEOBJECTID"];
+        [xmlWriter writeCharacters:caseObjID];
+        [xmlWriter writeEndElement];
+    }
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:caseName];
+    [xmlWriter writeEndElement];
+    
+    
+            //check to see if this caseItem is a brand new property
+    
+            //add the XML for a new or updated property here
+            [xmlWriter writeStartElement:@"PROPERTY"];
+            
+            [xmlWriter writeStartElement:@"PROPERTYNUM"];
+    
+            [xmlWriter writeCharacters:propertyNum];
+            [xmlWriter writeEndElement];
+            
+            [xmlWriter writeStartElement:@"PROPERTYDESCR"];
+            [xmlWriter writeCharacters:propertyDescr];
+            [xmlWriter writeEndElement];
+            
+            //get the options value from the property object
+            NSString *fullCharsString = [selectedPropertyObject objectForKey:@"options"];
+            
+            if([fullCharsString length]>0)
+            {
+                
+                [xmlWriter writeStartElement:@"OPTIONS"];
+                [xmlWriter writeCharacters:fullCharsString];
+                [xmlWriter writeEndElement];
+            }
+            //close property element
+            [xmlWriter writeEndElement];
+    
+    //write logic for updating the caseItem
+    //build strings for building item
+    [xmlWriter writeStartElement:@"ITEM"];
+    
+    //check to see if this caseItem has a number.  Otherwise give it a number of 9000 to indicate it is a brand new caseItem.
+    NSString *myCaseItem = [caseItemObject objectForKey:@"caseItem"];
+    NSString *caseItemNumber;
+    if(myCaseItem==nil)
+    {
+        caseItemNumber =@"9000";
+        
+    }
+    else
+    {
+        caseItemNumber = myCaseItem;
+        
+    }
+    
+    [xmlWriter writeStartElement:@"CASEITEM"];
+    [xmlWriter writeCharacters:caseItemNumber];
+    [xmlWriter writeEndElement];
+    
+   
+    [xmlWriter writeStartElement:@"PROPERTYNUM"];
+    [xmlWriter writeCharacters:propertyNum];
+    [xmlWriter writeEndElement];
+    
+    //write out the answers value of this case Item
+    
+    //need to check if the case type is custom answers
+    
+    //if case type is I or N, don't update anything for answers
+    NSString *propertyType = [selectedPropertyObject objectForKey:@"propertyType"];
+    NSString *optionText = [selectedPropertyObject objectForKey:@"options"];
+    
+    NSArray *answersDictionary = [caseItemObject objectForKey:@"answers"];
+    
+    
+    if([propertyType isEqualToString:@"I"] || [propertyType isEqualToString:@"N"] || [propertyType isEqualToString:@"B"])
+    {
+        //do nothing
+    }
+    else if([optionText length] == 0)
+    {
+        //write the answer as type Custom
+        
+        for (PFObject *ansObj in answersDictionary)
+        {
+            NSString *ansString = [ansObj objectForKey:@"custom"];
+            [xmlWriter writeStartElement:@"ANSWER"];
+            
+            [xmlWriter writeStartElement:@"CUSTOM"];
+            [xmlWriter writeCharacters:ansString];
+            [xmlWriter writeEndElement];
+            
+            [xmlWriter writeEndElement];
+            
+        }
+        
+    }
+    else
+    {
+        NSString *semiColonDelimitedCustomAnswers;
+        NSString *semiColonDelimitedAAnswers;
+        NSMutableArray *arrayOfCustomAnswers = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayOfAAnswers = [[NSMutableArray alloc] init];
+        
+        for (PFObject *ansObj in answersDictionary)
+        {
+            
+            //if the object responds to the key a, then write it as an answer a
+            NSString *ansString = [ansObj objectForKey:@"a"];
+            if([ansString length] ==0)
+            {
+                ansString = [ansObj objectForKey:@"custom"];
+                if([ansString length] >0)
+                {
+                    [arrayOfCustomAnswers addObject:ansString];
+                }
+            }
+            else
+            {
+                [arrayOfAAnswers addObject:ansString];
+                
+            }
+        }
+        semiColonDelimitedAAnswers = [arrayOfAAnswers componentsJoinedByString:@";"];
+        semiColonDelimitedCustomAnswers  = [arrayOfCustomAnswers componentsJoinedByString:@";"];
+        
+        if ([semiColonDelimitedAAnswers length] ==0 && [semiColonDelimitedCustomAnswers length] ==0)
+        {
+            
+            
+        }
+        else
+        {
+            [xmlWriter writeStartElement:@"ANSWER"];
+        }
+        
+        if([semiColonDelimitedAAnswers length]>0)
+        {
+            [xmlWriter writeStartElement:@"A"];
+            [xmlWriter writeCharacters:semiColonDelimitedAAnswers];
+            [xmlWriter writeEndElement];
+            
+        }
+        if([semiColonDelimitedCustomAnswers length]>0)
+        {
+            [xmlWriter writeStartElement:@"CUSTOM"];
+            [xmlWriter writeCharacters:semiColonDelimitedCustomAnswers];
+            [xmlWriter writeEndElement];
+            
+        }
+        if ([semiColonDelimitedAAnswers length] ==0 && [semiColonDelimitedCustomAnswers length] ==0)
+        {
+            
+        }
+        else
+        {
+            [xmlWriter writeEndElement];
+        }
+    }
+    
+    //close item element
+    [xmlWriter writeEndElement];
+    
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"locationText"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"locationLatitude"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"locationLongitude"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
+
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    return xml;
+}
+
+-(void)updateNewCaseItem
+{
+    
+    NSString *xmlForUpdate = [self createXMLFunctionSingleCaseItem];
+    
+    if([xmlForUpdate isEqualToString:@"no"])
+    {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invalid Update", nil) message:@"New Case Must Include At Least One Answered Question" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        return;
+        
+    }
+    //add a progress HUD to show it is retrieving list of properts
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Updating With The New Case Item";
+    [HUD show:YES];
+    
+    //use parse cloud code function
+    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+                       withParameters:@{@"payload": xmlForUpdate}
+                                block:^(NSString *responseString, NSError *error) {
+                                    
+                                    if (!error)
+                                    {
+                                        
+                                        NSString *responseText = responseString;
+                                        NSLog(responseText);
+                                        
+                                        [HUD hide:NO];
+                                        
+                                        NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+                                        PFObject *caseObject = [allCases objectAtIndex:[selectedCaseIndex integerValue]];
+                                        caseBeingUpdated = [caseObject objectForKey:@"caseId"];
+                                        
+                                        NSString *timeStampReturn = [caseObject objectForKey:@"timestamp"];
+                                        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                                        f.numberStyle = NSNumberFormatterDecimalStyle;
+                                        lastTimestamp = [f numberFromString:timeStampReturn];
+                                        
+                                        [self pollForCaseRefresh];
                                         
                                     }
                                     else
                                     {
                                         NSLog(error.localizedDescription);
                                         [HUD hide:YES];
-                                        
                                     }
                                 }];
+}
+
+-(void)getLocation:(id)sender
+{
+    locationManager.delegate = self;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    //show progress HUD
+    /*
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Retrieving Location Data";
+    [HUD show:YES];
+    */
+    [self.locationManager requestWhenInUseAuthorization];
+    [self.locationManager requestAlwaysAuthorization];
+    
+    [locationManager startUpdatingLocation];
+}
+
+
+#pragma mark - CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSLog(@"didFailWithError: %@", error);
+    UIAlertView *errorAlert = [[UIAlertView alloc]
+                               initWithTitle:@"Error" message:@"Failed to Get Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [errorAlert show];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    NSLog(@"didUpdateToLocation: %@", newLocation);
+    CLLocation *currentLocation = newLocation;
+    
+    if (currentLocation != nil) {
+        //longitudeLabel.text = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude];
+        //latitudeLabel.text = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude];
+        
+        
+        locationLongitude = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude];
+        locationLatitude =[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude];
+    }
+    
+    // Stop Location Manager
+    [locationManager stopUpdatingLocation];
+    
+    // Reverse Geocoding
+    NSLog(@"Resolving the Address");
+    [geocoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+        NSLog(@"Found placemarks: %@, error: %@", placemarks, error);
+        if (error == nil && [placemarks count] > 0) {
+            placemark = [placemarks lastObject];
+            
+            
+            NSString *locationText =[NSString stringWithFormat:@"%@ %@\n%@ %@\n%@\n%@",
+                                     placemark.subThoroughfare, placemark.thoroughfare,
+                                     placemark.postalCode, placemark.locality,
+                                     placemark.administrativeArea,
+                                     placemark.country];
+             locationRetrieved = placemark.locality;
+            
+           /*UIAlertView *successAlert = [[UIAlertView alloc]
+                                         initWithTitle:@"Success" message:@"Retrieved Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [successAlert show];
+            */
+            
+            [HUD hide:NO];
+        } else {
+            NSLog(@"%@", error.debugDescription);
+            
+            [HUD hide:NO];
+        }
+    } ];
     
 }
 

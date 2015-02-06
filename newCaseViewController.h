@@ -9,16 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
 #import <Parse/Parse.h>
+#import <CoreLocation/CoreLocation.h>
 
-@interface newCaseViewController : UIViewController <UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate,MBProgressHUDDelegate>
+@interface newCaseViewController : UIViewController <UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate,MBProgressHUDDelegate,CLLocationManagerDelegate>
 
-
+@property (strong, nonatomic) CLLocationManager *locationManager;
 @property (weak,nonatomic) IBOutlet UICollectionView *CaseOptionsCollectionView;
 
 @property (strong,nonatomic) UITableView *TemplateSecondLevelTableView;
 
 
 @property (strong,nonatomic) PFObject *itsMTLObject;
-
 
 @end
