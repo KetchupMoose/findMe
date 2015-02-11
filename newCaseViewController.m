@@ -71,7 +71,7 @@ NSString *locationLongitude;
     
     [CaseOptionsCollectionView reloadData];
     
-    [self getLocation:self];
+    //[self getLocation:self];
 }
 
 -(void) viewWillAppear:(BOOL)animated

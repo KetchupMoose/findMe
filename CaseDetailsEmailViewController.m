@@ -287,7 +287,7 @@ CGPoint startLocation;
 
 -(void) viewWillAppear:(BOOL)animated
 {
-    [self getLocation:self];
+    //[self getLocation:self];
 }
 
 - (void)didReceiveMemoryWarning {
