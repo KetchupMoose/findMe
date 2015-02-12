@@ -10,7 +10,8 @@
 #import "popupViewController.h"
 #import "XMLWriter.h"
 #import "SWTableViewCell.h"
-
+#import <SDWebImage/UIImageView+WebCache.h>
+#import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 
 @interface CaseDetailsEmailViewController ()
 
@@ -287,7 +288,7 @@ CGPoint startLocation;
 
 -(void) viewWillAppear:(BOOL)animated
 {
-    //[self getLocation:self];
+    [self getLocation:self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -340,6 +341,13 @@ CGPoint startLocation;
         
         propertyDescrLabel.text = @"Create a New Case Item";
         answersLabel.text = @"";
+        NSString *imgURL = @"http://www.primaryclassroomresources.co.uk/teaching-resources/promotion_new.png";
+        
+        UIActivityIndicatorViewStyle activityStyle = UIActivityIndicatorViewStyleGray;
+        
+        
+        [iconImgView setImageWithURL:[NSURL URLWithString:imgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
+        
         return cell;
         
     }
@@ -372,6 +380,15 @@ CGPoint startLocation;
     
     NSString *propertyType = [propAtIndex objectForKey:@"propertyType"];
     NSString *options = [propAtIndex objectForKey:@"options"];
+    
+    NSString *imgURL = [propAtIndex objectForKey:@"iconImageURL"];
+    
+    
+    UIActivityIndicatorViewStyle activityStyle = UIActivityIndicatorViewStyleGray;
+    
+    
+    [iconImgView setImageWithURL:[NSURL URLWithString:imgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
+    
     
     if([propertyType isEqualToString:@"I"])
     {
@@ -1907,8 +1924,11 @@ CGPoint startLocation;
     HUD.labelText = @"Retrieving Location Data";
     [HUD show:YES];
     */
-    [self.locationManager requestWhenInUseAuthorization];
-    [self.locationManager requestAlwaysAuthorization];
+    
+    // Check for iOS 8. Without this guard the code will crash with "unknown selector" on iOS 7.
+    if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+        [self.locationManager requestWhenInUseAuthorization];
+    }
     
     [locationManager startUpdatingLocation];
 }

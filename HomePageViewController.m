@@ -12,6 +12,7 @@
 #import <Parse/Parse.h>
 #import "ViewCasesViewController.h"
 #import "setProfileViewController.h"
+#import "matchesViewController.h"
 
 @interface HomePageViewController ()
 
@@ -188,6 +189,13 @@ MBProgressHUD *HUD;
 }
 - (IBAction)MyMatches:(id)sender {
     
+    matchesViewController *mvc = [self.storyboard instantiateViewControllerWithIdentifier:@"mvc"];
+    
+    //mvc.itsMTLObject = HomePageITSMTLObject;
+    
+    //UINavigationController *uinc = self.navigationController;
+    
+    [self.navigationController pushViewController:mvc animated:YES];
     
 }
 - (IBAction)MyProfile:(id)sender {

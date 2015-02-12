@@ -71,7 +71,7 @@ NSString *locationLongitude;
     
     [CaseOptionsCollectionView reloadData];
     
-    //[self getLocation:self];
+    [self getLocation:self];
 }
 
 -(void) viewWillAppear:(BOOL)animated
@@ -579,12 +579,10 @@ NSString *locationLongitude;
                                         NSString *responseText = responseString;
                                         NSLog(responseText);
                                         [HUD hide:NO];
-                                        if([responseText isEqualToString:@"ok"])
-                                        {
-                                            
-                                            NSLog(@"starting to poll for template maker update");
-                                            [self pollForTemplateMaker];
-                                        }
+                                        
+                                        NSLog(@"starting to poll for template maker update");
+                                        [self pollForTemplateMaker];
+                                        
                                     }
                                     else
                                     {
@@ -831,8 +829,12 @@ NSString *locationLongitude;
     HUD.labelText = @"Retrieving Location Data";
     [HUD show:YES];
     */
-    [self.locationManager requestWhenInUseAuthorization];
-    [self.locationManager requestAlwaysAuthorization];
+    
+    // Check for iOS 8. Without this guard the code will crash with "unknown selector" on iOS 7.
+    if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+        [self.locationManager requestWhenInUseAuthorization];
+    }
+   
     
     [locationManager startUpdatingLocation];
 }
