@@ -170,9 +170,7 @@
 
 -(void) PopButtonEnd:(UIButton *) view
 {
-    
-    
-    
+        
     //[UIView setAnimationDuration:0.3/1.5];
     [UIView setAnimationDelegate:self];
    

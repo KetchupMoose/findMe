@@ -86,6 +86,14 @@
 		ECEF944C1A832A4F0000A444 /* SWUtilityButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF94451A832A4F0000A444 /* SWUtilityButtonTapGestureRecognizer.m */; };
 		ECEF944D1A832A4F0000A444 /* SWUtilityButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF94471A832A4F0000A444 /* SWUtilityButtonView.m */; };
 		ECEF94501A8C29DF0000A444 /* matchesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF944F1A8C29DF0000A444 /* matchesViewController.m */; };
+		ECEF945F1A8D127F0000A444 /* ECPercentDrivenInteractiveTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF94531A8D127F0000A444 /* ECPercentDrivenInteractiveTransition.m */; };
+		ECEF94601A8D127F0000A444 /* ECSlidingAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF94551A8D127F0000A444 /* ECSlidingAnimationController.m */; };
+		ECEF94611A8D127F0000A444 /* ECSlidingInteractiveTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF94581A8D127F0000A444 /* ECSlidingInteractiveTransition.m */; };
+		ECEF94621A8D127F0000A444 /* ECSlidingSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF945A1A8D127F0000A444 /* ECSlidingSegue.m */; };
+		ECEF94631A8D127F0000A444 /* ECSlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF945C1A8D127F0000A444 /* ECSlidingViewController.m */; };
+		ECEF94641A8D127F0000A444 /* UIViewController+ECSlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF945E1A8D127F0000A444 /* UIViewController+ECSlidingViewController.m */; };
+		ECEF94671A8D1F200000A444 /* originalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF94661A8D1F200000A444 /* originalViewController.m */; };
+		ECEF946A1A8D1F410000A444 /* secondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF94691A8D1F410000A444 /* secondViewController.m */; };
 		ECF19FB81A76DAF200607E6D /* CaseDetailsEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECF19FB71A76DAF200607E6D /* CaseDetailsEmailViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -215,6 +223,23 @@
 		ECEF94471A832A4F0000A444 /* SWUtilityButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButtonView.m; sourceTree = "<group>"; };
 		ECEF944E1A8C29DF0000A444 /* matchesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matchesViewController.h; sourceTree = "<group>"; };
 		ECEF944F1A8C29DF0000A444 /* matchesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = matchesViewController.m; sourceTree = "<group>"; };
+		ECEF94521A8D127F0000A444 /* ECPercentDrivenInteractiveTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECPercentDrivenInteractiveTransition.h; sourceTree = "<group>"; };
+		ECEF94531A8D127F0000A444 /* ECPercentDrivenInteractiveTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECPercentDrivenInteractiveTransition.m; sourceTree = "<group>"; };
+		ECEF94541A8D127F0000A444 /* ECSlidingAnimationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECSlidingAnimationController.h; sourceTree = "<group>"; };
+		ECEF94551A8D127F0000A444 /* ECSlidingAnimationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECSlidingAnimationController.m; sourceTree = "<group>"; };
+		ECEF94561A8D127F0000A444 /* ECSlidingConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECSlidingConstants.h; sourceTree = "<group>"; };
+		ECEF94571A8D127F0000A444 /* ECSlidingInteractiveTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECSlidingInteractiveTransition.h; sourceTree = "<group>"; };
+		ECEF94581A8D127F0000A444 /* ECSlidingInteractiveTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECSlidingInteractiveTransition.m; sourceTree = "<group>"; };
+		ECEF94591A8D127F0000A444 /* ECSlidingSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECSlidingSegue.h; sourceTree = "<group>"; };
+		ECEF945A1A8D127F0000A444 /* ECSlidingSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECSlidingSegue.m; sourceTree = "<group>"; };
+		ECEF945B1A8D127F0000A444 /* ECSlidingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECSlidingViewController.h; sourceTree = "<group>"; };
+		ECEF945C1A8D127F0000A444 /* ECSlidingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECSlidingViewController.m; sourceTree = "<group>"; };
+		ECEF945D1A8D127F0000A444 /* UIViewController+ECSlidingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+ECSlidingViewController.h"; sourceTree = "<group>"; };
+		ECEF945E1A8D127F0000A444 /* UIViewController+ECSlidingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+ECSlidingViewController.m"; sourceTree = "<group>"; };
+		ECEF94651A8D1F200000A444 /* originalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = originalViewController.h; sourceTree = "<group>"; };
+		ECEF94661A8D1F200000A444 /* originalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = originalViewController.m; sourceTree = "<group>"; };
+		ECEF94681A8D1F410000A444 /* secondViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = secondViewController.h; sourceTree = "<group>"; };
+		ECEF94691A8D1F410000A444 /* secondViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = secondViewController.m; sourceTree = "<group>"; };
 		ECF19FB61A76DAF200607E6D /* CaseDetailsEmailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CaseDetailsEmailViewController.h; path = ../CaseDetailsEmailViewController.h; sourceTree = "<group>"; };
 		ECF19FB71A76DAF200607E6D /* CaseDetailsEmailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CaseDetailsEmailViewController.m; path = ../CaseDetailsEmailViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -299,6 +324,7 @@
 		D31DF2FB19CEFC0C00A37725 /* findMe */ = {
 			isa = PBXGroup;
 			children = (
+				ECEF94511A8D127F0000A444 /* ECSlidingViewController */,
 				ECEF943B1A832A1E0000A444 /* swipableTableViewCells */,
 				ECE6B17B1A0D9FAB007F4A19 /* commonControls */,
 				D3F4574419FD9215000EDF25 /* imageAssets */,
@@ -307,12 +333,16 @@
 				D3FBD13E19D05062008240F5 /* JSON Parsing */,
 				D31DF30419CEFC0C00A37725 /* AppDelegate.h */,
 				D31DF30519CEFC0C00A37725 /* AppDelegate.m */,
-				D31DF30719CEFC0C00A37725 /* Main_iPhone.storyboard */,
 				ECEF944E1A8C29DF0000A444 /* matchesViewController.h */,
 				ECEF944F1A8C29DF0000A444 /* matchesViewController.m */,
 				ECB1D50F1A7748B5008CC684 /* popupViewController.h */,
 				ECB1D5101A7748B5008CC684 /* popupViewController.m */,
+				D31DF30719CEFC0C00A37725 /* Main_iPhone.storyboard */,
 				D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */,
+				ECEF94651A8D1F200000A444 /* originalViewController.h */,
+				ECEF94661A8D1F200000A444 /* originalViewController.m */,
+				ECEF94681A8D1F410000A444 /* secondViewController.h */,
+				ECEF94691A8D1F410000A444 /* secondViewController.m */,
 				D31DF30D19CEFC0C00A37725 /* ViewCasesViewController.h */,
 				D31DF30E19CEFC0C00A37725 /* ViewCasesViewController.m */,
 				EC0823021A186B13000B6684 /* HomePageViewController.h */,
@@ -487,6 +517,26 @@
 			name = swipableTableViewCells;
 			sourceTree = "<group>";
 		};
+		ECEF94511A8D127F0000A444 /* ECSlidingViewController */ = {
+			isa = PBXGroup;
+			children = (
+				ECEF94521A8D127F0000A444 /* ECPercentDrivenInteractiveTransition.h */,
+				ECEF94531A8D127F0000A444 /* ECPercentDrivenInteractiveTransition.m */,
+				ECEF94541A8D127F0000A444 /* ECSlidingAnimationController.h */,
+				ECEF94551A8D127F0000A444 /* ECSlidingAnimationController.m */,
+				ECEF94561A8D127F0000A444 /* ECSlidingConstants.h */,
+				ECEF94571A8D127F0000A444 /* ECSlidingInteractiveTransition.h */,
+				ECEF94581A8D127F0000A444 /* ECSlidingInteractiveTransition.m */,
+				ECEF94591A8D127F0000A444 /* ECSlidingSegue.h */,
+				ECEF945A1A8D127F0000A444 /* ECSlidingSegue.m */,
+				ECEF945B1A8D127F0000A444 /* ECSlidingViewController.h */,
+				ECEF945C1A8D127F0000A444 /* ECSlidingViewController.m */,
+				ECEF945D1A8D127F0000A444 /* UIViewController+ECSlidingViewController.h */,
+				ECEF945E1A8D127F0000A444 /* UIViewController+ECSlidingViewController.m */,
+			);
+			path = ECSlidingViewController;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -581,13 +631,17 @@
 				ECE6B1801A0D9FF3007F4A19 /* UIImageView+Scaling.m in Sources */,
 				EC0823041A186B13000B6684 /* HomePageViewController.m in Sources */,
 				D31DF30F19CEFC0C00A37725 /* ViewCasesViewController.m in Sources */,
+				ECEF946A1A8D1F410000A444 /* secondViewController.m in Sources */,
 				D3FBD13D19D0505D008240F5 /* Case.m in Sources */,
 				ECEF94491A832A4F0000A444 /* SWCellScrollView.m in Sources */,
 				D318324919D06173003D51A3 /* CaseItem.m in Sources */,
+				ECEF94671A8D1F200000A444 /* originalViewController.m in Sources */,
 				EC0822FC1A0EE7F0000B6684 /* UIImage+WebP.m in Sources */,
+				ECEF94631A8D127F0000A444 /* ECSlidingViewController.m in Sources */,
 				EC0822F11A0EE7F0000B6684 /* NSData+ImageContentType.m in Sources */,
 				D31DF30619CEFC0C00A37725 /* AppDelegate.m in Sources */,
 				D3207B0219E9CBCE00085B7C /* NewPropertyViewController.m in Sources */,
+				ECEF94601A8D127F0000A444 /* ECSlidingAnimationController.m in Sources */,
 				ECEF944A1A832A4F0000A444 /* SWLongPressGestureRecognizer.m in Sources */,
 				EC0822F41A0EE7F0000B6684 /* SDWebImageDecoder.m in Sources */,
 				D3F4573F19F88199000EDF25 /* setProfileViewController.m in Sources */,
@@ -596,6 +650,7 @@
 				EC0822F91A0EE7F0000B6684 /* UIButton+WebCache.m in Sources */,
 				EC0822F71A0EE7F0000B6684 /* SDWebImageManager.m in Sources */,
 				ECEF94501A8C29DF0000A444 /* matchesViewController.m in Sources */,
+				ECEF94611A8D127F0000A444 /* ECSlidingInteractiveTransition.m in Sources */,
 				ECE6B1811A0D9FF3007F4A19 /* UIImageView+UIActivityIndicatorForSDWebImage.m in Sources */,
 				EC0822FE1A0EE7F0000B6684 /* UIImageView+WebCache.m in Sources */,
 				D3207AFF19E9B01200085B7C /* MBProgressHUD.m in Sources */,
@@ -613,12 +668,15 @@
 				ECF19FB81A76DAF200607E6D /* CaseDetailsEmailViewController.m in Sources */,
 				ECB1D5111A7748B5008CC684 /* popupViewController.m in Sources */,
 				D31DF30219CEFC0C00A37725 /* main.m in Sources */,
+				ECEF94621A8D127F0000A444 /* ECSlidingSegue.m in Sources */,
 				EC0822F01A0EE7F0000B6684 /* MKAnnotationView+WebCache.m in Sources */,
 				EC0822FB1A0EE7F0000B6684 /* UIImage+MultiFormat.m in Sources */,
 				EC0822FF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m in Sources */,
 				EC0822F31A0EE7F0000B6684 /* SDWebImageCompat.m in Sources */,
 				D318324D19D062ED003D51A3 /* CaseBuilder.m in Sources */,
 				ECE6B1761A0D8AE5007F4A19 /* newCaseViewController.m in Sources */,
+				ECEF94641A8D127F0000A444 /* UIViewController+ECSlidingViewController.m in Sources */,
+				ECEF945F1A8D127F0000A444 /* ECPercentDrivenInteractiveTransition.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

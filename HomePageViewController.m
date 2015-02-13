@@ -95,6 +95,7 @@ MBProgressHUD *HUD;
      //create parse objects and create the new case for the template
      PFUser *currentUser = [PFUser currentUser];
     
+    
     //query to see if there is an ITSMTLObject for this user already
     
     // Set determinate mode
@@ -155,8 +156,12 @@ MBProgressHUD *HUD;
         [HUD hide:NO];
     }
     
+    // Associate the device with a user
+    PFInstallation *installation = [PFInstallation currentInstallation];
+    installation[@"user"] = [PFUser currentUser];
+    installation[@"itsMTL"] = HomePageuserName;
+    [installation saveInBackground];
 
-    
 }
 
 /*
@@ -240,6 +245,7 @@ MBProgressHUD *HUD;
     
     //needs to query for the user and pull some info
     PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
+   
     [query getObjectInBackgroundWithId:HomePageuserName block:^(PFObject *latestCaseList, NSError *error) {
         // Do something with the returned PFObject
         NSLog(@"%@", latestCaseList);

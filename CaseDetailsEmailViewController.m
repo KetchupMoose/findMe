@@ -1594,6 +1594,7 @@ CGPoint startLocation;
                                         [HUD hide:NO];
                                         
                                         NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+                                        
                                         PFObject *caseObject = [allCases objectAtIndex:[selectedCaseIndex integerValue]];
                                         caseBeingUpdated = [caseObject objectForKey:@"caseId"];
                                         
@@ -1603,16 +1604,12 @@ CGPoint startLocation;
                                         lastTimestamp = [f numberFromString:timeStampReturn];
                                         
                                         [self pollForCaseRefresh];
-
-                                        
                                     }
                                     else
                                     {
                                         NSLog(error.localizedDescription);
                                         [HUD hide:NO];
                                       
-                                        
-                                        
                                     }
                                 }];
     
