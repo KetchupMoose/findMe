@@ -23,4 +23,7 @@
 - (IBAction)TestProfileButton:(id)sender;
 @property (strong,nonatomic) PFObject *HomePageITSMTLObject;
 @property (strong,nonatomic) NSString *HomePageuserName;
+
+-(IBAction)TestSlidingView:(id)sender;
+
 @end

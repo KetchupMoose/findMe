@@ -12,6 +12,7 @@
 #import "SWTableViewCell.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
+#import "UIViewController+ECSlidingViewController.h"
 
 @interface CaseDetailsEmailViewController ()
 
@@ -288,6 +289,15 @@ CGPoint startLocation;
 
 -(void) viewWillAppear:(BOOL)animated
 {
+  
+  
+    
+    // Tell it which view should be created under Right
+    
+    if (![self.slidingViewController.underLeftViewController isKindOfClass:[popupViewController class]]) {
+        self.slidingViewController.underLeftViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"popupvc"];
+    }
+    
     [self getLocation:self];
 }
 
@@ -530,7 +540,13 @@ CGPoint startLocation;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   
+    
+    
+    [self.slidingViewController anchorTopViewToRightAnimated:YES];
+    self.navigationController.navigationBar.alpha = 0;
+    
+    return;
+    
     //if the selected row is greater than the count of caseItems, show the NewPropertyViewController
     
     if(indexPath.row==sortedCaseItems.count)

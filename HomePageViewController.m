@@ -13,6 +13,8 @@
 #import "ViewCasesViewController.h"
 #import "setProfileViewController.h"
 #import "matchesViewController.h"
+#import "UIViewController+ECSlidingViewController.h"
+#import "originalViewController.h"
 
 @interface HomePageViewController ()
 
@@ -94,7 +96,6 @@ MBProgressHUD *HUD;
     
      //create parse objects and create the new case for the template
      PFUser *currentUser = [PFUser currentUser];
-    
     
     //query to see if there is an ITSMTLObject for this user already
     
@@ -292,6 +293,19 @@ MBProgressHUD *HUD;
     
     [self ReloadHomePageData];
     [self.navigationController popViewControllerAnimated:NO];
+}
+
+-(IBAction)TestSlidingView:(id)sender
+{
+    ECSlidingViewController *myecvc = (ECSlidingViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"ecsliding"];
+    
+    originalViewController *ovc = [self.storyboard instantiateViewControllerWithIdentifier:@"originalVC"];
+    
+    [myecvc setTopViewController:ovc];
+    
+    
+    [self.navigationController pushViewController:myecvc animated:YES];
+    
 }
 
 @end

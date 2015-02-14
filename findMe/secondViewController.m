@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "ECSlidingViewController.h"
 #import "UIViewController+ECSlidingViewController.h"
+#import "MenuTableViewController.h"
 @interface secondViewController ()
 
 @end
@@ -20,13 +21,32 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    //[self.slidingViewController setAnchorRightRevealAmount:280.0f];
-  // self.slidingViewController.underLeftWidthLayout = ECFullWidth;
+  
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // Add a shadow to the top view so it looks like it is on top of the others
+    self.view.layer.shadowOpacity = 0.75f;
+    self.view.layer.shadowRadius = 10.0f;
+    self.view.layer.shadowColor = [[UIColor blackColor] CGColor];
+    
+    // Tell it which view should be created under left
+    
+    if (![self.slidingViewController.underLeftViewController isKindOfClass:[MenuTableViewController class]]) {
+        self.slidingViewController.underLeftViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"menuvc"];
+    }
+    
+    // Add the pan gesture to allow sliding
+    [self.view addGestureRecognizer:self.slidingViewController.panGesture];
+    
 }
 
 /*

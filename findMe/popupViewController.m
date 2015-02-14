@@ -10,6 +10,8 @@
 #import "XMLWriter.h"
 #import "MBProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ECSlidingViewController.h"
+#import "UIViewController+ECSlidingViewController.h"
 
 
 @interface popupViewController ()
@@ -46,6 +48,12 @@ UIView *bgDarkenView;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    //setup sliding view controller variables
+     //[self.slidingViewController setAnchorRightRevealAmount:260.0f];
+    [self.slidingViewController setAnchorLeftRevealAmount:190.0f];
+    //[self.slidingViewController setAnchorRightRevealAmount:40.0f];
+    //[self.slidingViewController setAnchorLeftPeekAmount:25.0f];
     
     self.answersTableView.delegate = self;
     self.answersTableView.dataSource = self;
@@ -131,6 +139,13 @@ UIView *bgDarkenView;
 
 -(void) viewWillAppear:(BOOL)animated
 {
+      // Add a shadow to the top view so it looks like it is on top of the others
+    
+    self.view.layer.shadowOpacity = 0.75f;
+    self.view.layer.shadowRadius = 10.0f;
+    self.view.layer.shadowColor = [[UIColor blackColor] CGColor];
+    
+    
     self.answersTableView.delegate = self;
     self.answersTableView.dataSource = self;
     

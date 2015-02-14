@@ -221,7 +221,7 @@
         <!--Case Details Email View Controller-->
         <scene sceneID="QbB-ku-QVJ">
             <objects>
-                <viewController storyboardIdentifier="cdevc" id="D1u-gC-xXB" customClass="CaseDetailsEmailViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="cdevc" useStoryboardIdentifierAsRestorationIdentifier="YES" id="D1u-gC-xXB" customClass="CaseDetailsEmailViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="glh-oF-77I"/>
                         <viewControllerLayoutGuide type="bottom" id="VbP-Zq-3G2"/>
@@ -322,7 +322,7 @@
         <!--Popup View Controller-->
         <scene sceneID="bxA-Wa-VOj">
             <objects>
-                <viewController storyboardIdentifier="popupvc" id="4YK-dg-iiY" customClass="popupViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="popupvc" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4YK-dg-iiY" customClass="popupViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="17F-Bv-IeO"/>
                         <viewControllerLayoutGuide type="bottom" id="Dve-WM-NTI"/>
@@ -405,6 +405,54 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C9F-Sz-M6S" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1271" y="526"/>
+        </scene>
+        <!--Base Case Details Sliding View Controller-->
+        <scene sceneID="OKz-mR-r5X">
+            <objects>
+                <viewController storyboardIdentifier="bcdsvc" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ocJ-Hw-zAc" customClass="BaseCaseDetailsSlidingViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="rLy-v6-cga"/>
+                        <viewControllerLayoutGuide type="bottom" id="Uj5-jy-5a5"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="N9a-dg-3AN">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="topViewControllerStoryboardId" value="cdevc"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="underLeftViewControllerStoryboardId" value="popupvc"/>
+                    </userDefinedRuntimeAttributes>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="68A-CY-Tux" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1678" y="526"/>
+        </scene>
+        <!--Menu Table View Controller-->
+        <scene sceneID="y09-CK-R2t">
+            <objects>
+                <tableViewController storyboardIdentifier="menuvc" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1wa-6p-6Ki" customClass="MenuTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Yij-XL-WQG">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="vRo-rF-HLg">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vRo-rF-HLg" id="WIA-KX-X8W">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="1wa-6p-6Ki" id="xnP-lH-MNV"/>
+                            <outlet property="delegate" destination="1wa-6p-6Ki" id="yR7-nh-6Fg"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oIQ-zO-Ica" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1922" y="1164"/>
         </scene>
         <!--New Property View Controller-->
         <scene sceneID="SpK-xC-Mxf">
@@ -681,6 +729,17 @@
                                     <action selector="TestProfileButton:" destination="e02-Df-S4d" eventType="touchUpInside" id="gjD-S3-xSI"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NBa-bu-Q5y">
+                                <rect key="frame" x="165" y="195" width="139" height="44"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Test Sliding View">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="TestSlidingView:" destination="e02-Df-S4d" eventType="touchUpInside" id="b9f-kt-Bz4"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -816,7 +875,7 @@
         <!--Original View Controller-->
         <scene sceneID="wOY-7Z-azn">
             <objects>
-                <viewController storyboardIdentifier="originalvc" id="n5k-4o-C6K" customClass="originalViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="originalVC" id="n5k-4o-C6K" customClass="originalViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="3aZ-Xq-Y9t"/>
                         <viewControllerLayoutGuide type="bottom" id="Aic-ip-cbC"/>
@@ -826,6 +885,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="topViewControllerStoryboardId" value="secondvc"/>
+                    </userDefinedRuntimeAttributes>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b9w-ed-QBk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -834,7 +896,7 @@
         <!--Second View Controller-->
         <scene sceneID="l6l-WL-X54">
             <objects>
-                <viewController storyboardIdentifier="secondvc" id="X2k-xf-Lej" customClass="secondViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="secondvc" useStoryboardIdentifierAsRestorationIdentifier="YES" id="X2k-xf-Lej" customClass="secondViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="WGO-ET-gMP"/>
                         <viewControllerLayoutGuide type="bottom" id="eFY-ak-PKH"/>
@@ -847,7 +909,29 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gCp-tk-B3k" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1194" y="1280"/>
+            <point key="canvasLocation" x="1158" y="1164"/>
+        </scene>
+        <!--Sliding View Controller-->
+        <scene sceneID="LK7-rF-edR">
+            <objects>
+                <viewController storyboardIdentifier="ecsliding" id="JGi-hD-W9A" customClass="ECSlidingViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="O5V-fG-i1D"/>
+                        <viewControllerLayoutGuide type="bottom" id="eQf-ft-wZU"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="19M-0g-RMR">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="underRightViewControllerStoryboardId" value="secondvc"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="topViewControllerStoryboardId" value="originalVC"/>
+                    </userDefinedRuntimeAttributes>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7jE-81-Rpe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1530" y="1164"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="vRa-6d-R3J">

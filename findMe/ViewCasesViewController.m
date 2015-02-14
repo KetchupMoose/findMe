@@ -12,6 +12,7 @@
 #import "CaseBuilder.h"
 #import "CaseDetailsViewController.h"
 #import "CaseDetailsEmailViewController.h"
+#import "BaseCaseDetailsSlidingViewController.h"
 #import "MBProgressHUD.h"
 
 
@@ -271,7 +272,11 @@ UIRefreshControl *refreshControl;
     UIView *popupView = sendingButton.superview;
     [popupView removeFromSuperview];
     
-    [self.navigationController pushViewController:cdevc animated:YES];
+    BaseCaseDetailsSlidingViewController *bcdsvc = [self.storyboard instantiateViewControllerWithIdentifier:@"bcdsvc"];
+    
+    [bcdsvc setTopViewController:cdevc];
+    
+    [self.navigationController pushViewController:bcdsvc animated:YES];
 }
 
 -(IBAction)newCase:(id)sender
