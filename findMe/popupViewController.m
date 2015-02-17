@@ -29,6 +29,7 @@
 @synthesize locationLatitude;
 @synthesize locationLongitude;
 @synthesize locationRetrieved;
+@synthesize popupOrSlideout;
 
 NSMutableArray *optionsArray;
 NSMutableArray *answersArray;
@@ -50,8 +51,8 @@ UIView *bgDarkenView;
     // Do any additional setup after loading the view.
     
     //setup sliding view controller variables
-     //[self.slidingViewController setAnchorRightRevealAmount:260.0f];
-    [self.slidingViewController setAnchorLeftRevealAmount:190.0f];
+     [self.slidingViewController setAnchorRightRevealAmount:260.0f];
+    //[self.slidingViewController setAnchorLeftRevealAmount:190.0f];
     //[self.slidingViewController setAnchorRightRevealAmount:40.0f];
     //[self.slidingViewController setAnchorLeftPeekAmount:25.0f];
     
@@ -60,86 +61,21 @@ UIView *bgDarkenView;
     
     self.customAnswerTextField.delegate = self;
     
-    
-    //load the options array
-    NSString *options = [self.selectedPropertyObject objectForKey:@"options"];
-    optionsArray = [[options componentsSeparatedByString:@";"] mutableCopy];
-   
-    //load the answers array
-    NSArray *cases = [self.popupitsMTLObject objectForKey:@"cases"];
-    PFObject *selectedCaseObject = [cases objectAtIndex:[selectedCase integerValue]];
-   
-    NSString *caseObjectID = [selectedCaseObject objectForKey:@"caseId"];
-    
-    int length = (int)[caseObjectID length];
-    
-    if(length==0)
-    {
-        self.updateButton.titleLabel.text = @"Select These Answers";
-        templateMode = 1;
-    }
-    //Feb5
-    //commenting this portion out to deal with sortedCaseItems on the property level instead
-    /*
-    NSArray *caseItems = [selectedCaseObject objectForKey:@"caseItems"];
-    
-    //sort caseItems by priority
-    NSSortDescriptor *sortDescriptor;
-    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
-                                                 ascending:NO];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    */
-    PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:[selectedCaseItem integerValue]];
-    
-    
-    NSArray *selectedCaseItemAnswersList = [selectedCaseItemObject objectForKey:@"answers"];
-    answersArray = [[NSMutableArray alloc] init];
-    answersDictionary = [[NSMutableArray alloc] init];
-    
-    [answersArray removeAllObjects];
-    
-    for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
-    {
-        NSString *ansNum = [eachAnsObj valueForKey:@"a"];
-        if (ansNum==nil)
-        {
-            NSString *ans = [eachAnsObj valueForKey:@"custom"];
-            [answersArray addObject:ans];
-        }
-        else
-        {
-            [answersArray addObject:ansNum];
-        }
-    }
-    
-    if([self.displayMode isEqualToString:@"custom"])
-    {
-        self.answersTableView.alpha = 0;
-        self.customAnswerTextField.alpha =1;
-        
-        if([answersArray count]>0)
-        {
-            self.customAnswerTextField.text = [answersArray objectAtIndex:0];
-            
-        }
-    }
-    else
-    {
-        self.answersTableView.alpha = 1;
-        self.customAnswerTextField.alpha =0;
-        [self.answersTableView reloadData];
-    }
-   
-    //set the update button to disabled by default until a change is made:
-    self.updateButton.enabled = 0;
-    [self.updateButton.titleLabel setTextColor:[UIColor lightGrayColor]];
-    
-    
 }
 
 -(void) viewWillAppear:(BOOL)animated
 {
-      // Add a shadow to the top view so it looks like it is on top of the others
+   
+     PFObject *sortedCaseItems1 = self.sortedCaseItems;
+    //clear out all previous data.
+    
+    [optionsArray removeAllObjects];
+    //[answersArray removeAllObjects];
+    //[answersDictionary removeAllObjects];
+    
+    PFObject *sortedCaseItems2 = self.sortedCaseItems;
+    
+    // Add a shadow to the top view so it looks like it is on top of the others
     
     self.view.layer.shadowOpacity = 0.75f;
     self.view.layer.shadowRadius = 10.0f;
@@ -253,6 +189,10 @@ UIView *bgDarkenView;
     // Dispose of any resources that can be recreated.
 }
 
+-(void) viewDidAppear:(BOOL)animated
+{
+    
+}
 /*
 #pragma mark - Navigation
 
@@ -265,7 +205,20 @@ UIView *bgDarkenView;
 
 -(IBAction)closePopup:(id)sender
 {
-    [self dismissViewControllerAnimated:NO completion:nil];
+    if([popupOrSlideout isEqualToString:@"slideout"])
+       {
+           //[self.slidingViewController anchorTopViewToLeftAnimated:YES];
+           //[self.slidingViewController setAnchorLeftRevealAmount:0];
+           //[self.slidingViewController anchorTopViewToRightAnimated:YES];
+           [self.slidingViewController resetTopViewAnimated:YES];
+           
+       }
+       else
+       
+       {
+            [self dismissViewControllerAnimated:NO completion:nil];
+       }
+  
     
 }
 
@@ -505,12 +458,10 @@ UIView *bgDarkenView;
     
     [self updateAnswers:(self)];
     
-    
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    
     
     [self animateTextField:textField up:YES];
     
@@ -575,6 +526,10 @@ UIView *bgDarkenView;
     [AnsObj setValue:self.customAnswerTextField.text forKey:@"custom"];
     [answersDictionary addObject:AnsObj];
 }
+  
+    NSArray *checkingSortedCaseItems = self.sortedCaseItems;
+    
+    
     //prepare the array of sortedCaseItems
     NSArray *cases = [self.popupitsMTLObject objectForKey:@"cases"];
     PFObject *selectedCaseObject = [cases objectAtIndex:[selectedCase integerValue]];

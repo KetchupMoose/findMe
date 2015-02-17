@@ -26,5 +26,6 @@
 @property (weak,nonatomic) NSString *userName;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 -(void)reloadData:(PFObject *) newITSMTLObject;
+@property (strong,nonatomic) popupViewController *popupVC;
 
 @end

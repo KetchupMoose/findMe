@@ -16,6 +16,7 @@
 #import "MBProgressHUD.h"
 #import "CaseDetailsViewController.h"
 #import "CaseDetailsEmailViewController.h"
+#import "BaseCaseDetailsSlidingViewController.h"
 
 
 @interface newCaseViewController ()
@@ -729,6 +730,9 @@ NSString *locationLongitude;
     NSNumber *selectedIndex = [NSNumber numberWithInt:lastCaseInt];
     
     //CaseDetailsViewController *cdvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdvc"];
+    BaseCaseDetailsSlidingViewController *bcdsvc = [self.storyboard instantiateViewControllerWithIdentifier:@"bcdsvc"];
+    
+   
     CaseDetailsEmailViewController *cdevc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdevc"];
     
     cdevc.selectedCaseIndex=selectedIndex;
@@ -736,7 +740,9 @@ NSString *locationLongitude;
     cdevc.userName = itsMTLObject.objectId;
     cdevc.itsMTLObject = queryReturnPFObject;
     
-    [self.navigationController pushViewController:cdevc animated:YES];
+     [bcdsvc setTopViewController:cdevc];
+    
+    [self.navigationController pushViewController:bcdsvc animated:YES];
 }
 
 

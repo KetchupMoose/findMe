@@ -50,4 +50,6 @@
 @property (weak,nonatomic) NSString *locationRetrieved;
 @property (weak,nonatomic) NSString *locationLatitude;
 @property (weak,nonatomic) NSString *locationLongitude;
+@property (weak,nonatomic) NSString *popupOrSlideout;
+
 @end

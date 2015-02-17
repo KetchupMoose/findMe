@@ -8,6 +8,7 @@
 
 #import "BaseCaseDetailsSlidingViewController.h"
 #import "UIViewController+ECSlidingViewController.h"
+#import "popupViewController.h"
 
 @interface BaseCaseDetailsSlidingViewController ()
 
@@ -19,7 +20,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-      //self.topViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"cdevc"];
+    //self.topViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"cdevc"];
+    self.underRightViewController = (popupViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"popupvc"];
     
 }
 

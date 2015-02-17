@@ -86,6 +86,8 @@ CGPoint startLocation;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    self.popupVC =  (popupViewController *)self.slidingViewController.underRightViewController;
+    
     //set up delegates
     self.caseDetailsEmailTableView.delegate = self;
     self.caseDetailsEmailTableView.dataSource = self;
@@ -289,14 +291,13 @@ CGPoint startLocation;
 
 -(void) viewWillAppear:(BOOL)animated
 {
-  
-  
-    
     // Tell it which view should be created under Right
     
+    /*
     if (![self.slidingViewController.underLeftViewController isKindOfClass:[popupViewController class]]) {
         self.slidingViewController.underLeftViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"popupvc"];
     }
+    */
     
     [self getLocation:self];
 }
@@ -387,6 +388,7 @@ CGPoint startLocation;
     
     NSArray *CaseItemAnswersListAtIndex = [caseItemPicked objectForKey:@"answers"];
     //setting global var
+    
     
     NSString *propertyType = [propAtIndex objectForKey:@"propertyType"];
     NSString *options = [propAtIndex objectForKey:@"options"];
@@ -541,12 +543,6 @@ CGPoint startLocation;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    
-    [self.slidingViewController anchorTopViewToRightAnimated:YES];
-    self.navigationController.navigationBar.alpha = 0;
-    
-    return;
-    
     //if the selected row is greater than the count of caseItems, show the NewPropertyViewController
     
     if(indexPath.row==sortedCaseItems.count)
@@ -568,7 +564,7 @@ CGPoint startLocation;
     UIColor *lightYellowColor = [UIColor colorWithRed:252.0f/255.0f green:252.0f/255.0f blue:150.0f/255.0f alpha:1];
     popupView.backgroundColor = lightYellowColor;
     
-    popupViewController *popVC = [self.storyboard instantiateViewControllerWithIdentifier:@"popupvc"];
+    popupViewController *popVC = self.popupVC;
     
     //set data for popupViewController
      NSNumber *selectedCaseItem = [NSNumber numberWithInteger:indexPath.row];
@@ -634,17 +630,28 @@ CGPoint startLocation;
     {
         //show the popup in custom answer mode
        popVC.displayMode = @"custom";
-        [self setPresentationStyleForSelfController:self presentingController:popVC];
-        [self presentViewController:popVC animated:NO completion:nil];
+        
     }
     else
     {
         //show the popup in the normal mode with the tableView
         popVC.displayMode = @"table";
-        [self setPresentationStyleForSelfController:self presentingController:popVC];
-        [self presentViewController:popVC animated:NO completion:nil];
+        
         
     }
+    
+    //[self setPresentationStyleForSelfController:self presentingController:popVC];
+    //[self presentViewController:popVC animated:NO completion:nil];
+    
+    popVC.popupOrSlideout = @"slideout";
+    
+    self.slidingViewController.underLeftViewController = self.popupVC;
+    
+    
+    [self.slidingViewController anchorTopViewToRightAnimated:YES];
+    self.navigationController.navigationBar.alpha = 0;
+    
+    return;
     
 }
 
@@ -871,7 +878,15 @@ CGPoint startLocation;
             }
         }
     
-    [self dismissViewControllerAnimated:NO completion:nil];
+    if([self.popupVC.popupOrSlideout isEqualToString:@"slideout"])
+       {
+           [self.slidingViewController resetTopViewAnimated:YES];
+       }
+    else
+    {
+         [self dismissViewControllerAnimated:NO completion:nil];
+    }
+  
     
     
 }
@@ -1333,7 +1348,15 @@ CGPoint startLocation;
     
     [self.caseDetailsEmailTableView reloadData];
     
-    [self dismissViewControllerAnimated:NO completion:nil];
+    if([self.popupVC.popupOrSlideout isEqualToString:@"slideout"])
+    {
+        [self.slidingViewController resetTopViewAnimated:YES];
+    }
+    else
+    {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+   
     
 }
 - (void)updateNewCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers NewPropertyDescr:(NSString *) newPropDescr optionsList:(NSArray *) optionList
