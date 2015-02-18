@@ -12,6 +12,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "ECSlidingViewController.h"
 #import "UIViewController+ECSlidingViewController.h"
+#import "CaseDetailsEmailViewController.h"
 
 
 @interface popupViewController ()
@@ -31,7 +32,7 @@
 @synthesize locationRetrieved;
 @synthesize popupOrSlideout;
 
-NSMutableArray *optionsArray;
+NSMutableArray *popupOptionsArray;
 NSMutableArray *answersArray;
 NSMutableArray *answersDictionary;
 
@@ -50,9 +51,11 @@ UIView *bgDarkenView;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    popupOptionsArray = [[NSMutableArray alloc] init];
+    
     //setup sliding view controller variables
-     [self.slidingViewController setAnchorRightRevealAmount:260.0f];
-    //[self.slidingViewController setAnchorLeftRevealAmount:190.0f];
+     //[self.slidingViewController setAnchorRightRevealAmount:260.0f];
+    [self.slidingViewController setAnchorLeftRevealAmount:190.0f];
     //[self.slidingViewController setAnchorRightRevealAmount:40.0f];
     //[self.slidingViewController setAnchorLeftPeekAmount:25.0f];
     
@@ -66,10 +69,16 @@ UIView *bgDarkenView;
 -(void) viewWillAppear:(BOOL)animated
 {
    
-     PFObject *sortedCaseItems1 = self.sortedCaseItems;
+    [self.view addGestureRecognizer:self.slidingViewController.panGesture];
+    
+    PFObject *sortedCaseItems1 = self.sortedCaseItems;
     //clear out all previous data.
     
-    [optionsArray removeAllObjects];
+    if([popupOptionsArray count] !=0)
+    {
+      [popupOptionsArray removeAllObjects];
+    }
+    
     //[answersArray removeAllObjects];
     //[answersDictionary removeAllObjects];
     
@@ -87,7 +96,7 @@ UIView *bgDarkenView;
     
     //load the options array
     NSString *options = [self.selectedPropertyObject objectForKey:@"options"];
-    optionsArray = [[options componentsSeparatedByString:@";"] mutableCopy];
+    popupOptionsArray = [[options componentsSeparatedByString:@";"] mutableCopy];
     
     //load the answers array
     NSArray *cases = [self.popupitsMTLObject objectForKey:@"cases"];
@@ -160,7 +169,7 @@ UIView *bgDarkenView;
     self.updateButton.enabled = 0;
     [self.updateButton.titleLabel setTextColor:[UIColor lightGrayColor]];
     
-    originalAnswersCount = (int)[optionsArray count];
+    originalAnswersCount = (int)[popupOptionsArray count];
     
     [answersDictionary removeAllObjects];
     int g= 0;
@@ -191,6 +200,13 @@ UIView *bgDarkenView;
 
 -(void) viewDidAppear:(BOOL)animated
 {
+    
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    CaseDetailsEmailViewController *cdevc = (CaseDetailsEmailViewController *)self.slidingViewController.topViewController;
+    cdevc.slideoutDisplayed = @"no";
     
 }
 /*
@@ -225,7 +241,7 @@ UIView *bgDarkenView;
 #pragma mark UITableViewDelegateMethods
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    int caseItemsCount = (int)[optionsArray count];
+    int caseItemsCount = (int)[popupOptionsArray count];
     
     return caseItemsCount +1;
     
@@ -240,7 +256,7 @@ UIView *bgDarkenView;
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"popupCell" forIndexPath:indexPath];
     UILabel *optionLabel = (UILabel *)[cell viewWithTag:1];
     
-    if(indexPath.row == optionsArray.count)
+    if(indexPath.row == popupOptionsArray.count)
     {
         //show a button
        optionLabel.font = [UIFont systemFontOfSize:17];
@@ -251,7 +267,7 @@ UIView *bgDarkenView;
     {
         optionLabel.font = [UIFont systemFontOfSize:17];
         optionLabel.textColor = [UIColor blackColor];
-        optionLabel.text = [optionsArray objectAtIndex:indexPath.row];
+        optionLabel.text = [popupOptionsArray objectAtIndex:indexPath.row];
     }
     
     NSString *rowNumber = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
@@ -282,7 +298,7 @@ UIView *bgDarkenView;
 {
    
     //for the last cell, show a keyboard to type a new option
-    if(indexPath.row==optionsArray.count)
+    if(indexPath.row==popupOptionsArray.count)
     {
         bgDarkenView = [[UIView alloc] initWithFrame:self.view.bounds];
         bgDarkenView.backgroundColor = [UIColor blackColor];
@@ -444,7 +460,7 @@ UIView *bgDarkenView;
                 NSMutableDictionary *newAnsCustom = [[NSMutableDictionary alloc] init];
                 [newAnsCustom setObject:newAnsString forKey:@"custom"];
                 [answersDictionary addObject:newAnsCustom];
-                [optionsArray addObject:newAnsString];
+                [popupOptionsArray addObject:newAnsString];
             }
         }
         

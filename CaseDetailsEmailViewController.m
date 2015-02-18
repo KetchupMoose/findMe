@@ -71,6 +71,7 @@ NSNumber *lastTimestamp;
 int EmailTimerTickCaseDetails =0;
 int EmailsecondaryTimerTicks = 0;
 
+
 //location manager variables
 
 CLGeocoder *geocoder;
@@ -86,7 +87,7 @@ CGPoint startLocation;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.popupVC =  (popupViewController *)self.slidingViewController.underRightViewController;
+    self.popupVC =  (popupViewController *)self.slidingViewController.underLeftViewController;
     
     //set up delegates
     self.caseDetailsEmailTableView.delegate = self;
@@ -168,9 +169,31 @@ CGPoint startLocation;
     //get all the property information for the list of properties to consider
     PFQuery *propertsQuery = [PFQuery queryWithClassName:@"Properts"];
     [propertsQuery whereKey:@"objectId" containedIn:propertyIDSArray];
-    [propertsQuery orderByDescending:@"priority"];
+   
     
     propsArray = [[propertsQuery findObjects] mutableCopy];
+    
+    //sort the propsArray based on the order in sortedCaseItems
+    NSMutableArray *sortingPropsArray = [[NSMutableArray alloc] init];
+    
+    for(PFObject *caseItem in sortedCaseItems)
+    {
+        NSString *propID = [caseItem objectForKey:@"propertyNum"];
+        
+        for (PFObject *propObject in propsArray)
+        {
+            NSString *propObjectID = propObject.objectId;
+            
+            if([propObjectID isEqualToString:propID])
+            {
+                [sortingPropsArray addObject:propObject];
+                
+            }
+        }
+    }
+    
+    
+    propsArray = sortingPropsArray;
     
     //sort the properties into four categories based on their type: info messages, answerableQuestions, customAnswerableQuestions, and new suggestions
     int g = 0;
@@ -338,6 +361,9 @@ CGPoint startLocation;
     cell.rightUtilityButtons = [self rightButtons];
     cell.delegate = self;
     
+    UIView *bgColorView = [[UIView alloc] init];
+    bgColorView.backgroundColor = [UIColor clearColor];
+    [cell setSelectedBackgroundView:bgColorView];
     
     UILabel *propertyDescrLabel = (UILabel *)[cell viewWithTag:1];
     UILabel *answersLabel = (UILabel *)[cell viewWithTag:2];
@@ -540,9 +566,134 @@ CGPoint startLocation;
     return leftUtilityButtons;
 }
 
+-(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+   if([self.slideoutDisplayed isEqualToString:@"yes"])
+   {
+       [self.slidingViewController resetTopViewAnimated:YES];
+       
+   }
+    
+    //if the selected row is greater than the count of caseItems, show the NewPropertyViewController
+    
+    if(indexPath.row==sortedCaseItems.count)
+    {
+        NSLog(@"create a new case");
+        NewPropertyViewController *npvc = [self.storyboard instantiateViewControllerWithIdentifier:@"npvc"];
+        npvc.userName = self.itsMTLObject.objectId;
+        npvc.delegate = self;
+        
+        [self.navigationController pushViewController:npvc animated:YES];
+        
+        return;
+        
+    }
+    
+    //popup a small window for editing the selection of this entry
+    
+    UIView *popupView = [[UIView alloc] initWithFrame:CGRectMake(20,50,280,400)];
+    UIColor *lightYellowColor = [UIColor colorWithRed:252.0f/255.0f green:252.0f/255.0f blue:150.0f/255.0f alpha:1];
+    popupView.backgroundColor = lightYellowColor;
+    
+    popupViewController *popVC = self.popupVC;
+    
+    //set data for popupViewController
+    NSNumber *selectedCaseItem = [NSNumber numberWithInteger:indexPath.row];
+    
+    popVC.popupitsMTLObject = self.itsMTLObject;
+    popVC.selectedCase = self.selectedCaseIndex;
+    popVC.selectedCaseItem = selectedCaseItem;
+    popVC.selectedPropertyObject = [propsArray objectAtIndex:indexPath.row];
+    popVC.sortedCaseItems = sortedCaseItems;
+    popVC.locationLatitude = locationLatitude;
+    popVC.locationLongitude = locationLongitude;
+    popVC.locationRetrieved = locationRetrieved;
+    popVC.UCIdelegate = self;
+    
+    //check the property type of the property at this selected index and set different modes on the popup accordingly.
+    PFObject *selectedProperty = [propsArray objectAtIndex:indexPath.row];
+    PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:indexPath.row];
+    
+    //check the property type and show different UI accordingly.
+    NSString *propType = [popVC.selectedPropertyObject objectForKey:@"propertyType"];
+    NSString *options = [selectedProperty objectForKey:@"options"];
+    
+    //If the property is type I, show an info Message
+    //If the property is type N, do nothing.
+    //If the property is type B, show the matches view controller
+    if([propType  isEqual:@"I"])
+    {
+        //property is an info message
+        //display a UI alert with the info in the info message
+        NSString *infoMsg = [selectedProperty objectForKey:@"propertyDescr"];
+        
+        //for the caseItem of this index, take the params value
+        NSString *params = [selectedCaseItemObject objectForKey:@"params"];
+        
+        NSArray * paramsArray = [params componentsSeparatedByString:@";"];
+        
+        //loop through the infoMsg and replace instances of &# with the values in the param array.
+        
+        int i = 1;
+        if (paramsArray.count>=1)
+        {
+            for (i=1;i<paramsArray.count+1;i++)
+            {
+                NSString *numString = [NSString stringWithFormat:@"%i",i];
+                NSLog(numString);
+                NSString *stringToReplace = [@"&" stringByAppendingString:numString];
+                
+                [infoMsg stringByReplacingOccurrencesOfString:stringToReplace withString:[paramsArray objectAtIndex:i-1]];
+            }
+        }
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Info Message", nil) message:NSLocalizedString(infoMsg, nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+    }
+    else if([propType isEqual:@"N"])
+    {
+        
+    }
+    
+    else if([propType isEqual:@"B"])
+    {
+        //display matches view controller (to be created)
+    }
+    else if([options length]==0)
+    {
+        //show the popup in custom answer mode
+        popVC.displayMode = @"custom";
+        
+    }
+    else
+    {
+        //show the popup in the normal mode with the tableView
+        popVC.displayMode = @"table";
+        
+        
+    }
+    
+    //[self setPresentationStyleForSelfController:self presentingController:popVC];
+    //[self presentViewController:popVC animated:NO completion:nil];
+    
+    popVC.popupOrSlideout = @"slideout";
+    
+    self.slidingViewController.underLeftViewController = self.popupVC;
+    
+    self.slideoutDisplayed = @"yes";
+    [self.slidingViewController anchorTopViewToRightAnimated:YES];
+    
+    //self.navigationController.navigationBar.alpha = 0;
+    
+    return;
+
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    if([self.slideoutDisplayed isEqualToString:@"yes"])
+    {
+        [self.slidingViewController resetTopViewAnimated:YES];
+        
+    }
     //if the selected row is greater than the count of caseItems, show the NewPropertyViewController
     
     if(indexPath.row==sortedCaseItems.count)
@@ -647,9 +798,11 @@ CGPoint startLocation;
     
     self.slidingViewController.underLeftViewController = self.popupVC;
     
+    self.slideoutDisplayed = @"yes";
     
     [self.slidingViewController anchorTopViewToRightAnimated:YES];
-    self.navigationController.navigationBar.alpha = 0;
+   
+    //self.navigationController.navigationBar.alpha = 0;
     
     return;
     
@@ -772,7 +925,6 @@ CGPoint startLocation;
     //get all the property information for the list of properties to consider
     PFQuery *propertsQuery = [PFQuery queryWithClassName:@"Properts"];
     [propertsQuery whereKey:@"objectId" containedIn:propertyIDSArray];
-    [propertsQuery orderByDescending:@"priority"];
     
     [propsArray removeAllObjects];
     int gj = 0;
@@ -797,7 +949,27 @@ CGPoint startLocation;
         
         }
     
+    //brianaddsorthere
+    //sort the propsArray based on the order in sortedCaseItems
+    NSMutableArray *sortingPropsArray = [[NSMutableArray alloc] init];
     
+    for(PFObject *caseItem in sortedCaseItems)
+    {
+        NSString *propID = [caseItem objectForKey:@"propertyNum"];
+        
+        for (PFObject *propObject in propsArray)
+        {
+            NSString *propObjectID = propObject.objectId;
+            
+            if([propObjectID isEqualToString:propID])
+            {
+                [sortingPropsArray addObject:propObject];
+                
+            }
+        }
+    }
+    
+    propsArray = sortingPropsArray;
     
     //sort the properties into four categories based on their type: info messages, answerableQuestions, customAnswerableQuestions, and new suggestions
     int g = 0;

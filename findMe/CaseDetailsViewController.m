@@ -206,6 +206,29 @@ int panningEnabled = 1;
     
     propsArray = [[propertsQuery findObjects] mutableCopy];
     
+    //brianaddsorthere
+    
+    //sort the propsArray based on the order in sortedCaseItems
+    NSMutableArray *sortingPropsArray = [[NSMutableArray alloc] init];
+    
+    for(PFObject *caseItem in sortedCaseItems)
+    {
+        NSString *propID = [caseItem objectForKey:@"propertyNum"];
+        
+        for (PFObject *propObject in propsArray)
+        {
+            NSString *propObjectID = propObject.objectId;
+            
+            if([propObjectID isEqualToString:propID])
+            {
+                [sortingPropsArray addObject:propObject];
+                
+            }
+        }
+    }
+    
+    propsArray = sortingPropsArray;
+    
     //sort the properties into four categories based on their type: info messages, answerableQuestions, customAnswerableQuestions, and new suggestions
     int g = 0;
     for (PFObject *property in propsArray)
@@ -2176,6 +2199,29 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
     [propertsQuery orderByDescending:@"priority"];
     
     propsArray = [[propertsQuery findObjects] mutableCopy];
+    
+    //brianaddsorthere
+    
+    //sort the propsArray based on the order in sortedCaseItems
+    NSMutableArray *sortingPropsArray = [[NSMutableArray alloc] init];
+    
+    for(PFObject *caseItem in sortedCaseItems)
+    {
+        NSString *propID = [caseItem objectForKey:@"propertyNum"];
+        
+        for (PFObject *propObject in propsArray)
+        {
+            NSString *propObjectID = propObject.objectId;
+            
+            if([propObjectID isEqualToString:propID])
+            {
+                [sortingPropsArray addObject:propObject];
+                
+            }
+        }
+    }
+    
+    propsArray = sortingPropsArray;
     
     //sort the properties into four categories based on their type: info messages, answerableQuestions, customAnswerableQuestions, and new suggestions
     int g = 0;

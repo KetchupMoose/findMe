@@ -21,7 +21,7 @@
     // Do any additional setup after loading the view.
     
     //self.topViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"cdevc"];
-    self.underRightViewController = (popupViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"popupvc"];
+    //self.underLeftViewController = (popupViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"popupvc"];
     
 }
 
