@@ -22,6 +22,9 @@
 @synthesize selectedCaseIndex;
 @synthesize itsMTLObject;
 @synthesize locationManager;
+@synthesize jsonTemplate;
+@synthesize jsonTemplateMode;
+
 
 NSArray *caseItems;
 NSMutableArray *sortedCaseItems;
@@ -97,11 +100,22 @@ CGPoint startLocation;
     locationManager = [[CLLocationManager alloc] init];
     geocoder = [[CLGeocoder alloc] init];
     
-    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+    PFObject *caseItemObject;
+    if([self.jsonTemplateMode isEqualToString:@"yes"])
+    {
+        caseItemObject = (PFObject *)jsonTemplate;
+        templateMode =1;
+        
+    }
+    else
+    {
+        int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+        
+        NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+        
+        caseItemObject = [allCases objectAtIndex:selectedCaseInt];
+    }
     
-    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
-    
-    PFObject *caseItemObject = [allCases objectAtIndex:selectedCaseInt];
     
     NSString *caseObjectID = [caseItemObject objectForKey:@"caseId"];
     
@@ -287,12 +301,22 @@ CGPoint startLocation;
 
 -(void) viewDidAppear:(BOOL)animated
 {
-    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+    PFObject *caseItemObject;
     
-    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
-    
-    PFObject *caseItemObject = [allCases objectAtIndex:selectedCaseInt];
-    
+    if([self.jsonTemplateMode isEqualToString:@"yes"])
+    {
+        caseItemObject = (PFObject *)jsonTemplate;
+        templateMode =1;
+        
+    }
+    else
+    {
+        int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+        
+        NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+        caseItemObject = [allCases objectAtIndex:selectedCaseInt];
+    }
+   
     NSString *caseObjectID = [caseItemObject objectForKey:@"caseId"];
     
     int length = (int)[caseObjectID length];
@@ -308,8 +332,6 @@ CGPoint startLocation;
         caseBeingUpdated = caseObjectID;
     }
 
-    
-    
 }
 
 -(void) viewWillAppear:(BOOL)animated
@@ -382,22 +404,43 @@ CGPoint startLocation;
         
         UIActivityIndicatorViewStyle activityStyle = UIActivityIndicatorViewStyleGray;
         
-        
         [iconImgView setImageWithURL:[NSURL URLWithString:imgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
         
         return cell;
         
     }
     
-    PFObject *propAtIndex = [propsArray objectAtIndex:indexPath.row];
-    NSString *propertyDescr = [propAtIndex objectForKey:@"propertyDescr"];
-    
-    propertyDescrLabel.text = propertyDescr;
-    
+    PFObject *propAtIndex;
+ 
     //check to see the type of property and assign different values to the "answersLabel" accordingly.
     
     PFObject *caseItemPicked = [sortedCaseItems objectAtIndex:indexPath.row];
     selectedItemForUpdate = indexPath.row;
+    
+    NSString *caseItemPickedPropertyNum = [caseItemPicked objectForKey:@"propertyNum"];
+    
+    //check to see if the object is a new property--new properties are set as NSDictionaries and cannot be accessed by .objectId
+     if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:indexPath.row]])
+     {
+         propAtIndex = [propsArray objectAtIndex:indexPath.row];
+         
+     }
+    else
+    {
+        for(PFObject *propObject in propsArray)
+        {
+            if([propObject.objectId isEqualToString:caseItemPickedPropertyNum])
+            {
+                propAtIndex = propObject;
+                break;
+                
+            }
+        }
+  
+    }
+    
+        NSString *propertyDescr = [propAtIndex objectForKey:@"propertyDescr"];
+    propertyDescrLabel.text = propertyDescr;
     
     NSString *newFlag = [caseItemPicked objectForKey:@"new"];
     if([newFlag isEqualToString:@"X"])
@@ -603,7 +646,30 @@ CGPoint startLocation;
     popVC.popupitsMTLObject = self.itsMTLObject;
     popVC.selectedCase = self.selectedCaseIndex;
     popVC.selectedCaseItem = selectedCaseItem;
-    popVC.selectedPropertyObject = [propsArray objectAtIndex:indexPath.row];
+    
+    PFObject *caseItemPicked = [sortedCaseItems objectAtIndex:indexPath.row];
+    PFObject *selectedPropObject;
+    NSString *caseItemPickedPropertyNum = [caseItemPicked objectForKey:@"propertyNum"];
+    
+    if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:indexPath.row]])
+    {
+        selectedPropObject = [propsArray objectAtIndex:indexPath.row];
+        
+    }
+    else
+    {
+        for(PFObject *propObject in propsArray)
+        {
+        if([propObject.objectId isEqualToString:caseItemPickedPropertyNum])
+        {
+            selectedPropObject = propObject;
+            break;
+            
+        }
+        }
+    }
+
+    popVC.selectedPropertyObject = selectedPropObject;
     popVC.sortedCaseItems = sortedCaseItems;
     popVC.locationLatitude = locationLatitude;
     popVC.locationLongitude = locationLongitude;
@@ -611,12 +677,10 @@ CGPoint startLocation;
     popVC.UCIdelegate = self;
     
     //check the property type of the property at this selected index and set different modes on the popup accordingly.
-    PFObject *selectedProperty = [propsArray objectAtIndex:indexPath.row];
-    PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:indexPath.row];
     
     //check the property type and show different UI accordingly.
-    NSString *propType = [popVC.selectedPropertyObject objectForKey:@"propertyType"];
-    NSString *options = [selectedProperty objectForKey:@"options"];
+    NSString *propType = [selectedPropObject objectForKey:@"propertyType"];
+    NSString *options = [selectedPropObject objectForKey:@"options"];
     
     //If the property is type I, show an info Message
     //If the property is type N, do nothing.
@@ -625,10 +689,10 @@ CGPoint startLocation;
     {
         //property is an info message
         //display a UI alert with the info in the info message
-        NSString *infoMsg = [selectedProperty objectForKey:@"propertyDescr"];
+        NSString *infoMsg = [selectedPropObject objectForKey:@"propertyDescr"];
         
         //for the caseItem of this index, take the params value
-        NSString *params = [selectedCaseItemObject objectForKey:@"params"];
+        NSString *params = [caseItemPicked objectForKey:@"params"];
         
         NSArray * paramsArray = [params componentsSeparatedByString:@";"];
         
@@ -694,6 +758,7 @@ CGPoint startLocation;
         [self.slidingViewController resetTopViewAnimated:YES];
         
     }
+    
     //if the selected row is greater than the count of caseItems, show the NewPropertyViewController
     
     if(indexPath.row==sortedCaseItems.count)
@@ -718,12 +783,35 @@ CGPoint startLocation;
     popupViewController *popVC = self.popupVC;
     
     //set data for popupViewController
-     NSNumber *selectedCaseItem = [NSNumber numberWithInteger:indexPath.row];
+    NSNumber *selectedCaseItem = [NSNumber numberWithInteger:indexPath.row];
     
     popVC.popupitsMTLObject = self.itsMTLObject;
     popVC.selectedCase = self.selectedCaseIndex;
     popVC.selectedCaseItem = selectedCaseItem;
-    popVC.selectedPropertyObject = [propsArray objectAtIndex:indexPath.row];
+    
+    PFObject *caseItemPicked = [sortedCaseItems objectAtIndex:indexPath.row];
+    PFObject *selectedPropObject;
+    NSString *caseItemPickedPropertyNum = [caseItemPicked objectForKey:@"propertyNum"];
+    
+    if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:indexPath.row]])
+    {
+        selectedPropObject = [propsArray objectAtIndex:indexPath.row];
+        
+    }
+    else
+    {
+        for(PFObject *propObject in propsArray)
+        {
+            if([propObject.objectId isEqualToString:caseItemPickedPropertyNum])
+            {
+                selectedPropObject = propObject;
+                break;
+                
+            }
+        }
+    }
+    
+    popVC.selectedPropertyObject = selectedPropObject;
     popVC.sortedCaseItems = sortedCaseItems;
     popVC.locationLatitude = locationLatitude;
     popVC.locationLongitude = locationLongitude;
@@ -731,12 +819,10 @@ CGPoint startLocation;
     popVC.UCIdelegate = self;
     
     //check the property type of the property at this selected index and set different modes on the popup accordingly.
-    PFObject *selectedProperty = [propsArray objectAtIndex:indexPath.row];
-    PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:indexPath.row];
     
     //check the property type and show different UI accordingly.
-    NSString *propType = [popVC.selectedPropertyObject objectForKey:@"propertyType"];
-    NSString *options = [selectedProperty objectForKey:@"options"];
+    NSString *propType = [selectedPropObject objectForKey:@"propertyType"];
+    NSString *options = [selectedPropObject objectForKey:@"options"];
     
     //If the property is type I, show an info Message
     //If the property is type N, do nothing.
@@ -745,10 +831,10 @@ CGPoint startLocation;
     {
         //property is an info message
         //display a UI alert with the info in the info message
-        NSString *infoMsg = [selectedProperty objectForKey:@"propertyDescr"];
+        NSString *infoMsg = [selectedPropObject objectForKey:@"propertyDescr"];
         
         //for the caseItem of this index, take the params value
-        NSString *params = [selectedCaseItemObject objectForKey:@"params"];
+        NSString *params = [caseItemPicked objectForKey:@"params"];
         
         NSArray * paramsArray = [params componentsSeparatedByString:@";"];
         
@@ -775,12 +861,12 @@ CGPoint startLocation;
     
     else if([propType isEqual:@"B"])
     {
-       //display matches view controller (to be created)
+        //display matches view controller (to be created)
     }
     else if([options length]==0)
     {
         //show the popup in custom answer mode
-       popVC.displayMode = @"custom";
+        popVC.displayMode = @"custom";
         
     }
     else
@@ -799,13 +885,11 @@ CGPoint startLocation;
     self.slidingViewController.underLeftViewController = self.popupVC;
     
     self.slideoutDisplayed = @"yes";
-    
     [self.slidingViewController anchorTopViewToRightAnimated:YES];
-   
+    
     //self.navigationController.navigationBar.alpha = 0;
     
     return;
-    
 }
 
 -(void)setPresentationStyleForSelfController:(UIViewController *)selfController presentingController:(UIViewController *)presentingController
@@ -927,29 +1011,38 @@ CGPoint startLocation;
     [propertsQuery whereKey:@"objectId" containedIn:propertyIDSArray];
     
     [propsArray removeAllObjects];
-    int gj = 0;
-    
-    while ([propsArray count] != [sortedCaseItems count]) {
-            propsArray = [[propertsQuery findObjects] mutableCopy];
+ 
+   
         
-            //check the propsArray and remove all objects if one of them doens't have a propertyDescr;
-            for (PFObject *property in propsArray)
+    //check the propsArray and re-query if one of them doesn't have a property description filled in yet
+    
+    BOOL queryGood = 0;
+    
+    while (queryGood==0)
+    {
+         propsArray = [[propertsQuery findObjects] mutableCopy];
+        int gj = 0;
+        for (PFObject *property in propsArray)
+        {
+            NSString *propDescr =[property objectForKey:@"propertyDescr"];
+            if([propDescr length] ==0)
             {
-                NSString *propDescr =[property objectForKey:@"propertyDescr"];
-                if([propDescr length] ==0)
-                {
-                    [propsArray removeAllObjects];
-                    break;
-                    
-                }
+                [propsArray removeAllObjects];
+                queryGood =0;
+                break;
+                
             }
-        NSLog(@"doing the props query again");
-        gj=gj+1;
-        NSLog(@"%d",gj);
-        
+            gj=gj+1;
+            if(gj== [propsArray count])
+            {
+                queryGood =1;
+                
+            }
         }
+        NSLog(@"re-querying properties due to empty propertyDescr");
+        
+    }
     
-    //brianaddsorthere
     //sort the propsArray based on the order in sortedCaseItems
     NSMutableArray *sortingPropsArray = [[NSMutableArray alloc] init];
     
@@ -1276,23 +1369,19 @@ CGPoint startLocation;
     [xmlWriter writeEndElement];
     
     //Jan 18
-    //updating to put ALL property tags first before caseItem tags
+    //updating to put ALL NEW property tags first before caseItem tags
     int j = 0;
     
     for (PFObject *eachCaseItem in sortedCaseItems)
     {
-        
-        //do update
-        
-        PFObject *updatedProperty = [propsArray objectAtIndex:j];
-        NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
-        NSString *propertyDescr = [updatedProperty objectForKey:@"propertyDescr"];
         
         //check to see if this caseItem is a brand new property
         
         if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:j]])
             
         {
+            PFObject *newPropObject = [propsArray objectAtIndex:j];
+             NSString *propertyDescr = [newPropObject objectForKey:@"propertyDescr"];
             //add the XML for a new or updated property here
             [xmlWriter writeStartElement:@"PROPERTY"];
             
@@ -1306,7 +1395,7 @@ CGPoint startLocation;
             [xmlWriter writeEndElement];
             
             //get the options value from the property object
-            NSString *fullCharsString = [updatedProperty objectForKey:@"options"];
+            NSString *fullCharsString = [newPropObject objectForKey:@"options"];
             
             if([fullCharsString length]>0)
             {
@@ -1324,12 +1413,34 @@ CGPoint startLocation;
     
     int h = 0;
     for (PFObject *eachCaseItem in sortedCaseItems)
-    {
+        {
         
-            //do update
-            PFObject *updatedProperty = [propsArray objectAtIndex:h];
+            NSString *caseItemPickedPropertyNum = [eachCaseItem objectForKey:@"propertyNum"];
+            PFObject *propAtIndex;
+            
+            if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:h]])
+            {
+                propAtIndex = [propsArray objectAtIndex:h];
+                
+            }
+            
+            else
+            {
+                
+            
+                for(PFObject *propObject in propsArray)
+                {
+                    if([propObject.objectId isEqualToString:caseItemPickedPropertyNum])
+                    {
+                        propAtIndex = propObject;
+                        break;
+                    }
+                }
+            }
+            PFObject *updatedProperty = propAtIndex;
+           
+            
             NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
-            NSString *propertyDescr = [updatedProperty objectForKey:@"propertyDescr"];
         
             //write logic for updating the caseItem
             //build strings for building item
@@ -1573,7 +1684,6 @@ CGPoint startLocation;
     
     //loop through the incoming array of answers and set them to an array of NSMutableDictionaries
     
-    
     //add the data to the list sortedCaseList and propertiesArray
     
     NSMutableDictionary *propertyObject = [[NSMutableDictionary alloc] init];
@@ -1581,11 +1691,14 @@ CGPoint startLocation;
     [propertyObject setObject:question forKey:@"propertyDescr"];
     [propertyObject setObject:newPropNum forKey:@"propertyNum"];
     [propertyObject setObject:@"U" forKey:@"propertyType"];
+    [propertyObject setObject:newPropNum forKey:@"objectId"];
     
     
     NSMutableDictionary *caseItemObject = [[NSMutableDictionary alloc] init];
     [caseItemObject setObject:newCaseNum forKey:@"caseItem"];
     [caseItemObject setObject:Answers forKey:@"answers"];
+    [caseItemObject setObject:newPropNum forKey:@"propertyNum"];
+    
     
     int g = (int)sortedCaseItems.count;
     
@@ -1610,7 +1723,18 @@ CGPoint startLocation;
     //reload data
     if(templateMode==0)
     {
+        //add a progress HUD to show it is retrieving list of properts
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:HUD];
+        
+        // Set determinate mode
+        HUD.mode = MBProgressHUDModeDeterminate;
+        HUD.delegate = self;
+        HUD.labelText = @"Updating With The New Case Item";
+        [HUD show:YES];
+        
         [self updateNewCaseItem];
+        
         
     }
     else
@@ -1818,7 +1942,8 @@ CGPoint startLocation;
                                     }
                                     else
                                     {
-                                        NSLog(error.localizedDescription);
+                                        NSString *errorString = error.localizedDescription;
+                                        NSLog(errorString);
                                         [HUD hide:NO];
                                       
                                     }
@@ -1946,7 +2071,6 @@ CGPoint startLocation;
     NSString *optionText = [selectedPropertyObject objectForKey:@"options"];
     
     NSArray *answersDictionary = [caseItemObject objectForKey:@"answers"];
-    
     
     if([propertyType isEqualToString:@"I"] || [propertyType isEqualToString:@"N"] || [propertyType isEqualToString:@"B"])
     {
@@ -2077,15 +2201,7 @@ CGPoint startLocation;
         return;
         
     }
-    //add a progress HUD to show it is retrieving list of properts
-    HUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:HUD];
-    
-    // Set determinate mode
-    HUD.mode = MBProgressHUDModeDeterminate;
-    HUD.delegate = self;
-    HUD.labelText = @"Updating With The New Case Item";
-    [HUD show:YES];
+   
     
     //use parse cloud code function
     [PFCloud callFunctionInBackground:@"inboundZITSMTL"

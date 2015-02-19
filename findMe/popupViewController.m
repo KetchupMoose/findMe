@@ -71,18 +71,12 @@ UIView *bgDarkenView;
    
     [self.view addGestureRecognizer:self.slidingViewController.panGesture];
     
-    PFObject *sortedCaseItems1 = self.sortedCaseItems;
     //clear out all previous data.
     
     if([popupOptionsArray count] !=0)
     {
       [popupOptionsArray removeAllObjects];
     }
-    
-    //[answersArray removeAllObjects];
-    //[answersDictionary removeAllObjects];
-    
-    PFObject *sortedCaseItems2 = self.sortedCaseItems;
     
     // Add a shadow to the top view so it looks like it is on top of the others
     
@@ -259,9 +253,9 @@ UIView *bgDarkenView;
     if(indexPath.row == popupOptionsArray.count)
     {
         //show a button
-       optionLabel.font = [UIFont systemFontOfSize:17];
+        optionLabel.font = [UIFont systemFontOfSize:17];
         optionLabel.textColor = [UIColor blueColor];
-       optionLabel.text = @"Add Another Answer";
+        optionLabel.text = @"Add Another Answer";
     }
     else
     {
@@ -542,10 +536,7 @@ UIView *bgDarkenView;
     [AnsObj setValue:self.customAnswerTextField.text forKey:@"custom"];
     [answersDictionary addObject:AnsObj];
 }
-  
-    NSArray *checkingSortedCaseItems = self.sortedCaseItems;
-    
-    
+
     //prepare the array of sortedCaseItems
     NSArray *cases = [self.popupitsMTLObject objectForKey:@"cases"];
     PFObject *selectedCaseObject = [cases objectAtIndex:[selectedCase integerValue]];
@@ -561,7 +552,6 @@ UIView *bgDarkenView;
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     */
    
-    
     PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:[selectedCaseItem integerValue]];
     
     if(templateMode ==1)
@@ -756,7 +746,8 @@ UIView *bgDarkenView;
     
     int h = 0;
     
-    NSString *propertyNum = self.selectedPropertyObject.objectId;
+    
+    NSString *propertyNum = [caseItemObject objectForKey:@"propertyNum"];
     NSString *propertyDescr = [self.selectedPropertyObject objectForKey:@"propertyDescr"];
     
     //write logic for updating the caseItem

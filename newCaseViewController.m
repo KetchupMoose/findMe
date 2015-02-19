@@ -578,11 +578,27 @@ NSString *locationLongitude;
                                     if (!error) {
                                         
                                         NSString *responseText = responseString;
+                                        NSString *responseTextWithoutHeader = [responseText
+                                                                         stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+                                        NSError *jsonError;
+                                        NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+                                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                                             options:NSJSONReadingMutableContainers
+                                                                                               error:&jsonError];
+                                        
+                                        NSMutableDictionary *jsonTemplateChange = [json mutableCopy];
+                                        
+                                        [jsonTemplateChange setObject:@"" forKey:@"caseId"];
+                                        
+                                        
                                         NSLog(responseText);
                                         [HUD hide:NO];
                                         
-                                        NSLog(@"starting to poll for template maker update");
-                                        [self pollForTemplateMaker];
+                                        [self showCaseDetailsWithTemplateJSON:jsonTemplateChange];
+                                        
+                                        
+                                       // NSLog(@"starting to poll for template maker update");
+                                        //[self pollForTemplateMaker];
                                         
                                     }
                                     else
@@ -741,6 +757,22 @@ NSString *locationLongitude;
     cdevc.itsMTLObject = queryReturnPFObject;
     
      [bcdsvc setTopViewController:cdevc];
+    
+    [self.navigationController pushViewController:bcdsvc animated:YES];
+}
+
+-(void) showCaseDetailsWithTemplateJSON:(NSMutableDictionary *)templateJSON
+{
+    BaseCaseDetailsSlidingViewController *bcdsvc = [self.storyboard instantiateViewControllerWithIdentifier:@"bcdsvc"];
+    
+    
+    CaseDetailsEmailViewController *cdevc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdevc"];
+    
+    cdevc.jsonTemplate = templateJSON;
+    cdevc.jsonTemplateMode = @"yes";
+    
+    
+    [bcdsvc setTopViewController:cdevc];
     
     [self.navigationController pushViewController:bcdsvc animated:YES];
 }

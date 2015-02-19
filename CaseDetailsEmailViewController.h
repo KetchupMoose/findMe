@@ -28,5 +28,7 @@
 -(void)reloadData:(PFObject *) newITSMTLObject;
 @property (strong,nonatomic) popupViewController *popupVC;
 @property (strong,nonatomic) NSString *slideoutDisplayed;
+@property (strong,nonatomic) NSString *jsonTemplateMode;
+@property (strong,nonatomic) NSMutableDictionary *jsonTemplate;
 
 @end
