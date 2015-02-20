@@ -92,34 +92,30 @@ UIView *bgDarkenView;
     NSString *options = [self.selectedPropertyObject objectForKey:@"options"];
     popupOptionsArray = [[options componentsSeparatedByString:@";"] mutableCopy];
     
+    PFObject *selectedCaseObject;
     //load the answers array
-    NSArray *cases = [self.popupitsMTLObject objectForKey:@"cases"];
-    PFObject *selectedCaseObject = [cases objectAtIndex:[selectedCase integerValue]];
-    
-    NSString *caseObjectID = [selectedCaseObject objectForKey:@"caseId"];
-    
-    int length = (int)[caseObjectID length];
-    
-    if(length==0)
+    if([self.popupjsonTemplateMode isEqualToString:@"yes"])
     {
+        selectedCaseObject = self.popupjsonTemplate;
         self.updateButton.titleLabel.text = @"Select These Answers";
         templateMode = 1;
     }
-    
-    //Feb5
-    //commenting this portion out to deal with sortedCaseItems on the property level instead
-    /*
-     NSArray *caseItems = [selectedCaseObject objectForKey:@"caseItems"];
-     
-     //sort caseItems by priority
-     NSSortDescriptor *sortDescriptor;
-     sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
-     ascending:NO];
-     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-     */
-    
+    else
+    {
+        NSArray *cases = [self.popupitsMTLObject objectForKey:@"cases"];
+        selectedCaseObject = [cases objectAtIndex:[selectedCase integerValue]];
+        
+        NSString *caseObjectID = [selectedCaseObject objectForKey:@"caseId"];
+        
+        int length = (int)[caseObjectID length];
+        
+        if(length==0)
+        {
+            self.updateButton.titleLabel.text = @"Select These Answers";
+            templateMode = 1;
+        }
+    }
     PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:[selectedCaseItem integerValue]];
-    
     
     NSArray *selectedCaseItemAnswersList = [selectedCaseItemObject objectForKey:@"answers"];
     answersArray = [[NSMutableArray alloc] init];
@@ -183,8 +179,6 @@ UIView *bgDarkenView;
         }
         g=g+1;
     }
-
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -338,7 +332,7 @@ UIView *bgDarkenView;
         [newOptionView addSubview:closeButton];
         [newOptionView addSubview:addButton];
         [newOptionView addSubview:newAnsTextField];
-         [self.view addSubview:newOptionView];
+        [self.view addSubview:newOptionView];
         
         return;
         
@@ -537,20 +531,16 @@ UIView *bgDarkenView;
     [answersDictionary addObject:AnsObj];
 }
 
-    //prepare the array of sortedCaseItems
+    PFObject *selectedCaseObject;
+    if([self.popupjsonTemplateMode isEqualToString:@"yes"])
+    {
+        selectedCaseObject = self.popupjsonTemplate;
+    }
+    else
+    {
     NSArray *cases = [self.popupitsMTLObject objectForKey:@"cases"];
-    PFObject *selectedCaseObject = [cases objectAtIndex:[selectedCase integerValue]];
-   
-    /*
-    //commenting out Feb 5
-    NSArray *caseItems = [selectedCaseObject objectForKey:@"caseItems"];
-    
-    //sort caseItems by priority
-    NSSortDescriptor *sortDescriptor;
-    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
-                                                 ascending:NO];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    */
+    selectedCaseObject = [cases objectAtIndex:[selectedCase integerValue]];
+   }
    
     PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:[selectedCaseItem integerValue]];
     

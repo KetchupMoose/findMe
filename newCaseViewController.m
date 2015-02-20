@@ -770,6 +770,8 @@ NSString *locationLongitude;
     
     cdevc.jsonTemplate = templateJSON;
     cdevc.jsonTemplateMode = @"yes";
+    cdevc.userName = self.itsMTLObject.objectId;
+    cdevc.itsMTLObject = self.itsMTLObject;
     
     
     [bcdsvc setTopViewController:cdevc];

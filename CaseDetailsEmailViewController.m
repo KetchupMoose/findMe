@@ -420,7 +420,7 @@ CGPoint startLocation;
     NSString *caseItemPickedPropertyNum = [caseItemPicked objectForKey:@"propertyNum"];
     
     //check to see if the object is a new property--new properties are set as NSDictionaries and cannot be accessed by .objectId
-     if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:indexPath.row]])
+     if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:(int)indexPath.row]])
      {
          propAtIndex = [propsArray objectAtIndex:indexPath.row];
          
@@ -439,7 +439,7 @@ CGPoint startLocation;
   
     }
     
-        NSString *propertyDescr = [propAtIndex objectForKey:@"propertyDescr"];
+    NSString *propertyDescr = [propAtIndex objectForKey:@"propertyDescr"];
     propertyDescrLabel.text = propertyDescr;
     
     NSString *newFlag = [caseItemPicked objectForKey:@"new"];
@@ -623,7 +623,7 @@ CGPoint startLocation;
     {
         NSLog(@"create a new case");
         NewPropertyViewController *npvc = [self.storyboard instantiateViewControllerWithIdentifier:@"npvc"];
-        npvc.userName = self.itsMTLObject.objectId;
+        npvc.userName = self.userName;
         npvc.delegate = self;
         
         [self.navigationController pushViewController:npvc animated:YES];
@@ -634,19 +634,33 @@ CGPoint startLocation;
     
     //popup a small window for editing the selection of this entry
     
+    
+    
     UIView *popupView = [[UIView alloc] initWithFrame:CGRectMake(20,50,280,400)];
     UIColor *lightYellowColor = [UIColor colorWithRed:252.0f/255.0f green:252.0f/255.0f blue:150.0f/255.0f alpha:1];
     popupView.backgroundColor = lightYellowColor;
     
+   
     popupViewController *popVC = self.popupVC;
     
     //set data for popupViewController
+    
+    if([self.jsonTemplateMode isEqualToString:@"yes"])
+    {
+        popVC.popupjsonTemplateMode = @"yes";
+        popVC.popupjsonTemplate = self.jsonTemplate;
+    }
+    else
+    {
+        
+        popVC.popupitsMTLObject = self.itsMTLObject;
+        popVC.selectedCase = self.selectedCaseIndex;
+        
+        popVC.popupjsonTemplateMode = @"no";
+    }
     NSNumber *selectedCaseItem = [NSNumber numberWithInteger:indexPath.row];
-    
-    popVC.popupitsMTLObject = self.itsMTLObject;
-    popVC.selectedCase = self.selectedCaseIndex;
     popVC.selectedCaseItem = selectedCaseItem;
-    
+   
     PFObject *caseItemPicked = [sortedCaseItems objectAtIndex:indexPath.row];
     PFObject *selectedPropObject;
     NSString *caseItemPickedPropertyNum = [caseItemPicked objectForKey:@"propertyNum"];
@@ -725,14 +739,11 @@ CGPoint startLocation;
     {
         //show the popup in custom answer mode
         popVC.displayMode = @"custom";
-        
     }
     else
     {
         //show the popup in the normal mode with the tableView
         popVC.displayMode = @"table";
-        
-        
     }
     
     //[self setPresentationStyleForSelfController:self presentingController:popVC];
@@ -765,7 +776,7 @@ CGPoint startLocation;
     {
         NSLog(@"create a new case");
         NewPropertyViewController *npvc = [self.storyboard instantiateViewControllerWithIdentifier:@"npvc"];
-        npvc.userName = self.itsMTLObject.objectId;
+        npvc.userName = self.userName;
         npvc.delegate = self;
         
         [self.navigationController pushViewController:npvc animated:YES];
@@ -780,15 +791,26 @@ CGPoint startLocation;
     UIColor *lightYellowColor = [UIColor colorWithRed:252.0f/255.0f green:252.0f/255.0f blue:150.0f/255.0f alpha:1];
     popupView.backgroundColor = lightYellowColor;
     
+    
     popupViewController *popVC = self.popupVC;
     
     //set data for popupViewController
+    
+    if([self.jsonTemplateMode isEqualToString:@"yes"])
+    {
+        popVC.popupjsonTemplateMode = @"yes";
+        popVC.popupjsonTemplate = self.jsonTemplate;
+    }
+    else
+    {
+     
+        popVC.popupitsMTLObject = self.itsMTLObject;
+        popVC.selectedCase = self.selectedCaseIndex;
+       
+        popVC.popupjsonTemplateMode = @"no";
+    }
     NSNumber *selectedCaseItem = [NSNumber numberWithInteger:indexPath.row];
-    
-    popVC.popupitsMTLObject = self.itsMTLObject;
-    popVC.selectedCase = self.selectedCaseIndex;
-    popVC.selectedCaseItem = selectedCaseItem;
-    
+     popVC.selectedCaseItem = selectedCaseItem;
     PFObject *caseItemPicked = [sortedCaseItems objectAtIndex:indexPath.row];
     PFObject *selectedPropObject;
     NSString *caseItemPickedPropertyNum = [caseItemPicked objectForKey:@"propertyNum"];
@@ -867,14 +889,11 @@ CGPoint startLocation;
     {
         //show the popup in custom answer mode
         popVC.displayMode = @"custom";
-        
     }
     else
     {
         //show the popup in the normal mode with the tableView
         popVC.displayMode = @"table";
-        
-        
     }
     
     //[self setPresentationStyleForSelfController:self presentingController:popVC];
@@ -966,6 +985,7 @@ CGPoint startLocation;
     }
     
     templateMode =0;
+    self.jsonTemplateMode = @"no";
     
     caseItemObject = [casesArray objectAtIndex:indexOfCase];
     self.selectedCaseIndex = [NSNumber numberWithInt:indexOfCase];
@@ -1189,11 +1209,21 @@ CGPoint startLocation;
                                     
                                     [HUD hide:NO];
                                     
-                                    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
-                                    PFObject *caseObject = [allCases objectAtIndex:[selectedCaseIndex integerValue]];
-                                    caseBeingUpdated = [caseObject objectForKey:@"caseId"];
-                                    
-                                    NSString *timeStampReturn = [caseObject objectForKey:@"timestamp"];
+                                    NSString *timeStampReturn;
+                                    if([self.jsonTemplateMode isEqualToString:@"yes"])
+                                    {
+                                        timeStampReturn = [self.jsonTemplate objectForKey:@"timestamp"];
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+                                        PFObject *caseObject = [allCases objectAtIndex:[selectedCaseIndex integerValue]];
+                                        caseBeingUpdated = [caseObject objectForKey:@"caseId"];
+                                        
+                                        timeStampReturn = [caseObject objectForKey:@"timestamp"];
+                                       
+                                    }
                                     NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
                                     f.numberStyle = NSNumberFormatterDecimalStyle;
                                     lastTimestamp = [f numberFromString:timeStampReturn];
@@ -1236,13 +1266,13 @@ CGPoint startLocation;
     PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
     [query includeKey:@"cases"];
     
-    PFObject *returnedITSMTLObject = [query getObjectWithId:self.itsMTLObject.objectId];
+    PFObject *returnedITSMTLObject = [query getObjectWithId:self.userName];
     
     NSArray *returnedCases = [returnedITSMTLObject objectForKey:@"cases"];
     
     BOOL updateSuccess = 0;
     
-    if(templateMode ==1)
+    if(templateMode ==1 || [self.jsonTemplateMode isEqualToString:@"yes"])
     {
         for (PFObject *eachReturnedCase in returnedCases)
         {
@@ -1264,8 +1294,7 @@ CGPoint startLocation;
             
         }
     }
-    else
-        //check for a non template mode successful update
+       else
     {
         for (PFObject *eachReturnedCase in returnedCases)
         {
@@ -1331,9 +1360,19 @@ CGPoint startLocation;
     
     NSInteger selectedCaseInt = [selectedCaseIndex integerValue];
     //the case object includes the list of all caseItems and the caseId
-    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
     
-    PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
+    PFObject *caseObject;
+    if([self.jsonTemplateMode isEqualToString:@"yes"])
+    {
+        caseObject = self.jsonTemplate;
+    }
+    else
+    {
+        NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+        
+        caseObject = [allCases objectAtIndex:selectedCaseInt];
+    }
+    
     
     NSString *caseName = [caseObject objectForKey:@"caseName"];
     NSString *caseObjID = [caseObject objectForKey:@"caseId"];
@@ -1347,7 +1386,7 @@ CGPoint startLocation;
     
     // add element with an attribute and some some text
     [xmlWriter writeStartElement:@"USEROBJECTID"];
-    [xmlWriter writeCharacters:_userName];
+    [xmlWriter writeCharacters:self.userName];
     [xmlWriter writeEndElement];
     
     [xmlWriter writeStartElement:@"LAISO"];
@@ -1640,7 +1679,6 @@ CGPoint startLocation;
         [self dismissViewControllerAnimated:NO completion:nil];
     }
    
-    
 }
 - (void)updateNewCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers NewPropertyDescr:(NSString *) newPropDescr optionsList:(NSArray *) optionList
 {

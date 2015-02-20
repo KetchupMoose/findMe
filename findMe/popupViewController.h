@@ -40,6 +40,8 @@
 @property (weak,nonatomic) NSNumber *selectedCaseItem;
 @property (weak,nonatomic) PFObject *selectedPropertyObject;
 @property (weak,nonatomic) NSString *displayMode;
+@property (strong,nonatomic) NSString *popupjsonTemplateMode;
+@property (strong,nonatomic) NSMutableDictionary *popupjsonTemplate;
 @property (weak,nonatomic) NSArray *sortedCaseItems;
 
 
