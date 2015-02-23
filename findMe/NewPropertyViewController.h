@@ -31,8 +31,8 @@
 @property (weak,nonatomic) IBOutlet UIImageView *checkMark3;
 
 @property (weak,nonatomic) NSString *userName;
-@property (strong,nonatomic) NSString *newpropjsonTemplateMode;
-@property (strong,nonatomic) NSMutableDictionary *newpropjsonTemplate;
+@property (strong,nonatomic) NSString *newpropjsonObjectMode;
+@property (strong,nonatomic) NSMutableDictionary *newpropjsonObject;
 @property (nonatomic, weak) id<MyDataDelegate> delegate;
 
 @end

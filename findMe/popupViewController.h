@@ -19,7 +19,7 @@
 //3)The popup sends back an array of answers and a new property
 - (void)updateCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers;
 - (void)updateCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers NewPropertyDescr:(NSString *) newPropDescr optionsList:(NSArray *) optionList;
-- (void)reloadData:(PFObject *) myObject;
+- (void)reloadData:(PFObject *) myObject reloadMode:(NSString *)reloadModeString;
 
 @end
 
@@ -36,12 +36,13 @@
 
 
 @property (weak,nonatomic) PFObject *popupitsMTLObject;
+@property (weak,nonatomic) NSString *popupUserName;
 @property (weak,nonatomic) NSNumber *selectedCase;
 @property (weak,nonatomic) NSNumber *selectedCaseItem;
 @property (weak,nonatomic) PFObject *selectedPropertyObject;
 @property (weak,nonatomic) NSString *displayMode;
-@property (strong,nonatomic) NSString *popupjsonTemplateMode;
-@property (strong,nonatomic) NSMutableDictionary *popupjsonTemplate;
+@property (strong,nonatomic) NSString *popupjsonDisplayMode;
+@property (strong,nonatomic) NSMutableDictionary *popupjsonObject;
 @property (weak,nonatomic) NSArray *sortedCaseItems;
 
 

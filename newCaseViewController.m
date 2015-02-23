@@ -586,15 +586,15 @@ NSString *locationLongitude;
                                                                                              options:NSJSONReadingMutableContainers
                                                                                                error:&jsonError];
                                         
-                                        NSMutableDictionary *jsonTemplateChange = [json mutableCopy];
+                                        NSMutableDictionary *jsonObjectChange = [json mutableCopy];
                                         
-                                        [jsonTemplateChange setObject:@"" forKey:@"caseId"];
+                                        [jsonObjectChange setObject:@"" forKey:@"caseId"];
                                         
                                         
                                         NSLog(responseText);
                                         [HUD hide:NO];
                                         
-                                        [self showCaseDetailsWithTemplateJSON:jsonTemplateChange];
+                                        [self showCaseDetailsWithTemplateJSON:jsonObjectChange];
                                         
                                         
                                        // NSLog(@"starting to poll for template maker update");
@@ -768,8 +768,8 @@ NSString *locationLongitude;
     
     CaseDetailsEmailViewController *cdevc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdevc"];
     
-    cdevc.jsonTemplate = templateJSON;
-    cdevc.jsonTemplateMode = @"yes";
+    cdevc.jsonObject = templateJSON;
+    cdevc.jsonDisplayMode = @"template";
     cdevc.userName = self.itsMTLObject.objectId;
     cdevc.itsMTLObject = self.itsMTLObject;
     

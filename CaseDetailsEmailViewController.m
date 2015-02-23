@@ -22,8 +22,8 @@
 @synthesize selectedCaseIndex;
 @synthesize itsMTLObject;
 @synthesize locationManager;
-@synthesize jsonTemplate;
-@synthesize jsonTemplateMode;
+@synthesize jsonObject;
+@synthesize jsonDisplayMode;
 
 
 NSArray *caseItems;
@@ -101,9 +101,9 @@ CGPoint startLocation;
     geocoder = [[CLGeocoder alloc] init];
     
     PFObject *caseItemObject;
-    if([self.jsonTemplateMode isEqualToString:@"yes"])
+    if([self.jsonDisplayMode isEqualToString:@"template"])
     {
-        caseItemObject = (PFObject *)jsonTemplate;
+        caseItemObject = (PFObject *)jsonObject;
         templateMode =1;
         
     }
@@ -303,9 +303,9 @@ CGPoint startLocation;
 {
     PFObject *caseItemObject;
     
-    if([self.jsonTemplateMode isEqualToString:@"yes"])
+    if([self.jsonDisplayMode isEqualToString:@"template"])
     {
-        caseItemObject = (PFObject *)jsonTemplate;
+        caseItemObject = (PFObject *)jsonObject;
         templateMode =1;
         
     }
@@ -536,6 +536,10 @@ CGPoint startLocation;
                 for (NSString *eachAnsObj in CaseItemAnswersListAtIndex)
                 {
                     NSString *ansNum = [eachAnsObj valueForKey:@"a"];
+                    if([ansNum length] ==0)
+                    {
+                        ansNum = [eachAnsObj valueForKey:@"custom"];
+                    }
                     [answersArray addObject:ansNum];
                     
                 }
@@ -551,11 +555,21 @@ CGPoint startLocation;
                 NSString *finalAnsString = @"";
                 
                 optionsArray = [optionsString componentsSeparatedByString:@";"];
+                
+                for(NSString *optString in optionsArray)
+                {
+                    if([answersArray containsObject:optString])
+                    {
+                        NSLog(@"hi");
+                        
+                    }
+                }
+                
                 int indexMatcher = 1;
                 for(NSString *optString in optionsArray)
                 {
                     NSString *numMatcher = [[NSNumber numberWithInt:indexMatcher] stringValue];
-                    if([answersArray containsObject:numMatcher])
+                    if([answersArray containsObject:numMatcher] || [answersArray containsObject:optString])
                     {
                         if(indexMatcher==optionsArray.count)
                         {
@@ -611,11 +625,11 @@ CGPoint startLocation;
 
 -(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   if([self.slideoutDisplayed isEqualToString:@"yes"])
-   {
-       [self.slidingViewController resetTopViewAnimated:YES];
-       
-   }
+    if([self.slideoutDisplayed isEqualToString:@"yes"])
+    {
+        [self.slidingViewController resetTopViewAnimated:YES];
+        
+    }
     
     //if the selected row is greater than the count of caseItems, show the NewPropertyViewController
     
@@ -634,21 +648,25 @@ CGPoint startLocation;
     
     //popup a small window for editing the selection of this entry
     
-    
-    
     UIView *popupView = [[UIView alloc] initWithFrame:CGRectMake(20,50,280,400)];
     UIColor *lightYellowColor = [UIColor colorWithRed:252.0f/255.0f green:252.0f/255.0f blue:150.0f/255.0f alpha:1];
     popupView.backgroundColor = lightYellowColor;
     
-   
+    
     popupViewController *popVC = self.popupVC;
     
     //set data for popupViewController
     
-    if([self.jsonTemplateMode isEqualToString:@"yes"])
+    if([self.jsonDisplayMode isEqualToString:@"template"])
     {
-        popVC.popupjsonTemplateMode = @"yes";
-        popVC.popupjsonTemplate = self.jsonTemplate;
+        popVC.popupjsonDisplayMode = @"template";
+        popVC.popupjsonObject = self.jsonObject;
+    }
+    else if([self.jsonDisplayMode isEqualToString:@"singleCase"])
+    {
+        popVC.popupjsonDisplayMode = @"singleCase";
+        popVC.popupjsonObject = self.jsonObject;
+        
     }
     else
     {
@@ -656,11 +674,10 @@ CGPoint startLocation;
         popVC.popupitsMTLObject = self.itsMTLObject;
         popVC.selectedCase = self.selectedCaseIndex;
         
-        popVC.popupjsonTemplateMode = @"no";
+        popVC.popupjsonDisplayMode = @"no";
     }
     NSNumber *selectedCaseItem = [NSNumber numberWithInteger:indexPath.row];
     popVC.selectedCaseItem = selectedCaseItem;
-   
     PFObject *caseItemPicked = [sortedCaseItems objectAtIndex:indexPath.row];
     PFObject *selectedPropObject;
     NSString *caseItemPickedPropertyNum = [caseItemPicked objectForKey:@"propertyNum"];
@@ -674,22 +691,22 @@ CGPoint startLocation;
     {
         for(PFObject *propObject in propsArray)
         {
-        if([propObject.objectId isEqualToString:caseItemPickedPropertyNum])
-        {
-            selectedPropObject = propObject;
-            break;
-            
-        }
+            if([propObject.objectId isEqualToString:caseItemPickedPropertyNum])
+            {
+                selectedPropObject = propObject;
+                break;
+                
+            }
         }
     }
-
+    
     popVC.selectedPropertyObject = selectedPropObject;
     popVC.sortedCaseItems = sortedCaseItems;
     popVC.locationLatitude = locationLatitude;
     popVC.locationLongitude = locationLongitude;
     popVC.locationRetrieved = locationRetrieved;
     popVC.UCIdelegate = self;
-    
+    popVC.popupUserName = self.userName;
     //check the property type of the property at this selected index and set different modes on the popup accordingly.
     
     //check the property type and show different UI accordingly.
@@ -796,21 +813,27 @@ CGPoint startLocation;
     
     //set data for popupViewController
     
-    if([self.jsonTemplateMode isEqualToString:@"yes"])
+    if([self.jsonDisplayMode isEqualToString:@"template"])
     {
-        popVC.popupjsonTemplateMode = @"yes";
-        popVC.popupjsonTemplate = self.jsonTemplate;
+        popVC.popupjsonDisplayMode = @"template";
+        popVC.popupjsonObject = self.jsonObject;
+    }
+    else if([self.jsonDisplayMode isEqualToString:@"singleCase"])
+    {
+        popVC.popupjsonDisplayMode = @"singleCase";
+        popVC.popupjsonObject = self.jsonObject;
+        
     }
     else
     {
-     
+        
         popVC.popupitsMTLObject = self.itsMTLObject;
         popVC.selectedCase = self.selectedCaseIndex;
-       
-        popVC.popupjsonTemplateMode = @"no";
+        
+        popVC.popupjsonDisplayMode = @"no";
     }
     NSNumber *selectedCaseItem = [NSNumber numberWithInteger:indexPath.row];
-     popVC.selectedCaseItem = selectedCaseItem;
+    popVC.selectedCaseItem = selectedCaseItem;
     PFObject *caseItemPicked = [sortedCaseItems objectAtIndex:indexPath.row];
     PFObject *selectedPropObject;
     NSString *caseItemPickedPropertyNum = [caseItemPicked objectForKey:@"propertyNum"];
@@ -839,7 +862,7 @@ CGPoint startLocation;
     popVC.locationLongitude = locationLongitude;
     popVC.locationRetrieved = locationRetrieved;
     popVC.UCIdelegate = self;
-    
+    popVC.popupUserName = self.userName;
     //check the property type of the property at this selected index and set different modes on the popup accordingly.
     
     //check the property type and show different UI accordingly.
@@ -929,71 +952,86 @@ CGPoint startLocation;
     }
 }
 
-- (void)reloadData:(PFObject *) myObject
+- (void)reloadData:(PFObject *) myObject reloadMode:(NSString *)reloadModeString
 {
     
-    self.itsMTLObject = myObject;
-    
-    NSSortDescriptor *sortDescriptor;
-    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
-                                                 ascending:NO];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    NSArray *casesArray = [self.itsMTLObject objectForKey:@"cases"];
-    PFObject *caseItemObject;
-    
-    int i = 0;
+   //code for old refresh/poll mode where the entire itsMTLobject is returned on the refresh
+    NSArray *casesArray;
     int indexOfCase = 0;
-    if(templateMode ==1)
+    PFObject *caseItemObject;
+
+    if([reloadModeString isEqualToString:@"polledForMTL"])
     {
-        for (PFObject *eachReturnedCase in casesArray)
+        self.itsMTLObject = myObject;
+        
+       
+        casesArray = [self.itsMTLObject objectForKey:@"cases"];
+        
+        
+        int i = 0;
+        
+        if(templateMode ==1)
         {
-            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
-            //make sure CaseString is not nil/blank
-            if([caseString length] >0)
+            for (PFObject *eachReturnedCase in casesArray)
             {
-                if([priorCaseIDS containsObject:caseString])
+                NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+                //make sure CaseString is not nil/blank
+                if([caseString length] >0)
                 {
-                    //continue
+                    if([priorCaseIDS containsObject:caseString])
+                    {
+                        //continue
+                    }
+                    else
+                    {
+                        indexOfCase = i;
+                        break;
+                    }
+                }
+                i = i+1;
+            }
+        }
+        else if (templateMode ==0)
+        {
+            for (PFObject *eachReturnedCase in casesArray)
+            {
+                NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+                if([caseBeingUpdated isEqualToString:caseString])
+                {
+                    indexOfCase = i;
+                    NSLog(@"match found on case");
+                    break;
                 }
                 else
                 {
-                    indexOfCase = i;
-                    break;
+                    //continue
                 }
+                i = i+1;
             }
-            i = i+1;
+            
         }
-    }
-    else if (templateMode ==0)
-    {
-        for (PFObject *eachReturnedCase in casesArray)
-        {
-            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
-            if([caseBeingUpdated isEqualToString:caseString])
-            {
-                indexOfCase = i;
-                NSLog(@"match found on case");
-                break;
-            }
-            else
-            {
-                //continue
-            }
-            i = i+1;
-        }
+
+    self.selectedCaseIndex = [NSNumber numberWithInt:indexOfCase];
+    caseItemObject = [casesArray objectAtIndex:indexOfCase];
         
     }
-    
-    templateMode =0;
-    self.jsonTemplateMode = @"no";
-    
-    caseItemObject = [casesArray objectAtIndex:indexOfCase];
-    self.selectedCaseIndex = [NSNumber numberWithInt:indexOfCase];
-    
+   else //case where reload data is not called as a result of polling but is given case directly
+   {
+       caseItemObject = myObject;
+       self.jsonDisplayMode = @"singleCase";
+       self.jsonObject = (PFObject *)caseItemObject;
+   }
     caseBeingUpdated = [caseItemObject objectForKey:@"caseId"];
-  
-    caseItems= [caseItemObject objectForKey:@"caseItems"];
+    templateMode =0;
+   
+    //define sort descriptors for sorting caseItems by priority
+    NSArray *sortDescriptors;
+    NSSortDescriptor *sortDescriptor;
+    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
+                                                 ascending:NO];
+    sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     
+    caseItems= [caseItemObject objectForKey:@"caseItems"];
     sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
     
     //setting up arrays for storing three sets of properties and cases based on type: info messages, already answered properties, and new suggested properties
@@ -1032,12 +1070,12 @@ CGPoint startLocation;
     
     [propsArray removeAllObjects];
  
-   
-        
+     propsArray = [[propertsQuery findObjects] mutableCopy];
+    
     //check the propsArray and re-query if one of them doesn't have a property description filled in yet
     
     BOOL queryGood = 0;
-    
+    /*
     while (queryGood==0)
     {
          propsArray = [[propertsQuery findObjects] mutableCopy];
@@ -1062,6 +1100,7 @@ CGPoint startLocation;
         NSLog(@"re-querying properties due to empty propertyDescr");
         
     }
+    */
     
     //sort the propsArray based on the order in sortedCaseItems
     NSMutableArray *sortingPropsArray = [[NSMutableArray alloc] init];
@@ -1143,25 +1182,15 @@ CGPoint startLocation;
     
     [self.caseDetailsEmailTableView reloadData];
     
+    //set the last timestamp for the case if there needs to be polling.
+    NSString *timeStampReturn = [caseItemObject objectForKey:@"timestamp"];
+    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+    f.numberStyle = NSNumberFormatterDecimalStyle;
+    lastTimestamp = [f numberFromString:timeStampReturn];
+    
     //remove the updating HUD
     [HUD hide:YES];
     
-    //set the last timestamp value for cases where it's not the first template
-   
-        updateDate = self.itsMTLObject.updatedAt;
-        
-        for (PFObject *eachReturnedCase in casesArray)
-        {
-            NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
-            if([caseString length] <=0)
-            {
-                NSString *timeStampReturn = [eachReturnedCase objectForKey:@"timestamp"];
-                NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-                f.numberStyle = NSNumberFormatterDecimalStyle;
-                lastTimestamp = [f numberFromString:timeStampReturn];
-                
-            }
-        }
     
     if([self.popupVC.popupOrSlideout isEqualToString:@"slideout"])
        {
@@ -1209,10 +1238,11 @@ CGPoint startLocation;
                                     
                                     [HUD hide:NO];
                                     
+                                    //setting timestamp to compare to for the subsequent update
                                     NSString *timeStampReturn;
-                                    if([self.jsonTemplateMode isEqualToString:@"yes"])
+                                    if([self.jsonDisplayMode isEqualToString:@"template"])
                                     {
-                                        timeStampReturn = [self.jsonTemplate objectForKey:@"timestamp"];
+                                        timeStampReturn = [self.jsonObject objectForKey:@"timestamp"];
                                         
                                     }
                                     else
@@ -1228,7 +1258,21 @@ CGPoint startLocation;
                                     f.numberStyle = NSNumberFormatterDecimalStyle;
                                     lastTimestamp = [f numberFromString:timeStampReturn];
                                     
-                                    [self pollForCaseRefresh];
+                                    //convert to NSDictionaryHere
+                                    
+                                    NSString *responseTextWithoutHeader = [responseText
+                                                                           stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+                                    NSError *jsonError;
+                                    NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+                                    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                                         options:NSJSONReadingMutableContainers
+                                                                                           error:&jsonError];
+                                    
+                                    NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+                                    
+                                    [self reloadData:jsonCaseChange reloadMode:@"fromJSON"];
+                                    
+                                    //[self pollForCaseRefresh];
                                     
                                 }
                                 else
@@ -1272,7 +1316,7 @@ CGPoint startLocation;
     
     BOOL updateSuccess = 0;
     
-    if(templateMode ==1 || [self.jsonTemplateMode isEqualToString:@"yes"])
+    if(templateMode ==1 || [self.jsonDisplayMode isEqualToString:@"template"])
     {
         for (PFObject *eachReturnedCase in returnedCases)
         {
@@ -1334,7 +1378,7 @@ CGPoint startLocation;
         [HUD hide:NO];
         
         //trigger caseDetailsEmailViewController to reload its data
-        [self reloadData:returnedITSMTLObject];
+        [self reloadData:returnedITSMTLObject reloadMode:@"polledForMTL"];
     
     }
     else
@@ -1362,9 +1406,9 @@ CGPoint startLocation;
     //the case object includes the list of all caseItems and the caseId
     
     PFObject *caseObject;
-    if([self.jsonTemplateMode isEqualToString:@"yes"])
+    if([self.jsonDisplayMode isEqualToString:@"template"])
     {
-        caseObject = self.jsonTemplate;
+        caseObject = self.jsonObject;
     }
     else
     {
@@ -1658,12 +1702,31 @@ CGPoint startLocation;
         if([[eachCaseItem objectForKey:@"caseItem"] isEqualToString:caseItemID])
         {
             selectedCaseItem = eachCaseItem;
+            
         }
     }
     
     //set the answers for this case to an array of a-value NSDicts
     
     [selectedCaseItem setObject:Answers forKey:@"answers"];
+    
+    NSString *propNum = [selectedCaseItem objectForKey:@"propertyNum"];
+    
+    //add to the list of options for the relevant property
+    for (PFObject *propObject in propsArray)
+    {
+         if([propObject.objectId isEqualToString:propNum])
+         {
+             NSString *options = [propObject objectForKey:@"options"];
+             NSDictionary *lastAns = [Answers objectAtIndex:Answers.count-1];
+             
+             NSString *newOptionToAdd = [lastAns objectForKey:@"custom"];
+             options = [[options stringByAppendingString:@"; "] stringByAppendingString:newOptionToAdd];
+             [propObject setObject:options forKey:@"options"];
+             
+         }
+    }
+   
     
     self.submitAnswersButton.enabled = 1;
     self.submitAnswersButton.backgroundColor = [UIColor blueColor];

@@ -94,11 +94,16 @@ UIView *bgDarkenView;
     
     PFObject *selectedCaseObject;
     //load the answers array
-    if([self.popupjsonTemplateMode isEqualToString:@"yes"])
+    if([self.popupjsonDisplayMode isEqualToString:@"template"])
     {
-        selectedCaseObject = self.popupjsonTemplate;
+        selectedCaseObject = self.popupjsonObject;
         self.updateButton.titleLabel.text = @"Select These Answers";
         templateMode = 1;
+    }
+    else if([self.popupjsonDisplayMode isEqualToString:@"singleCase"])
+    {
+        selectedCaseObject = self.popupjsonObject;
+        templateMode = 0;
     }
     else
     {
@@ -532,9 +537,9 @@ UIView *bgDarkenView;
 }
 
     PFObject *selectedCaseObject;
-    if([self.popupjsonTemplateMode isEqualToString:@"yes"])
+    if([self.popupjsonDisplayMode isEqualToString:@"template"] || ([self.popupjsonDisplayMode isEqualToString:@"singleCase"]))
     {
-        selectedCaseObject = self.popupjsonTemplate;
+        selectedCaseObject = self.popupjsonObject;
     }
     else
     {
@@ -554,7 +559,16 @@ UIView *bgDarkenView;
         return;
     }
     
-    NSString *generatedXMLString = [self createXMLFunction];
+    NSString *generatedXMLString;
+    if([self.popupjsonDisplayMode isEqualToString:@"singleCase"])
+    {
+        generatedXMLString = [self createXMLFunctionSingleJSONCase];
+    }
+    else
+    {
+         generatedXMLString = [self createXMLFunction];
+    }
+ 
     
     //add a progress HUD to show it is retrieving list of properts
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -585,9 +599,22 @@ UIView *bgDarkenView;
             NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
             f.numberStyle = NSNumberFormatterDecimalStyle;
             lastTimestamp = [f numberFromString:timeStampReturn];
-                                        
-            [self pollForCaseRefresh];
-                                        
+            
+            //convert to NSDictionaryHere
+                
+            NSString *responseTextWithoutHeader = [responseText
+                                                       stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+            NSError *jsonError;
+            NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                     options:NSJSONReadingMutableContainers
+                                                                       error:&jsonError];
+            NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+            
+            [self.UCIdelegate reloadData:jsonCaseChange reloadMode:@"json"];
+                
+            //[self pollForCaseRefresh];
+                
             }
             else
             {
@@ -671,7 +698,7 @@ UIView *bgDarkenView;
         
         //trigger caseDetailsEmailViewController to reload its data
         
-        [self.UCIdelegate reloadData:returnedITSMTLObject];
+        [self.UCIdelegate reloadData:returnedITSMTLObject reloadMode:@"polledForMTL"];
     }
     
     else
@@ -885,6 +912,205 @@ UIView *bgDarkenView;
         [xmlWriter writeEndElement];
     }
 
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    return xml;
+}
+
+-(NSString *)createXMLFunctionSingleJSONCase
+{
+    PFObject *caseObject = self.popupjsonObject;
+    PFObject *caseItemObject = [sortedCaseItems objectAtIndex:[selectedCaseItem integerValue]];
+    
+    NSString *caseName = [caseObject objectForKey:@"caseName"];
+    NSString *caseObjID = [caseObject objectForKey:@"caseId"];
+    
+    //get the selected property from the chooser element.
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:self.popupUserName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    //if it's a brand new case, this will be nil
+    if(caseObjID != nil)
+    {
+        
+        [xmlWriter writeStartElement:@"CASEOBJECTID"];
+        [xmlWriter writeCharacters:caseObjID];
+        [xmlWriter writeEndElement];
+    }
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:caseName];
+    [xmlWriter writeEndElement];
+    
+    int h = 0;
+    
+    NSString *propertyNum = [caseItemObject objectForKey:@"propertyNum"];
+    NSString *propertyDescr = [self.selectedPropertyObject objectForKey:@"propertyDescr"];
+    
+    //write logic for updating the caseItem
+    //build strings for building item
+    [xmlWriter writeStartElement:@"ITEM"];
+    
+    //check to see if this caseItem has a number.  Otherwise give it a number of 9000 to indicate it is a brand new caseItem.
+    NSString *myCaseItem = [caseItemObject objectForKey:@"caseItem"];
+    NSString *caseItemNumber;
+    if(myCaseItem==nil)
+    {
+        caseItemNumber =@"9000";
+        
+    }
+    else
+    {
+        caseItemNumber = myCaseItem;
+        
+    }
+    
+    [xmlWriter writeStartElement:@"CASEITEM"];
+    [xmlWriter writeCharacters:caseItemNumber];
+    [xmlWriter writeEndElement];
+    
+    if(propertyNum==nil)
+    {
+        propertyNum =@"1";
+        
+    }
+    [xmlWriter writeStartElement:@"PROPERTYNUM"];
+    [xmlWriter writeCharacters:propertyNum];
+    [xmlWriter writeEndElement];
+    
+    //write out the answers value of this case Item
+    
+    //need to check if the case type is custom answers
+    
+    //if case type is I or N, don't update anything for answers
+    NSString *propertyType = [self.selectedPropertyObject objectForKey:@"propertyType"];
+    NSString *optionText = [self.selectedPropertyObject objectForKey:@"options"];
+    
+    if([propertyType isEqualToString:@"I"] || [propertyType isEqualToString:@"N"] || [propertyType isEqualToString:@"B"])
+    {
+        //do nothing
+    }
+    else if([optionText length] == 0)
+    {
+        //write the answer as type Custom
+        
+        for (PFObject *ansObj in answersDictionary)
+        {
+            NSString *ansString = [ansObj objectForKey:@"custom"];
+            [xmlWriter writeStartElement:@"ANSWER"];
+            
+            [xmlWriter writeStartElement:@"CUSTOM"];
+            [xmlWriter writeCharacters:ansString];
+            [xmlWriter writeEndElement];
+            
+            [xmlWriter writeEndElement];
+            
+        }
+        
+    }
+    else
+    {
+        NSString *semiColonDelimitedCustomAnswers;
+        NSString *semiColonDelimitedAAnswers;
+        NSMutableArray *arrayOfCustomAnswers = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayOfAAnswers = [[NSMutableArray alloc] init];
+        
+        for (PFObject *ansObj in answersDictionary)
+        {
+            
+            //if the object responds to the key a, then write it as an answer a
+            NSString *ansString = [ansObj objectForKey:@"a"];
+            if([ansString length] ==0)
+            {
+                ansString = [ansObj objectForKey:@"custom"];
+                if([ansString length] >0)
+                {
+                    [arrayOfCustomAnswers addObject:ansString];
+                }
+            }
+            else
+            {
+                [arrayOfAAnswers addObject:ansString];
+                
+            }
+        }
+        semiColonDelimitedAAnswers = [arrayOfAAnswers componentsJoinedByString:@";"];
+        semiColonDelimitedCustomAnswers  = [arrayOfCustomAnswers componentsJoinedByString:@";"];
+        
+        if ([semiColonDelimitedAAnswers length] ==0 && [semiColonDelimitedCustomAnswers length] ==0)
+        {
+            
+            
+        }
+        else
+        {
+            [xmlWriter writeStartElement:@"ANSWER"];
+        }
+        
+        if([semiColonDelimitedAAnswers length]>0)
+        {
+            [xmlWriter writeStartElement:@"A"];
+            [xmlWriter writeCharacters:semiColonDelimitedAAnswers];
+            [xmlWriter writeEndElement];
+            
+        }
+        if([semiColonDelimitedCustomAnswers length]>0)
+        {
+            [xmlWriter writeStartElement:@"CUSTOM"];
+            [xmlWriter writeCharacters:semiColonDelimitedCustomAnswers];
+            [xmlWriter writeEndElement];
+            
+        }
+        if ([semiColonDelimitedAAnswers length] ==0 && [semiColonDelimitedCustomAnswers length] ==0)
+        {
+            
+        }
+        else
+        {
+            [xmlWriter writeEndElement];
+        }
+    }
+    
+    //close item element
+    [xmlWriter writeEndElement];
+    
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"locationText"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"locationLatitude"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"locationLongitude"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
+    
     
     // close payload element
     [xmlWriter writeEndElement];
