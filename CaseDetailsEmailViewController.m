@@ -48,6 +48,7 @@ NSMutableArray *browsePropertiesIndex;
 NSMutableArray *newlyCreatedPropertiesIndex;
 NSMutableArray *changedCaseItemsIndex;
 NSMutableArray *priorCaseIDS;
+NSMutableArray *templateOptionsCounts;
 
 PFObject *returnedITSMTLObject;
 //this variable stores the case being updated so it's clear which one to show when the json returns.  Used for a case where we're not in "template mode".
@@ -163,6 +164,7 @@ CGPoint startLocation;
     suggestedCaseDisplayedIndex = -1;
     changedCaseItemsIndex =[[NSMutableArray alloc] init];
     priorCaseIDS = [[NSMutableArray alloc] init];
+    templateOptionsCounts = [[NSMutableArray alloc] init];
     
     //fill an array of the prior cases so the client can look for a new previously non-existing caseId if the user is submitting a new template
     NSArray *cases = [self.itsMTLObject objectForKey:@"cases"];
@@ -266,6 +268,7 @@ CGPoint startLocation;
         g=g+1;
     }
     
+    
     //submit answers button is set to disabled and gray until the user makes a change
     self.submitAnswersButton.enabled = 0;
     self.submitAnswersButton.backgroundColor = [UIColor lightGrayColor];
@@ -281,8 +284,11 @@ CGPoint startLocation;
     else
     //this view controller will control refreshing after all data is entered
     {
-        for (PFObject *eachReturnedCase in casesArray)
+       
+        
+        for (PFObject *eachReturnedCase in sortedCaseItems)
         {
+            //set the last timestamp if polling on the client is required
             NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
             if([caseString length] <=0)
             {
@@ -292,6 +298,25 @@ CGPoint startLocation;
                 lastTimestamp = [f numberFromString:timeStampReturn];
                 
             }
+            
+            //set the templateOptionsArray so the popupViewController can keep track of how many options were originally submitted for determinining whether an answer should be marked as "a" or "custom"
+            NSString *propNum = [eachReturnedCase objectForKey:@"propertyNum"];
+            for(PFObject *propObj in propsArray)
+            {
+                if([propObj.objectId isEqualToString:propNum])
+                {
+                    NSString *options = [propObj objectForKey:@"options"];
+                    
+                    //get array from semi-colon delimited text so we can get the count.
+                    NSArray *templateOptionsArray = [options componentsSeparatedByString:@";"];
+                    NSNumber *templateOptionCountNum = [NSNumber numberWithInteger:[templateOptionsArray count]];
+                    
+                    [templateOptionsCounts addObject:templateOptionCountNum];
+                    
+                    
+                }
+            }
+            
         }
 
     }
@@ -458,10 +483,8 @@ CGPoint startLocation;
     NSArray *CaseItemAnswersListAtIndex = [caseItemPicked objectForKey:@"answers"];
     //setting global var
     
-    
     NSString *propertyType = [propAtIndex objectForKey:@"propertyType"];
     NSString *options = [propAtIndex objectForKey:@"options"];
-    
     NSString *imgURL = [propAtIndex objectForKey:@"iconImageURL"];
     
     
@@ -661,6 +684,8 @@ CGPoint startLocation;
     {
         popVC.popupjsonDisplayMode = @"template";
         popVC.popupjsonObject = self.jsonObject;
+        popVC.originalTemplateOptionsCounts = templateOptionsCounts;
+        
     }
     else if([self.jsonDisplayMode isEqualToString:@"singleCase"])
     {
@@ -673,7 +698,6 @@ CGPoint startLocation;
         
         popVC.popupitsMTLObject = self.itsMTLObject;
         popVC.selectedCase = self.selectedCaseIndex;
-        
         popVC.popupjsonDisplayMode = @"no";
     }
     NSNumber *selectedCaseItem = [NSNumber numberWithInteger:indexPath.row];
@@ -817,6 +841,7 @@ CGPoint startLocation;
     {
         popVC.popupjsonDisplayMode = @"template";
         popVC.popupjsonObject = self.jsonObject;
+        popVC.originalTemplateOptionsCounts = templateOptionsCounts;
     }
     else if([self.jsonDisplayMode isEqualToString:@"singleCase"])
     {
@@ -1226,7 +1251,7 @@ CGPoint startLocation;
     [HUD show:YES];
 
     //use parse cloud code function
-    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+    [PFCloud callFunctionInBackground:@"submitXML"
                    withParameters:@{@"payload": xmlForUpdate}
                             block:^(NSString *responseString, NSError *error) {
                                 
@@ -1572,7 +1597,7 @@ CGPoint startLocation;
             //if case type is I or N, don't update anything for answers
             NSString *propertyType = [updatedProperty objectForKey:@"propertyType"];
             NSString *optionText = [updatedProperty objectForKey:@"options"];
-            NSArray *answersDictionary = [eachCaseItem objectForKey:@"answers"];
+            NSArray *cdeAnswersDictionary = [eachCaseItem objectForKey:@"answers"];
         
             if([propertyType isEqualToString:@"I"] || [propertyType isEqualToString:@"N"] || [propertyType isEqualToString:@"B"])
             {
@@ -1582,7 +1607,7 @@ CGPoint startLocation;
             {
                 //write the answer as type Custom
                 
-                for (PFObject *ansObj in answersDictionary)
+                for (PFObject *ansObj in cdeAnswersDictionary)
                 {
                     NSString *ansString = [ansObj objectForKey:@"custom"];
                     [xmlWriter writeStartElement:@"ANSWER"];
@@ -1603,7 +1628,7 @@ CGPoint startLocation;
                 NSMutableArray *arrayOfCustomAnswers = [[NSMutableArray alloc] init];
                 NSMutableArray *arrayOfAAnswers = [[NSMutableArray alloc] init];
                 
-                for (PFObject *ansObj in answersDictionary)
+                for (PFObject *ansObj in cdeAnswersDictionary)
                 {
                     
                     //if the object responds to the key a, then write it as an answer a
@@ -1637,7 +1662,7 @@ CGPoint startLocation;
                 if([semiColonDelimitedCustomAnswers length]>0)
                 {
                     [xmlWriter writeStartElement:@"CUSTOM"];
-                    [xmlWriter writeCharacters:semiColonDelimitedAAnswers];
+                    [xmlWriter writeCharacters:semiColonDelimitedCustomAnswers];
                     [xmlWriter writeEndElement];
                     
                 }
@@ -1705,29 +1730,38 @@ CGPoint startLocation;
             
         }
     }
-    
     //set the answers for this case to an array of a-value NSDicts
     
     [selectedCaseItem setObject:Answers forKey:@"answers"];
     
     NSString *propNum = [selectedCaseItem objectForKey:@"propertyNum"];
     
-    //add to the list of options for the relevant property
-    for (PFObject *propObject in propsArray)
-    {
-         if([propObject.objectId isEqualToString:propNum])
-         {
-             NSString *options = [propObject objectForKey:@"options"];
-             NSDictionary *lastAns = [Answers objectAtIndex:Answers.count-1];
-             
-             NSString *newOptionToAdd = [lastAns objectForKey:@"custom"];
-             options = [[options stringByAppendingString:@"; "] stringByAppendingString:newOptionToAdd];
-             [propObject setObject:options forKey:@"options"];
-             
-         }
-    }
-   
+    //add to the list of options for the relevant property if the answer is a custom answer
     
+    //check only the latest answer added.  Assumes right now that no custom answers are added and then deleted by user.
+    
+  NSDictionary *ansDict = [Answers objectAtIndex:Answers.count-1];
+   NSString *ansCustomVal = [ansDict objectForKey:@"custom"];
+    
+    if([ansCustomVal length] >0)
+    {
+        //loop through the propsArray to get the matching property and add to it only if this answer hasn't already been added.
+            for (PFObject *propObject in propsArray)
+            {
+                if([propObject.objectId isEqualToString:propNum])
+                {
+                    NSString *options = [propObject objectForKey:@"options"];
+                    
+                    //loop through op
+                    
+                    options = [[options stringByAppendingString:@"; "] stringByAppendingString:ansCustomVal];
+                    [propObject setObject:options forKey:@"options"];
+                    
+                }
+            }
+
+
+    }
     self.submitAnswersButton.enabled = 1;
     self.submitAnswersButton.backgroundColor = [UIColor blueColor];
     
@@ -2019,7 +2053,7 @@ CGPoint startLocation;
     [HUD show:YES];
     
     //use parse cloud code function
-    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+    [PFCloud callFunctionInBackground:@"submitXML"
                        withParameters:@{@"payload": xml}
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {
@@ -2171,7 +2205,7 @@ CGPoint startLocation;
     NSString *propertyType = [selectedPropertyObject objectForKey:@"propertyType"];
     NSString *optionText = [selectedPropertyObject objectForKey:@"options"];
     
-    NSArray *answersDictionary = [caseItemObject objectForKey:@"answers"];
+    NSArray *cdeanswersDictionary = [caseItemObject objectForKey:@"answers"];
     
     if([propertyType isEqualToString:@"I"] || [propertyType isEqualToString:@"N"] || [propertyType isEqualToString:@"B"])
     {
@@ -2181,7 +2215,7 @@ CGPoint startLocation;
     {
         //write the answer as type Custom
         
-        for (PFObject *ansObj in answersDictionary)
+        for (PFObject *ansObj in cdeanswersDictionary)
         {
             NSString *ansString = [ansObj objectForKey:@"custom"];
             [xmlWriter writeStartElement:@"ANSWER"];
@@ -2202,7 +2236,7 @@ CGPoint startLocation;
         NSMutableArray *arrayOfCustomAnswers = [[NSMutableArray alloc] init];
         NSMutableArray *arrayOfAAnswers = [[NSMutableArray alloc] init];
         
-        for (PFObject *ansObj in answersDictionary)
+        for (PFObject *ansObj in cdeanswersDictionary)
         {
             
             //if the object responds to the key a, then write it as an answer a
@@ -2305,7 +2339,7 @@ CGPoint startLocation;
    
     
     //use parse cloud code function
-    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+    [PFCloud callFunctionInBackground:@"submitXML"
                        withParameters:@{@"payload": xmlForUpdate}
                                 block:^(NSString *responseString, NSError *error) {
                                     

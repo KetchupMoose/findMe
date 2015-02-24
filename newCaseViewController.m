@@ -572,7 +572,7 @@ NSString *locationLongitude;
     [HUD show:YES];
 
     //use parse cloud code function to update with appropriate XML
-    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+    [PFCloud callFunctionInBackground:@"submitXML"
                        withParameters:@{@"payload": xmlGeneratedString}
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {

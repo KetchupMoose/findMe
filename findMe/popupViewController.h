@@ -44,7 +44,7 @@
 @property (strong,nonatomic) NSString *popupjsonDisplayMode;
 @property (strong,nonatomic) NSMutableDictionary *popupjsonObject;
 @property (weak,nonatomic) NSArray *sortedCaseItems;
-
+@property (weak,nonatomic) NSArray *originalTemplateOptionsCounts;
 
 @property (weak,nonatomic) IBOutlet UITextField *customAnswerTextField;
 

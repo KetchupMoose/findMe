@@ -234,7 +234,7 @@ int selectedPic = 1;
     [HUD show:YES];
     
     //use parse cloud code function to update with appropriate XML
-    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+    [PFCloud callFunctionInBackground:@"submitXML"
                        withParameters:@{@"payload": xmlGeneratedString}
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {

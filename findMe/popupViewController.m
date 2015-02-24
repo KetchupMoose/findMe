@@ -31,10 +31,11 @@
 @synthesize locationLongitude;
 @synthesize locationRetrieved;
 @synthesize popupOrSlideout;
+@synthesize originalTemplateOptionsCounts;
 
 NSMutableArray *popupOptionsArray;
 NSMutableArray *answersArray;
-NSMutableArray *answersDictionary;
+NSMutableArray *popupanswersDictionary;
 
 NSNumber *lastTimestamp;
 MBProgressHUD *HUD;
@@ -52,6 +53,8 @@ UIView *bgDarkenView;
     // Do any additional setup after loading the view.
     
     popupOptionsArray = [[NSMutableArray alloc] init];
+    answersArray = [[NSMutableArray alloc] init];
+    popupanswersDictionary = [[NSMutableArray alloc] init];
     
     //setup sliding view controller variables
      //[self.slidingViewController setAnchorRightRevealAmount:260.0f];
@@ -123,10 +126,16 @@ UIView *bgDarkenView;
     PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:[selectedCaseItem integerValue]];
     
     NSArray *selectedCaseItemAnswersList = [selectedCaseItemObject objectForKey:@"answers"];
-    answersArray = [[NSMutableArray alloc] init];
-    answersDictionary = [[NSMutableArray alloc] init];
+   
+   
     
     [answersArray removeAllObjects];
+    //[answersDictionary removeAllObjects];
+    if([selectedCaseItemAnswersList count]>0)
+    {
+        popupanswersDictionary = [selectedCaseItemAnswersList mutableCopy];
+    }
+    
     
     for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
     {
@@ -164,27 +173,27 @@ UIView *bgDarkenView;
     self.updateButton.enabled = 0;
     [self.updateButton.titleLabel setTextColor:[UIColor lightGrayColor]];
     
-    originalAnswersCount = (int)[popupOptionsArray count];
     
-    [answersDictionary removeAllObjects];
-    int g= 0;
-    for(NSString *eachAns in answersArray)
+    
+    if ([self.popupjsonDisplayMode isEqualToString:@"template"])
     {
-        if(g<=originalAnswersCount-1)
+        NSInteger selectedCaseInteger = [selectedCaseItem integerValue];
+        
+        //get the value from the original optionCount
+        if(selectedCaseInteger <= [self.originalTemplateOptionsCounts count]-1)
         {
-            NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
-            [AnsObj setValue:eachAns forKey:@"a"];
-            [answersDictionary addObject:AnsObj];
+            NSNumber *originalOptionCount = [self.originalTemplateOptionsCounts objectAtIndex:selectedCaseInteger];
+            originalAnswersCount = [originalOptionCount intValue];
+            
         }
-        else
-        {
-            NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
-            [AnsObj setValue:eachAns forKey:@"custom"];
-            [answersDictionary addObject:AnsObj];
-        }
-        g=g+1;
     }
-}
+    else
+    {
+        originalAnswersCount = (int)[popupOptionsArray count];
+    }
+    
+    
+   }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -357,7 +366,11 @@ UIView *bgDarkenView;
         NSString *optionTxt = optionLabel.text;
         if ([answersArray containsObject:optionTxt])
         {
+            NSInteger indexOfObject = [answersArray indexOfObject:optionTxt];
+            
             [answersArray removeObject:optionTxt];
+            [popupanswersDictionary removeObjectAtIndex:indexOfObject];
+            
             
         }
         
@@ -376,15 +389,25 @@ UIView *bgDarkenView;
             i = i+1;
         }
         [answersArray removeObjectAtIndex:indexToRemove];
-       
+       [popupanswersDictionary removeObjectAtIndex:indexToRemove];
     }
     else
+    
+        //add the answer to the answers array and answersDictionary.
     {
-         if(indexPath.row +1 <=originalAnswersCount)
+        
+        //check to see if the answer is an answer for one of the original properties on this caseItem or a new custom property
+            if(indexPath.row +1 <=originalAnswersCount)
          {
              NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
              [answersArray addObject:newAns];
              cell.backgroundColor = [UIColor greenColor];
+             
+             NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+             [AnsObj setValue:newAns forKey:@"a"];
+             NSDictionary *myAnsDict = [AnsObj copy];
+             
+             [popupanswersDictionary addObject:myAnsDict];
          }
         else
         {
@@ -392,30 +415,13 @@ UIView *bgDarkenView;
             NSString *newAns = optionLabel.text;
             [answersArray addObject:newAns];
             cell.backgroundColor = [UIColor greenColor];
-        }
-       
-        
-    }
-    
-    //set the answers for this case to an array of a-value NSDicts
-    
-    [answersDictionary removeAllObjects];
-    int g= 0;
-    for(NSString *eachAns in answersArray)
-    {
-       if(g<=originalAnswersCount-1)
-       {
-        NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
-        [AnsObj setValue:eachAns forKey:@"a"];
-        [answersDictionary addObject:AnsObj];
-        }
-        else
-        {
+            
             NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
-            [AnsObj setValue:eachAns forKey:@"custom"];
-            [answersDictionary addObject:AnsObj];
+            [AnsObj setValue:newAns forKey:@"custom"];
+            NSDictionary *myAnsDict = [AnsObj copy];
+           [popupanswersDictionary addObject:myAnsDict];
         }
-        g=g+1;
+        
     }
     
     self.updateButton.enabled = 1;
@@ -452,7 +458,7 @@ UIView *bgDarkenView;
                 [answersArray addObject:@"newAnsString"];
                 NSMutableDictionary *newAnsCustom = [[NSMutableDictionary alloc] init];
                 [newAnsCustom setObject:newAnsString forKey:@"custom"];
-                [answersDictionary addObject:newAnsCustom];
+                [popupanswersDictionary addObject:newAnsCustom];
                 [popupOptionsArray addObject:newAnsString];
             }
         }
@@ -529,12 +535,12 @@ UIView *bgDarkenView;
 {
    if([displayMode isEqualToString:@"custom"])
    {
-    [answersDictionary removeAllObjects];
+    [popupanswersDictionary removeAllObjects];
     
     NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
     [AnsObj setValue:self.customAnswerTextField.text forKey:@"custom"];
-    [answersDictionary addObject:AnsObj];
-}
+    [popupanswersDictionary addObject:AnsObj];
+   }
 
     PFObject *selectedCaseObject;
     if([self.popupjsonDisplayMode isEqualToString:@"template"] || ([self.popupjsonDisplayMode isEqualToString:@"singleCase"]))
@@ -555,7 +561,7 @@ UIView *bgDarkenView;
         
         caseIDBeingUpdated = [selectedCaseItemObject objectForKey:@"caseItem"];
         
-        [self.UCIdelegate updateCaseItem:caseIDBeingUpdated AcceptableAnswersList:answersDictionary];
+        [self.UCIdelegate updateCaseItem:caseIDBeingUpdated AcceptableAnswersList:popupanswersDictionary];
         return;
     }
     
@@ -581,7 +587,7 @@ UIView *bgDarkenView;
     [HUD show:YES];
     
     //use parse cloud code function
-    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+    [PFCloud callFunctionInBackground:@"submitXML"
                        withParameters:@{@"payload": generatedXMLString}
                                 block:^(NSString *responseString, NSError *error) {
                                     
@@ -814,7 +820,7 @@ UIView *bgDarkenView;
             {
                 //write the answer as type Custom
                 
-                for (PFObject *ansObj in answersDictionary)
+                for (PFObject *ansObj in popupanswersDictionary)
                 {
                     NSString *ansString = [ansObj objectForKey:@"custom"];
                     [xmlWriter writeStartElement:@"ANSWER"];
@@ -835,7 +841,7 @@ UIView *bgDarkenView;
                 NSMutableArray *arrayOfCustomAnswers = [[NSMutableArray alloc] init];
                 NSMutableArray *arrayOfAAnswers = [[NSMutableArray alloc] init];
                 
-                for (PFObject *ansObj in answersDictionary)
+                for (PFObject *ansObj in popupanswersDictionary)
                 {
                     
                     //if the object responds to the key a, then write it as an answer a
@@ -1013,7 +1019,7 @@ UIView *bgDarkenView;
     {
         //write the answer as type Custom
         
-        for (PFObject *ansObj in answersDictionary)
+        for (PFObject *ansObj in popupanswersDictionary)
         {
             NSString *ansString = [ansObj objectForKey:@"custom"];
             [xmlWriter writeStartElement:@"ANSWER"];
@@ -1034,7 +1040,7 @@ UIView *bgDarkenView;
         NSMutableArray *arrayOfCustomAnswers = [[NSMutableArray alloc] init];
         NSMutableArray *arrayOfAAnswers = [[NSMutableArray alloc] init];
         
-        for (PFObject *ansObj in answersDictionary)
+        for (PFObject *ansObj in popupanswersDictionary)
         {
             
             //if the object responds to the key a, then write it as an answer a

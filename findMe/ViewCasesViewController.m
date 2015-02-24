@@ -296,7 +296,7 @@ UIRefreshControl *refreshControl;
     NSString *generatedXMLString = [self createXMLFunction];
     
     //use parse cloud code function
-    [PFCloud callFunctionInBackground:@"inboundZITSMTL"
+    [PFCloud callFunctionInBackground:@"submitXML"
                        withParameters:@{@"payload": generatedXMLString}
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {
