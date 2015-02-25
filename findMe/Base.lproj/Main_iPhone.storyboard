@@ -867,6 +867,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="matchesTableView" destination="B4c-FB-dOC" id="WaJ-kv-BvZ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nE2-7G-ByG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

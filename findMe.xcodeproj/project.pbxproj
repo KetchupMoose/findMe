@@ -44,6 +44,7 @@
 		D3FBD13819CF0424008240F5 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD13719CF0423008240F5 /* StoreKit.framework */; };
 		D3FBD13A19CF042F008240F5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD13919CF042E008240F5 /* SystemConfiguration.framework */; };
 		D3FBD13D19D0505D008240F5 /* Case.m in Sources */ = {isa = PBXBuildFile; fileRef = D3FBD13C19D0505D008240F5 /* Case.m */; };
+		EC0403F71A9CFE3400151796 /* femalesilhouette.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = EC0403F61A9CFE3400151796 /* femalesilhouette.jpeg */; };
 		EC0822F01A0EE7F0000B6684 /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0822D01A0EE7F0000B6684 /* MKAnnotationView+WebCache.m */; };
 		EC0822F11A0EE7F0000B6684 /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0822D21A0EE7F0000B6684 /* NSData+ImageContentType.m */; };
 		EC0822F21A0EE7F0000B6684 /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0822D41A0EE7F0000B6684 /* SDImageCache.m */; };
@@ -156,6 +157,7 @@
 		D3FBD13919CF042E008240F5 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D3FBD13B19D0505D008240F5 /* Case.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Case.h; sourceTree = "<group>"; };
 		D3FBD13C19D0505D008240F5 /* Case.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Case.m; sourceTree = "<group>"; };
+		EC0403F61A9CFE3400151796 /* femalesilhouette.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = femalesilhouette.jpeg; path = ../femalesilhouette.jpeg; sourceTree = "<group>"; };
 		EC0822CF1A0EE7F0000B6684 /* MKAnnotationView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKAnnotationView+WebCache.h"; sourceTree = "<group>"; };
 		EC0822D01A0EE7F0000B6684 /* MKAnnotationView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKAnnotationView+WebCache.m"; sourceTree = "<group>"; };
 		EC0822D11A0EE7F0000B6684 /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ImageContentType.h"; sourceTree = "<group>"; };
@@ -431,6 +433,7 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				EC0403F61A9CFE3400151796 /* femalesilhouette.jpeg */,
 				EC9F51DE1A2AC68B00CFED6E /* blurredlights.jpg */,
 				EC9F51DC1A2AC63F00CFED6E /* gaussianblur.jpg */,
 				EC9F51DA1A2AC53B00CFED6E /* longexposurestreetlights.jpeg */,
@@ -650,6 +653,7 @@
 				ECE6B16E1A06AD0E007F4A19 /* sawyousubway.jpg in Resources */,
 				D3F4574219FD920A000EDF25 /* ManButton.png in Resources */,
 				D31DF30C19CEFC0C00A37725 /* Main_iPad.storyboard in Resources */,
+				EC0403F71A9CFE3400151796 /* femalesilhouette.jpeg in Resources */,
 				D3F4574B1A003772000EDF25 /* stockphotoguy1.jpg in Resources */,
 				D31DF31119CEFC0C00A37725 /* Images.xcassets in Resources */,
 				EC9F51DF1A2AC68B00CFED6E /* blurredlights.jpg in Resources */,

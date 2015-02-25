@@ -87,6 +87,52 @@ MBProgressHUD *HUD;
     
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Retrieving Cases";
+    [HUD show:YES];
+    
+    //needs to query for the user and pull some info
+    PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
+    [query getObjectInBackgroundWithId:HomePageuserName block:^(PFObject *latestCaseList, NSError *error) {
+        // Do something with the returned PFObject
+        NSLog(@"%@", latestCaseList);
+        
+        [HUD hide:NO];
+        
+        //do some logic to sort through these cases and see how many have matches, how many are awaiting more info.
+        NSArray *cases = [latestCaseList objectForKey:@"cases"];
+        
+        int caseCount = (int)cases.count;
+        
+        UIView *bubbleIndicatorCases = [[UIView alloc] init];
+        int bubbleWidth = 20;
+        int bubbleHeight = 20;
+        
+        [bubbleIndicatorCases setFrame:CGRectMake(ViewMyCasesButton.frame.origin.x+ViewMyCasesButton.frame.size.width-bubbleWidth/2,ViewMyCasesButton.frame.origin.y-bubbleHeight/2,bubbleWidth,bubbleHeight)];
+        
+        bubbleIndicatorCases.backgroundColor = [UIColor redColor];
+        
+        UILabel *bubbleNumber = [[UILabel alloc] initWithFrame:bubbleIndicatorCases.bounds];
+        
+        bubbleNumber.text = [NSString stringWithFormat:@"%i",caseCount];
+        
+        [bubbleNumber setTextAlignment:NSTextAlignmentCenter];
+        
+        [bubbleIndicatorCases addSubview:bubbleNumber];
+        
+        bubbleIndicatorCases.layer.cornerRadius = 9.0;
+        bubbleIndicatorCases.layer.masksToBounds = YES;
+        
+        [self.view addSubview:bubbleIndicatorCases];
+        
+    }];
+
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -197,9 +243,43 @@ MBProgressHUD *HUD;
     
     matchesViewController *mvc = [self.storyboard instantiateViewControllerWithIdentifier:@"mvc"];
     
-    //mvc.itsMTLObject = HomePageITSMTLObject;
+    //loop through the itsMTLObject and gather all the user's matches
+    NSMutableArray *allMatchesArray = [[NSMutableArray alloc] init];
+    NSMutableArray *allMatchCaseObjectsArray = [[NSMutableArray alloc] init];
+    NSMutableArray *allMatchCaseItemObjectsArray = [[NSMutableArray alloc] init];
+    NSArray *cases = [HomePageITSMTLObject objectForKey:@"cases"];
+    for(PFObject *caseObj in cases)
+    {
+        NSArray *caseItems = [caseObj objectForKey:@"caseItems"];
+        //get the properties
+        
+        for(PFObject *caseItemObject in caseItems)
+        {
+            NSString *origin = [caseItemObject objectForKey:@"origin"];
+            if([origin isEqualToString:@"B"])
+            {
+                NSString *matchesString = [caseItemObject objectForKey:@"browse"];
+                NSString *matchesYesString = [caseItemObject objectForKey:@"yes"];
+                NSArray *matchesArray = [matchesString componentsSeparatedByString:@";"];
+                
+                for(NSString *mtlObjectID in matchesArray)
+                {
+                    [allMatchesArray addObject:mtlObjectID];
+                    [allMatchCaseObjectsArray addObject:caseObj];
+                    NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                    
+                    [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                    
+                }
+            }
+        }
+    }
     
-    //UINavigationController *uinc = self.navigationController;
+    mvc.matchesArray = [allMatchesArray copy];
+    mvc.matchesCaseObjectArrays = [allMatchCaseObjectsArray copy];
+    mvc.matchesCaseItemArrays = [allMatchCaseItemObjectsArray copy];
+    
+    mvc.matchesUserName = HomePageuserName;
     
     [self.navigationController pushViewController:mvc animated:YES];
     

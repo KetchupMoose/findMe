@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SWTableViewCell.h"
 
-@interface matchesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface matchesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,SWTableViewCellDelegate>
 
 @property (strong,nonatomic) IBOutlet UITableView *matchesTableView;
+@property (strong,nonatomic) NSArray *matchesArray;
+@property (strong,nonatomic) NSArray *matchesCaseObjectArrays;
+@property (strong,nonatomic) NSArray *matchesCaseItemArrays;
+@property (strong,nonatomic) NSString *matchesUserName;
 
 @end
