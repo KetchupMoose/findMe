@@ -13,6 +13,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 #import "UIViewController+ECSlidingViewController.h"
+#import "matchesViewController.h"
 
 @interface CaseDetailsEmailViewController ()
 
@@ -101,10 +102,10 @@ CGPoint startLocation;
     locationManager = [[CLLocationManager alloc] init];
     geocoder = [[CLGeocoder alloc] init];
     
-    PFObject *caseItemObject;
+    PFObject *caseObject;
     if([self.jsonDisplayMode isEqualToString:@"template"])
     {
-        caseItemObject = (PFObject *)jsonObject;
+        caseObject = (PFObject *)jsonObject;
         templateMode =1;
         
     }
@@ -114,11 +115,11 @@ CGPoint startLocation;
         
         NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
         
-        caseItemObject = [allCases objectAtIndex:selectedCaseInt];
+        caseObject = [allCases objectAtIndex:selectedCaseInt];
     }
     
     
-    NSString *caseObjectID = [caseItemObject objectForKey:@"caseId"];
+    NSString *caseObjectID = [caseObject objectForKey:@"caseId"];
     
     int length = (int)[caseObjectID length];
     
@@ -133,7 +134,7 @@ CGPoint startLocation;
         caseBeingUpdated = caseObjectID;
         
     }
-    caseItems= [caseItemObject objectForKey:@"caseItems"];
+    caseItems= [caseObject objectForKey:@"caseItems"];
     
     //sort the incoming caseItems by priority
     NSSortDescriptor *sortDescriptor;
@@ -207,7 +208,6 @@ CGPoint startLocation;
             }
         }
     }
-    
     
     propsArray = sortingPropsArray;
     
@@ -685,7 +685,6 @@ CGPoint startLocation;
         popVC.popupjsonDisplayMode = @"template";
         popVC.popupjsonObject = self.jsonObject;
         popVC.originalTemplateOptionsCounts = templateOptionsCounts;
-        
     }
     else if([self.jsonDisplayMode isEqualToString:@"singleCase"])
     {
@@ -698,6 +697,7 @@ CGPoint startLocation;
         
         popVC.popupitsMTLObject = self.itsMTLObject;
         popVC.selectedCase = self.selectedCaseIndex;
+        
         popVC.popupjsonDisplayMode = @"no";
     }
     NSNumber *selectedCaseItem = [NSNumber numberWithInteger:indexPath.row];
@@ -775,6 +775,59 @@ CGPoint startLocation;
     else if([propType isEqual:@"B"])
     {
         //display matches view controller (to be created)
+        matchesViewController *mvc = [self.storyboard instantiateViewControllerWithIdentifier:@"mvc"];
+        
+        [mvc.matchViewControllerMode isEqualToString:@"singleCaseMatches"];
+        
+        //loop through the itsMTLObject and gather all the user's matches
+        NSMutableArray *allMatchesArray = [[NSMutableArray alloc] init];
+        NSMutableArray *allMatchCaseObjectsArray = [[NSMutableArray alloc] init];
+        NSMutableArray *allMatchCaseItemObjectsArray = [[NSMutableArray alloc] init];
+        
+        
+        NSString *matchesString = [caseItemPicked objectForKey:@"browse"];
+        
+        NSString *matchesYesString = [caseItemPicked objectForKey:@"yes"];
+        
+        NSString *matchesCombined;
+        if([matchesYesString length] >0)
+        {
+            matchesCombined = [matchesString stringByAppendingString:matchesYesString];
+        }
+        else
+        {
+            matchesCombined = matchesString;
+        }
+        
+        NSArray *matchesArray = [matchesCombined componentsSeparatedByString:@";"];
+        PFObject *caseObject;
+        
+        int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+        
+        NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+        
+        caseObject = [allCases objectAtIndex:selectedCaseInt];
+        for(NSString *mtlObjectID in matchesArray)
+        {
+            [allMatchesArray addObject:mtlObjectID];
+            NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
+            
+            
+            [allMatchCaseObjectsArray addObject:caseObject];
+            
+            [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+        }
+        
+        mvc.matchesArray = [allMatchesArray copy];
+        mvc.matchesCaseObjectArrays = [allMatchCaseObjectsArray copy];
+        mvc.matchesCaseItemArrays = [allMatchCaseItemObjectsArray copy];
+        mvc.matchesUserName = self.userName;
+        
+        [self.navigationController pushViewController:mvc animated:YES];
+        
+        return;
+        
+        
     }
     else if([options length]==0)
     {
@@ -932,6 +985,59 @@ CGPoint startLocation;
     else if([propType isEqual:@"B"])
     {
         //display matches view controller (to be created)
+        matchesViewController *mvc = [self.storyboard instantiateViewControllerWithIdentifier:@"mvc"];
+        
+        [mvc.matchViewControllerMode isEqualToString:@"singleCaseMatches"];
+        
+        //loop through the itsMTLObject and gather all the user's matches
+        NSMutableArray *allMatchesArray = [[NSMutableArray alloc] init];
+        NSMutableArray *allMatchCaseObjectsArray = [[NSMutableArray alloc] init];
+        NSMutableArray *allMatchCaseItemObjectsArray = [[NSMutableArray alloc] init];
+        
+        
+        NSString *matchesString = [caseItemPicked objectForKey:@"browse"];
+        
+        NSString *matchesYesString = [caseItemPicked objectForKey:@"yes"];
+        
+        NSString *matchesCombined;
+        if([matchesYesString length] >0)
+        {
+            matchesCombined = [matchesString stringByAppendingString:matchesYesString];
+        }
+        else
+        {
+            matchesCombined = matchesString;
+        }
+
+        NSArray *matchesArray = [matchesCombined componentsSeparatedByString:@";"];
+        PFObject *caseObject;
+        
+        int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+        
+        NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+        
+        caseObject = [allCases objectAtIndex:selectedCaseInt];
+        for(NSString *mtlObjectID in matchesArray)
+            {
+            [allMatchesArray addObject:mtlObjectID];
+            NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
+            
+            
+            [allMatchCaseObjectsArray addObject:caseObject];
+      
+            [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+            }
+        
+        mvc.matchesArray = [allMatchesArray copy];
+        mvc.matchesCaseObjectArrays = [allMatchCaseObjectsArray copy];
+        mvc.matchesCaseItemArrays = [allMatchCaseItemObjectsArray copy];
+        mvc.matchesUserName = self.userName;
+        
+        [self.navigationController pushViewController:mvc animated:YES];
+        
+        return;
+        
+        
     }
     else if([options length]==0)
     {

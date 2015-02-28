@@ -260,8 +260,20 @@ MBProgressHUD *HUD;
             if([origin isEqualToString:@"B"])
             {
                 NSString *matchesString = [caseItemObject objectForKey:@"browse"];
+                
                 NSString *matchesYesString = [caseItemObject objectForKey:@"yes"];
-                NSArray *matchesArray = [matchesString componentsSeparatedByString:@";"];
+                
+                NSString *matchesCombined;
+                if([matchesYesString length] >0)
+                {
+                    matchesCombined = [matchesString stringByAppendingString:matchesYesString];
+                }
+                else
+                {
+                    matchesCombined = matchesString;
+                }
+                
+                NSArray *matchesArray = [matchesCombined componentsSeparatedByString:@";"];
                 
                 for(NSString *mtlObjectID in matchesArray)
                 {
@@ -281,6 +293,7 @@ MBProgressHUD *HUD;
     mvc.matchesCaseItemArrays = [allMatchCaseItemObjectsArray copy];
     
     mvc.matchesUserName = HomePageuserName;
+    mvc.matchViewControllerMode = @"allMatches";
     
     [self.navigationController pushViewController:mvc animated:YES];
     
@@ -389,6 +402,6 @@ MBProgressHUD *HUD;
     
 }
 
-//placeholder comment for commit Wednesday Feb 25, 2.5 hours spent on contract renewal and discussions with uzma.
+
 
 @end

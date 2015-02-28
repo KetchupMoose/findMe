@@ -11,6 +11,7 @@
 #import "XMLWriter.h"
 #import <Parse/Parse.h>
 #import "MBProgressHUD.h"
+#import "conversationsViewController.h"
 
 @interface matchesViewController ()
 
@@ -26,8 +27,6 @@ MBProgressHUD *HUD;
     // Do any additional setup after loading the view.
     self.matchesTableView.delegate = self;
     self.matchesTableView.dataSource = self;
-    
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -71,6 +70,24 @@ MBProgressHUD *HUD;
     
     UILabel *matchNameLabel = (UILabel *)[cell viewWithTag:2];
     UIImageView *matchImage = (UIImageView *)[cell viewWithTag:1];
+    UIView *bgLabelView = [cell viewWithTag:6];
+    UILabel *caseNameLabel = (UILabel *)[cell viewWithTag:7];
+    
+    if([self.matchViewControllerMode isEqualToString:@"allMatches"])
+    {
+        PFObject *caseObj = [self.matchesCaseObjectArrays objectAtIndex:indexPath.row];
+        NSString *caseName = [caseObj objectForKey:@"caseName"];
+        caseNameLabel.text = caseName;
+        bgLabelView.alpha = 1;
+        caseNameLabel.alpha = 1;
+        
+    }
+    else
+    {
+        bgLabelView.alpha = 0;
+        caseNameLabel.alpha = 0;
+        
+    }
     
     matchImage.image = [UIImage imageNamed:@"femalesilhouette.jpeg"];
     
@@ -117,8 +134,44 @@ MBProgressHUD *HUD;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //create a conversation PFObject between the two usernames or look up the conversation object
+    PFQuery *query = [PFQuery queryWithClassName:@"Conversations"];
     
+    NSString *matchID = [self.matchesArray objectAtIndex:indexPath.row];
+    NSMutableArray *twoMatches = [[NSMutableArray alloc] init];
+    
+    [twoMatches addObject:matchID];
+    [twoMatches addObject:self.matchesUserName];
+    NSArray *conversationMembers = [twoMatches mutableCopy];
+    
+    [query whereKey:@"Members" containsAllObjectsInArray:conversationMembers];
+    
+    NSArray *returnedConversations = [query findObjects];
+    
+    PFObject *conversationObject;
+    
+    if([returnedConversations count] ==0)
+    {
+        //create a conversation object
+        PFObject *conversationObject = [PFObject objectWithClassName:@"Conversations"];
+        [conversationObject setObject:conversationMembers forKey:@"Members"];
+        [conversationObject save];
+        
+    }
+    else
+    {
+       conversationObject = [returnedConversations objectAtIndex:0];
+    }
+    
+    //open the conversationsViewController
+    conversationsViewController *cvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cvc"];
+    
+    cvc.conversationObject = conversationObject;
+    
+    [self.navigationController pushViewController:cvc animated:YES];
 }
+
+
 
 #pragma mark swipableTableViewCellsDelegateMethods
 
@@ -183,6 +236,8 @@ MBProgressHUD *HUD;
                                         NSLog(responseText);
                                         
                                         [HUD hide:NO];
+                                        
+                                        [self refreshMatchViewController];
                                         
                                     }
                                     else
@@ -279,6 +334,84 @@ MBProgressHUD *HUD;
         
     return xml;
     
+}
+
+-(void)refreshMatchViewController
+{
+    if([self.matchViewControllerMode isEqualToString:@"allMatches"])
+    {
+        [self refreshAllMatches];
+        
+    }
+}
+
+-(void)refreshAllMatches
+{
+    //query the itsMTLObject for the updated data
+    //add a progress HUD to show it is retrieving list of cases
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Retrieving Data After Swipe";
+    [HUD show:YES];
+    
+    //needs to query for the user and pull some info
+    PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
+    
+    [query getObjectInBackgroundWithId:self.matchesUserName block:^(PFObject *latestCaseList, NSError *error) {
+        // Do something with the returned PFObject
+        NSLog(@"%@", latestCaseList);
+        
+        [HUD hide:NO];
+        
+        //loop through the itsMTLObject and gather all the user's matches
+        NSMutableArray *allMatchesArray = [[NSMutableArray alloc] init];
+        NSMutableArray *allMatchCaseObjectsArray = [[NSMutableArray alloc] init];
+        NSMutableArray *allMatchCaseItemObjectsArray = [[NSMutableArray alloc] init];
+        NSArray *cases = [latestCaseList objectForKey:@"cases"];
+        
+        for(PFObject *caseObj in cases)
+        {
+            NSArray *caseItems = [caseObj objectForKey:@"caseItems"];
+            //get the properties
+            
+            for(PFObject *caseItemObject in caseItems)
+            {
+                NSString *origin = [caseItemObject objectForKey:@"origin"];
+                if([origin isEqualToString:@"B"])
+                {
+                    NSString *matchesString = [caseItemObject objectForKey:@"browse"];
+                    NSString *matchesYesString = [caseItemObject objectForKey:@"yes"];
+                    NSArray *matchesArray = [matchesString componentsSeparatedByString:@";"];
+                    
+                    for(NSString *mtlObjectID in matchesArray)
+                    {
+                        [allMatchesArray addObject:mtlObjectID];
+                        [allMatchCaseObjectsArray addObject:caseObj];
+                        NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                        
+                        [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                        
+                    }
+                }
+            }
+        }
+        
+        self.matchesArray = [allMatchesArray copy];
+        self.matchesCaseObjectArrays = [allMatchCaseObjectsArray copy];
+        self.matchesCaseItemArrays = [allMatchCaseItemObjectsArray copy];
+        
+        [self.matchesTableView reloadData];
+        
+        
+        
+    }];
+    
+
 }
 
 
