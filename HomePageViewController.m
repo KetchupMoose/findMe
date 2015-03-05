@@ -16,6 +16,9 @@
 #import "matchesViewController.h"
 #import "UIViewController+ECSlidingViewController.h"
 #import "originalViewController.h"
+#import "reachabilitySingleton.h"
+#import "Reachability.h"
+#import "internetOfflineViewController.h"
 
 @interface HomePageViewController ()
 
@@ -35,14 +38,38 @@ MBProgressHUD *HUD;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    //check to see if the parse connection is available.  If not, remove the HomePageViewController and show a ParseUnavailableViewController
+    Reachability *singletonReach = [[reachabilitySingleton sharedReachability] reacher];
+    
+    NetworkStatus *status = [singletonReach currentReachabilityStatus];
+    
+   if (status !=NotReachable)
+    {
+        NSLog(@"reached it!");
+        [self LoadingHomePage];
+    }
+    else
+    {
+        NSLog(@"no connection");
+        //show the internet offline view controller
+        internetOfflineViewController *iovc = [self.storyboard instantiateViewControllerWithIdentifier:@"iovc"];
+        [self.navigationController presentViewController:iovc animated:YES completion:nil];
+        
+    }
+    
+    
+}
+
+
+
+-(void)LoadingHomePage
+{
+    //create an itsMTL Object if necessary
+    [self createParseUser];
     
     //add a progress HUD to show it is retrieving list of cases
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:HUD];
-    
-    //create an itsMTL Object if necessary
-    [self createParseUser];
-    
     
     // Set determinate mode
     HUD.mode = MBProgressHUDModeDeterminate;
@@ -55,7 +82,7 @@ MBProgressHUD *HUD;
     [query getObjectInBackgroundWithId:HomePageuserName block:^(PFObject *latestCaseList, NSError *error) {
         // Do something with the returned PFObject
         NSLog(@"%@", latestCaseList);
-       
+        
         [HUD hide:NO];
         
         //do some logic to sort through these cases and see how many have matches, how many are awaiting more info.
@@ -83,9 +110,9 @@ MBProgressHUD *HUD;
         bubbleIndicatorCases.layer.masksToBounds = YES;
         
         [self.view addSubview:bubbleIndicatorCases];
-                
+        
     }];
-    
+
 }
 
 -(void)viewWillAppear:(BOOL)animated

@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "reachabilitySingleton.h"
 #import <Parse/Parse.h>
 
 @implementation AppDelegate
@@ -30,6 +31,9 @@
     
     PFUser *currentUser = [PFUser currentUser];
     [currentUser save];
+    
+    //setup singleton for checking internet status
+    [reachabilitySingleton sharedReachability];
     
     
     //-- Set Notification
@@ -64,6 +68,7 @@
     [currentInstallation saveInBackground];
     
 }
+
 							
 - (void)applicationWillResignActive:(UIApplication *)application
 {

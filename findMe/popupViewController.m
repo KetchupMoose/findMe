@@ -32,10 +32,13 @@
 @synthesize locationRetrieved;
 @synthesize popupOrSlideout;
 @synthesize originalTemplateOptionsCounts;
+@synthesize popupanswersDictionary;
 
 NSMutableArray *popupOptionsArray;
 NSMutableArray *answersArray;
-NSMutableArray *popupanswersDictionary;
+
+
+NSArray *popupAnswersStatic;
 
 NSNumber *lastTimestamp;
 MBProgressHUD *HUD;
@@ -55,6 +58,8 @@ UIView *bgDarkenView;
     popupOptionsArray = [[NSMutableArray alloc] init];
     answersArray = [[NSMutableArray alloc] init];
     popupanswersDictionary = [[NSMutableArray alloc] init];
+    
+    
     
     //setup sliding view controller variables
      //[self.slidingViewController setAnchorRightRevealAmount:260.0f];
@@ -86,7 +91,6 @@ UIView *bgDarkenView;
     self.view.layer.shadowOpacity = 0.75f;
     self.view.layer.shadowRadius = 10.0f;
     self.view.layer.shadowColor = [[UIColor blackColor] CGColor];
-    
     
     self.answersTableView.delegate = self;
     self.answersTableView.dataSource = self;
@@ -127,15 +131,15 @@ UIView *bgDarkenView;
     
     NSArray *selectedCaseItemAnswersList = [selectedCaseItemObject objectForKey:@"answers"];
    
-   
-    
     [answersArray removeAllObjects];
     //[answersDictionary removeAllObjects];
-    if([selectedCaseItemAnswersList count]>0)
-    {
-        popupanswersDictionary = [selectedCaseItemAnswersList mutableCopy];
-    }
+    popupanswersDictionary = [selectedCaseItemAnswersList mutableCopy];
     
+    if(popupanswersDictionary ==nil)
+    {
+        popupanswersDictionary = [[NSMutableArray alloc] init];
+        
+    }
     
     for (PFObject *eachAnsObj in selectedCaseItemAnswersList)
     {

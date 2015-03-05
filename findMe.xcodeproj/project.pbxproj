@@ -72,6 +72,10 @@
 		EC9F51DB1A2AC53B00CFED6E /* longexposurestreetlights.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DA1A2AC53B00CFED6E /* longexposurestreetlights.jpeg */; };
 		EC9F51DD1A2AC63F00CFED6E /* gaussianblur.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DC1A2AC63F00CFED6E /* gaussianblur.jpg */; };
 		EC9F51DF1A2AC68B00CFED6E /* blurredlights.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DE1A2AC68B00CFED6E /* blurredlights.jpg */; };
+		ECA7A21D1AA7B77900F899D5 /* internetOfflineIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = ECA7A21C1AA7B77900F899D5 /* internetOfflineIcon.png */; };
+		ECA7A2201AA7B84C00F899D5 /* internetOfflineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECA7A21F1AA7B84C00F899D5 /* internetOfflineViewController.m */; };
+		ECA7A2231AA7BD7700F899D5 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = ECA7A2221AA7BD7700F899D5 /* Reachability.m */; };
+		ECA7A2261AA7CA1D00F899D5 /* reachabilitySingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = ECA7A2251AA7CA1D00F899D5 /* reachabilitySingleton.m */; };
 		ECB1D5111A7748B5008CC684 /* popupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECB1D5101A7748B5008CC684 /* popupViewController.m */; };
 		ECC9E5041AA1126F0099C46A /* conversationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECC9E5031AA1126F0099C46A /* conversationsViewController.m */; };
 		ECC9E50E1AA153070099C46A /* Icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = ECC9E5061AA153070099C46A /* Icon-40.png */; };
@@ -218,6 +222,13 @@
 		EC9F51DA1A2AC53B00CFED6E /* longexposurestreetlights.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = longexposurestreetlights.jpeg; sourceTree = "<group>"; };
 		EC9F51DC1A2AC63F00CFED6E /* gaussianblur.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = gaussianblur.jpg; sourceTree = "<group>"; };
 		EC9F51DE1A2AC68B00CFED6E /* blurredlights.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = blurredlights.jpg; sourceTree = "<group>"; };
+		ECA7A21C1AA7B77900F899D5 /* internetOfflineIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = internetOfflineIcon.png; sourceTree = "<group>"; };
+		ECA7A21E1AA7B84C00F899D5 /* internetOfflineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = internetOfflineViewController.h; sourceTree = "<group>"; };
+		ECA7A21F1AA7B84C00F899D5 /* internetOfflineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = internetOfflineViewController.m; sourceTree = "<group>"; };
+		ECA7A2211AA7BD7700F899D5 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		ECA7A2221AA7BD7700F899D5 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		ECA7A2241AA7CA1D00F899D5 /* reachabilitySingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reachabilitySingleton.h; sourceTree = "<group>"; };
+		ECA7A2251AA7CA1D00F899D5 /* reachabilitySingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = reachabilitySingleton.m; sourceTree = "<group>"; };
 		ECB1D50F1A7748B5008CC684 /* popupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = popupViewController.h; sourceTree = "<group>"; };
 		ECB1D5101A7748B5008CC684 /* popupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = popupViewController.m; sourceTree = "<group>"; };
 		ECC9E5021AA1126F0099C46A /* conversationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = conversationsViewController.h; sourceTree = "<group>"; };
@@ -374,6 +385,8 @@
 				D3FBD13E19D05062008240F5 /* JSON Parsing */,
 				D31DF30419CEFC0C00A37725 /* AppDelegate.h */,
 				D31DF30519CEFC0C00A37725 /* AppDelegate.m */,
+				ECA7A2241AA7CA1D00F899D5 /* reachabilitySingleton.h */,
+				ECA7A2251AA7CA1D00F899D5 /* reachabilitySingleton.m */,
 				ECEF944E1A8C29DF0000A444 /* matchesViewController.h */,
 				ECEF944F1A8C29DF0000A444 /* matchesViewController.m */,
 				ECC9E5021AA1126F0099C46A /* conversationsViewController.h */,
@@ -398,7 +411,8 @@
 				D3207B0119E9CBCE00085B7C /* NewPropertyViewController.m */,
 				D3F4573D19F88199000EDF25 /* setProfileViewController.h */,
 				D3F4573E19F88199000EDF25 /* setProfileViewController.m */,
-				D3207B0319E9CF8B00085B7C /* green-checkmark.jpg */,
+				ECA7A21E1AA7B84C00F899D5 /* internetOfflineViewController.h */,
+				ECA7A21F1AA7B84C00F899D5 /* internetOfflineViewController.m */,
 				D31DF31019CEFC0C00A37725 /* Images.xcassets */,
 				D31DF2FC19CEFC0C00A37725 /* Supporting Files */,
 			);
@@ -455,6 +469,8 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				D3207B0319E9CF8B00085B7C /* green-checkmark.jpg */,
+				ECA7A21C1AA7B77900F899D5 /* internetOfflineIcon.png */,
 				EC0403F61A9CFE3400151796 /* femalesilhouette.jpeg */,
 				EC9F51DE1A2AC68B00CFED6E /* blurredlights.jpg */,
 				EC9F51DC1A2AC63F00CFED6E /* gaussianblur.jpg */,
@@ -572,6 +588,8 @@
 		ECE6B17B1A0D9FAB007F4A19 /* commonControls */ = {
 			isa = PBXGroup;
 			children = (
+				ECA7A2211AA7BD7700F899D5 /* Reachability.h */,
+				ECA7A2221AA7BD7700F899D5 /* Reachability.m */,
 				ECE6B1821A0DA01D007F4A19 /* UIImage+Scaling.h */,
 				ECE6B1831A0DA01D007F4A19 /* UIImage+Scaling.m */,
 				ECE6B17C1A0D9FF3007F4A19 /* UIImageView+Scaling.h */,
@@ -688,6 +706,7 @@
 				D3F4574319FD920A000EDF25 /* womanbutton.png in Resources */,
 				ECE6B16C1A069DAB007F4A19 /* stockphotowoman2.jpg in Resources */,
 				ECE6B16E1A06AD0E007F4A19 /* sawyousubway.jpg in Resources */,
+				ECA7A21D1AA7B77900F899D5 /* internetOfflineIcon.png in Resources */,
 				ECC9E5131AA153070099C46A /* Icon-Small.png in Resources */,
 				D3F4574219FD920A000EDF25 /* ManButton.png in Resources */,
 				ECC9E5141AA153070099C46A /* Icon-Small@2x.png in Resources */,
@@ -724,6 +743,7 @@
 			files = (
 				ECC9E5041AA1126F0099C46A /* conversationsViewController.m in Sources */,
 				EC6595101A8E8BCA00678E6C /* MEDynamicTransition.m in Sources */,
+				ECA7A2261AA7CA1D00F899D5 /* reachabilitySingleton.m in Sources */,
 				EC0822FA1A0EE7F0000B6684 /* UIImage+GIF.m in Sources */,
 				ECE6B1801A0D9FF3007F4A19 /* UIImageView+Scaling.m in Sources */,
 				EC0823041A186B13000B6684 /* HomePageViewController.m in Sources */,
@@ -742,6 +762,7 @@
 				ECEF94601A8D127F0000A444 /* ECSlidingAnimationController.m in Sources */,
 				ECEF944A1A832A4F0000A444 /* SWLongPressGestureRecognizer.m in Sources */,
 				EC0822F41A0EE7F0000B6684 /* SDWebImageDecoder.m in Sources */,
+				ECA7A2231AA7BD7700F899D5 /* Reachability.m in Sources */,
 				D3F4573F19F88199000EDF25 /* setProfileViewController.m in Sources */,
 				ECEF944D1A832A4F0000A444 /* SWUtilityButtonView.m in Sources */,
 				ECEF944B1A832A4F0000A444 /* SWTableViewCell.m in Sources */,
@@ -765,6 +786,7 @@
 				EC6595051A8E89E900678E6C /* METransitions.m in Sources */,
 				EC0822F61A0EE7F0000B6684 /* SDWebImageDownloaderOperation.m in Sources */,
 				ECEF94481A832A4F0000A444 /* NSMutableArray+SWUtilityButtons.m in Sources */,
+				ECA7A2201AA7B84C00F899D5 /* internetOfflineViewController.m in Sources */,
 				ECF19FB81A76DAF200607E6D /* CaseDetailsEmailViewController.m in Sources */,
 				ECB1D5111A7748B5008CC684 /* popupViewController.m in Sources */,
 				D31DF30219CEFC0C00A37725 /* main.m in Sources */,

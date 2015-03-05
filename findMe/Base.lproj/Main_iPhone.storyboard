@@ -817,6 +817,50 @@
             </objects>
             <point key="canvasLocation" x="97" y="531"/>
         </scene>
+        <!--Internet Offline View Controller-->
+        <scene sceneID="DU5-hZ-cIg">
+            <objects>
+                <viewController storyboardIdentifier="iovc" id="ecn-wq-Zar" customClass="internetOfflineViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="1Gy-jn-FeR"/>
+                        <viewControllerLayoutGuide type="bottom" id="XCZ-Y1-4d1"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="fMe-qi-Xun">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="internetOfflineIcon.png" translatesAutoresizingMaskIntoConstraints="NO" id="HV4-nE-0YZ">
+                                <rect key="frame" x="105" y="57" width="110" height="102"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w2v-7K-QnZ">
+                                <rect key="frame" x="74" y="249" width="189" height="60"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal" title="Retry Connection">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="retryConnection:" destination="ecn-wq-Zar" eventType="touchUpInside" id="LFf-GD-Vy2"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="The connection to FindMe is currently unavailable." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DTh-7c-SWI">
+                                <rect key="frame" x="33" y="144" width="271" height="123"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="internetRetryButton" destination="w2v-7K-QnZ" id="4nV-8S-s0v"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="usF-Vc-2vP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-970" y="1118"/>
+        </scene>
         <!--Conversations View Controller-->
         <scene sceneID="VXm-G5-yEh">
             <objects>
@@ -1032,6 +1076,7 @@
         <image name="blurredlights.jpg" width="640" height="1136"/>
         <image name="cityLightsBG.jpg" width="640" height="1136"/>
         <image name="green-checkmark.jpg" width="425" height="425"/>
+        <image name="internetOfflineIcon.png" width="128" height="128"/>
         <image name="womanbutton.png" width="135" height="135"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
@@ -1040,7 +1085,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="EW0-y8-lYK"/>
-        <segue reference="E0J-rW-9nj"/>
+        <segue reference="bxr-lz-QZV"/>
+        <segue reference="uUO-Il-KEk"/>
     </inferredMetricsTieBreakers>
 </document>

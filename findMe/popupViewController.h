@@ -55,4 +55,6 @@
 @property (weak,nonatomic) NSString *locationLongitude;
 @property (weak,nonatomic) NSString *popupOrSlideout;
 
+@property (strong,nonatomic) NSMutableArray *popupanswersDictionary;
+
 @end
