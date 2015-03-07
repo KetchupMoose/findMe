@@ -26,6 +26,7 @@ MBProgressHUD* HUD;
     self.chatTableView.delegate = self;
     self.chatTableView.dataSource = self;
     
+    self.chatTextField.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,6 +41,7 @@ MBProgressHUD* HUD;
     [self.chatTableView removeConstraints:self.chatTableView.constraints];
     
     PFQuery *query = [PFQuery queryWithClassName:@"conversationMessages"];
+    [query whereKey:@"Conversation" equalTo:self.conversationObject];
     [query orderByDescending:@"updatedAt"];
     
     conversationMessagesArray = [query findObjects];
@@ -107,15 +109,19 @@ MBProgressHUD* HUD;
 
 - (IBAction)sendChat:(id)sender
 {
+    [self.chatTextField resignFirstResponder];
+    
     //create a messages object with the text
     
     NSString *chatMessage = self.chatTextField.text;
     PFObject *messageObject;
+    
     if([chatMessage length] >0)
     {
          messageObject = [PFObject objectWithClassName:@"conversationMessages"];
         [messageObject setObject:self.conversationObject forKey:@"Conversation"];
         [messageObject setObject:chatMessage forKey:@"MessageString"];
+        [messageObject setObject:self.conversationCaseUserID forKey:@"messageCaseUserID"];
         [messageObject save];
     }
     
@@ -128,5 +134,63 @@ MBProgressHUD* HUD;
     [self.chatTableView reloadData];
     
 }
+
+//textfield delegate methods
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    
+    [self animateTextField:textField up:YES];
+    
+    self.sendButton.enabled = 1;
+    
+}
+
+
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [self animateTextField:textField up:NO];
+    
+}
+
+
+- (void) animateTextField: (UITextField*) textField up: (BOOL) up
+{
+    int animatedDistance;
+    int moveUpValue = textField.frame.origin.y+ textField.frame.size.height;
+    UIInterfaceOrientation orientation =
+    [[UIApplication sharedApplication] statusBarOrientation];
+    if (orientation == UIInterfaceOrientationPortrait ||
+        orientation == UIInterfaceOrientationPortraitUpsideDown)
+    {
+        
+        animatedDistance = 216-(460-moveUpValue-5);
+    }
+    else
+    {
+        animatedDistance = 162-(320-moveUpValue-5);
+    }
+    
+    if(animatedDistance>0)
+    {
+        const int movementDistance = animatedDistance;
+        const float movementDuration = 0.3f;
+        int movement = (up ? -movementDistance : movementDistance);
+        [UIView beginAnimations: nil context: nil];
+        [UIView setAnimationBeginsFromCurrentState: YES];
+        [UIView setAnimationDuration: movementDuration];
+        self.view.frame = CGRectOffset(self.view.frame, 0, movement);
+        [UIView commitAnimations];
+    }
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
+    [textField resignFirstResponder];
+    
+    return YES;
+    
+}
+
 
 @end

@@ -991,6 +991,24 @@
             </objects>
             <point key="canvasLocation" x="104" y="1280"/>
         </scene>
+        <!--ConversationJSQ View Controller-->
+        <scene sceneID="lwu-o9-Ifh">
+            <objects>
+                <viewController storyboardIdentifier="convojsq" id="q67-xP-4EN" customClass="conversationJSQViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="B8P-K2-q33"/>
+                        <viewControllerLayoutGuide type="bottom" id="lIp-xO-pxl"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="E5d-sk-djw">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vRt-3C-hdI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="102" y="1984"/>
+        </scene>
         <!--Original View Controller-->
         <scene sceneID="wOY-7Z-azn">
             <objects>

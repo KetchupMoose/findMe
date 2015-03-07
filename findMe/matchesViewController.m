@@ -12,12 +12,15 @@
 #import <Parse/Parse.h>
 #import "MBProgressHUD.h"
 #import "conversationsViewController.h"
+#import "conversationJSQViewController.h"
+#import "conversationModelData.h"
 
 @interface matchesViewController ()
 
 @end
 
 @implementation matchesViewController
+
 
 MBProgressHUD *HUD;
 
@@ -141,7 +144,11 @@ MBProgressHUD *HUD;
     NSMutableArray *twoMatches = [[NSMutableArray alloc] init];
     
     [twoMatches addObject:matchID];
-    [twoMatches addObject:self.matchesUserName];
+    PFObject *caseObjAtIndex = [self.matchesCaseObjectArrays objectAtIndex:indexPath.row];
+    
+    NSString *caseForMatch = [caseObjAtIndex objectForKey:@"caseId"];
+    
+    [twoMatches addObject:caseForMatch];
     NSArray *conversationMembers = [twoMatches mutableCopy];
     
     [query whereKey:@"Members" containsAllObjectsInArray:conversationMembers];
@@ -153,7 +160,7 @@ MBProgressHUD *HUD;
     if([returnedConversations count] ==0)
     {
         //create a conversation object
-        PFObject *conversationObject = [PFObject objectWithClassName:@"Conversations"];
+        conversationObject = [PFObject objectWithClassName:@"Conversations"];
         [conversationObject setObject:conversationMembers forKey:@"Members"];
         [conversationObject save];
         
@@ -163,12 +170,25 @@ MBProgressHUD *HUD;
        conversationObject = [returnedConversations objectAtIndex:0];
     }
     
+    
+     conversationJSQViewController *cJSQvc = [self.storyboard instantiateViewControllerWithIdentifier:@"convojsq"];
+    
+    conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject userName:caseForMatch];
+    
+    cJSQvc.conversationData = cmData;
+    
+    [self.navigationController pushViewController:cJSQvc animated:YES];
+    
+    //commenting out old conversationsViewController to replace with JSQViewController
+    /*
     //open the conversationsViewController
     conversationsViewController *cvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cvc"];
     
     cvc.conversationObject = conversationObject;
+    cvc.conversationCaseUserID = caseForMatch;
     
     [self.navigationController pushViewController:cvc animated:YES];
+     */
 }
 
 

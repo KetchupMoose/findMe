@@ -2174,12 +2174,13 @@ CGPoint startLocation;
                                         PFObject *caseObject = [allCases objectAtIndex:[selectedCaseIndex integerValue]];
                                         caseBeingUpdated = [caseObject objectForKey:@"caseId"];
                                         
+                                        /*
                                         NSString *timeStampReturn = [caseObject objectForKey:@"timestamp"];
                                         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
                                         f.numberStyle = NSNumberFormatterDecimalStyle;
                                         lastTimestamp = [f numberFromString:timeStampReturn];
-                                        
-                                        [self pollForCaseRefresh];
+                                        */
+                                        //[self pollForCaseRefresh];
                                     }
                                     else
                                     {

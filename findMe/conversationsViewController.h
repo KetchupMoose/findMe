@@ -16,5 +16,7 @@
 - (IBAction)sendChat:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextField *chatTextField;
 @property (weak,nonatomic) IBOutlet UITableView *chatTableView;
+@property (weak,nonatomic) NSString *conversationCaseUserID;
+
 
 @end
