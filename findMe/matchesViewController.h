@@ -17,6 +17,6 @@
 @property (strong,nonatomic) NSArray *matchesCaseItemArrays;
 @property (strong,nonatomic) NSString *matchesUserName;
 @property (strong,nonatomic) NSString *matchViewControllerMode;
-
+@property (strong,nonatomic) NSArray *matchTypeArray;
 
 @end

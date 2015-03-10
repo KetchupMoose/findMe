@@ -98,6 +98,18 @@ MBProgressHUD *HUD;
     
     matchNameLabel.text = matchNameString;
     
+    NSString *matchType = [self.matchTypeArray objectAtIndex:indexPath.row];
+    if([matchType isEqualToString:@"yes"])
+    {
+        matchNameLabel.textColor = [UIColor greenColor];
+        
+    }
+    else if([matchType isEqualToString:@"rejected"])
+    {
+        matchNameLabel.textColor = [UIColor grayColor];
+        
+    }
+    
     return cell;
 }
 

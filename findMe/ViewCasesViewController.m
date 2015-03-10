@@ -104,6 +104,48 @@ UIRefreshControl *refreshControl;
     //if response case is ok, refresh the list of cases.
     PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
     
+    [query getObjectInBackgroundWithId:userName block:^(PFObject *object, NSError *error) {
+        
+        if(error)
+        {
+             [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Query Failed", nil) message:NSLocalizedString([error localizedDescription], nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+            return;
+            
+        }
+        
+        PFObject *latestCaseList = object;
+        self.itsMTLObject = latestCaseList;
+        
+        // NSLog(@"%@", latestCaseList);
+        caseListJSON = [latestCaseList objectForKey:@"cases"];
+        [caseListPruned removeAllObjects];
+        
+        for (PFObject *caseObject in caseListJSON)
+        {
+            
+            NSString *caseID = [caseObject objectForKey:@"caseId"];
+            if (caseID !=nil)
+            {
+                [caseListPruned addObject:caseObject];
+                
+            }
+            
+        }
+        
+        [refreshControl endRefreshing];
+        
+        [casesTableView reloadData];
+        
+        [HUD hide:YES];
+
+    }];
+    
+  
+}
+
+-(void) viewDidAppear:(BOOL)animated
+{
+    //refresh the itsMTLObject so it grabs the latest data
     //add a progress HUD to show it is retrieving list of cases
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:HUD];
@@ -111,40 +153,29 @@ UIRefreshControl *refreshControl;
     // Set determinate mode
     HUD.mode = MBProgressHUDModeDeterminate;
     HUD.delegate = self;
-    HUD.labelText = @"Updating Case List";
+    HUD.labelText = @"Running Wait For Sync";
     [HUD show:YES];
     
-    PFObject *latestCaseList = [query getObjectWithId:userName];
-    self.itsMTLObject = latestCaseList;
-    
-    NSLog(@"%@", latestCaseList);
-    caseListJSON = [latestCaseList objectForKey:@"cases"];
-    [caseListPruned removeAllObjects];
-    
-    for (PFObject *caseObject in caseListJSON)
-    {
-        
-        NSString *caseID = [caseObject objectForKey:@"caseId"];
-        if (caseID !=nil)
-        {
-            [caseListPruned addObject:caseObject];
-            
-        }
-        
-    }
-    
-    [refreshControl endRefreshing];
-    
-    [casesTableView reloadData];
-    
-    [HUD hide:YES];
-
-}
-
--(void) viewDidAppear:(BOOL)animated
-{
-    //refresh the itsMTLObject so it grabs the latest data
-    [self refreshTable];
+    //call waitForSync first and then refresh the table
+    [PFCloud callFunctionInBackground:@"waitForSync"
+                       withParameters:@{@"payload": userName}
+                                block:^(NSString *responseString, NSError *error) {
+                                    NSLog(responseString);
+                                    
+                                if([responseString containsString:@"ERROR"])
+                                {
+                                    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WaitForSync Failed", nil) message:NSLocalizedString(responseString, nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+                                    [HUD hide:NO];
+                                    
+                                    return;
+                                    
+                                }
+                                    else
+                                    {
+                                      [self refreshTable];
+                                    }
+                                
+                                }];
     
 }
 

@@ -18,7 +18,7 @@
 #import "originalViewController.h"
 #import "reachabilitySingleton.h"
 #import "Reachability.h"
-#import "internetOfflineViewController.h"
+
 
 @interface HomePageViewController ()
 
@@ -27,12 +27,11 @@
 
 @implementation HomePageViewController
 
-
-
 MBProgressHUD *HUD;
 @synthesize ViewMyCasesButton;
 @synthesize HomePageITSMTLObject;
 @synthesize HomePageuserName;
+@synthesize testUserTextField;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -57,9 +56,10 @@ MBProgressHUD *HUD;
         
     }
     
+    self.testUserTextField.delegate = self;
+
     
 }
-
 
 
 -(void)LoadingHomePage
@@ -275,6 +275,7 @@ MBProgressHUD *HUD;
     NSMutableArray *allMatchesArray = [[NSMutableArray alloc] init];
     NSMutableArray *allMatchCaseObjectsArray = [[NSMutableArray alloc] init];
     NSMutableArray *allMatchCaseItemObjectsArray = [[NSMutableArray alloc] init];
+    NSMutableArray *allMatchesCaseTypes = [[NSMutableArray alloc] init];
     NSArray *cases = [HomePageITSMTLObject objectForKey:@"cases"];
     for(PFObject *caseObj in cases)
     {
@@ -288,29 +289,61 @@ MBProgressHUD *HUD;
             {
                 NSString *matchesString = [caseItemObject objectForKey:@"browse"];
                 
-                NSString *matchesYesString = [caseItemObject objectForKey:@"yes"];
+                NSString *matchesYesString = [caseItemObject objectForKey:@"yeses"];
                 
-                NSString *matchesCombined;
-                if([matchesYesString length] >0)
+                NSString *matchesRejectedYesString = [caseItemObject objectForKey:@"rejectedYeses"];
+                
+                NSArray *matchesArray = [matchesString componentsSeparatedByString:@";"];
+                NSArray *matchesYesArray = [matchesYesString componentsSeparatedByString:@";"];
+                NSArray *matchesRejectedYesArray= [matchesRejectedYesString componentsSeparatedByString:@";"];
+                
+                if([matchesArray count] >0)
                 {
-                    matchesCombined = [matchesString stringByAppendingString:matchesYesString];
+                    for(NSString *mtlObjectID in matchesArray)
+                    {
+                        [allMatchesArray addObject:mtlObjectID];
+                        [allMatchCaseObjectsArray addObject:caseObj];
+                        NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                        
+                        [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                        [allMatchesCaseTypes addObject:@"match"];
+                        
+                    }
+
                 }
-                else
+                
+                if([matchesYesArray count] >0)
                 {
-                    matchesCombined = matchesString;
+                    for(NSString *mtlObjectID in matchesYesArray)
+                    {
+                        [allMatchesArray addObject:mtlObjectID];
+                        [allMatchCaseObjectsArray addObject:caseObj];
+                        NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                        
+                        [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                        [allMatchesCaseTypes addObject:@"yes"];
+                        
+                    }
+
                 }
                 
-                NSArray *matchesArray = [matchesCombined componentsSeparatedByString:@";"];
                 
-                for(NSString *mtlObjectID in matchesArray)
+                if([matchesRejectedYesArray count] >0)
                 {
-                    [allMatchesArray addObject:mtlObjectID];
-                    [allMatchCaseObjectsArray addObject:caseObj];
-                    NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                    for(NSString *mtlObjectID in matchesRejectedYesArray)
+                    {
+                        [allMatchesArray addObject:mtlObjectID];
+                        [allMatchCaseObjectsArray addObject:caseObj];
+                        NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                        
+                        [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                        [allMatchesCaseTypes addObject:@"rejected"];
+                        
+                    }
                     
-                    [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
-                    
                 }
+
+            
             }
         }
     }
@@ -318,6 +351,8 @@ MBProgressHUD *HUD;
     mvc.matchesArray = [allMatchesArray copy];
     mvc.matchesCaseObjectArrays = [allMatchCaseObjectsArray copy];
     mvc.matchesCaseItemArrays = [allMatchCaseItemObjectsArray copy];
+    mvc.matchTypeArray = [allMatchesCaseTypes copy];
+    
     
     mvc.matchesUserName = HomePageuserName;
     mvc.matchViewControllerMode = @"allMatches";
@@ -345,7 +380,16 @@ MBProgressHUD *HUD;
     //sos account match match IQnCnDzMFX
     
     //paulina gretzky NoJW05Xwsq
-    HomePageuserName = @"Mu1K2TuLPj";
+    
+    if([self.testUserString length] ==0)
+    {
+         HomePageuserName = @"yh5YoZSXRW";
+    }
+    else
+    {
+        HomePageuserName = self.testUserString;
+    }
+   
     
     //set the HomePageITSMTLOject to this object.
     
@@ -377,9 +421,18 @@ MBProgressHUD *HUD;
    
     [query getObjectInBackgroundWithId:HomePageuserName block:^(PFObject *latestCaseList, NSError *error) {
         // Do something with the returned PFObject
+        
+        
         NSLog(@"%@", latestCaseList);
         
         [HUD hide:NO];
+        
+        if(error)
+        {
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invalid Test User or Parse Connection Failed", nil) message:NSLocalizedString([error localizedDescription], nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+            return;
+            
+        }
         
         //do some logic to sort through these cases and see how many have matches, how many are awaiting more info.
         NSArray *cases = [latestCaseList objectForKey:@"cases"];
@@ -436,6 +489,75 @@ MBProgressHUD *HUD;
     
 }
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    
+    [self animateTextField:textField up:YES];
+}
+
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [self animateTextField:textField up:NO];
+    self.testUserString = textField.text;
+    
+    
+}
+
+
+- (void) animateTextField: (UITextField*) textField up: (BOOL) up
+{
+    int animatedDistance;
+    int moveUpValue = textField.frame.origin.y+ textField.frame.size.height;
+    UIInterfaceOrientation orientation =
+    [[UIApplication sharedApplication] statusBarOrientation];
+    if (orientation == UIInterfaceOrientationPortrait ||
+        orientation == UIInterfaceOrientationPortraitUpsideDown)
+    {
+        
+        animatedDistance = 216-(460-moveUpValue-5);
+    }
+    else
+    {
+        animatedDistance = 162-(320-moveUpValue-5);
+    }
+    
+    if(animatedDistance>0)
+    {
+        const int movementDistance = animatedDistance;
+        const float movementDuration = 0.3f;
+        int movement = (up ? -movementDistance : movementDistance);
+        [UIView beginAnimations: nil context: nil];
+        [UIView setAnimationBeginsFromCurrentState: YES];
+        [UIView setAnimationDuration: movementDuration];
+        self.view.frame = CGRectOffset(self.view.frame, 0, movement);
+        [UIView commitAnimations];
+    }
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
+    //put the string of the text field onto a label now in the same cell
+    //put -100 so it doesn't interfere with the uilabel tag of 3 in every cell
+ 
+    
+    [textField resignFirstResponder];
+    
+    return YES;
+}
+
+-(void)dismissKeyboard {
+    
+    [self.view endEditing:YES];
+}
+
+#pragma mark internetOfflineViewController delegate function
+
+- (void)dismissIOVC
+{
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    
+}
 
 
 @end

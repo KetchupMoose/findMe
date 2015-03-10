@@ -8,8 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@class internetOfflineViewController;
+
+@protocol internetOfflineViewControllerDelegate
+
+- (void)dismissIOVC;
+
+@end
+
 @interface internetOfflineViewController : UIViewController
 
 @property (weak,nonatomic) IBOutlet UIButton *internetRetryButton;
 - (IBAction)retryConnection:(id)sender;
+@property (weak,nonatomic) id<internetOfflineViewControllerDelegate> delegate;
 @end

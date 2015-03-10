@@ -402,7 +402,14 @@ CGPoint startLocation;
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"caseDetailsEmailCell"];
+   
+    SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"caseDetailsEmailCell"];
+    
+    if(cell==nil)
+    {
+        cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"caseDetailsEmailCell"];
+    }
+    
     
     cell.leftUtilityButtons = [self leftButtons];
     cell.rightUtilityButtons = [self rightButtons];
@@ -648,215 +655,17 @@ CGPoint startLocation;
 
 -(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if([self.slideoutDisplayed isEqualToString:@"yes"])
-    {
-        [self.slidingViewController resetTopViewAnimated:YES];
-        
-    }
-    
-    //if the selected row is greater than the count of caseItems, show the NewPropertyViewController
-    
-    if(indexPath.row==sortedCaseItems.count)
-    {
-        NSLog(@"create a new case");
-        NewPropertyViewController *npvc = [self.storyboard instantiateViewControllerWithIdentifier:@"npvc"];
-        npvc.userName = self.userName;
-        npvc.delegate = self;
-        
-        [self.navigationController pushViewController:npvc animated:YES];
-        
-        return;
-        
-    }
-    
-    //popup a small window for editing the selection of this entry
-    
-    UIView *popupView = [[UIView alloc] initWithFrame:CGRectMake(20,50,280,400)];
-    UIColor *lightYellowColor = [UIColor colorWithRed:252.0f/255.0f green:252.0f/255.0f blue:150.0f/255.0f alpha:1];
-    popupView.backgroundColor = lightYellowColor;
-    
-    
-    popupViewController *popVC = self.popupVC;
-    
-    //set data for popupViewController
-    
-    if([self.jsonDisplayMode isEqualToString:@"template"])
-    {
-        popVC.popupjsonDisplayMode = @"template";
-        popVC.popupjsonObject = self.jsonObject;
-        popVC.originalTemplateOptionsCounts = templateOptionsCounts;
-    }
-    else if([self.jsonDisplayMode isEqualToString:@"singleCase"])
-    {
-        popVC.popupjsonDisplayMode = @"singleCase";
-        popVC.popupjsonObject = self.jsonObject;
-        
-    }
-    else
-    {
-        
-        popVC.popupitsMTLObject = self.itsMTLObject;
-        popVC.selectedCase = self.selectedCaseIndex;
-        
-        popVC.popupjsonDisplayMode = @"no";
-    }
-    NSNumber *selectedCaseItem = [NSNumber numberWithInteger:indexPath.row];
-    popVC.selectedCaseItem = selectedCaseItem;
-    PFObject *caseItemPicked = [sortedCaseItems objectAtIndex:indexPath.row];
-    PFObject *selectedPropObject;
-    NSString *caseItemPickedPropertyNum = [caseItemPicked objectForKey:@"propertyNum"];
-    
-    if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:indexPath.row]])
-    {
-        selectedPropObject = [propsArray objectAtIndex:indexPath.row];
-        
-    }
-    else
-    {
-        for(PFObject *propObject in propsArray)
-        {
-            if([propObject.objectId isEqualToString:caseItemPickedPropertyNum])
-            {
-                selectedPropObject = propObject;
-                break;
-                
-            }
-        }
-    }
-    
-    popVC.selectedPropertyObject = selectedPropObject;
-    popVC.sortedCaseItems = sortedCaseItems;
-    popVC.locationLatitude = locationLatitude;
-    popVC.locationLongitude = locationLongitude;
-    popVC.locationRetrieved = locationRetrieved;
-    popVC.UCIdelegate = self;
-    popVC.popupUserName = self.userName;
-    //check the property type of the property at this selected index and set different modes on the popup accordingly.
-    
-    //check the property type and show different UI accordingly.
-    NSString *propType = [selectedPropObject objectForKey:@"propertyType"];
-    NSString *options = [selectedPropObject objectForKey:@"options"];
-    
-    //If the property is type I, show an info Message
-    //If the property is type N, do nothing.
-    //If the property is type B, show the matches view controller
-    if([propType  isEqual:@"I"])
-    {
-        //property is an info message
-        //display a UI alert with the info in the info message
-        NSString *infoMsg = [selectedPropObject objectForKey:@"propertyDescr"];
-        
-        //for the caseItem of this index, take the params value
-        NSString *params = [caseItemPicked objectForKey:@"params"];
-        
-        NSArray * paramsArray = [params componentsSeparatedByString:@";"];
-        
-        //loop through the infoMsg and replace instances of &# with the values in the param array.
-        
-        int i = 1;
-        if (paramsArray.count>=1)
-        {
-            for (i=1;i<paramsArray.count+1;i++)
-            {
-                NSString *numString = [NSString stringWithFormat:@"%i",i];
-                NSLog(numString);
-                NSString *stringToReplace = [@"&" stringByAppendingString:numString];
-                
-                [infoMsg stringByReplacingOccurrencesOfString:stringToReplace withString:[paramsArray objectAtIndex:i-1]];
-            }
-        }
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Info Message", nil) message:NSLocalizedString(infoMsg, nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
-    }
-    else if([propType isEqual:@"N"])
-    {
-        
-    }
-    
-    else if([propType isEqual:@"B"])
-    {
-        //display matches view controller (to be created)
-        matchesViewController *mvc = [self.storyboard instantiateViewControllerWithIdentifier:@"mvc"];
-        
-        [mvc.matchViewControllerMode isEqualToString:@"singleCaseMatches"];
-        
-        //loop through the itsMTLObject and gather all the user's matches
-        NSMutableArray *allMatchesArray = [[NSMutableArray alloc] init];
-        NSMutableArray *allMatchCaseObjectsArray = [[NSMutableArray alloc] init];
-        NSMutableArray *allMatchCaseItemObjectsArray = [[NSMutableArray alloc] init];
-        
-        
-        NSString *matchesString = [caseItemPicked objectForKey:@"browse"];
-        
-        NSString *matchesYesString = [caseItemPicked objectForKey:@"yes"];
-        
-        NSString *matchesCombined;
-        if([matchesYesString length] >0)
-        {
-            matchesCombined = [matchesString stringByAppendingString:matchesYesString];
-        }
-        else
-        {
-            matchesCombined = matchesString;
-        }
-        
-        NSArray *matchesArray = [matchesCombined componentsSeparatedByString:@";"];
-        PFObject *caseObject;
-        
-        int selectedCaseInt = (int)[selectedCaseIndex integerValue];
-        
-        NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
-        
-        caseObject = [allCases objectAtIndex:selectedCaseInt];
-        for(NSString *mtlObjectID in matchesArray)
-        {
-            [allMatchesArray addObject:mtlObjectID];
-            NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
-            
-            
-            [allMatchCaseObjectsArray addObject:caseObject];
-            
-            [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
-        }
-        
-        mvc.matchesArray = [allMatchesArray copy];
-        mvc.matchesCaseObjectArrays = [allMatchCaseObjectsArray copy];
-        mvc.matchesCaseItemArrays = [allMatchCaseItemObjectsArray copy];
-        mvc.matchesUserName = self.userName;
-        
-        [self.navigationController pushViewController:mvc animated:YES];
-        
-        return;
-        
-        
-    }
-    else if([options length]==0)
-    {
-        //show the popup in custom answer mode
-        popVC.displayMode = @"custom";
-    }
-    else
-    {
-        //show the popup in the normal mode with the tableView
-        popVC.displayMode = @"table";
-    }
-    
-    //[self setPresentationStyleForSelfController:self presentingController:popVC];
-    //[self presentViewController:popVC animated:NO completion:nil];
-    
-    popVC.popupOrSlideout = @"slideout";
-    
-    self.slidingViewController.underLeftViewController = self.popupVC;
-    
-    self.slideoutDisplayed = @"yes";
-    [self.slidingViewController anchorTopViewToRightAnimated:YES];
-    
-    //self.navigationController.navigationBar.alpha = 0;
-    
-    return;
+    [self doTableViewSelectionChange:indexPath];
 
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self doTableViewSelectionChange:indexPath];
+    
+}
+
+-(void)doTableViewSelectionChange:(NSIndexPath*) indexPath
 {
     if([self.slideoutDisplayed isEqualToString:@"yes"])
     {
@@ -993,44 +802,70 @@ CGPoint startLocation;
         NSMutableArray *allMatchesArray = [[NSMutableArray alloc] init];
         NSMutableArray *allMatchCaseObjectsArray = [[NSMutableArray alloc] init];
         NSMutableArray *allMatchCaseItemObjectsArray = [[NSMutableArray alloc] init];
-        
+        NSMutableArray *allMatchesCaseTypes = [[NSMutableArray alloc] init];
         
         NSString *matchesString = [caseItemPicked objectForKey:@"browse"];
+        NSString *matchesYesString = [caseItemPicked objectForKey:@"yeses"];
+        NSString *matchesRejectedYesString = [caseItemPicked objectForKey:@"rejectedYeses"];
+        NSArray *matchesArray = [matchesString componentsSeparatedByString:@";"];
+        NSArray *matchesYesArray = [matchesYesString componentsSeparatedByString:@";"];
+        NSArray *matchesRejectedYesArray= [matchesRejectedYesString componentsSeparatedByString:@";"];
         
-        NSString *matchesYesString = [caseItemPicked objectForKey:@"yes"];
-        
-        NSString *matchesCombined;
-        if([matchesYesString length] >0)
-        {
-            matchesCombined = [matchesString stringByAppendingString:matchesYesString];
-        }
-        else
-        {
-            matchesCombined = matchesString;
-        }
-
-        NSArray *matchesArray = [matchesCombined componentsSeparatedByString:@";"];
         PFObject *caseObject;
-        
         int selectedCaseInt = (int)[selectedCaseIndex integerValue];
-        
         NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
         
         caseObject = [allCases objectAtIndex:selectedCaseInt];
-        for(NSString *mtlObjectID in matchesArray)
+        if([matchesArray count] >0)
+        {
+            for(NSString *mtlObjectID in matchesArray)
             {
-            [allMatchesArray addObject:mtlObjectID];
-            NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
-            
-            
-            [allMatchCaseObjectsArray addObject:caseObject];
-      
-            [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                [allMatchesArray addObject:mtlObjectID];
+                [allMatchCaseObjectsArray addObject:caseObject];
+                NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
+                
+                [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                [allMatchesCaseTypes addObject:@"match"];
+                
             }
+            
+        }
+        
+        if([matchesYesArray count] >0)
+        {
+            for(NSString *mtlObjectID in matchesYesArray)
+            {
+                [allMatchesArray addObject:mtlObjectID];
+                [allMatchCaseObjectsArray addObject:caseObject];
+                NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
+                
+                [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                [allMatchesCaseTypes addObject:@"yes"];
+                
+            }
+            
+        }
+        
+        if([matchesRejectedYesArray count] >0)
+        {
+            for(NSString *mtlObjectID in matchesRejectedYesArray)
+            {
+                [allMatchesArray addObject:mtlObjectID];
+                [allMatchCaseObjectsArray addObject:caseObject];
+                NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
+                
+                [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                [allMatchesCaseTypes addObject:@"rejected"];
+                
+            }
+            
+        }
         
         mvc.matchesArray = [allMatchesArray copy];
         mvc.matchesCaseObjectArrays = [allMatchCaseObjectsArray copy];
         mvc.matchesCaseItemArrays = [allMatchCaseItemObjectsArray copy];
+        mvc.matchTypeArray = [allMatchesCaseTypes copy];
+        
         mvc.matchesUserName = self.userName;
         
         [self.navigationController pushViewController:mvc animated:YES];
@@ -1063,6 +898,7 @@ CGPoint startLocation;
     //self.navigationController.navigationBar.alpha = 0;
     
     return;
+
 }
 
 -(void)setPresentationStyleForSelfController:(UIViewController *)selfController presentingController:(UIViewController *)presentingController
@@ -1311,17 +1147,23 @@ CGPoint startLocation;
         g=g+1;
     }
     
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
     [self.caseDetailsEmailTableView reloadData];
+    //remove the updating HUD
+    [HUD hide:YES];
+    });
     
+    if([reloadModeString isEqualToString:@"fromSingleNewProperty"])
+    {
+        [self.navigationController popViewControllerAnimated:NO];
+    }
+        
     //set the last timestamp for the case if there needs to be polling.
     NSString *timeStampReturn = [caseItemObject objectForKey:@"timestamp"];
     NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
     f.numberStyle = NSNumberFormatterDecimalStyle;
     lastTimestamp = [f numberFromString:timeStampReturn];
-    
-    //remove the updating HUD
-    [HUD hide:YES];
-    
     
     if([self.popupVC.popupOrSlideout isEqualToString:@"slideout"])
        {
@@ -1363,7 +1205,6 @@ CGPoint startLocation;
                                 
                                 if (!error)
                                 {
-                                    
                                     NSString *responseText = responseString;
                                     NSLog(responseText);
                                     
@@ -1401,7 +1242,9 @@ CGPoint startLocation;
                                     
                                     NSMutableDictionary *jsonCaseChange = [json mutableCopy];
                                     
+                                    dispatch_async(dispatch_get_main_queue(), ^{
                                     [self reloadData:jsonCaseChange reloadMode:@"fromJSON"];
+                                    });
                                     
                                     //[self pollForCaseRefresh];
                                     
@@ -1883,6 +1726,8 @@ CGPoint startLocation;
     }
    
 }
+//brian march 9
+//don't think this is ever called now.  May need to delete this function.
 - (void)updateNewCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers NewPropertyDescr:(NSString *) newPropDescr optionsList:(NSArray *) optionList
 {
     NSMutableDictionary *propertyObject = [[NSMutableDictionary alloc] init];
@@ -1941,15 +1786,6 @@ CGPoint startLocation;
     [caseItemObject setObject:newPropNum forKey:@"propertyNum"];
     
     
-    int g = (int)sortedCaseItems.count;
-    
-    [sortedCaseItems addObject:caseItemObject];
-    [propsArray addObject:propertyObject];
-    
-    NSNumber *indexNum = [[NSNumber alloc] initWithInt:g];
-    [newlyCreatedPropertiesIndex addObject:indexNum];
-    [changedCaseItemsIndex addObject:indexNum];
-    
     //[self.pickerView reloadAllComponents];
   //  [self.caseDetailsTableView reloadData];
     
@@ -1958,7 +1794,7 @@ CGPoint startLocation;
     self.submitAnswersButton.enabled = 1;
     self.submitAnswersButton.backgroundColor = [UIColor blueColor];
     
-    [self.navigationController popViewControllerAnimated:NO];
+    
     
     
     //reload data
@@ -1974,13 +1810,23 @@ CGPoint startLocation;
         HUD.labelText = @"Updating With The New Case Item";
         [HUD show:YES];
         
-        [self updateNewCaseItem];
-        
+        [self updateNewCaseItem:propertyObject CaseItemObject:caseItemObject];
         
     }
     else
     {
-          [self.caseDetailsEmailTableView reloadData];
+        int g = (int)sortedCaseItems.count;
+        
+        [sortedCaseItems addObject:caseItemObject];
+        [propsArray addObject:propertyObject];
+        
+        NSNumber *indexNum = [[NSNumber alloc] initWithInt:g];
+        [newlyCreatedPropertiesIndex addObject:indexNum];
+        [changedCaseItemsIndex addObject:indexNum];
+        
+        [self.navigationController popViewControllerAnimated:NO];
+        
+        [self.caseDetailsEmailTableView reloadData];
     }
     
     
@@ -2164,23 +2010,35 @@ CGPoint startLocation;
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {
                                         
-                                        NSString *responseText = responseString;
-                                        NSLog(responseText);
                                         
-                                        [HUD hide:NO];
                                         
+                                        //commented out as no longer polling
+                                        /*
                                         NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
                                         
                                         PFObject *caseObject = [allCases objectAtIndex:[selectedCaseIndex integerValue]];
                                         caseBeingUpdated = [caseObject objectForKey:@"caseId"];
                                         
-                                        /*
+                                        
                                         NSString *timeStampReturn = [caseObject objectForKey:@"timestamp"];
                                         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
                                         f.numberStyle = NSNumberFormatterDecimalStyle;
                                         lastTimestamp = [f numberFromString:timeStampReturn];
                                         */
                                         //[self pollForCaseRefresh];
+                                        
+                                        //load data from synchronous data return
+                                        NSString *responseTextWithoutHeader = [responseString
+                                                                               stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+                                        NSError *jsonError;
+                                        NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+                                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                                             options:NSJSONReadingMutableContainers
+                                                                                               error:&jsonError];
+                                        
+                                        NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+                                        [self reloadData:jsonCaseChange reloadMode:@"fromJSON"];
+                                        [HUD hide:NO];
                                     }
                                     else
                                     {
@@ -2193,7 +2051,7 @@ CGPoint startLocation;
     
 }
 
--(NSString *)createXMLFunctionSingleCaseItem
+-(NSString *)createXMLFunctionSingleCaseItem:(NSDictionary *) propertyObject CaseItemObject:(NSDictionary *)caseItemObjForXML
 {
     //iterate through all items still in the caseitems and property arrays and send XML to update all of these (either with their original contents or the modifications/new entries)
     
@@ -2204,12 +2062,12 @@ CGPoint startLocation;
     PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
     
     //newCaseItem is always the last on sortedCaseItems because it was just added
-    PFObject *caseItemObject = [sortedCaseItems objectAtIndex:sortedCaseItems.count-1];
+    PFObject *caseItemObject = (PFObject *)caseItemObjForXML;
     
     NSString *caseName = [caseObject objectForKey:@"caseName"];
     NSString *caseObjID = [caseObject objectForKey:@"caseId"];
     
-    PFObject *selectedPropertyObject = [propsArray objectAtIndex:propsArray.count-1];
+    PFObject *selectedPropertyObject = (PFObject *)propertyObject;
     NSString *propertyNum = [selectedPropertyObject objectForKey:@"propertyNum"];
     NSString *propertyDescr = [selectedPropertyObject objectForKey:@"propertyDescr"];
     
@@ -2432,10 +2290,10 @@ CGPoint startLocation;
     return xml;
 }
 
--(void)updateNewCaseItem
+-(void)updateNewCaseItem:(NSDictionary *)propertyObject CaseItemObject:(NSDictionary *)caseItemObject
 {
     
-    NSString *xmlForUpdate = [self createXMLFunctionSingleCaseItem];
+    NSString *xmlForUpdate = [self createXMLFunctionSingleCaseItem:propertyObject CaseItemObject:caseItemObject];
     
     if([xmlForUpdate isEqualToString:@"no"])
     {
@@ -2444,7 +2302,6 @@ CGPoint startLocation;
         
     }
    
-    
     //use parse cloud code function
     [PFCloud callFunctionInBackground:@"submitXML"
                        withParameters:@{@"payload": xmlForUpdate}
@@ -2456,8 +2313,10 @@ CGPoint startLocation;
                                         NSString *responseText = responseString;
                                         NSLog(responseText);
                                         
-                                        [HUD hide:NO];
+                                    
                                         
+                                        //commenting out as it was needed for polling
+                                        /*
                                         NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
                                         PFObject *caseObject = [allCases objectAtIndex:[selectedCaseIndex integerValue]];
                                         caseBeingUpdated = [caseObject objectForKey:@"caseId"];
@@ -2466,8 +2325,24 @@ CGPoint startLocation;
                                         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
                                         f.numberStyle = NSNumberFormatterDecimalStyle;
                                         lastTimestamp = [f numberFromString:timeStampReturn];
-                                        
+                                         
                                         [self pollForCaseRefresh];
+                                         */
+                                        
+                                        //convert to NSDictionaryHere
+                                        
+                                        NSString *responseTextWithoutHeader = [responseText
+                                                                               stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+                                        NSError *jsonError;
+                                        NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+                                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                                             options:NSJSONReadingMutableContainers
+                                                                                               error:&jsonError];
+                                        
+                                        NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [self reloadData:jsonCaseChange reloadMode:@"fromSingleNewProperty"];
+                                         });
                                         
                                     }
                                     else

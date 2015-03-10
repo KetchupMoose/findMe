@@ -7,6 +7,8 @@
 //
 
 #import "NewPropertyViewController.h"
+#import "MBProgressHUD.h"
+
 
 @interface NewPropertyViewController ()
 
@@ -19,6 +21,8 @@
 NSMutableArray *answersListArray;
 NSMutableArray *acceptableAnswers;
 NSString *questionText;
+MBProgressHUD *HUD;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -48,6 +52,11 @@ NSString *questionText;
                                    action:@selector(dismissKeyboard)];
      tap.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tap];
+    
+}
+
+-(void) viewWillAppear:(BOOL)animated{
+    [HUD hide:NO];
     
 }
 
@@ -109,7 +118,17 @@ NSString *questionText;
     }
     
     NSString *optionsList = [[answersListArray copy] componentsJoinedByString:@";"];
-        
+    
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Updating With Your New Property";
+    [HUD show:YES];
+    
+    
     [self.delegate recieveData:optionsList AcceptableAnswersList:[acceptableAnswersKeyPairValues copy]QuestionText:questionText];
 
 }

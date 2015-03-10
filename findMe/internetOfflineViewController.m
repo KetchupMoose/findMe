@@ -7,13 +7,16 @@
 //
 
 #import "internetOfflineViewController.h"
-#import "HomePageViewController.h"
+#import "reachabilitySingleton.h"
+#import "Reachability.h"
 
 @interface internetOfflineViewController ()
 
 @end
 
 @implementation internetOfflineViewController
+NSTimer *checkInternetTimer;
+int checkInternetTimerTicks;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -34,5 +37,64 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (IBAction)retryConnection:(id)sender
+{
+    Reachability *singletonReach = [[reachabilitySingleton sharedReachability] reacher];
+    
+    NetworkStatus *status = [singletonReach currentReachabilityStatus];
+    
+    if (status !=NotReachable)
+    {
+        NSLog(@"reached it!");
+        [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+        
+    }
+    else
+    {
+        NSLog(@"no connection");
+        //start a timer to refresh and try again
+        if(checkInternetTimer ==nil)
+        {
+            
+       checkInternetTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                         target:self
+                                       selector:@selector(internetCheck:)
+                                       userInfo:nil
+                                        repeats:NO];
+        }
+    }
+}
+
+-(void)internetCheck
+{
+    Reachability *singletonReach = [[reachabilitySingleton sharedReachability] reacher];
+    
+    NetworkStatus *status = [singletonReach currentReachabilityStatus];
+    
+    if(status != NotReachable)
+    {
+        NSLog(@"reached it!");
+        [checkInternetTimer invalidate];
+        checkInternetTimerTicks = 0;
+        
+        [self.delegate dismissIOVC];
+        
+    }
+    else
+    {
+        checkInternetTimerTicks = checkInternetTimerTicks+1;
+        
+        if(checkInternetTimerTicks ==10)
+        {
+            [checkInternetTimer invalidate];
+            
+             [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Internet Detected", nil) message:@"No Connection Detected.  Hit Retry to Try Again" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+            
+        }
+    }
+}
+
+
 
 @end

@@ -740,6 +740,11 @@
                                     <action selector="TestSlidingView:" destination="e02-Df-S4d" eventType="touchUpInside" id="b9f-kt-Bz4"/>
                                 </connections>
                             </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZoX-fA-o6z">
+                                <rect key="frame" x="223" y="107" width="97" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -749,6 +754,7 @@
                         <outlet property="MyMatchesButton" destination="Q8k-HY-oqm" id="e9P-MZ-9Lg"/>
                         <outlet property="MyProfileButton" destination="J5a-Uy-HSq" id="o2e-ud-pWo"/>
                         <outlet property="ViewMyCasesButton" destination="X8y-lr-Rgb" id="Uh9-PR-82j"/>
+                        <outlet property="testUserTextField" destination="ZoX-fA-o6z" id="TXd-GG-X9N"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BrF-6S-tjR" userLabel="First Responder" sceneMemberID="firstResponder"/>

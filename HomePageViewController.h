@@ -10,8 +10,9 @@
 #import "MBProgressHUD.h"
 #import <Parse/Parse.h>
 #import "setProfileViewController.h"
+#import "internetOfflineViewController.h"
 
-@interface HomePageViewController : UIViewController <MBProgressHUDDelegate,SetProfileDelegate>
+@interface HomePageViewController : UIViewController <MBProgressHUDDelegate,SetProfileDelegate,UITextFieldDelegate,internetOfflineViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *CreateNewCaseButton;
 - (IBAction)CreateNewCase:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *ViewMyCasesButton;
@@ -23,7 +24,8 @@
 - (IBAction)TestProfileButton:(id)sender;
 @property (strong,nonatomic) PFObject *HomePageITSMTLObject;
 @property (strong,nonatomic) NSString *HomePageuserName;
-
 -(IBAction)TestSlidingView:(id)sender;
+@property (weak,nonatomic) IBOutlet UITextField *testUserTextField;
+@property (strong,nonatomic) NSString *testUserString;
 
 @end
