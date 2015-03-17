@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "reachabilitySingleton.h"
 #import <Parse/Parse.h>
+#import "PNImports.h"
 
 @implementation AppDelegate
 
@@ -34,6 +35,11 @@
     
     //setup singleton for checking internet status
     [reachabilitySingleton sharedReachability];
+    
+    /* Instantiate PubNub */
+    [PubNub setDelegate:self];
+    
+   
     
     
     //-- Set Notification
@@ -95,6 +101,35 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark pubnub delegate methods
+//(In AppDelegate.m, define didReceiveMessage delegate method:)
+- (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
+    NSLog( @"%@", [NSString stringWithFormat:@"received: %@", message.message] );
+    NSLog(@"this fired from the app delegate zoinks");
+    
+    //check to see what view controller this is originating from
+    
+    NSMutableDictionary *pubMsgDict = [[NSMutableDictionary alloc] init];
+    NSDictionary *msgIncomingDict = message.message;
+    NSString *msgStringVal = [msgIncomingDict objectForKey:@"text"];
+    
+    
+    NSDate *msgDate = (NSDate *)message.receiveDate.date;
+    
+    [pubMsgDict setObject:msgStringVal forKey:@"pubMsgString"];
+    [pubMsgDict setObject:msgDate forKey:@"pubMsgDate"];
+    
+    //trigger an NSNotificationCenter notification that the other view controllers subscribe to with the message details
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PNMessage" object:self userInfo:[pubMsgDict copy]];
+    
+}
+
+- (void)pubnubClient:(PubNub *)client didConnectToOrigin:(NSString *)origin {
+    NSLog(@"DELEGATE: Connected to  origin: %@", origin);
+    NSLog(@"brianconnected");
+    
 }
 
 @end

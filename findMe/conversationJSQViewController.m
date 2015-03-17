@@ -8,12 +8,15 @@
 
 #import "conversationJSQViewController.h"
 #import <Parse/Parse.h>
+#import "PNImports.h"
+#import "AppDelegate.h"
 
 @interface conversationJSQViewController ()
 
 @end
 
 @implementation conversationJSQViewController
+PNChannel *sharedChannel;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -61,7 +64,100 @@
                                                                              target:self
                                                                              action:@selector(receiveMessagePressed:)];
     
+    
+    PNConfiguration *configuration = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
+                                                                  publishKey:@"pub-c-71127e1e-7bbf-4f65-abd4-67a2907606b2" subscribeKey:@"sub-c-110d37e8-c9b7-11e4-a054-0619f8945a4f" secretKey:@"sec-c-MzUwOTczZTQtMWI3YS00N2ZkLTk4ZTMtZTIyZDk5NGIyMWI1"];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+   [PubNub setConfiguration:configuration];
+    
+    
+    [PubNub connectWithSuccessBlock:^(NSString *origin) {
+        //NSLog(origin);
+        NSLog(@"success flagged here brian");
+        
+    } errorBlock:^(PNError *error) {
+        NSLog(error.localizedDescription);
+    }];
+    
+    [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:appDelegate withCallbackBlock:^(NSString *origin, BOOL connected, PNError *connectionError){
+        if (connected)
+        {
+            NSLog(@"OBSERVER: Successful Connection!");
+        }
+        else if (!connected || connectionError)
+        {
+            NSLog(@"OBSERVER: Error %@, Connection Failed!", connectionError.localizedDescription);
+        }
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receivePNMessage:)
+                                                 name:@"PNMessage"
+                                               object:nil];
+    
+     NSString *channelName = self.conversationData.conversationObject.objectId;
+    
+    // Define a channel
+   // sharedChannel = [PNChannel channelWithName:@"demo_tutorial"];
+    sharedChannel = [PNChannel channelWithName:channelName];
+    // Subscribe on the channel
+   
+    [PubNub subscribeOn:@[sharedChannel]
+withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
+    switch (state) {
+        case PNSubscriptionProcessNotSubscribedState:
+            // There should be a reason because of which subscription failed and it can be found in 'error' instance
+            NSLog(@"error with process bob");
+            NSLog(error.localizedDescription);
+            
+            
+            break;
+        case PNSubscriptionProcessSubscribedState:
+            // PubNub client completed subscription on specified set of channels.
+              NSLog(@"brian subscribe success");
+            break;
+        default:
+            break;
+    }
+}];
  
+    
+    
+}
+
+-(void)receivePNMessage:(NSNotification *) notification
+{
+  
+    NSString *message = [notification.userInfo objectForKey:@"pubMsgString"];
+    PNDate *msgDate = [notification.userInfo objectForKey:@"pubMsgDate"];
+    
+    NSLog(@"got the message locally");
+    NSLog( @"%@", [NSString stringWithFormat:@"received local: %@", message] );
+    
+    //add a new JSQMessage to the local messages array
+    
+    [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
+    
+    NSString *userNameString = self.conversationData.conversationUserName;
+    
+    if([message containsString:userNameString])
+    {
+        //this is a message sent by this user, don't add it to the list of messages beacuse it has already been added
+        NSLog(@"message received but is from the user");
+        
+    }
+    else
+    {
+        JSQMessage *newJSQMessage = [[JSQMessage alloc] initWithSenderId:@"test"
+                                                       senderDisplayName:@"test"
+                                                                    date:(NSDate *)msgDate
+                                                                    text:message];
+        
+        [self.conversationData.messages addObject:newJSQMessage];
+        
+        [self finishReceivingMessageAnimated:YES];
+
+    }
     
 }
 
@@ -292,6 +388,15 @@
     //upload message in background to parse
     [self uploadMessageToParse:message];
     
+    NSString *sendingUserString = self.conversationData.conversationUserName;
+    
+    NSString *fullMsgString = [sendingUserString stringByAppendingString:message.text];
+    
+    NSMutableDictionary *sendingMsgDict = [[NSMutableDictionary alloc] init];
+    [sendingMsgDict setObject:fullMsgString forKey:@"text"];
+    
+    
+    [PubNub sendMessage:sendingMsgDict toChannel:sharedChannel];
     
     [self finishSendingMessageAnimated:YES];
 }
@@ -306,7 +411,8 @@
     [messageObject setObject:messageText forKey:@"MessageString"];
     [messageObject setObject:message.senderId forKey:@"messageCaseUserID"];
     [messageObject saveInBackground];
-
+    
+    
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender

@@ -198,9 +198,14 @@ NSArray *conversationMessagesArray;
     }
     else
     {
+        NSSortDescriptor* sortByDate = [NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES];
         
+        NSMutableArray *sortedConversationMessages = [[NSMutableArray alloc] init];
+        sortedConversationMessages = [conversationMessagesArray mutableCopy];
+        
+       [sortedConversationMessages sortUsingDescriptors:[NSArray arrayWithObject:sortByDate]];
     
-    for(PFObject *msgObject in conversationMessagesArray)
+    for(PFObject *msgObject in sortedConversationMessages)
                                    {
                                        NSString *msgSenderID = [msgObject objectForKey:@"messageCaseUserID"];
                                        
@@ -221,7 +226,7 @@ NSArray *conversationMessagesArray;
     self.messages = JSQMessages;
     
     //adding one add photo media message as an example
-    [self addPhotoMediaMessage];
+    //[self addPhotoMediaMessage];
     
 }
 

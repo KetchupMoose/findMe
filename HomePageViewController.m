@@ -370,6 +370,7 @@ MBProgressHUD *HUD;
 
 - (IBAction)TestProfileButton:(id)sender
 {
+   
     //set hardcoded value for homepageusername
     //yh5YoZSXRW
     //e9eAifIkyD
@@ -381,9 +382,11 @@ MBProgressHUD *HUD;
     
     //paulina gretzky NoJW05Xwsq
     
+    //chat EiSavyJT4E
+    
     if([self.testUserString length] ==0)
     {
-         HomePageuserName = @"yh5YoZSXRW";
+         HomePageuserName = @"EiSavyJT4E";
     }
     else
     {
@@ -400,6 +403,9 @@ MBProgressHUD *HUD;
     //query for data based on this itsMTLobject and reload data on the home page
     
     [self ReloadHomePageData];
+   
+    [self cloudCodeTest];
+    
     
 }
 
@@ -558,6 +564,20 @@ MBProgressHUD *HUD;
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     
 }
+
+//test cloud code function call
+-(void) cloudCodeTest {
+    [PFCloud callFunctionInBackground:@"testSecondModule"
+                       withParameters:@{}
+                                block:^(NSString *responseString, NSError *error)
+     {
+         NSLog(responseString);
+         
+     }
+     ];
+    
+}
+
 
 
 @end
