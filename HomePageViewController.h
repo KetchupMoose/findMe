@@ -27,5 +27,6 @@
 -(IBAction)TestSlidingView:(id)sender;
 @property (weak,nonatomic) IBOutlet UITextField *testUserTextField;
 @property (strong,nonatomic) NSString *testUserString;
+@property (strong,nonatomic ) NSArray *homePageCases;
 
 @end

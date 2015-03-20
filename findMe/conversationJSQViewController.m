@@ -136,7 +136,7 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     
     //add a new JSQMessage to the local messages array
     
-    [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
+    
     
     NSString *userNameString = self.conversationData.conversationUserName;
     
@@ -148,6 +148,7 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     }
     else
     {
+        [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
         JSQMessage *newJSQMessage = [[JSQMessage alloc] initWithSenderId:@"test"
                                                        senderDisplayName:@"test"
                                                                     date:(NSDate *)msgDate

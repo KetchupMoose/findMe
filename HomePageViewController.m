@@ -18,6 +18,8 @@
 #import "originalViewController.h"
 #import "reachabilitySingleton.h"
 #import "Reachability.h"
+#import "PNImports.h"
+#import "AppDelegate.h"
 
 
 @interface HomePageViewController ()
@@ -32,6 +34,7 @@ MBProgressHUD *HUD;
 @synthesize HomePageITSMTLObject;
 @synthesize HomePageuserName;
 @synthesize testUserTextField;
+@synthesize homePageCases;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -64,6 +67,9 @@ MBProgressHUD *HUD;
 
 -(void)LoadingHomePage
 {
+    [self setPubNubConfigDetails];
+    
+    
     //create an itsMTL Object if necessary
     [self createParseUser];
     
@@ -71,99 +77,115 @@ MBProgressHUD *HUD;
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:HUD];
     
-    // Set determinate mode
-    HUD.mode = MBProgressHUDModeDeterminate;
-    HUD.delegate = self;
-    HUD.labelText = @"Retrieving Cases";
-    [HUD show:YES];
-    
-    //needs to query for the user and pull some info
-    PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
-    [query getObjectInBackgroundWithId:HomePageuserName block:^(PFObject *latestCaseList, NSError *error) {
-        // Do something with the returned PFObject
-        NSLog(@"%@", latestCaseList);
-        
-        [HUD hide:NO];
-        
-        //do some logic to sort through these cases and see how many have matches, how many are awaiting more info.
-        NSArray *cases = [latestCaseList objectForKey:@"cases"];
-        
-        int caseCount = (int)cases.count;
-        
-        UIView *bubbleIndicatorCases = [[UIView alloc] init];
-        int bubbleWidth = 20;
-        int bubbleHeight = 20;
-        
-        [bubbleIndicatorCases setFrame:CGRectMake(ViewMyCasesButton.frame.origin.x+ViewMyCasesButton.frame.size.width-bubbleWidth/2,ViewMyCasesButton.frame.origin.y-bubbleHeight/2,bubbleWidth,bubbleHeight)];
-        
-        bubbleIndicatorCases.backgroundColor = [UIColor redColor];
-        
-        UILabel *bubbleNumber = [[UILabel alloc] initWithFrame:bubbleIndicatorCases.bounds];
-        
-        bubbleNumber.text = [NSString stringWithFormat:@"%i",caseCount];
-        
-        [bubbleNumber setTextAlignment:NSTextAlignmentCenter];
-        
-        [bubbleIndicatorCases addSubview:bubbleNumber];
-        
-        bubbleIndicatorCases.layer.cornerRadius = 9.0;
-        bubbleIndicatorCases.layer.masksToBounds = YES;
-        
-        [self.view addSubview:bubbleIndicatorCases];
-        
-    }];
+   
 
+}
+
+-(void) setPubNubConfigDetails
+{
+    PNConfiguration *configuration = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
+                                                                  publishKey:@"pub-c-71127e1e-7bbf-4f65-abd4-67a2907606b2" subscribeKey:@"sub-c-110d37e8-c9b7-11e4-a054-0619f8945a4f" secretKey:@"sec-c-MzUwOTczZTQtMWI3YS00N2ZkLTk4ZTMtZTIyZDk5NGIyMWI1"];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [PubNub setConfiguration:configuration];
+    
+    
+    [PubNub connectWithSuccessBlock:^(NSString *origin) {
+        //NSLog(origin);
+        NSLog(@"success flagged here brian");
+        
+    } errorBlock:^(PNError *error) {
+        NSLog(error.localizedDescription);
+    }];
+    
+    [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:appDelegate withCallbackBlock:^(NSString *origin, BOOL connected, PNError *connectionError){
+        if (connected)
+        {
+            NSLog(@"OBSERVER: Successful Connection!");
+        }
+        else if (!connected || connectionError)
+        {
+            NSLog(@"OBSERVER: Error %@, Connection Failed!", connectionError.localizedDescription);
+        }
+    }];
+    
+   
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    // Set determinate mode
-    HUD.mode = MBProgressHUDModeDeterminate;
-    HUD.delegate = self;
-    HUD.labelText = @"Retrieving Cases";
-    [HUD show:YES];
+    [self ReloadHomePageData];
     
-    //needs to query for the user and pull some info
-    PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
-    [query getObjectInBackgroundWithId:HomePageuserName block:^(PFObject *latestCaseList, NSError *error) {
-        // Do something with the returned PFObject
-        NSLog(@"%@", latestCaseList);
-        
-        [HUD hide:NO];
-        
-        //do some logic to sort through these cases and see how many have matches, how many are awaiting more info.
-        NSArray *cases = [latestCaseList objectForKey:@"cases"];
-        
-        int caseCount = (int)cases.count;
-        
-        UIView *bubbleIndicatorCases = [[UIView alloc] init];
-        int bubbleWidth = 20;
-        int bubbleHeight = 20;
-        
-        [bubbleIndicatorCases setFrame:CGRectMake(ViewMyCasesButton.frame.origin.x+ViewMyCasesButton.frame.size.width-bubbleWidth/2,ViewMyCasesButton.frame.origin.y-bubbleHeight/2,bubbleWidth,bubbleHeight)];
-        
-        bubbleIndicatorCases.backgroundColor = [UIColor redColor];
-        
-        UILabel *bubbleNumber = [[UILabel alloc] initWithFrame:bubbleIndicatorCases.bounds];
-        
-        bubbleNumber.text = [NSString stringWithFormat:@"%i",caseCount];
-        
-        [bubbleNumber setTextAlignment:NSTextAlignmentCenter];
-        
-        [bubbleIndicatorCases addSubview:bubbleNumber];
-        
-        bubbleIndicatorCases.layer.cornerRadius = 9.0;
-        bubbleIndicatorCases.layer.masksToBounds = YES;
-        
-        [self.view addSubview:bubbleIndicatorCases];
-        
-    }];
-
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void) subscribeToConversationChannels
+{
+    //query the Cases object to get all the cases belonging to the home page user
+    //query the Conversations object on parse to get all conversations where the array of users contains one of the home page user's cases
+    
+   
+    PFQuery *newQuery = [PFQuery queryWithClassName:@"Conversations"];
+    
+    NSMutableArray *homePageCaseNames = [[NSMutableArray alloc] init];
+    for(PFObject *caseObj in self.homePageCases)
+    {
+        NSString *caseID = [caseObj objectForKey:@"caseId"];
+        [homePageCaseNames addObject:caseID];
+        
+    };
+    
+    
+    [newQuery whereKey:@"Members" containedIn:[homePageCaseNames copy]];
+    
+    [newQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        //for each conversation object, subscribe to that channel on pubnub'
+        
+        NSLog(@"retrieved this many conversation objects");
+        NSLog(@"%lu",(unsigned long)objects.count);
+        
+        NSMutableArray *channelsToSubscribeTo = [[NSMutableArray alloc] init];
+        //remove all pubnub subscribes
+        NSArray *subscribedToChannels = [PubNub subscribedObjectsList];
+        
+        [PubNub unsubscribeFrom:subscribedToChannels withCompletionHandlingBlock:^(NSArray *channels, PNError *error) {
+            
+            if(error)
+            {
+                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unsubscribe Error", nil) message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+                return;
+            }
+            else
+         
+            {
+                //subscribe on channels for each conversation object
+                for(PFObject *conversationObj in objects)
+                {
+                    NSString *conversationID = conversationObj.objectId;
+                    [channelsToSubscribeTo addObject:conversationID];
+                }
+                NSArray *channelsArray = [PNChannel channelsWithNames:channelsToSubscribeTo];
+        
+                        [PubNub subscribeOn:channelsArray withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
+                            if(error)
+                            {
+                                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Subscribe Error", nil) message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+                            }
+                            //subscribe successful.
+                            NSLog(@"successfully subscribed on channels");
+                            NSLog(@"%lu",(unsigned long)channels.count);
+                
+                        }];
+            }
+        }];
+        
+    }];
+     
+    
 }
 
 -(void) createParseUser {
@@ -386,7 +408,7 @@ MBProgressHUD *HUD;
     
     if([self.testUserString length] ==0)
     {
-         HomePageuserName = @"EiSavyJT4E";
+         HomePageuserName = @"yh5YoZSXRW";
     }
     else
     {
@@ -404,7 +426,6 @@ MBProgressHUD *HUD;
     
     [self ReloadHomePageData];
    
-    [self cloudCodeTest];
     
     
 }
@@ -428,9 +449,6 @@ MBProgressHUD *HUD;
     [query getObjectInBackgroundWithId:HomePageuserName block:^(PFObject *latestCaseList, NSError *error) {
         // Do something with the returned PFObject
         
-        
-        NSLog(@"%@", latestCaseList);
-        
         [HUD hide:NO];
         
         if(error)
@@ -441,9 +459,7 @@ MBProgressHUD *HUD;
         }
         
         //do some logic to sort through these cases and see how many have matches, how many are awaiting more info.
-        NSArray *cases = [latestCaseList objectForKey:@"cases"];
-        
-        int caseCount = (int)cases.count;
+       homePageCases = [latestCaseList objectForKey:@"cases"];
         
         UIView *bubbleIndicatorCases = [[UIView alloc] init];
         int bubbleWidth = 20;
@@ -468,8 +484,11 @@ MBProgressHUD *HUD;
         
         [self.view addSubview:bubbleIndicatorCases];
         
+        [self subscribeToConversationChannels];
+        
     }];
 
+    
     
 }
 
