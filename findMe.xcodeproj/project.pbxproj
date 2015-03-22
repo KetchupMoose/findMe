@@ -132,6 +132,7 @@
 		ECC9E5131AA153070099C46A /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = ECC9E50B1AA153070099C46A /* Icon-Small.png */; };
 		ECC9E5141AA153070099C46A /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECC9E50C1AA153070099C46A /* Icon-Small@2x.png */; };
 		ECC9E5151AA153070099C46A /* Icon-Small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECC9E50D1AA153070099C46A /* Icon-Small@3x.png */; };
+		ECD591BC1ABC930700D32D5D /* carselfie1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECD591BB1ABC930700D32D5D /* carselfie1.jpg */; };
 		ECE6B1631A069AC3007F4A19 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1621A069AC3007F4A19 /* Bolts.framework */; };
 		ECE6B1671A069B69007F4A19 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1661A069B69007F4A19 /* Parse.framework */; };
 		ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B1691A069C1D007F4A19 /* findmeInfo.plist */; };
@@ -497,6 +498,7 @@
 		ECC9E50B1AA153070099C46A /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
 		ECC9E50C1AA153070099C46A /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
 		ECC9E50D1AA153070099C46A /* Icon-Small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@3x.png"; sourceTree = "<group>"; };
+		ECD591BB1ABC930700D32D5D /* carselfie1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = carselfie1.jpg; sourceTree = "<group>"; };
 		ECE6B1621A069AC3007F4A19 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = findMe/Bolts.framework; sourceTree = "<group>"; };
 		ECE6B1661A069B69007F4A19 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = findMe/Parse.framework; sourceTree = "<group>"; };
 		ECE6B1681A069C1D007F4A19 /* findme-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "findme-Prefix.pch"; sourceTree = "<group>"; };
@@ -1002,6 +1004,7 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				ECD591BB1ABC930700D32D5D /* carselfie1.jpg */,
 				D3207B0319E9CF8B00085B7C /* green-checkmark.jpg */,
 				ECA7A21C1AA7B77900F899D5 /* internetOfflineIcon.png */,
 				EC0403F61A9CFE3400151796 /* femalesilhouette.jpeg */,
@@ -1830,6 +1833,7 @@
 				ECE6B16C1A069DAB007F4A19 /* stockphotowoman2.jpg in Resources */,
 				ECE6B16E1A06AD0E007F4A19 /* sawyousubway.jpg in Resources */,
 				ECA7A21D1AA7B77900F899D5 /* internetOfflineIcon.png in Resources */,
+				ECD591BC1ABC930700D32D5D /* carselfie1.jpg in Resources */,
 				ECC9E5131AA153070099C46A /* Icon-Small.png in Resources */,
 				D3F4574219FD920A000EDF25 /* ManButton.png in Resources */,
 				ECA7A29A1AA8B86C00F899D5 /* JSQMessagesAssets.bundle in Resources */,

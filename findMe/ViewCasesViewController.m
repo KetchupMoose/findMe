@@ -23,7 +23,6 @@
 @implementation ViewCasesViewController
 NSArray *caseListJSON;
 NSMutableArray *caseListPruned;
-
 @synthesize casesTableView;
 MBProgressHUD *HUD;
 UIRefreshControl *refreshControl;
@@ -34,6 +33,8 @@ UIRefreshControl *refreshControl;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    
     
     refreshControl = [[UIRefreshControl alloc]init];
     [self.casesTableView addSubview:refreshControl];
@@ -141,6 +142,10 @@ UIRefreshControl *refreshControl;
     }];
     
   
+}
+-(void) viewWillAppear:(BOOL)animated
+{
+    self.navigationController.navigationBarHidden = NO;
 }
 
 -(void) viewDidAppear:(BOOL)animated

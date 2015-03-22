@@ -38,6 +38,11 @@ MBProgressHUD *HUD;
     
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    self.navigationController.navigationBarHidden = NO;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -185,7 +190,7 @@ MBProgressHUD *HUD;
     
      conversationJSQViewController *cJSQvc = [self.storyboard instantiateViewControllerWithIdentifier:@"convojsq"];
     
-    conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject userName:caseForMatch];
+    conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject userName:self.matchesUserName];
     
     cJSQvc.conversationData = cmData;
     

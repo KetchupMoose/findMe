@@ -36,6 +36,7 @@ MBProgressHUD* HUD;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    self.navigationController.navigationBarHidden = NO;
     
     //query for updated messages
     [self.chatTableView removeConstraints:self.chatTableView.constraints];
@@ -47,7 +48,9 @@ MBProgressHUD* HUD;
     conversationMessagesArray = [query findObjects];
     
     [self.chatTableView reloadData];
+   
     
+
 }
 
 /*

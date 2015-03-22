@@ -166,6 +166,8 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
 {
     [super viewWillAppear:animated];
     
+    self.navigationController.navigationBarHidden = NO;
+    
     if (self.delegateModal) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop
                                                                                               target:self

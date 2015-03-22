@@ -496,6 +496,56 @@
 
 }
 
+- (void) SlideFromRight:(UIView *) addview containerView:(UIView *) container duration:(float) secs option:(UIViewAnimationOptions)option
+{
+    
+    CGRect originalframe = addview.frame;
+    int width = container.bounds.size.width;
+    
+    CGRect newframe = CGRectMake(width+50,addview.frame.origin.y,addview.frame.size.width,addview.frame.size.height);
+    
+    addview.frame = newframe;
+    [self addSubview:addview];
+    
+    [UIView animateWithDuration:secs delay:0.0 options:option
+                     animations:^{
+                         addview.frame = CGRectMake(width-addview.frame.size.width,originalframe.origin.y, originalframe.size.width, originalframe.size.height);
+                     }
+                     completion:nil];
+}
+
+- (void) SlideFromRightWithBounceBack:(UIView *) addview containerView:(UIView *) container duration:(float) secs option:(UIViewAnimationOptions)option
+{
+    
+    CGRect originalframe = addview.frame;
+    int width = container.bounds.size.width;
+    
+    CGRect newframe = CGRectMake(width+40,addview.frame.origin.y,addview.frame.size.width,addview.frame.size.height);
+    
+    addview.frame = newframe;
+    [self addSubview:addview];
+    
+    [UIView animateWithDuration:secs delay:0.0 options:option
+                     animations:^{
+                         addview.frame = CGRectMake(width-addview.frame.size.width,originalframe.origin.y, originalframe.size.width, originalframe.size.height);
+                     }
+                     completion:^(BOOL finished) {
+                         [self BounceRightSlightly:addview ];
+                     }
+];
+}
+
+-(void)BounceRightSlightly:(UIView *)addview
+{
+    [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         addview.frame = CGRectMake(addview.frame.origin.x+10,addview.frame.origin.y, addview.frame.size.width, addview.frame.size.height);
+                     }
+                     completion:nil];
+     
+
+}
+
 
 
 

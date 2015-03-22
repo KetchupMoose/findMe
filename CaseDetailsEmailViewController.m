@@ -367,7 +367,9 @@ CGPoint startLocation;
     if (![self.slidingViewController.underLeftViewController isKindOfClass:[popupViewController class]]) {
         self.slidingViewController.underLeftViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"popupvc"];
     }
-    */
+     */
+    self.navigationController.navigationBarHidden = NO;
+    
     
     [self getLocation:self];
 }

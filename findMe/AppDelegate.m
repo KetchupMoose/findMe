@@ -10,6 +10,9 @@
 #import "reachabilitySingleton.h"
 #import <Parse/Parse.h>
 #import "PNImports.h"
+#import "JSQMessagesViewController.h"
+#import "conversationModelData.h"
+#import "conversationJSQViewController.h"
 
 @implementation AppDelegate
 
@@ -39,8 +42,6 @@
     /* Instantiate PubNub */
     [PubNub setDelegate:self];
     
-   
-    
     
     //-- Set Notification
     if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
@@ -56,12 +57,73 @@
         [application registerForRemoteNotificationTypes:
          (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
     }
-   
+    
+    if (launchOptions != nil)
+    
+    {
+        // Launched from push notification
+        NSDictionary *userInfo = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        NSString *messageType = [userInfo objectForKey:@"messageType"];
+        NSString *userMTLName = [userInfo objectForKey:@"userMTL"];
+        
+        //handle responding to different kinds of notifications and showing different kinds of data
+        
+        if([messageType isEqualToString:@"message"])
+        {
+            //get the conversation object
+            NSString *conversationObj = [userInfo objectForKey:@"Conversation"];
+            
+            //open the chat view controller above the home screen view controller directly to this conversation object
+            PFObject *conversationObject = [PFObject objectWithClassName:@"Conversations"];
+            conversationObject.objectId = conversationObj;
+            
+            [conversationObject fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+               
+                UINavigationController *rootNC = (UINavigationController *)self.window.rootViewController;
+                
+                conversationJSQViewController *cJSQvc = [rootNC.storyboard instantiateViewControllerWithIdentifier:@"convojsq"];
+                
+                conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject userName:userMTLName];
+                
+                cJSQvc.conversationData = cmData;
+                [rootNC pushViewController:cJSQvc animated:YES];
+
+            }];
+        }
+        else
+        {
+            //respond to some other kind of NSNotification
+        }
+    }
+    
     return YES;
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    [PFPush handlePush:userInfo];
+    //[PFPush handlePush:userInfo];
+    
+    if ( application.applicationState == UIApplicationStateActive )
+    {
+         // app was already in the foreground
+        NSString *messageType = [userInfo objectForKey:@"messageType"];
+        
+        if([messageType isEqualToString:@"newMatch"])
+        {
+            //show new match popup
+        }
+        if([messageType isEqualToString:@"message"])
+        {
+            //do nothing, pubnub already handling
+        }
+        application.applicationIconBadgeNumber = 0;
+    }
+   
+    else
+    {
+        // app was just brought from background to foreground
+        [PFPush handlePush:userInfo];
+        application.applicationIconBadgeNumber = 0;
+    }
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -131,5 +193,6 @@
     NSLog(@"brianconnected");
     
 }
+
 
 @end

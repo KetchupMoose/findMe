@@ -77,7 +77,7 @@ NSString *locationLongitude;
 
 -(void) viewWillAppear:(BOOL)animated
 {
-  
+   self.navigationController.navigationBarHidden = NO;
 }
 
 -(void) queryForTemplates
