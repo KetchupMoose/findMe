@@ -2237,7 +2237,7 @@
 				GCC_PREFIX_HEADER = "findMe/findme-Prefix.pch";
 				INFOPLIST_FILE = findMe/findmeInfo.plist;
 				PRODUCT_NAME = findme;
-				PROVISIONING_PROFILE = "6355d950-87b9-4ac9-8c1e-7859712810df";
+				PROVISIONING_PROFILE = "ddfa3f5c-5b53-4491-aa18-fe4a0a647ee1";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2258,7 +2258,7 @@
 				GCC_PREFIX_HEADER = "findMe/findme-Prefix.pch";
 				INFOPLIST_FILE = findMe/findmeInfo.plist;
 				PRODUCT_NAME = findme;
-				PROVISIONING_PROFILE = "6355d950-87b9-4ac9-8c1e-7859712810df";
+				PROVISIONING_PROFILE = "ddfa3f5c-5b53-4491-aa18-fe4a0a647ee1";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

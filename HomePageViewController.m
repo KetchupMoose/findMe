@@ -309,7 +309,7 @@ MBProgressHUD *HUD;
         
         HomePageITSMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
         [HomePageITSMTLObject setObject:currentUser forKey:@"ParseUser"];
-        [HomePageITSMTLObject setObject:@"newHomeScreenUser" forKey:@"showName"];
+        //[HomePageITSMTLObject setObject:@"newHomeScreenUser" forKey:@"showName"];
         
         // Set the access control list to current user for security purposes
         PFACL *itsMTLACL = [PFACL ACLWithUser:[PFUser currentUser]];

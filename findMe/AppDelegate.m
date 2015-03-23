@@ -61,15 +61,21 @@
     if (launchOptions != nil)
     
     {
+        NSLog(@"Brian view on device log--launched from a push notification");
+              
+        
         // Launched from push notification
         NSDictionary *userInfo = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
         NSString *messageType = [userInfo objectForKey:@"messageType"];
         NSString *userMTLName = [userInfo objectForKey:@"userMTL"];
         
+        NSLog(userMTLName);
+        
         //handle responding to different kinds of notifications and showing different kinds of data
         
         if([messageType isEqualToString:@"message"])
         {
+             NSLog(@"got message type");
             //get the conversation object
             NSString *conversationObj = [userInfo objectForKey:@"Conversation"];
             
@@ -78,13 +84,15 @@
             conversationObject.objectId = conversationObj;
             
             [conversationObject fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-               
+               NSLog(@"fetched conversation object");
                 UINavigationController *rootNC = (UINavigationController *)self.window.rootViewController;
                 
                 conversationJSQViewController *cJSQvc = [rootNC.storyboard instantiateViewControllerWithIdentifier:@"convojsq"];
                 
                 conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject userName:userMTLName];
                 
+                NSLog(userMTLName);
+
                 cJSQvc.conversationData = cmData;
                 [rootNC pushViewController:cJSQvc animated:YES];
 
