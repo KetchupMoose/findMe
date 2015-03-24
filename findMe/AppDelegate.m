@@ -13,6 +13,7 @@
 #import "JSQMessagesViewController.h"
 #import "conversationModelData.h"
 #import "conversationJSQViewController.h"
+#import "HomePageViewController.h"
 
 @implementation AppDelegate
 
@@ -67,14 +68,12 @@
         // Launched from push notification
         NSDictionary *userInfo = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
         NSString *messageType = [userInfo objectForKey:@"messageType"];
-        NSString *userMTLName = [userInfo objectForKey:@"userMTL"];
-        
-        NSLog(userMTLName);
-        
+              
         //handle responding to different kinds of notifications and showing different kinds of data
         
         if([messageType isEqualToString:@"message"])
         {
+           
              NSLog(@"got message type");
             //get the conversation object
             NSString *conversationObj = [userInfo objectForKey:@"Conversation"];
@@ -83,20 +82,23 @@
             PFObject *conversationObject = [PFObject objectWithClassName:@"Conversations"];
             conversationObject.objectId = conversationObj;
             
-            [conversationObject fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            [conversationObject fetch];
                NSLog(@"fetched conversation object");
                 UINavigationController *rootNC = (UINavigationController *)self.window.rootViewController;
                 
-                conversationJSQViewController *cJSQvc = [rootNC.storyboard instantiateViewControllerWithIdentifier:@"convojsq"];
+            
+                NSArray *conversationMembers = [conversationObject objectForKey:@"Members"];
                 
-                conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject userName:userMTLName];
-                
-                NSLog(userMTLName);
-
+              conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject arrayOfCaseUsers:conversationMembers];
+            HomePageViewController *hmpgvc = rootNC.childViewControllers[0];
+            hmpgvc.conversationData = cmData;
+            
+            conversationJSQViewController *cJSQvc = [rootNC.storyboard instantiateViewControllerWithIdentifier:@"convojsq"];
+            
                 cJSQvc.conversationData = cmData;
                 [rootNC pushViewController:cJSQvc animated:YES];
 
-            }];
+           
         }
         else
         {
@@ -184,7 +186,6 @@
     NSMutableDictionary *pubMsgDict = [[NSMutableDictionary alloc] init];
     NSDictionary *msgIncomingDict = message.message;
     NSString *msgStringVal = [msgIncomingDict objectForKey:@"text"];
-    
     
     NSDate *msgDate = (NSDate *)message.receiveDate.date;
     

@@ -23,7 +23,7 @@
 
 @interface conversationJSQViewController : JSQMessagesViewController<UIActionSheetDelegate>
 
-@property (strong, nonatomic) conversationModelData *conversationData;
+@property (strong, atomic) conversationModelData *conversationData;
 @property (weak, nonatomic) id<conversationJSQViewControllerDelegate> delegateModal;
 
 - (void)receiveMessagePressed:(UIBarButtonItem *)sender;

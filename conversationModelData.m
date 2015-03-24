@@ -17,6 +17,7 @@
 //
 
 #import "conversationModelData.h"
+#import "AppDelegate.h"
 //#import "NSUserDefaults+DemoSettings.h"
 
 
@@ -53,9 +54,11 @@ NSArray *conversationMessagesArray;
 -(conversationModelData*)initWithConversationObject:(PFObject*)conversationObj userName:(NSString*)convoUserName
 {
     NSLog(@"doing init");
+    NSLog(convoUserName);
+    
     self = [super init];
     self.conversationObject = conversationObj;
-    self.conversationUserName = convoUserName;
+    self.conversationCaseUserName = convoUserName;
     
     [self QueryForMessages];
     [self loadAvatars];
@@ -72,6 +75,67 @@ NSArray *conversationMessagesArray;
     
     self.outgoingBubbleImageData = [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     self.incomingBubbleImageData = [bubbleFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
+    
+    return self;
+    
+}
+
+-(conversationModelData*)initWithConversationObject:(PFObject*)conversationObj arrayOfCaseUsers:(NSArray*)caseUserArray
+{
+     self = [super init];
+    
+    
+    
+    NSLog(@"doing init with array of users");
+    NSLog(@"%lu",(unsigned long)caseUserArray.count);
+    
+   
+    //need to query for the caseObjects within the message's caseUserArray and then query up to their parse users to find the matching caseID
+    PFQuery *query = [PFQuery queryWithClassName:@"Cases"];
+    [query whereKey:@"objectId" containedIn:caseUserArray];
+    [query includeKey:@"ownerObjectid.ParseUser"];
+    
+    NSArray *objects =  [query findObjects];
+        NSLog(@"object count:@%lu",(unsigned long)objects.count);
+        for(PFObject *caseObj in objects)
+        {
+            PFObject *mtlObj = [caseObj objectForKey:@"ownerObjectid"];
+            PFUser *parentUser = [mtlObj objectForKey:@"ParseUser"];
+            PFUser *ownUser = [PFUser currentUser];
+            NSLog(parentUser.objectId);
+            NSLog(ownUser.objectId);
+            
+             if([parentUser.objectId isEqualToString:ownUser.objectId])
+             {
+             self.conversationCaseUserName = caseObj.objectId;
+                 NSLog(@"got a match");
+                 
+             }
+            else
+            {
+                NSLog(@"did  not match");
+            }
+             
+        }
+        //self.conversationCaseUserName = @"fIcrScUrxq";
+        self.conversationObject = conversationObj;
+         
+         
+         [self QueryForMessages];
+         [self loadAvatars];
+         
+         [self loadMessages];
+         
+         /**
+          *  Create message bubble images objects.
+          *
+          *  Be sure to create your bubble images one time and reuse them for good performance.
+          *
+          */
+         JSQMessagesBubbleImageFactory *bubbleFactory = [[JSQMessagesBubbleImageFactory alloc] init];
+         
+         self.outgoingBubbleImageData = [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
+         self.incomingBubbleImageData = [bubbleFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
     
     return self;
     
@@ -208,6 +272,9 @@ NSArray *conversationMessagesArray;
     for(PFObject *msgObject in sortedConversationMessages)
                                    {
                                        NSString *msgSenderID = [msgObject objectForKey:@"messageCaseUserID"];
+                                       NSLog(@"checking sender id");
+                                       
+                                       NSLog(msgSenderID);
                                        
                                        NSString *msgText = [msgObject objectForKey:@"MessageString"];
                                        NSDate *msgDate = msgObject.updatedAt;

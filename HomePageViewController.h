@@ -11,6 +11,7 @@
 #import <Parse/Parse.h>
 #import "setProfileViewController.h"
 #import "internetOfflineViewController.h"
+#import "conversationModelData.h"
 
 @interface HomePageViewController : UIViewController <MBProgressHUDDelegate,SetProfileDelegate,UITextFieldDelegate,internetOfflineViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *CreateNewCaseButton;
@@ -28,5 +29,5 @@
 @property (weak,nonatomic) IBOutlet UITextField *testUserTextField;
 @property (strong,nonatomic) NSString *testUserString;
 @property (strong,nonatomic ) NSArray *homePageCases;
-
+@property (strong, atomic) conversationModelData *conversationData;
 @end

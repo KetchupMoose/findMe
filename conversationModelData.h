@@ -54,9 +54,11 @@ static NSString * const kJSQDemoAvatarIdWoz = @"309-41802-93823";
 
 @property (strong,nonatomic) PFObject *conversationObject;
 
-@property (weak,nonatomic) NSString *conversationUserName;
+@property (strong,nonatomic) NSString *conversationCaseUserName;
 
 -(conversationModelData*)initWithConversationObject:(PFObject*)conversationObj userName:(NSString*)convoUserName;
+
+-(conversationModelData*)initWithConversationObject:(PFObject*)conversationObj arrayOfCaseUsers:(NSArray*)caseUserArray;
 
 - (void)addPhotoMediaMessage;
 

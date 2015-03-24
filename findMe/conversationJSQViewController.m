@@ -1,4 +1,4 @@
-//
+ //
 //  conversationJSQViewController.m
 //  findMe
 //
@@ -27,22 +27,39 @@ PNChannel *sharedChannel;
     /**
      *  You MUST set your senderId and display name
      */
-    
     //get senderID and sender Display Name from conversationData
+    NSLog(@"JSQ loading sender name");
+    if(self.conversationData ==nil)
+    {
+        NSLog(@"holy shit the error is here");
+        
+    }
+    NSLog(self.conversationData.conversationCaseUserName);
     
-    self.senderId = self.conversationData.conversationUserName;
+    //this needs to be set as the case and not as the MTLUserName..
+    if([self.conversationData.conversationCaseUserName length] ==0)
+    {
+        NSLog(@"setting to brian test");
+        self.senderId = @"briantest";
+    }
+    else
+    {
+         NSLog(@"got the sender id");
+        self.senderId = self.conversationData.conversationCaseUserName;
+    }
     
     //if self.users count is 0, default to a display name "Me"
     
     if([self.conversationData.users count] <=1)
     {
-       self.senderDisplayName = @"Me";
+        self.senderDisplayName = @"Me";
     }
     else
     {
         self.senderDisplayName = [self.conversationData.users objectForKey:self.senderId];
         
     }
+
     
     /**
      *  You can set custom avatar sizes
@@ -125,6 +142,8 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     
 }
 
+
+
 -(void)receivePNMessage:(NSNotification *) notification
 {
   
@@ -138,7 +157,7 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     
     
     
-    NSString *userNameString = self.conversationData.conversationUserName;
+    NSString *userNameString = self.conversationData.conversationCaseUserName;
     
     if([message containsString:userNameString])
     {
@@ -165,6 +184,7 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
     
     self.navigationController.navigationBarHidden = NO;
     
@@ -391,7 +411,7 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     //upload message in background to parse
     [self uploadMessageToParse:message];
     
-    NSString *sendingUserString = self.conversationData.conversationUserName;
+    NSString *sendingUserString = self.conversationData.conversationCaseUserName;
     
     NSString *fullMsgString = [sendingUserString stringByAppendingString:message.text];
     

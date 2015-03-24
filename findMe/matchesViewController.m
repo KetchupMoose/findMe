@@ -187,10 +187,11 @@ MBProgressHUD *HUD;
        conversationObject = [returnedConversations objectAtIndex:0];
     }
     
-    
      conversationJSQViewController *cJSQvc = [self.storyboard instantiateViewControllerWithIdentifier:@"convojsq"];
     
-    conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject userName:self.matchesUserName];
+    //conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject userName:caseForMatch];
+    conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject arrayOfCaseUsers:conversationMembers];
+    
     
     cJSQvc.conversationData = cmData;
     
