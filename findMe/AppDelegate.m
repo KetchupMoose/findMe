@@ -186,11 +186,16 @@
     NSMutableDictionary *pubMsgDict = [[NSMutableDictionary alloc] init];
     NSDictionary *msgIncomingDict = message.message;
     NSString *msgStringVal = [msgIncomingDict objectForKey:@"text"];
+    NSString *thisChannel = [msgIncomingDict objectForKey:@"channel"];
+    NSString *msgSenderCaseID = [msgIncomingDict objectForKey:@"msgSenderCaseID"];
+    
     
     NSDate *msgDate = (NSDate *)message.receiveDate.date;
     
     [pubMsgDict setObject:msgStringVal forKey:@"pubMsgString"];
     [pubMsgDict setObject:msgDate forKey:@"pubMsgDate"];
+    [pubMsgDict setObject:thisChannel forKey:@"pubChannel"];
+    [pubMsgDict setObject:msgSenderCaseID forKey:@"pubMsgSender"];
     
     //trigger an NSNotificationCenter notification that the other view controllers subscribe to with the message details
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PNMessage" object:self userInfo:[pubMsgDict copy]];

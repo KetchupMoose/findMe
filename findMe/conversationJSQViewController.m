@@ -81,7 +81,14 @@ PNChannel *sharedChannel;
                                                                              target:self
                                                                              action:@selector(receiveMessagePressed:)];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receivePNMessage:)
+                                                 name:@"PNMessage"
+                                               object:nil];
     
+    //commenting this out March 27, already handling PubNub connectivity on other channels
+    
+    /*
     PNConfiguration *configuration = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
                                                                   publishKey:@"pub-c-71127e1e-7bbf-4f65-abd4-67a2907606b2" subscribeKey:@"sub-c-110d37e8-c9b7-11e4-a054-0619f8945a4f" secretKey:@"sec-c-MzUwOTczZTQtMWI3YS00N2ZkLTk4ZTMtZTIyZDk5NGIyMWI1"];
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -107,10 +114,7 @@ PNChannel *sharedChannel;
         }
     }];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receivePNMessage:)
-                                                 name:@"PNMessage"
-                                               object:nil];
+    
     
      NSString *channelName = self.conversationData.conversationObject.objectId;
     
@@ -137,7 +141,7 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
             break;
     }
 }];
- 
+ */
     
     
 }
@@ -154,8 +158,6 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     NSLog( @"%@", [NSString stringWithFormat:@"received local: %@", message] );
     
     //add a new JSQMessage to the local messages array
-    
-    
     
     NSString *userNameString = self.conversationData.conversationCaseUserName;
     
@@ -413,11 +415,12 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     
     NSString *sendingUserString = self.conversationData.conversationCaseUserName;
     
-    NSString *fullMsgString = [sendingUserString stringByAppendingString:message.text];
-    
     NSMutableDictionary *sendingMsgDict = [[NSMutableDictionary alloc] init];
-    [sendingMsgDict setObject:fullMsgString forKey:@"text"];
+    [sendingMsgDict setObject:message.text forKey:@"text"];
     
+    [sendingMsgDict setObject:sendingUserString forKey:@"msgSenderCaseID"];
+    
+    [sendingMsgDict setObject:self.conversationData.conversationObject.objectId forKey:@"channel"];
     
     [PubNub sendMessage:sendingMsgDict toChannel:sharedChannel];
     
@@ -433,7 +436,14 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     [messageObject setObject:convoObj forKey:@"Conversation"];
     [messageObject setObject:messageText forKey:@"MessageString"];
     [messageObject setObject:message.senderId forKey:@"messageCaseUserID"];
-    [messageObject saveInBackground];
+    [messageObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if(error)
+        {
+            NSLog(@"There was a parse upload error: @%@",error.localizedDescription);
+        }
+    }
+     ];
+    
     
     
 }
@@ -542,6 +552,7 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
         }
     }
     */
+    NSDictionary *avatar =  [self.conversationData.avatars objectForKey:message.senderId];
     
     return [self.conversationData.avatars objectForKey:message.senderId];
 }

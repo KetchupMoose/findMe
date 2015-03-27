@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
 #import <Parse/Parse.h>
+
 @protocol SetProfileDelegate
 
 - (void)setNewProfile:(PFObject *)newITSMTLObject;

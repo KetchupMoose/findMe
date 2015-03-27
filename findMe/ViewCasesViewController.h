@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
 #import <Parse/Parse.h>
-
-@interface ViewCasesViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,MBProgressHUDDelegate>
+#import "findMeBaseViewController.h"
+@interface ViewCasesViewController : findMeBaseViewController <UITableViewDataSource,UITableViewDelegate,MBProgressHUDDelegate>
 
 @property (weak,nonatomic) IBOutlet UITableView *casesTableView;
 -(IBAction)newCase:(id)sender;

@@ -146,6 +146,9 @@
 		ECE6B1841A0DA01D007F4A19 /* UIImage+Scaling.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE6B1831A0DA01D007F4A19 /* UIImage+Scaling.m */; };
 		ECE6B1891A0DAA4E007F4A19 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1791A0D9C83007F4A19 /* ImageIO.framework */; };
 		ECE6B18B1A0DAA54007F4A19 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B18A1A0DAA54007F4A19 /* MapKit.framework */; };
+		ECEE00D31AC1B9E70070908C /* findMeBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEE00D21AC1B9E70070908C /* findMeBaseViewController.m */; };
+		ECEE00D61AC1CA2E0070908C /* sharedUserDataSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEE00D51AC1CA2E0070908C /* sharedUserDataSingleton.m */; };
+		ECEE00D91AC497FE0070908C /* messageIdentifierButton.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEE00D81AC497FE0070908C /* messageIdentifierButton.m */; };
 		ECEF94481A832A4F0000A444 /* NSMutableArray+SWUtilityButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF943D1A832A4F0000A444 /* NSMutableArray+SWUtilityButtons.m */; };
 		ECEF94491A832A4F0000A444 /* SWCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF943F1A832A4F0000A444 /* SWCellScrollView.m */; };
 		ECEF944A1A832A4F0000A444 /* SWLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEF94411A832A4F0000A444 /* SWLongPressGestureRecognizer.m */; };
@@ -517,6 +520,12 @@
 		ECE6B1821A0DA01D007F4A19 /* UIImage+Scaling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scaling.h"; sourceTree = "<group>"; };
 		ECE6B1831A0DA01D007F4A19 /* UIImage+Scaling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scaling.m"; sourceTree = "<group>"; };
 		ECE6B18A1A0DAA54007F4A19 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		ECEE00D11AC1B9E70070908C /* findMeBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = findMeBaseViewController.h; sourceTree = "<group>"; };
+		ECEE00D21AC1B9E70070908C /* findMeBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = findMeBaseViewController.m; sourceTree = "<group>"; };
+		ECEE00D41AC1CA2E0070908C /* sharedUserDataSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sharedUserDataSingleton.h; sourceTree = "<group>"; };
+		ECEE00D51AC1CA2E0070908C /* sharedUserDataSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sharedUserDataSingleton.m; sourceTree = "<group>"; };
+		ECEE00D71AC497FE0070908C /* messageIdentifierButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = messageIdentifierButton.h; sourceTree = "<group>"; };
+		ECEE00D81AC497FE0070908C /* messageIdentifierButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = messageIdentifierButton.m; sourceTree = "<group>"; };
 		ECEF943C1A832A4F0000A444 /* NSMutableArray+SWUtilityButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+SWUtilityButtons.h"; sourceTree = "<group>"; };
 		ECEF943D1A832A4F0000A444 /* NSMutableArray+SWUtilityButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+SWUtilityButtons.m"; sourceTree = "<group>"; };
 		ECEF943E1A832A4F0000A444 /* SWCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCellScrollView.h; sourceTree = "<group>"; };
@@ -1310,6 +1319,12 @@
 		ECE6B17B1A0D9FAB007F4A19 /* commonControls */ = {
 			isa = PBXGroup;
 			children = (
+				ECEE00D11AC1B9E70070908C /* findMeBaseViewController.h */,
+				ECEE00D21AC1B9E70070908C /* findMeBaseViewController.m */,
+				ECEE00D71AC497FE0070908C /* messageIdentifierButton.h */,
+				ECEE00D81AC497FE0070908C /* messageIdentifierButton.m */,
+				ECEE00D41AC1CA2E0070908C /* sharedUserDataSingleton.h */,
+				ECEE00D51AC1CA2E0070908C /* sharedUserDataSingleton.m */,
 				ECA7A2211AA7BD7700F899D5 /* Reachability.h */,
 				ECA7A2221AA7BD7700F899D5 /* Reachability.m */,
 				ECE6B1821A0DA01D007F4A19 /* UIImage+Scaling.h */,
@@ -1947,6 +1962,7 @@
 				D31DF30619CEFC0C00A37725 /* AppDelegate.m in Sources */,
 				ECFDAAD61AB38B5C00E42C33 /* NSString+PNAddition.m in Sources */,
 				ECFDAACD1AB38B5C00E42C33 /* NSDate+PNAdditions.m in Sources */,
+				ECEE00D31AC1B9E70070908C /* findMeBaseViewController.m in Sources */,
 				EC65950E1A8E8BCA00678E6C /* MEFoldAnimationController.m in Sources */,
 				D3207B0219E9CBCE00085B7C /* NewPropertyViewController.m in Sources */,
 				ECEF94601A8D127F0000A444 /* ECSlidingAnimationController.m in Sources */,
@@ -1961,6 +1977,7 @@
 				ECFDAAA21AB38B5C00E42C33 /* PNActionResponseParser.m in Sources */,
 				EC0822F41A0EE7F0000B6684 /* SDWebImageDecoder.m in Sources */,
 				ECFDAADD1AB38B5C00E42C33 /* PNChannelGroupNamespacesRequest.m in Sources */,
+				ECEE00D61AC1CA2E0070908C /* sharedUserDataSingleton.m in Sources */,
 				ECA7A2231AA7BD7700F899D5 /* Reachability.m in Sources */,
 				ECFDAAF51AB38B5C00E42C33 /* PNConnectionChannel.m in Sources */,
 				ECFDAAC01AB38B5C00E42C33 /* PNDate.m in Sources */,
@@ -2047,6 +2064,7 @@
 				ECF19FB81A76DAF200607E6D /* CaseDetailsEmailViewController.m in Sources */,
 				ECA7A2B71AA8B86C00F899D5 /* JSQMessagesCollectionViewCellIncoming.m in Sources */,
 				ECB1D5111A7748B5008CC684 /* popupViewController.m in Sources */,
+				ECEE00D91AC497FE0070908C /* messageIdentifierButton.m in Sources */,
 				D31DF30219CEFC0C00A37725 /* main.m in Sources */,
 				ECFDAA931AB38B5C00E42C33 /* PubNub+History.m in Sources */,
 				ECFDAAD91AB38B5C00E42C33 /* PNAccessRightsAuditRequest.m in Sources */,

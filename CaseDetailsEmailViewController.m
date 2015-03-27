@@ -358,9 +358,17 @@ CGPoint startLocation;
     }
 
 }
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+}
 
 -(void) viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:YES];
+    
+    
     // Tell it which view should be created under Right
     
     /*

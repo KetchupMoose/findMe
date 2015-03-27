@@ -24,7 +24,7 @@
 @implementation conversationModelData
 
 NSArray *conversationMessagesArray;
-
+NSArray *conversationMembersArray;
 
 - (instancetype)init:(PFObject *) conversationObject
 {
@@ -95,9 +95,9 @@ NSArray *conversationMessagesArray;
     [query whereKey:@"objectId" containedIn:caseUserArray];
     [query includeKey:@"ownerObjectid.ParseUser"];
     
-    NSArray *objects =  [query findObjects];
-        NSLog(@"object count:@%lu",(unsigned long)objects.count);
-        for(PFObject *caseObj in objects)
+    conversationMembersArray =  [query findObjects];
+        NSLog(@"object count:@%lu",(unsigned long)conversationMembersArray.count);
+        for(PFObject *caseObj in conversationMembersArray)
         {
             PFObject *mtlObj = [caseObj objectForKey:@"ownerObjectid"];
             PFUser *parentUser = [mtlObj objectForKey:@"ParseUser"];
@@ -156,7 +156,8 @@ NSArray *conversationMessagesArray;
 -(void) loadAvatars
 {
     //get the images for the avatars
-    NSMutableArray *userNamesInConversation = [[NSMutableArray alloc] init];
+    
+    /*NSMutableArray *userNamesInConversation = [[NSMutableArray alloc] init];
     
     for(PFObject *msgObject in conversationMessagesArray)
     {
@@ -175,6 +176,17 @@ NSArray *conversationMessagesArray;
         //nothing to add yet for avatar images or avatar user names
         return;
     }
+     */
+    NSMutableArray *userNamesInConversation = [[NSMutableArray alloc] init];
+    
+    for(PFObject *object in conversationMembersArray)
+    {
+        NSString *convoMemberID = object.objectId;
+        if(![userNamesInConversation containsObject:convoMemberID])
+        {
+            [userNamesInConversation addObject:convoMemberID];
+        }
+    }
     //query for the itsMTLObjects of these users to get their pictures
     PFQuery *query = [PFQuery queryWithClassName:@"Cases"];
     [query whereKey:@"objectId" containedIn:userNamesInConversation];
@@ -192,12 +204,12 @@ NSArray *conversationMessagesArray;
             NSString *caseID = caseObject.objectId;
             NSString *avatarName = [caseObject objectForKey:@"caseShowName"];
             
-            if(avatarName ==nil)
+            if([avatarName length ]==0)
             {
                 avatarName = @"Default Name";
             }
             
-            if(imgURL ==nil)
+            if([imgURL length] ==0)
             {
                 imgURL = @"http://icons.iconarchive.com/icons/hopstarter/face-avatars/256/Male-Face-M4-icon.png";
             }

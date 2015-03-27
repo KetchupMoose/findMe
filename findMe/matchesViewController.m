@@ -37,9 +37,15 @@ MBProgressHUD *HUD;
     [self.matchesTableView reloadData];
     
 }
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+}
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:NO];
     self.navigationController.navigationBarHidden = NO;
 }
 
@@ -180,6 +186,7 @@ MBProgressHUD *HUD;
         conversationObject = [PFObject objectWithClassName:@"Conversations"];
         [conversationObject setObject:conversationMembers forKey:@"Members"];
         [conversationObject save];
+        
         
     }
     else

@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "SWTableViewCell.h"
-
-@interface matchesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,SWTableViewCellDelegate>
+#import "findMeBaseViewController.h"
+@interface matchesViewController : findMeBaseViewController <UITableViewDataSource, UITableViewDelegate,SWTableViewCellDelegate>
 
 @property (strong,nonatomic) IBOutlet UITableView *matchesTableView;
 @property (strong,nonatomic) NSArray *matchesArray;

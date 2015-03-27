@@ -10,8 +10,9 @@
 #import "MBProgressHUD.h"
 #import <Parse/Parse.h>
 #import <CoreLocation/CoreLocation.h>
+#import "findMeBaseViewController.h"
 
-@interface newCaseViewController : UIViewController <UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate,MBProgressHUDDelegate,CLLocationManagerDelegate>
+@interface newCaseViewController : findMeBaseViewController <UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate,MBProgressHUDDelegate,CLLocationManagerDelegate>
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (weak,nonatomic) IBOutlet UICollectionView *CaseOptionsCollectionView;

@@ -12,8 +12,10 @@
 #import "setProfileViewController.h"
 #import "internetOfflineViewController.h"
 #import "conversationModelData.h"
+#import "findMeBaseViewController.h"
 
-@interface HomePageViewController : UIViewController <MBProgressHUDDelegate,SetProfileDelegate,UITextFieldDelegate,internetOfflineViewControllerDelegate>
+
+@interface HomePageViewController : findMeBaseViewController <MBProgressHUDDelegate,SetProfileDelegate,UITextFieldDelegate,internetOfflineViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *CreateNewCaseButton;
 - (IBAction)CreateNewCase:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *ViewMyCasesButton;

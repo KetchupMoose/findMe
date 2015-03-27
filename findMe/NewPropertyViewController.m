@@ -56,7 +56,14 @@ MBProgressHUD *HUD;
 }
 
 -(void) viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    
     [HUD hide:NO];
+    
+}
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
     
 }
 

@@ -48,8 +48,6 @@ MBProgressHUD* HUD;
     conversationMessagesArray = [query findObjects];
     
     [self.chatTableView reloadData];
-   
-    
 
 }
 

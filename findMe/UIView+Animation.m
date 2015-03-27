@@ -546,8 +546,17 @@
 
 }
 
-
-
+-(void) SlideOffRight:(UIView *) view duration:(float) secs
+{
+    [UIView animateWithDuration:secs delay:0.0 options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         view.frame = CGRectMake(view.frame.origin.x+200,view.frame.origin.y, view.frame.size.width, view.frame.size.height);
+                     }
+                      completion:^(BOOL finished) {
+                          [view removeFromSuperview];
+                          
+                      }];
+}
 
 
 

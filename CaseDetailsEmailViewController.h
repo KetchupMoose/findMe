@@ -13,8 +13,9 @@
 #import <Parse/Parse.h>
 #import "popupViewController.h"
 #import "SWTableViewCell.h"
+#import "findMeBaseViewController.h"
 
-@interface CaseDetailsEmailViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,MBProgressHUDDelegate,UIAlertViewDelegate,CLLocationManagerDelegate,UpdateCaseItemDelegate,MyDataDelegate,SWTableViewCellDelegate>
+@interface CaseDetailsEmailViewController : findMeBaseViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,MBProgressHUDDelegate,UIAlertViewDelegate,CLLocationManagerDelegate,UpdateCaseItemDelegate,MyDataDelegate,SWTableViewCellDelegate>
 
 @property (weak,nonatomic) IBOutlet UITableView *caseDetailsEmailTableView;
 

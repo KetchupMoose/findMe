@@ -66,7 +66,7 @@ int checkInternetTimerTicks;
     }
 }
 
--(void)internetCheck
+-(void)internetCheck:(id)sender
 {
     Reachability *singletonReach = [[reachabilitySingleton sharedReachability] reacher];
     

@@ -7,14 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "findMeBaseViewController.h"
 @protocol MyDataDelegate
 
 - (void)recieveData:(NSString *)OptionsList AcceptableAnswersList:(NSArray *)Answers QuestionText:(NSString *) question;
 
 @end
 
-@interface NewPropertyViewController : UIViewController <UITextFieldDelegate,UITableViewDataSource, UITableViewDelegate>
+@interface NewPropertyViewController : findMeBaseViewController <UITextFieldDelegate,UITableViewDataSource, UITableViewDelegate>
 
 -(IBAction)addAnswerToList:(id)sender;
 -(IBAction)addNewProperty:(id)sender;

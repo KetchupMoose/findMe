@@ -22,7 +22,7 @@
 #import "AppDelegate.h"
 #import "JSQSystemSoundPlayer+JSQMessages.h"
 #import "UIView+Animation.h"
-
+#import "sharedUserDataSingleton.h"
 
 @interface HomePageViewController ()
 
@@ -53,6 +53,9 @@ MBProgressHUD *HUD;
     {
         NSLog(@"reached it!");
         [self LoadingHomePage];
+        
+        
+        
     }
     else
     {
@@ -82,84 +85,8 @@ MBProgressHUD *HUD;
     [self.view addSubview:HUD];
     
     //set up notification channels
-    [self setUpNotificationChannels];
+    //[self setUpNotificationChannels];
 }
-
--(void) setUpNotificationChannels {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receivePNMessage:)
-                                                 name:@"PNMessage"
-                                               object:nil];
-    
-}
-
--(void)receivePNMessage:(NSNotification *) notification
-{
-    
-    NSString *message = [notification.userInfo objectForKey:@"pubMsgString"];
-    PNDate *msgDate = [notification.userInfo objectForKey:@"pubMsgDate"];
-    
-    NSLog( @"%@", [NSString stringWithFormat:@"received on home page: %@", message] );
-    
-    //add a new JSQMessage to the local messages array
-    NSString *userNameString = self.HomePageuserName;
-    
-    if([message containsString:userNameString])
-    {
-        //this is a message sent by this user, don't add it to the list of messages beacuse it has already been added
-        NSLog(@"message received but is from the user");
-        
-    }
-    else
-    {
-        [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
-        
-        //show a UIView saying there is a message received
-        [self displayMessageReceivedUIView:notification];
-        
-        
-    }
-    
-}
-
--(void) displayMessageReceivedUIView:(NSNotification *) notification
-{
-    NSString *message = [notification.userInfo objectForKey:@"pubMsgString"];
-    PNDate *msgDate = [notification.userInfo objectForKey:@"pubMsgDate"];
-
-    UIButton *messageReceivedView = [[UIButton alloc] initWithFrame:CGRectMake(0,20,150,50)];
-    [messageReceivedView addTarget:self action:@selector(popMessageReceivedView:) forControlEvents:UIControlEventTouchUpInside];
-    
-    messageReceivedView.backgroundColor = [UIColor whiteColor];
-    
-    messageReceivedView.layer.cornerRadius = 5.0f;
-    
-    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(55,0,85,50)];
-    messageLabel.text = message;
-    messageLabel.numberOfLines = 2;
-    messageLabel.font = [UIFont systemFontOfSize:11];
-    
-    
-    [messageReceivedView addSubview:messageLabel];
-    
-    UIImageView *senderImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5,5,40,40)];
-    senderImageView.layer.cornerRadius = senderImageView.frame.size.height /2;
-    senderImageView.layer.masksToBounds = YES;
-    senderImageView.layer.borderWidth = 0;
-    senderImageView.image = [UIImage imageNamed:@"carselfie1.jpg"];
-    
-    [messageReceivedView addSubview:senderImageView];
-    
-    [self.view SlideFromRightWithBounceBack:messageReceivedView containerView:self.view duration:0.3 option:UIViewAnimationOptionCurveEaseOut];
-    
-}
-
--(void)popMessageReceivedView:(id)sender
-{
-    UIButton *sendingButton = (UIButton *)sender;
-    [sendingButton removeFromSuperview];
-}
-
 
 
 -(void) setPubNubConfigDetails
@@ -191,11 +118,19 @@ MBProgressHUD *HUD;
         
 }
 
+
 -(void)viewWillAppear:(BOOL)animated
 {
-     self.navigationController.navigationBarHidden = YES;
+    [super viewWillAppear:NO];
+    self.navigationController.navigationBarHidden = YES;
     
     [self ReloadHomePageData];
+    
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
     
 }
 
@@ -208,8 +143,6 @@ MBProgressHUD *HUD;
 {
     //query the Cases object to get all the cases belonging to the home page user
     //query the Conversations object on parse to get all conversations where the array of users contains one of the home page user's cases
-    
-   
     PFQuery *newQuery = [PFQuery queryWithClassName:@"Conversations"];
     
     NSMutableArray *homePageCaseNames = [[NSMutableArray alloc] init];
@@ -219,7 +152,6 @@ MBProgressHUD *HUD;
         [homePageCaseNames addObject:caseID];
         
     };
-    
     
     [newQuery whereKey:@"Members" containedIn:[homePageCaseNames copy]];
     
@@ -295,6 +227,9 @@ MBProgressHUD *HUD;
         //do nothing, don't create an itsMTLObject
         PFObject *returnedMTLObject = [returnedMTLObjects objectAtIndex:0];
         HomePageuserName = returnedMTLObject.objectId;
+        sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
+        [sharedUData setUserName:HomePageuserName];
+        
         HomePageITSMTLObject = returnedMTLObject;
         
         [HUD hide:NO];
@@ -321,7 +256,8 @@ MBProgressHUD *HUD;
         [HomePageITSMTLObject save];
         
          HomePageuserName = HomePageITSMTLObject.objectId;
-        
+        sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
+        [sharedUData setUserName:HomePageuserName];
         //need to grab these properties later to save them on the user
         /*
          //set user properties to parse true user account
@@ -490,10 +426,15 @@ MBProgressHUD *HUD;
     if([self.testUserString length] ==0)
     {
          HomePageuserName = @"yh5YoZSXRW";
+       
+        sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
+        [sharedUData setUserName:HomePageuserName];
     }
     else
     {
         HomePageuserName = self.testUserString;
+        sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
+        [sharedUData setUserName:HomePageuserName];
     }
    
     
@@ -576,6 +517,8 @@ MBProgressHUD *HUD;
 - (void)setNewProfile:(PFObject *)newITSMTLObject
 {
     self.HomePageuserName = newITSMTLObject.objectId;
+    sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
+    [sharedUData setUserName:HomePageuserName];
     self.HomePageITSMTLObject = newITSMTLObject;
     
     [self ReloadHomePageData];

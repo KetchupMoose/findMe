@@ -73,11 +73,19 @@ NSString *locationLongitude;
     [CaseOptionsCollectionView reloadData];
     
     [self getLocation:self];
+    
+    
+}
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
 }
 
 -(void) viewWillAppear:(BOOL)animated
 {
-   self.navigationController.navigationBarHidden = NO;
+   [super viewWillAppear:NO];
+    self.navigationController.navigationBarHidden = NO;
 }
 
 -(void) queryForTemplates

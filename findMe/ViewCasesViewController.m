@@ -14,6 +14,7 @@
 #import "CaseDetailsEmailViewController.h"
 #import "BaseCaseDetailsSlidingViewController.h"
 #import "MBProgressHUD.h"
+#import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 
 
 @interface ViewCasesViewController ()
@@ -27,6 +28,10 @@ NSMutableArray *caseListPruned;
 MBProgressHUD *HUD;
 UIRefreshControl *refreshControl;
 @synthesize userName;
+NSMutableArray *caseIDSList;
+NSArray *caseObjects;
+NSMutableArray *caseImages;
+NSMutableArray *caseShowNames;
 
 
 - (void)viewDidLoad
@@ -34,14 +39,38 @@ UIRefreshControl *refreshControl;
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    
-    
     refreshControl = [[UIRefreshControl alloc]init];
     [self.casesTableView addSubview:refreshControl];
     [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
     
     [casesTableView setDataSource:self];
     [casesTableView setDelegate:self];
+    
+    caseIDSList = [[NSMutableArray alloc] init];
+    
+    caseImages = [[NSMutableArray alloc] init];
+    caseShowNames = [[NSMutableArray alloc] init];
+    
+    //add a progress HUD to show it is retrieving list of cases
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Retrieving Cases";
+    [HUD show:NO];
+    
+    caseListPruned = [[NSMutableArray alloc] init];
+   // [self refreshTable];
+    
+    
+    /*
+    //MAR27 experimentation failed
+    
+    //MAR 27 remove this from view did load, it's being handled on appear
+    
+    //[self refreshTable];
     
     //add a progress HUD to show it is retrieving list of cases
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -64,7 +93,7 @@ UIRefreshControl *refreshControl;
         
         //this represents the overall list of cases
         caseListPruned = [[NSMutableArray alloc] init];
-        
+        caseIDSList = [[NSMutableArray alloc] init];
     
         for (PFObject *caseObject in caseListJSON)
         {
@@ -73,14 +102,41 @@ UIRefreshControl *refreshControl;
             if (caseID !=nil)
             {
                 [caseListPruned addObject:caseObject];
+                [caseIDSList addObject:caseID];
                 
             }
             
         }
-       
-        [casesTableView reloadData];
         
-        [HUD hide:YES];
+        //query for cases for showNames and ImageViews
+        PFQuery *casesQuery = [PFQuery queryWithClassName:@"Cases"];
+        [casesQuery whereKey:@"objectId" containedIn:caseIDSList];
+        [casesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            //set the images and shownames
+            NSLog(@"mar27 found these objects");
+            NSLog(@"%luli",(unsigned long)objects.count);
+            
+            for(PFObject *caseObject in objects)
+            {
+                NSString *showName = [caseObject objectForKey:@"caseShowName"];
+                NSString *imgURL = [caseObject objectForKey:@"caseImgURL"];
+                
+                if([showName length] >2)
+                {
+                    NSLog(@"got a lengther");
+                    
+                }
+                [caseImages addObject:imgURL];
+                [caseShowNames addObject:showName];
+                
+            }
+            [casesTableView reloadData];
+            
+            [HUD hide:YES];
+            
+        }];
+       
+       
         
        // NSArray *myCases = [CaseBuilder casesFromJSON:[latestCase objectForKey:@"cases"] error:nil];
         
@@ -91,7 +147,7 @@ UIRefreshControl *refreshControl;
        // NSLog(jsonBlob1);
         
     }];
-    
+    */
 }
 
 - (void)didReceiveMemoryWarning
@@ -103,24 +159,40 @@ UIRefreshControl *refreshControl;
 -(void)refreshTable
 {
     //if response case is ok, refresh the list of cases.
-    PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
+    // Set determinate mode
     
-    [query getObjectInBackgroundWithId:userName block:^(PFObject *object, NSError *error) {
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Querying Case Data";
+    [HUD show:YES];
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
+    //PFQuery *casesQuery = [PFQuery queryWithClassName:@"Cases"];
+    
+    //example structure for running two queries at once:
+   // NSArray *queryArray = [NSArray arrayWithObjects:messageQuery,pokeQuery,commentsQuery,nil];
+    //PFQuery *allQueries = [PFQuery orQueryWithSubqueries:queryArray];
+    
+    
         
+        PFObject *object = [query getObjectWithId:userName];
+    
+        /*
         if(error)
         {
-             [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Query Failed", nil) message:NSLocalizedString([error localizedDescription], nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Query Failed", nil) message:NSLocalizedString([error localizedDescription], nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
             return;
             
         }
-        
+        */
         PFObject *latestCaseList = object;
         self.itsMTLObject = latestCaseList;
         
         // NSLog(@"%@", latestCaseList);
         caseListJSON = [latestCaseList objectForKey:@"cases"];
         [caseListPruned removeAllObjects];
-        
+        [caseIDSList removeAllObjects];
+    
         for (PFObject *caseObject in caseListJSON)
         {
             
@@ -128,40 +200,43 @@ UIRefreshControl *refreshControl;
             if (caseID !=nil)
             {
                 [caseListPruned addObject:caseObject];
+                [caseIDSList addObject:caseID];
                 
             }
             
         }
-        
+    
+        PFQuery *caseQuery = [PFQuery queryWithClassName:@"Cases"];
+        [caseQuery whereKey:@"objectId" containedIn:caseIDSList];
+        caseObjects = [caseQuery findObjects];
+    
+    
         [refreshControl endRefreshing];
-        
         [casesTableView reloadData];
         
-        [HUD hide:YES];
+        [HUD hide:NO];
+        
+ 
 
-    }];
     
   
 }
--(void) viewWillAppear:(BOOL)animated
-{
-    self.navigationController.navigationBarHidden = NO;
-}
-
 -(void) viewDidAppear:(BOOL)animated
 {
-    //refresh the itsMTLObject so it grabs the latest data
-    //add a progress HUD to show it is retrieving list of cases
-    HUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:HUD];
+    [super viewDidAppear:NO];
     
-    // Set determinate mode
-    HUD.mode = MBProgressHUDModeDeterminate;
-    HUD.delegate = self;
-    HUD.labelText = @"Running Wait For Sync";
-    [HUD show:YES];
+    
+    //[casesTableView reloadData];
+}
+
+-(void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:NO];
+    
+    self.navigationController.navigationBarHidden = NO;
     
     //call waitForSync first and then refresh the table
+    
     [PFCloud callFunctionInBackground:@"waitForSync"
                        withParameters:@{@"payload": userName}
                                 block:^(NSString *responseString, NSError *error) {
@@ -177,10 +252,18 @@ UIRefreshControl *refreshControl;
                                 }
                                     else
                                     {
-                                      [self refreshTable];
+                                        
+                                        dispatch_async(dispatch_get_main_queue(),
+                                                       ^{
+                                        [HUD hide:NO];
+                                        [self refreshTable];
+                                                       });
+                                        
                                     }
                                 
                                 }];
+    
+    
     
 }
 
@@ -200,15 +283,56 @@ UIRefreshControl *refreshControl;
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"caseCell" forIndexPath:indexPath];
     
-    UILabel *caseNameLabel = (UILabel *)[cell viewWithTag:2];
-    UILabel *caseIDLabel = (UILabel *)[cell viewWithTag:3];
+    UILabel *caseShowNameLabel = (UILabel *)[cell viewWithTag:1];
+    UILabel *matchesCountLabel = (UILabel *)[cell viewWithTag:2];
+    UILabel *caseDetail1 = (UILabel *)[cell viewWithTag:3];
+    UILabel *caseDetail2 = (UILabel *)[cell viewWithTag:4];
+    UILabel *caseDetail3 = (UILabel *)[cell viewWithTag:5];
+    UIImageView *caseImgView = (UIImageView *)[cell viewWithTag:6];
+    UIButton *viewMatchButton = (UIButton *)[cell viewWithTag:7];
     PFObject *caseObject = [caseListPruned objectAtIndex:indexPath.row];
     
-    NSString *caseName = [caseObject objectForKey:@"caseName"];
-    caseNameLabel.text = caseName;
+   /* NSString *caseShowName = [caseShowNames objectAtIndex:indexPath.row];
     
-    NSString *caseId = [caseObject objectForKey:@"caseId"];
-    caseIDLabel.text = caseId;
+    caseShowNameLabel.text = caseShowName;
+    if([caseShowName length] ==0)
+    {
+        caseShowNameLabel.text = @"Default User Name";
+        
+    }
+    */
+    PFObject *caseObj =  [caseListPruned objectAtIndex:indexPath.row];
+    
+    caseDetail1.text = [caseObj objectForKey:@"caseId"];
+    
+    PFObject *caseParseObj = [caseObjects objectAtIndex:indexPath.row];
+    if([[caseParseObj objectForKey:@"caseShowName"] length]>0)
+    {
+         caseShowNameLabel.text = [caseParseObj objectForKey:@"caseShowName"];
+    }
+    
+    NSString *caseImgURL = @"";
+   if([[caseParseObj objectForKey:@"caseImgURL"] length]>0)
+   {
+       caseImgURL =[caseParseObj objectForKey:@"caseImgURL"];
+   }
+    else
+    {
+        caseImgURL = @"http://www.carascravings.com/wp-content/uploads/2012/07/profile-photo-220x183.jpg";
+    }
+    
+    
+    UIActivityIndicatorViewStyle *activityStyle = UIActivityIndicatorViewStyleGray;
+
+    //NSString *caseImgURL = [caseImages objectAtIndex:indexPath.row];
+  
+    
+    if([caseImgURL length] ==0)
+    {
+        caseImgURL = @"http://www.carascravings.com/wp-content/uploads/2012/07/profile-photo-220x183.jpg";
+    }
+    [caseImgView setImageWithURL:[NSURL URLWithString:caseImgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
+   
     
     return cell;
 }
@@ -312,7 +436,7 @@ UIRefreshControl *refreshControl;
     
     [bcdsvc setTopViewController:cdevc];
     
-    [self.navigationController pushViewController:bcdsvc animated:YES];
+    [self.navigationController pushViewController:bcdsvc animated:NO];
 }
 
 -(IBAction)newCase:(id)sender
