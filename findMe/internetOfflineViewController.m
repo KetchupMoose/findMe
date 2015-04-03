@@ -61,7 +61,7 @@ int checkInternetTimerTicks;
                                          target:self
                                        selector:@selector(internetCheck:)
                                        userInfo:nil
-                                        repeats:NO];
+                                                            repeats:YES];
         }
     }
 }

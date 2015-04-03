@@ -115,7 +115,7 @@ MBProgressHUD *HUD;
             NSLog(@"OBSERVER: Error %@, Connection Failed!", connectionError.localizedDescription);
         }
     }];
-        
+    
 }
 
 
@@ -335,43 +335,11 @@ MBProgressHUD *HUD;
                 NSArray *matchesArray = [matchesString componentsSeparatedByString:@";"];
                 NSArray *matchesYesArray = [matchesYesString componentsSeparatedByString:@";"];
                 NSArray *matchesRejectedYesArray= [matchesRejectedYesString componentsSeparatedByString:@";"];
-                
-                if([matchesArray count] >0)
-                {
-                    for(NSString *mtlObjectID in matchesArray)
-                    {
-                        [allMatchesArray addObject:mtlObjectID];
-                        [allMatchCaseObjectsArray addObject:caseObj];
-                        NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
-                        
-                        [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
-                        [allMatchesCaseTypes addObject:@"match"];
-                        
-                    }
-
-                }
-                
-                if([matchesYesArray count] >0)
-                {
-                    for(NSString *mtlObjectID in matchesYesArray)
-                    {
-                        [allMatchesArray addObject:mtlObjectID];
-                        [allMatchCaseObjectsArray addObject:caseObj];
-                        NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
-                        
-                        [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
-                        [allMatchesCaseTypes addObject:@"yes"];
-                        
-                    }
-
-                }
-                
-                
                 if([matchesRejectedYesArray count] >0)
                 {
-                    for(NSString *mtlObjectID in matchesRejectedYesArray)
+                    for(NSString *caseMatchID in matchesRejectedYesArray)
                     {
-                        [allMatchesArray addObject:mtlObjectID];
+                        [allMatchesArray addObject:caseMatchID];
                         [allMatchCaseObjectsArray addObject:caseObj];
                         NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
                         
@@ -381,8 +349,41 @@ MBProgressHUD *HUD;
                     }
                     
                 }
+                
+                if([matchesYesArray count] >0)
+                {
+                    for(NSString *caseMatchID in matchesYesArray)
+                    {
+                        if(![allMatchesArray containsObject:caseMatchID])
+                        {
+                            [allMatchesArray addObject:caseMatchID];
+                            [allMatchCaseObjectsArray addObject:caseObj];
+                            NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                            
+                            [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                            [allMatchesCaseTypes addObject:@"yes"];
+                        }
+                        
+                    }
+                    
+                }
+                
+                if([matchesArray count] >0)
+                {
+                    for(NSString *caseMatchID in matchesArray)
+                    {
+                        if(![allMatchesArray containsObject:caseMatchID])
+                        {
+                        [allMatchesArray addObject:caseMatchID];
+                        [allMatchCaseObjectsArray addObject:caseObj];
+                        NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                        
+                        [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                        [allMatchesCaseTypes addObject:@"match"];
+                        }
+                    }
 
-            
+                }
             }
         }
     }
@@ -413,7 +414,7 @@ MBProgressHUD *HUD;
     //set hardcoded value for homepageusername
     //yh5YoZSXRW
     //e9eAifIkyD
-    
+    //NoJW05Xwsq
     //s0sPlhvE34
     
     //yh user LlneiUgZMD
@@ -422,11 +423,10 @@ MBProgressHUD *HUD;
     //paulina gretzky NoJW05Xwsq
     
     //chat EiSavyJT4E
-    
+    //wbdZqUP5NJ
     if([self.testUserString length] ==0)
     {
-         HomePageuserName = @"yh5YoZSXRW";
-       
+        HomePageuserName = @"NoJW05Xwsq";
         sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
         [sharedUData setUserName:HomePageuserName];
     }
@@ -437,7 +437,6 @@ MBProgressHUD *HUD;
         [sharedUData setUserName:HomePageuserName];
     }
    
-    
     //set the HomePageITSMTLOject to this object.
     
     PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
@@ -448,7 +447,6 @@ MBProgressHUD *HUD;
     
     [self ReloadHomePageData];
    
-    
     
 }
 

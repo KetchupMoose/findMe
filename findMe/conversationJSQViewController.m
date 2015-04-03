@@ -31,7 +31,7 @@ PNChannel *sharedChannel;
     NSLog(@"JSQ loading sender name");
     if(self.conversationData ==nil)
     {
-        NSLog(@"holy shit the error is here");
+        NSLog(@"error appears here");
         
     }
     NSLog(self.conversationData.conversationCaseUserName);
@@ -86,14 +86,16 @@ PNChannel *sharedChannel;
                                                  name:@"PNMessage"
                                                object:nil];
     
+    /*
     //commenting this out March 27, already handling PubNub connectivity on other channels
     
-    /*
     PNConfiguration *configuration = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
-                                                                  publishKey:@"pub-c-71127e1e-7bbf-4f65-abd4-67a2907606b2" subscribeKey:@"sub-c-110d37e8-c9b7-11e4-a054-0619f8945a4f" secretKey:@"sec-c-MzUwOTczZTQtMWI3YS00N2ZkLTk4ZTMtZTIyZDk5NGIyMWI1"];
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-   [PubNub setConfiguration:configuration];
+                                                                  publishKey:@"pub-c-52642b11-2177-44d9-9321-1e5bceb28507" subscribeKey:@"sub-c-cffdd2bc-c9ca-11e4-801b-02ee2ddab7fe" secretKey:@"sec-c-YWRhYjRjZDUtNDljMC00YjAwLWIxZTktMzg1MmYxZTU1ZTAw"];
     
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+   //[PubNub setConfiguration:configuration];
+    
+   
     
     [PubNub connectWithSuccessBlock:^(NSString *origin) {
         //NSLog(origin);
@@ -103,7 +105,7 @@ PNChannel *sharedChannel;
         NSLog(error.localizedDescription);
     }];
     
-    [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:appDelegate withCallbackBlock:^(NSString *origin, BOOL connected, PNError *connectionError){
+    [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:self withCallbackBlock:^(NSString *origin, BOOL connected, PNError *connectionError){
         if (connected)
         {
             NSLog(@"OBSERVER: Successful Connection!");
@@ -158,10 +160,9 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     NSLog( @"%@", [NSString stringWithFormat:@"received local: %@", message] );
     
     //add a new JSQMessage to the local messages array
-    
     NSString *userNameString = self.conversationData.conversationCaseUserName;
-    
-    if([message containsString:userNameString])
+    NSString *msgSender = [notification.userInfo objectForKey:@"pubMsgSender"];
+    if([msgSender isEqualToString:userNameString])
     {
         //this is a message sent by this user, don't add it to the list of messages beacuse it has already been added
         NSLog(@"message received but is from the user");
@@ -169,11 +170,16 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     }
     else
     {
+       //mar31--setting user profile information from array of users
+        NSString *showName = [self.conversationData.users objectForKey:msgSender];
+        
         [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
-        JSQMessage *newJSQMessage = [[JSQMessage alloc] initWithSenderId:@"test"
-                                                       senderDisplayName:@"test"
+        JSQMessage *newJSQMessage = [[JSQMessage alloc] initWithSenderId:msgSender
+                                                       senderDisplayName:showName
                                                                     date:(NSDate *)msgDate
                                                                     text:message];
+        
+        
         
         [self.conversationData.messages addObject:newJSQMessage];
         
@@ -421,6 +427,9 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     [sendingMsgDict setObject:sendingUserString forKey:@"msgSenderCaseID"];
     
     [sendingMsgDict setObject:self.conversationData.conversationObject.objectId forKey:@"channel"];
+    
+    NSString *channelName = self.conversationData.conversationObject.objectId;
+    sharedChannel = [PNChannel channelWithName:channelName];
     
     [PubNub sendMessage:sendingMsgDict toChannel:sharedChannel];
     
@@ -723,5 +732,12 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
 {
     NSLog(@"Tapped cell at %@!", NSStringFromCGPoint(touchLocation));
 }
+
+- (void)pubnubClient:(PubNub *)client didConnectToOrigin:(NSString *)origin {
+    NSLog(@"DELEGATE: Connected to  origin: %@", origin);
+    NSLog(@"convoscreen connected");
+    
+}
+
 
 @end

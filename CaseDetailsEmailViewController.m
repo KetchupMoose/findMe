@@ -826,41 +826,11 @@ CGPoint startLocation;
         NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
         
         caseObject = [allCases objectAtIndex:selectedCaseInt];
-        if([matchesArray count] >0)
-        {
-            for(NSString *mtlObjectID in matchesArray)
-            {
-                [allMatchesArray addObject:mtlObjectID];
-                [allMatchCaseObjectsArray addObject:caseObject];
-                NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
-                
-                [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
-                [allMatchesCaseTypes addObject:@"match"];
-                
-            }
-            
-        }
-        
-        if([matchesYesArray count] >0)
-        {
-            for(NSString *mtlObjectID in matchesYesArray)
-            {
-                [allMatchesArray addObject:mtlObjectID];
-                [allMatchCaseObjectsArray addObject:caseObject];
-                NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
-                
-                [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
-                [allMatchesCaseTypes addObject:@"yes"];
-                
-            }
-            
-        }
-        
         if([matchesRejectedYesArray count] >0)
         {
-            for(NSString *mtlObjectID in matchesRejectedYesArray)
+            for(NSString *caseMatchID in matchesRejectedYesArray)
             {
-                [allMatchesArray addObject:mtlObjectID];
+                [allMatchesArray addObject:caseMatchID];
                 [allMatchCaseObjectsArray addObject:caseObject];
                 NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
                 
@@ -871,6 +841,40 @@ CGPoint startLocation;
             
         }
         
+        if([matchesYesArray count] >0)
+        {
+            for(NSString *caseMatchID in matchesYesArray)
+            {
+                if(![allMatchesArray containsObject:caseMatchID])
+                {
+                    [allMatchesArray addObject:caseMatchID];
+                    [allMatchCaseObjectsArray addObject:caseObject];
+                    NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
+                    
+                    [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                    [allMatchesCaseTypes addObject:@"yes"];
+                }
+                
+            }
+            
+        }
+        
+        if([matchesArray count] >0)
+        {
+            for(NSString *caseMatchID in matchesArray)
+            {
+                if(![allMatchesArray containsObject:caseMatchID])
+                {
+                    [allMatchesArray addObject:caseMatchID];
+                    [allMatchCaseObjectsArray addObject:caseObject];
+                    NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
+                    
+                    [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                    [allMatchesCaseTypes addObject:@"match"];
+                }
+            }
+            
+        }
         mvc.matchesArray = [allMatchesArray copy];
         mvc.matchesCaseObjectArrays = [allMatchCaseObjectsArray copy];
         mvc.matchesCaseItemArrays = [allMatchCaseItemObjectsArray copy];
@@ -1435,6 +1439,23 @@ CGPoint startLocation;
     [xmlWriter writeCharacters:caseName];
     [xmlWriter writeEndElement];
     
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"LATITUDE"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"LONGITUDE"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
     //Jan 18
     //updating to put ALL NEW property tags first before caseItem tags
     int j = 0;
@@ -1504,6 +1525,10 @@ CGPoint startLocation;
                     }
                 }
             }
+            
+           
+            
+            
             PFObject *updatedProperty = propAtIndex;
            
             
@@ -1610,30 +1635,38 @@ CGPoint startLocation;
                 semiColonDelimitedAAnswers = [arrayOfAAnswers componentsJoinedByString:@";"];
                 semiColonDelimitedCustomAnswers  = [arrayOfCustomAnswers componentsJoinedByString:@";"];
                 
-                [xmlWriter writeStartElement:@"ANSWER"];
-                if([semiColonDelimitedAAnswers length]>0)
-                {
-                    [xmlWriter writeStartElement:@"A"];
-                    [xmlWriter writeCharacters:semiColonDelimitedAAnswers];
-                    [xmlWriter writeEndElement];
-                    
-                }
-                if([semiColonDelimitedCustomAnswers length]>0)
-                {
-                    [xmlWriter writeStartElement:@"CUSTOM"];
-                    [xmlWriter writeCharacters:semiColonDelimitedCustomAnswers];
-                    [xmlWriter writeEndElement];
-                    
-                }
-                
                 if ([semiColonDelimitedAAnswers length] ==0 && [semiColonDelimitedCustomAnswers length] ==0)
                 {
-                  
-                    return @"no";
                     
+                    //don't write any answers, do nothing
+                    /*
+                    [xmlWriter writeStartElement:@"ANSWER"];
+                    [xmlWriter writeStartElement:@"A"];
+                    [xmlWriter writeCharacters:@"1"];
+                    [xmlWriter writeEndElement];
+                    [xmlWriter writeEndElement];
+                     */
                 }
-                
-                [xmlWriter writeEndElement];
+                else
+                {
+                    [xmlWriter writeStartElement:@"ANSWER"];
+                    if([semiColonDelimitedAAnswers length]>0)
+                    {
+                        [xmlWriter writeStartElement:@"A"];
+                        [xmlWriter writeCharacters:semiColonDelimitedAAnswers];
+                        [xmlWriter writeEndElement];
+                        
+                    }
+                    if([semiColonDelimitedCustomAnswers length]>0)
+                    {
+                        [xmlWriter writeStartElement:@"CUSTOM"];
+                        [xmlWriter writeCharacters:semiColonDelimitedCustomAnswers];
+                        [xmlWriter writeEndElement];
+                        
+                    }
+                    //close answer element
+                    [xmlWriter writeEndElement];
+                }
                 
             }
 
@@ -1641,23 +1674,7 @@ CGPoint startLocation;
             [xmlWriter writeEndElement];
         
     }
-    if([locationRetrieved length]>0)
-    {
-        [xmlWriter writeStartElement:@"locationText"];
-        [xmlWriter writeCharacters:locationRetrieved];
-        [xmlWriter writeEndElement];
-    }
-    
-    if([locationLatitude length]>0)
-    {
-        [xmlWriter writeStartElement:@"locationLatitude"];
-        [xmlWriter writeCharacters:locationLatitude];
-        [xmlWriter writeEndElement];
-        
-        [xmlWriter writeStartElement:@"locationLongitude"];
-        [xmlWriter writeCharacters:locationLongitude];
-        [xmlWriter writeEndElement];
-    }
+  
     
     // close payload element
     [xmlWriter writeEndElement];
@@ -2117,6 +2134,23 @@ CGPoint startLocation;
     [xmlWriter writeCharacters:caseName];
     [xmlWriter writeEndElement];
     
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"LATITUDE"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"LONGITUDE"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
     
             //check to see if this caseItem is a brand new property
     
@@ -2269,25 +2303,6 @@ CGPoint startLocation;
     
     //close item element
     [xmlWriter writeEndElement];
-    
-    if([locationRetrieved length]>0)
-    {
-        [xmlWriter writeStartElement:@"locationText"];
-        [xmlWriter writeCharacters:locationRetrieved];
-        [xmlWriter writeEndElement];
-    }
-    
-    if([locationLatitude length]>0)
-    {
-        [xmlWriter writeStartElement:@"locationLatitude"];
-        [xmlWriter writeCharacters:locationLatitude];
-        [xmlWriter writeEndElement];
-        
-        [xmlWriter writeStartElement:@"locationLongitude"];
-        [xmlWriter writeCharacters:locationLongitude];
-        [xmlWriter writeEndElement];
-    }
-
     
     // close payload element
     [xmlWriter writeEndElement];

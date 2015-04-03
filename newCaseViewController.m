@@ -806,6 +806,24 @@ NSString *locationLongitude;
     [xmlWriter writeCharacters:@"EN"];
     [xmlWriter writeEndElement];
     
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"LATITUDE"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"LONGITUDE"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
+    
     [xmlWriter writeStartElement:@"PREFERENCES"];
     
     [xmlWriter writeStartElement:@"COUNTRY"];
@@ -835,23 +853,6 @@ NSString *locationLongitude;
     //close preferences element
     [xmlWriter writeEndElement];
     
-    if([locationRetrieved length]>0)
-    {
-        [xmlWriter writeStartElement:@"locationText"];
-        [xmlWriter writeCharacters:locationRetrieved];
-        [xmlWriter writeEndElement];
-    }
-    
-    if([locationLatitude length]>0)
-    {
-        [xmlWriter writeStartElement:@"locationLatitude"];
-        [xmlWriter writeCharacters:locationLatitude];
-        [xmlWriter writeEndElement];
-        
-        [xmlWriter writeStartElement:@"locationLongitude"];
-        [xmlWriter writeCharacters:locationLongitude];
-        [xmlWriter writeEndElement];
-    }
     
     // close payload element
     [xmlWriter writeEndElement];

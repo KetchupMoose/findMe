@@ -9,6 +9,7 @@
 #import "JSQMessagesViewController.h"
 #import "JSQMessagesViewController/JSQMessages.h"
 #import "conversationModelData.h"
+#import "PNImports.h"
 
 @class conversationJSQViewController;
 
@@ -21,7 +22,7 @@
 
 
 
-@interface conversationJSQViewController : JSQMessagesViewController<UIActionSheetDelegate>
+@interface conversationJSQViewController : JSQMessagesViewController<UIActionSheetDelegate,PNDelegate>
 
 @property (strong, atomic) conversationModelData *conversationData;
 @property (weak, nonatomic) id<conversationJSQViewControllerDelegate> delegateModal;

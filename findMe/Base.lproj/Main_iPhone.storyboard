@@ -310,11 +310,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="8mt-AK-Uxl">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="457"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="404"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="457" id="dIw-UP-s1D"/>
-                                </constraints>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="caseDetailsEmailCell" rowHeight="60" id="9fZ-mJ-8sG" customClass="SWTableViewCell">
                                         <autoresizingMask key="autoresizingMask"/>
@@ -366,7 +363,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BJ5-SN-vv1">
-                                <rect key="frame" x="73" y="487" width="175" height="30"/>
+                                <rect key="frame" x="73" y="454" width="175" height="30"/>
                                 <color key="backgroundColor" red="0.1578580433" green="0.54924624909999997" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="Update Answers">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -380,12 +377,12 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="8mt-AK-Uxl" firstAttribute="leading" secondItem="8qj-Wl-pd9" secondAttribute="leading" id="4mW-MC-YjT"/>
-                            <constraint firstAttribute="trailing" secondItem="8mt-AK-Uxl" secondAttribute="trailing" id="Iao-Vi-6qT"/>
-                            <constraint firstItem="BJ5-SN-vv1" firstAttribute="top" secondItem="8mt-AK-Uxl" secondAttribute="bottom" constant="30" id="l1t-Er-7ab"/>
-                            <constraint firstItem="8mt-AK-Uxl" firstAttribute="centerX" secondItem="BJ5-SN-vv1" secondAttribute="centerX" id="trA-Hw-YWY"/>
-                            <constraint firstAttribute="bottom" secondItem="BJ5-SN-vv1" secondAttribute="bottom" constant="37" id="uSA-l8-Zts"/>
-                            <constraint firstItem="8mt-AK-Uxl" firstAttribute="top" secondItem="8qj-Wl-pd9" secondAttribute="top" id="vD7-Qg-BbB"/>
+                            <constraint firstItem="BJ5-SN-vv1" firstAttribute="top" secondItem="8mt-AK-Uxl" secondAttribute="bottom" constant="50" id="Clq-vY-JiM"/>
+                            <constraint firstAttribute="bottom" secondItem="BJ5-SN-vv1" secondAttribute="bottom" constant="20" id="IEI-NU-KKa"/>
+                            <constraint firstItem="8mt-AK-Uxl" firstAttribute="centerX" secondItem="BJ5-SN-vv1" secondAttribute="centerX" id="cLU-bt-EdV"/>
+                            <constraint firstAttribute="trailing" secondItem="8mt-AK-Uxl" secondAttribute="trailing" id="kcf-MA-7nf"/>
+                            <constraint firstItem="8mt-AK-Uxl" firstAttribute="top" secondItem="glh-oF-77I" secondAttribute="bottom" id="nE8-LL-IVp"/>
+                            <constraint firstItem="8mt-AK-Uxl" firstAttribute="leading" secondItem="8qj-Wl-pd9" secondAttribute="leading" id="y34-0D-JHB"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="LdZ-yy-v1z"/>
