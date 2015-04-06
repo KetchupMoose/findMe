@@ -32,4 +32,5 @@
 @property (strong,nonatomic) NSString *testUserString;
 @property (strong,nonatomic ) NSArray *homePageCases;
 @property (strong, atomic) conversationModelData *conversationData;
+@property (weak, nonatomic) IBOutlet UILabel *connectedMTLLabel;
 @end

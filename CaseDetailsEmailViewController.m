@@ -845,15 +845,15 @@ CGPoint startLocation;
         {
             for(NSString *caseMatchID in matchesYesArray)
             {
-                if(![allMatchesArray containsObject:caseMatchID])
-                {
+               // if(![allMatchesArray containsObject:caseMatchID])
+                //{
                     [allMatchesArray addObject:caseMatchID];
                     [allMatchCaseObjectsArray addObject:caseObject];
                     NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
                     
                     [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
                     [allMatchesCaseTypes addObject:@"yes"];
-                }
+               // }
                 
             }
             
@@ -863,15 +863,15 @@ CGPoint startLocation;
         {
             for(NSString *caseMatchID in matchesArray)
             {
-                if(![allMatchesArray containsObject:caseMatchID])
-                {
+               // if(![allMatchesArray containsObject:caseMatchID])
+                //{
                     [allMatchesArray addObject:caseMatchID];
                     [allMatchCaseObjectsArray addObject:caseObject];
                     NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
                     
                     [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
                     [allMatchesCaseTypes addObject:@"match"];
-                }
+                //}
             }
             
         }

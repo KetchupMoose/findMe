@@ -37,6 +37,7 @@ MBProgressHUD *HUD;
 @synthesize HomePageuserName;
 @synthesize testUserTextField;
 @synthesize homePageCases;
+@synthesize connectedMTLLabel;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -229,6 +230,7 @@ MBProgressHUD *HUD;
         HomePageuserName = returnedMTLObject.objectId;
         sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
         [sharedUData setUserName:HomePageuserName];
+        self.connectedMTLLabel.text = [@"Current MTL User: " stringByAppendingString:HomePageuserName];
         
         HomePageITSMTLObject = returnedMTLObject;
         
@@ -239,9 +241,11 @@ MBProgressHUD *HUD;
     {
         //create new case with this user.
         
-        NSLog(@"creating a new its mtl user");
+        NSLog(@"need to create mtl user from the template screen");
         
-        
+        //brian Apr4
+        //MTLobject will be created later on profile screen, commenting this out for now
+        /*
         HomePageITSMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
         [HomePageITSMTLObject setObject:currentUser forKey:@"ParseUser"];
         //[HomePageITSMTLObject setObject:@"newHomeScreenUser" forKey:@"showName"];
@@ -258,24 +262,25 @@ MBProgressHUD *HUD;
          HomePageuserName = HomePageITSMTLObject.objectId;
         sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
         [sharedUData setUserName:HomePageuserName];
+          self.connectedMTLLabel.text = [@"Current MTL User: " stringByAppendingString:HomePageuserName];
         //need to grab these properties later to save them on the user
-        /*
+        
          //set user properties to parse true user account
          [currentUser setObject:@"newHomeScreenUser" forKey:@"showName"];
          [currentUser setObject:@"5" forKey:@"cellNumber"];
          [currentUser setObject:@"F" forKey:@"gender"];
          [currentUser save];
-         */
+         
+        */
+        setProfileViewController *spvc = [self.storyboard instantiateViewControllerWithIdentifier:@"spvc"];
+        spvc.delegate = self;
+        
+        [self.navigationController pushViewController:spvc animated:YES];
         
         [HUD hide:NO];
     }
     
-    // Associate the device with a user
-    PFInstallation *installation = [PFInstallation currentInstallation];
-    installation[@"user"] = [PFUser currentUser];
-    installation[@"itsMTL"] = HomePageuserName;
-    [installation saveInBackground];
-
+    
 }
 
 /*
@@ -335,6 +340,8 @@ MBProgressHUD *HUD;
                 NSArray *matchesArray = [matchesString componentsSeparatedByString:@";"];
                 NSArray *matchesYesArray = [matchesYesString componentsSeparatedByString:@";"];
                 NSArray *matchesRejectedYesArray= [matchesRejectedYesString componentsSeparatedByString:@";"];
+                
+                
                 if([matchesRejectedYesArray count] >0)
                 {
                     for(NSString *caseMatchID in matchesRejectedYesArray)
@@ -354,15 +361,16 @@ MBProgressHUD *HUD;
                 {
                     for(NSString *caseMatchID in matchesYesArray)
                     {
-                        if(![allMatchesArray containsObject:caseMatchID])
-                        {
+                        
+                        //if(![allMatchesArray containsObject:caseMatchID])
+                       // {
                             [allMatchesArray addObject:caseMatchID];
                             [allMatchCaseObjectsArray addObject:caseObj];
                             NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
                             
                             [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
                             [allMatchesCaseTypes addObject:@"yes"];
-                        }
+                      //  }
                         
                     }
                     
@@ -372,15 +380,15 @@ MBProgressHUD *HUD;
                 {
                     for(NSString *caseMatchID in matchesArray)
                     {
-                        if(![allMatchesArray containsObject:caseMatchID])
-                        {
+                       // if(![allMatchesArray containsObject:caseMatchID])
+                        //{
                         [allMatchesArray addObject:caseMatchID];
                         [allMatchCaseObjectsArray addObject:caseObj];
                         NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
                         
                         [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
                         [allMatchesCaseTypes addObject:@"match"];
-                        }
+                       // }
                     }
 
                 }
@@ -426,15 +434,17 @@ MBProgressHUD *HUD;
     //wbdZqUP5NJ
     if([self.testUserString length] ==0)
     {
-        HomePageuserName = @"NoJW05Xwsq";
+        HomePageuserName = @"yh5YoZSXRW";
         sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
         [sharedUData setUserName:HomePageuserName];
+          self.connectedMTLLabel.text = [@"Current MTL User: " stringByAppendingString:HomePageuserName];
     }
     else
     {
         HomePageuserName = self.testUserString;
         sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
         [sharedUData setUserName:HomePageuserName];
+          self.connectedMTLLabel.text = [@"Current MTL User: " stringByAppendingString:HomePageuserName];
     }
    
     //set the HomePageITSMTLOject to this object.
@@ -461,7 +471,7 @@ MBProgressHUD *HUD;
     HUD.mode = MBProgressHUDModeDeterminate;
     HUD.delegate = self;
     HUD.labelText = @"Retrieving Cases";
-    [HUD show:YES];
+    [HUD show:NO];
     
     //needs to query for the user and pull some info
     PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
@@ -517,9 +527,10 @@ MBProgressHUD *HUD;
     self.HomePageuserName = newITSMTLObject.objectId;
     sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
     [sharedUData setUserName:HomePageuserName];
+      self.connectedMTLLabel.text = [@"Current MTL User: " stringByAppendingString:HomePageuserName];
     self.HomePageITSMTLObject = newITSMTLObject;
     
-    [self ReloadHomePageData];
+    //[self ReloadHomePageData];
     [self.navigationController popViewControllerAnimated:NO];
 }
 

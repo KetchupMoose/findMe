@@ -821,6 +821,13 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ConnectedMTL User" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z6h-ec-DcA">
+                                <rect key="frame" x="0.0" y="72" width="167" height="43"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -830,6 +837,7 @@
                         <outlet property="MyMatchesButton" destination="Q8k-HY-oqm" id="e9P-MZ-9Lg"/>
                         <outlet property="MyProfileButton" destination="J5a-Uy-HSq" id="o2e-ud-pWo"/>
                         <outlet property="ViewMyCasesButton" destination="X8y-lr-Rgb" id="Uh9-PR-82j"/>
+                        <outlet property="connectedMTLLabel" destination="Z6h-ec-DcA" id="CDt-vI-nmN"/>
                         <outlet property="testUserTextField" destination="ZoX-fA-o6z" id="TXd-GG-X9N"/>
                     </connections>
                 </viewController>

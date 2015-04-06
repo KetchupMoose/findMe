@@ -185,7 +185,6 @@ int selectedPic = 1;
     
     itsMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
     [itsMTLObject setObject:currentUser forKey:@"ParseUser"];
-    [itsMTLObject setObject:showName forKey:@"showName"];
     
     // Set the access control list to current user for security purposes
     PFACL *itsMTLACL = [PFACL ACLWithUser:[PFUser currentUser]];
@@ -202,7 +201,12 @@ int selectedPic = 1;
     [currentUser setObject:gender forKey:@"gender"];
     [currentUser save];
     
-    
+    // Associate the device with a user
+    PFInstallation *installation = [PFInstallation currentInstallation];
+    installation[@"user"] = [PFUser currentUser];
+    installation[@"itsMTL"] = itsMTLObject.objectId;
+    [installation saveInBackground];
+
     //get the ID and run the XML with the case info.
     NSString *itsMTLObjectID = itsMTLObject.objectId;
     
@@ -239,20 +243,13 @@ int selectedPic = 1;
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {
                                         
-                                    NSString *responseText = responseString;
-                                    NSLog(responseText);
-                                        
+                                    //NSString *responseText = responseString;
+                                    //NSLog(responseText);
                                     [HUD hide:NO];
-                                    if([responseText isEqualToString:@"ok"])
-                                    {
-                                           
-                                        NSLog(@"starting to poll for template maker update");
-                                        [self pollForTemplateMaker];
-                                        
+                                    [self.delegate setNewProfile:itsMTLObject];
+
                                     }
-                                        
-                                        
-                                    }
+                                    
                                     else
                                     {
                                         NSLog(error.localizedDescription);
@@ -338,8 +335,6 @@ int selectedPic = 1;
             [templateSuccess show];
             
             [self.delegate setNewProfile:object];
-            
-           
             
             return;
             
