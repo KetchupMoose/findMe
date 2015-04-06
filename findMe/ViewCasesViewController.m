@@ -12,6 +12,7 @@
 #import "CaseBuilder.h"
 #import "CaseDetailsViewController.h"
 #import "CaseDetailsEmailViewController.h"
+#import "caseDetailsCarouselViewController.h"
 #import "BaseCaseDetailsSlidingViewController.h"
 #import "MBProgressHUD.h"
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
@@ -346,29 +347,35 @@ NSMutableArray *caseShowNames;
     
     UIButton *classicViewButton = [[UIButton alloc] initWithFrame:CGRectMake(15,25,100,100)];
     UIButton *emailViewButton = [[UIButton alloc] initWithFrame:CGRectMake(140,25,100,100)];
-
+    UIButton *carouselViewButton = [[UIButton alloc] initWithFrame:CGRectMake(15,135,100,100)];
     
     [classicViewButton setTitle:@"Classic View" forState:UIControlStateNormal];
     [emailViewButton setTitle:@"Email View" forState:UIControlStateNormal];
+    [carouselViewButton setTitle:@"Carousel View" forState:UIControlStateNormal];
     
     classicViewButton.tag = indexPath.row;
     emailViewButton.tag = indexPath.row;
+    carouselViewButton.tag = indexPath.row;
     
     classicViewButton.backgroundColor = [UIColor blueColor];
     emailViewButton.backgroundColor = [UIColor greenColor];
+    carouselViewButton.backgroundColor = [UIColor redColor];
+    
     
     classicViewButton.titleLabel.textColor = [UIColor blackColor];
     emailViewButton.titleLabel.textColor = [UIColor blackColor];
+    carouselViewButton.titleLabel.textColor = [UIColor blackColor];
     
     [classicViewButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
     [emailViewButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
+    [carouselViewButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
     
     [classicViewButton addTarget:self action:@selector(classicButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-    
     [emailViewButton addTarget:self action:@selector(emailButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [carouselViewButton addTarget:self action:@selector(carouselButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [caseDetailsSelectorPopup addSubview:classicViewButton];
     [caseDetailsSelectorPopup  addSubview:emailViewButton];
-
+    [caseDetailsSelectorPopup  addSubview:carouselViewButton];
     
     caseDetailsSelectorPopup.backgroundColor = [UIColor lightGrayColor];
     
@@ -437,6 +444,29 @@ NSMutableArray *caseShowNames;
     [bcdsvc setTopViewController:cdevc];
     
     [self.navigationController pushViewController:bcdsvc animated:NO];
+}
+
+-(void)carouselButtonClick:(id)sender
+{
+    //get index from tag
+    UIButton *sendingButton = (UIButton *) sender;
+    int buttonTag = (int)sendingButton.tag;
+    
+    NSNumber *selectedIndex = [NSNumber numberWithInteger:buttonTag];
+    
+    caseDetailsCarouselViewController *cdcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdcvc"];
+    
+    cdcvc.selectedCaseIndex=selectedIndex;
+    
+    cdcvc.userName = userName;
+    cdcvc.itsMTLObject = self.itsMTLObject;
+    
+    //close the popupView
+    UIView *popupView = sendingButton.superview;
+    [popupView removeFromSuperview];
+    
+    [self.navigationController pushViewController:cdcvc animated:NO];
+
 }
 
 -(IBAction)newCase:(id)sender

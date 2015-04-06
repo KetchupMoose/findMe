@@ -153,11 +153,86 @@
                         <outlet property="casesTableView" destination="4oD-GR-jbR" id="wf2-3p-vEV"/>
                         <segue destination="ubz-9T-mj9" kind="push" id="E0J-rW-9nj"/>
                         <segue destination="D1u-gC-xXB" kind="push" id="EW0-y8-lYK"/>
+                        <segue destination="KJv-BZ-cwS" kind="push" id="gI3-3X-ZJP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="214" y="-146"/>
+        </scene>
+        <!--Case Details Carousel View Controller-->
+        <scene sceneID="SyM-lv-Xzh">
+            <objects>
+                <viewController storyboardIdentifier="cdcvc" id="KJv-BZ-cwS" customClass="caseDetailsCarouselViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="PUc-2c-vb9"/>
+                        <viewControllerLayoutGuide type="bottom" id="I71-i6-D7K"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Els-CM-3Xv">
+                        <rect key="frame" x="0.0" y="64" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="2QU-c2-OsA">
+                                <rect key="frame" x="16" y="225" width="288" height="285"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="propertyCell" id="JrH-1m-v6l">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JrH-1m-v6l" id="LCn-Vr-oiN">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Selecting the Property Here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BbV-ri-4ma">
+                                                    <rect key="frame" x="8" y="11" width="272" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bXQ-kV-ADU" customClass="iCarousel">
+                                <rect key="frame" x="16" y="84" width="288" height="125"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="viG-Yy-aaG">
+                                <rect key="frame" x="103" y="524" width="114" height="30"/>
+                                <color key="backgroundColor" red="0.1578580433" green="0.54924624909999997" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Update Answers">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="doUpdate:" destination="KJv-BZ-cwS" eventType="touchUpInside" id="2gm-0Q-Zlf"/>
+                                    <action selector="doUpdate:" destination="ubz-9T-mj9" eventType="touchUpInside" id="U2s-dt-OTy"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="bXQ-kV-ADU" firstAttribute="trailing" secondItem="2QU-c2-OsA" secondAttribute="trailing" id="1Lj-AQ-6bO"/>
+                            <constraint firstAttribute="bottom" secondItem="viG-Yy-aaG" secondAttribute="bottom" constant="14" id="9oT-ey-AbV"/>
+                            <constraint firstItem="bXQ-kV-ADU" firstAttribute="centerX" secondItem="viG-Yy-aaG" secondAttribute="centerX" id="E35-nC-PhT"/>
+                            <constraint firstItem="2QU-c2-OsA" firstAttribute="leading" secondItem="Els-CM-3Xv" secondAttribute="leading" constant="16" id="E67-Rw-Aua"/>
+                            <constraint firstAttribute="trailing" secondItem="2QU-c2-OsA" secondAttribute="trailing" constant="16" id="QQz-pf-SZ9"/>
+                            <constraint firstItem="viG-Yy-aaG" firstAttribute="top" secondItem="2QU-c2-OsA" secondAttribute="bottom" constant="14" id="SO9-Th-wPd"/>
+                            <constraint firstItem="bXQ-kV-ADU" firstAttribute="leading" secondItem="2QU-c2-OsA" secondAttribute="leading" id="bth-7g-Uab"/>
+                            <constraint firstItem="2QU-c2-OsA" firstAttribute="top" secondItem="bXQ-kV-ADU" secondAttribute="bottom" constant="16" id="hbS-Ku-Flw"/>
+                            <constraint firstAttribute="bottom" secondItem="bXQ-kV-ADU" secondAttribute="bottom" constant="359" id="tgl-04-FMq"/>
+                            <constraint firstItem="bXQ-kV-ADU" firstAttribute="top" secondItem="Els-CM-3Xv" secondAttribute="top" constant="84" id="yM6-OZ-1sQ"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="tls-0g-lUS"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="carousel" destination="bXQ-kV-ADU" id="BJM-vU-gVa"/>
+                        <outlet property="propertiesTableView" destination="2QU-c2-OsA" id="6jc-tN-kkM"/>
+                        <outlet property="submitAnswersButton" destination="viG-Yy-aaG" id="rci-KN-NwL"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YJr-Cv-TaV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="818" y="-817"/>
         </scene>
         <!--Case Details View Controller-->
         <scene sceneID="WWx-UL-zNV">
