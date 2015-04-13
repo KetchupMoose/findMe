@@ -203,6 +203,9 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="showLocationPicker:" destination="KJv-BZ-cwS" eventType="touchUpInside" id="H50-ko-nuN"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="viG-Yy-aaG">
                                 <rect key="frame" x="103" y="524" width="114" height="30"/>
@@ -235,6 +238,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="carousel" destination="bXQ-kV-ADU" id="BJM-vU-gVa"/>
+                        <outlet property="locationButton" destination="iKs-9O-IfQ" id="mcX-a0-gfe"/>
                         <outlet property="propertiesTableView" destination="2QU-c2-OsA" id="6jc-tN-kkM"/>
                         <outlet property="submitAnswersButton" destination="viG-Yy-aaG" id="rci-KN-NwL"/>
                     </connections>
@@ -1195,12 +1199,36 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YqC-Uw-l85">
-                                <rect key="frame" x="0.0" y="47" width="320" height="402"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YqC-Uw-l85">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="477"/>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TFb-ph-ZZA">
+                                <rect key="frame" x="103" y="493" width="114" height="30"/>
+                                <color key="backgroundColor" red="0.1578580433" green="0.54924624909999997" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Set Location">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="setLocation:" destination="NFP-TK-h6r" eventType="touchUpInside" id="44t-X9-0rd"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="YqC-Uw-l85" firstAttribute="top" secondItem="YtR-Ss-9XL" secondAttribute="top" id="2xs-yl-hjX"/>
+                            <constraint firstItem="TFb-ph-ZZA" firstAttribute="centerX" secondItem="YtR-Ss-9XL" secondAttribute="centerX" id="OAW-Fv-9bH"/>
+                            <constraint firstAttribute="bottom" secondItem="TFb-ph-ZZA" secondAttribute="bottom" constant="45" id="V0B-fU-p6R"/>
+                            <constraint firstItem="TFb-ph-ZZA" firstAttribute="top" secondItem="YqC-Uw-l85" secondAttribute="bottom" constant="16" id="i6a-Sa-0Ys"/>
+                            <constraint firstItem="YqC-Uw-l85" firstAttribute="leading" secondItem="YtR-Ss-9XL" secondAttribute="leading" id="jZZ-mQ-q3n"/>
+                            <constraint firstItem="TFb-ph-ZZA" firstAttribute="centerX" secondItem="YqC-Uw-l85" secondAttribute="centerX" id="sRH-4a-RWH"/>
+                            <constraint firstItem="TFb-ph-ZZA" firstAttribute="leading" secondItem="YtR-Ss-9XL" secondAttribute="leadingMargin" constant="87" id="uOF-TH-egL"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="mapView" destination="YqC-Uw-l85" id="aA7-sp-I3W"/>
+                        <outlet property="setLocation" destination="TFb-ph-ZZA" id="I6O-eK-oyu"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wQv-Ff-wlK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

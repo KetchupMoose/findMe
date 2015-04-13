@@ -12,7 +12,7 @@
 #import <Parse/Parse.h>
 #import "popupViewController.h"
 
-@interface caseDetailsCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate,MyDataDelegate>
+@interface caseDetailsCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate,MyDataDelegate,CLLocationManagerDelegate>
 
 -(IBAction)doUpdate:(id)sender;
 

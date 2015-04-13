@@ -79,13 +79,18 @@ NSString *locationRetrieved;
 NSString *locationLatitude;
 NSString *locationLongitude;
 
+NSString *manualLocationLatitude;
+NSString *manualLocationLongitude;
 //used for calcaulting swipe gestures
 CGPoint startLocation;
 
 NSMutableArray *propertyTableOptionsArray;
 UIView *bgDarkenView;
 
-NSMutableArray *selectedCaseItemAnswersDictionary;
+NSMutableArray *selectedCaseItemAnswersArray;
+NSMutableArray *selectedCaseItemAnswersArrayOfDictionaries;
+NSMutableArray *selectedCaseItemOriginalOptions;
+NSInteger selectedCarouselIndex;
 
 -(void)viewDidLoad
 {
@@ -167,7 +172,9 @@ NSMutableArray *selectedCaseItemAnswersDictionary;
     priorCaseIDS = [[NSMutableArray alloc] init];
     templateOptionsCounts = [[NSMutableArray alloc] init];
     propertyTableOptionsArray = [[NSMutableArray alloc] init];
-    selectedCaseItemAnswersDictionary = [[NSMutableArray alloc] init];
+    selectedCaseItemAnswersArray = [[NSMutableArray alloc] init];
+    selectedCaseItemAnswersArrayOfDictionaries  = [[NSMutableArray alloc] init];
+    selectedCaseItemOriginalOptions = [[NSMutableArray alloc] init];
     
     //fill an array of the prior cases so the client can look for a new previously non-existing caseId if the user is submitting a new template
     NSArray *cases = [self.itsMTLObject objectForKey:@"cases"];
@@ -331,8 +338,11 @@ NSMutableArray *selectedCaseItemAnswersDictionary;
     NSString *propOptions = [propertyObject objectForKey:@"options"];
     propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
     
+    
     [self.carousel reloadData];
      [self.propertiesTableView reloadData];
+    [self carouselCurrentItemIndexDidChange:self.carousel];
+    
     
 }
 -(void) viewWillAppear:(BOOL)animated
@@ -620,23 +630,13 @@ NSMutableArray *selectedCaseItemAnswersDictionary;
 
 - (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index
 {
-   /*
-    PFObject *propertyObject = [propsArray objectAtIndex:index];
-    
-    //get choices
-    NSString *propOptions = [propertyObject objectForKey:@"options"];
-    propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
-    [self.propertiesTableView reloadData];
-    */
-    
-    
-    
+  
 }
 -(void)carouselCurrentItemIndexDidChange:(iCarousel *)carousel
 {
-    
+
     NSInteger index = self.carousel.currentItemIndex;
-    
+    selectedCarouselIndex = self.carousel.currentItemIndex;
     if(index ==propsArray.count)
     {
         self.propertiesTableView.alpha = 0;
@@ -650,7 +650,56 @@ NSMutableArray *selectedCaseItemAnswersDictionary;
         //get choices
         NSString *propOptions = [propertyObject objectForKey:@"options"];
         propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
+        
+        selectedCaseItemOriginalOptions = propertyTableOptionsArray;
+        
+
+        //set the answers array
+        PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:index];
+        
+        [selectedCaseItemAnswersArrayOfDictionaries removeAllObjects];
+        if([selectedCaseItemObject objectForKey:@"answers"] !=nil)
+        {
+            selectedCaseItemAnswersArrayOfDictionaries  = [selectedCaseItemObject objectForKey:@"answers"];
+        }
+       
+       
+        //build the mutableArray of answers from the dictionary
+        
+        //check to see if this row is one of the custom answer types.  It is if option length is 0.
+        if([propOptions length] ==0)
+        {
+            //display just one custom answer
+            NSString *customAns;
+            //check to see if the custom answer is there
+            for (PFObject *eachAnsObj in  selectedCaseItemAnswersArrayOfDictionaries)
+            {
+                customAns = [eachAnsObj valueForKey:@"custom"];
+            }
+            
+            //set a textbox value as that current answer, don't show the tableview
+            //WORKINPROGRESS APR 13
+            //answersLabel.text = customAns;
+            self.propertiesTableView.alpha = 0;
+        }
+        else
+        {
+            [selectedCaseItemAnswersArray removeAllObjects];
+            
+            for (PFObject *eachAnsObj in selectedCaseItemAnswersArrayOfDictionaries )
+            {
+                NSString *ansNum = [eachAnsObj valueForKey:@"a"];
+                if([ansNum length] ==0)
+                {
+                    ansNum = [eachAnsObj valueForKey:@"custom"];
+                }
+                [selectedCaseItemAnswersArray addObject:ansNum];
+                
+            }
+        self.propertiesTableView.alpha=1;
         [self.propertiesTableView reloadData];
+        }
+        
     }
    
 
@@ -828,7 +877,7 @@ NSMutableArray *selectedCaseItemAnswersDictionary;
     
     NSString *rowNumber = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
     
-    if([answersArray containsObject:rowNumber])
+    if([selectedCaseItemAnswersArray containsObject:rowNumber])
     {
         cell.backgroundColor = [UIColor greenColor];
         
@@ -840,7 +889,7 @@ NSMutableArray *selectedCaseItemAnswersDictionary;
     }
     NSString *optionTxt = optionLabel.text;
     
-    if ([answersArray containsObject:optionTxt])
+    if ([selectedCaseItemAnswersArray  containsObject:optionTxt])
     {
         cell.backgroundColor = [UIColor greenColor];
         
@@ -905,31 +954,35 @@ NSMutableArray *selectedCaseItemAnswersDictionary;
         return;
         
     }
-    /*
+    
     UIView *cell = [tableView cellForRowAtIndexPath:indexPath];
     
+    //APR13
+    //these two class level variables are already filled each time the user selects a new property with the carousel.
+    //the mutable dictionary will be the object that is populated and sent eventually to the JSON when updates are being done.
+    //NSMutableArray *selectedCaseItemAnswersArray;
+    //NSMutableDictionary *selectedCaseItemAnswersArrayOfDictionaries ;
+    //this code will have an error if users enter values with numeric strings (ie; they enter "2" and then it goes to remove 2 twice later
     if(cell.backgroundColor==[UIColor greenColor])
     {
         
         //remove this answer from the list.
         int i = 0;
-        int indexToRemove = 0;
+        int indexToRemove = -1;
         
         //check to see if the answersArray includes the string label
-        UILabel *optionLabel = (UILabel *)[cell viewWithTag:1];
+        UILabel *optionLabel = (UILabel *)[cell viewWithTag:4];
         NSString *optionTxt = optionLabel.text;
-        if ([answersArray containsObject:optionTxt])
+        if ([selectedCaseItemAnswersArray containsObject:optionTxt])
         {
-            NSInteger indexOfObject = [answersArray indexOfObject:optionTxt];
-            
-            [answersArray removeObject:optionTxt];
-            [selectedCaseItemAnswersDictionary removeObjectAtIndex:indexOfObject];
+            NSInteger indexOfObject = [selectedCaseItemAnswersArray indexOfObject:optionTxt];
+            [selectedCaseItemAnswersArray removeObject:optionTxt];
+            [selectedCaseItemAnswersArrayOfDictionaries removeObjectAtIndex:indexOfObject];
         }
         
-        for (NSString *eachAns in answersArray)
+        for (NSString *eachAns in selectedCaseItemAnswersArray)
         {
             int ansInt = (int)[eachAns integerValue];
-            
             
             //making sure to compare to a number +1 since the answersArray has a 1 higher index
             if(ansInt==indexPath.row+1)
@@ -940,46 +993,53 @@ NSMutableArray *selectedCaseItemAnswersDictionary;
             }
             i = i+1;
         }
-        [answersArray removeObjectAtIndex:indexToRemove];
-        [popupanswersDictionary removeObjectAtIndex:indexToRemove];
+        if(indexToRemove>-1)
+        {
+            [selectedCaseItemAnswersArray removeObjectAtIndex:indexToRemove];
+            [selectedCaseItemAnswersArrayOfDictionaries removeObjectAtIndex:indexToRemove];
+        }
+        
     }
     else
-        
         //add the answer to the answers array and answersDictionary.
     {
         
         //check to see if the answer is an answer for one of the original properties on this caseItem or a new custom property
-        if(indexPath.row +1 <=originalAnswersCount)
+        if(indexPath.row +1 <=[selectedCaseItemOriginalOptions count])
         {
             NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
-            [answersArray addObject:newAns];
+            [selectedCaseItemAnswersArray addObject:newAns];
             cell.backgroundColor = [UIColor greenColor];
             
             NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
             [AnsObj setValue:newAns forKey:@"a"];
             NSDictionary *myAnsDict = [AnsObj copy];
             
-            [popupanswersDictionary addObject:myAnsDict];
+            [selectedCaseItemAnswersArrayOfDictionaries addObject:myAnsDict];
         }
         else
         {
-            UILabel *optionLabel = (UILabel *)[cell viewWithTag:1];
+            UILabel *optionLabel = (UILabel *)[cell viewWithTag:4];
             NSString *newAns = optionLabel.text;
-            [answersArray addObject:newAns];
+            [selectedCaseItemAnswersArray addObject:newAns];
             cell.backgroundColor = [UIColor greenColor];
             
             NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
             [AnsObj setValue:newAns forKey:@"custom"];
             NSDictionary *myAnsDict = [AnsObj copy];
-            [popupanswersDictionary addObject:myAnsDict];
+            [selectedCaseItemAnswersArrayOfDictionaries addObject:myAnsDict];
         }
         
     }
+    PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
+    NSString *caseItemObjectID = [selectedCaseItemObject objectForKey:@"caseItem"];
     
-    self.updateButton.enabled = 1;
-    [self.updateButton.titleLabel setTextColor:[UIColor blueColor]];
+    [self updateCaseItem:caseItemObjectID AcceptableAnswersList:selectedCaseItemAnswersArrayOfDictionaries];
     
-    */
+    self.submitAnswersButton.enabled = 1;
+    [self.submitAnswersButton.titleLabel setTextColor:[UIColor blueColor]];
+    
+    
 }
 
 #pragma mark DataDelegateMethods
@@ -1218,6 +1278,10 @@ NSMutableArray *selectedCaseItemAnswersDictionary;
     [newlyCreatedPropertiesIndex removeAllObjects];
     suggestedCaseDisplayedIndex = -1;
     [changedCaseItemsIndex removeAllObjects];
+    [propertyTableOptionsArray removeAllObjects];
+    [selectedCaseItemAnswersArray removeAllObjects];
+    [selectedCaseItemAnswersArrayOfDictionaries removeAllObjects];
+    [selectedCaseItemOriginalOptions removeAllObjects];
     
     //get all the property ID's from each item in the selected case.
     
@@ -1834,9 +1898,6 @@ NSMutableArray *selectedCaseItemAnswersDictionary;
             }
         }
         
-        
-        
-        
         PFObject *updatedProperty = propAtIndex;
         
         
@@ -1998,14 +2059,26 @@ NSMutableArray *selectedCaseItemAnswersDictionary;
 }
 
 //need to modify this function to show the acceptable answers list
-/*
+
 - (void)updateCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers
 {
+    
     NSLog(@"got this");
     
     //update the data and modify the sortedCaseItems and propsArray to take on the new data coming back
     
     //loop through the caseItems and select the one with this caseItemID
+    
+    if([Answers count]==0)
+    {
+        self.submitAnswersButton.enabled = 1;
+        self.submitAnswersButton.backgroundColor = [UIColor blueColor];
+        
+        
+        [self.propertiesTableView reloadData];
+        return;
+        
+    }
     PFObject *selectedCaseItem;
     
     for(PFObject *eachCaseItem in sortedCaseItems)
@@ -2051,23 +2124,15 @@ NSMutableArray *selectedCaseItemAnswersDictionary;
     self.submitAnswersButton.backgroundColor = [UIColor blueColor];
     
     
-    [self.caseDetailsEmailTableView reloadData];
-    
-    if([self.popupVC.popupOrSlideout isEqualToString:@"slideout"])
-    {
-        [self.slidingViewController resetTopViewAnimated:YES];
-    }
-    else
-    {
-        [self dismissViewControllerAnimated:NO completion:nil];
-    }
+    [self.propertiesTableView reloadData];
     
 }
-*/
 
-/*
+
+
 -(void)updateAnswersCarousel:(NSInteger)caseIndex
 {
+    /*
     //should comment out this part
     [popupanswersDictionary removeAllObjects];
         
@@ -2157,16 +2222,24 @@ NSMutableArray *selectedCaseItemAnswersDictionary;
                                         [HUD hide:YES];
                                     }
                                 }];
+     */
 }
-*/
+
 
 -(IBAction)showLocationPicker:(id)sender
 {
     mapPinViewController *mpvc = [self.storyboard instantiateViewControllerWithIdentifier:@"mpvc"];
-  //  mpvc.delegate = self;
+    mpvc.delegate = self;
     
     [self.navigationController pushViewController:mpvc animated:YES];
     
+}
+
+- (void)setUserLocation:(float) latitude withLongitude:(float)longitude
+{
+    //set manual location variables which will take priority over automatic variables when present
+    manualLocationLatitude = [NSString stringWithFormat:@"%f",latitude];
+    manualLocationLongitude = [NSString stringWithFormat:@"%f", longitude];
 }
 
 

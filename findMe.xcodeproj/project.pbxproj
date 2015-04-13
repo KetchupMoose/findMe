@@ -135,6 +135,8 @@
 		ECCD46F91AD30FD300804B06 /* caseDetailsCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD46F81AD30FD300804B06 /* caseDetailsCarouselViewController.m */; };
 		ECCD46FC1AD3135100804B06 /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD46FB1AD3135100804B06 /* iCarousel.m */; };
 		ECCD46FF1ADB31D900804B06 /* mapPinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD46FE1ADB31D900804B06 /* mapPinViewController.m */; };
+		ECCD47021ADC1F8700804B06 /* myLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD47011ADC1F8700804B06 /* myLocation.m */; };
+		ECCD47041ADC211200804B06 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECCD47031ADC211200804B06 /* AddressBook.framework */; };
 		ECD591BC1ABC930700D32D5D /* carselfie1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECD591BB1ABC930700D32D5D /* carselfie1.jpg */; };
 		ECE6B1631A069AC3007F4A19 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1621A069AC3007F4A19 /* Bolts.framework */; };
 		ECE6B1671A069B69007F4A19 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1661A069B69007F4A19 /* Parse.framework */; };
@@ -510,6 +512,9 @@
 		ECCD46FB1AD3135100804B06 /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
 		ECCD46FD1ADB31D900804B06 /* mapPinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mapPinViewController.h; sourceTree = "<group>"; };
 		ECCD46FE1ADB31D900804B06 /* mapPinViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mapPinViewController.m; sourceTree = "<group>"; };
+		ECCD47001ADC1F8700804B06 /* myLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myLocation.h; sourceTree = "<group>"; };
+		ECCD47011ADC1F8700804B06 /* myLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = myLocation.m; sourceTree = "<group>"; };
+		ECCD47031ADC211200804B06 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		ECD591BB1ABC930700D32D5D /* carselfie1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = carselfie1.jpg; sourceTree = "<group>"; };
 		ECE6B1621A069AC3007F4A19 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = findMe/Bolts.framework; sourceTree = "<group>"; };
 		ECE6B1661A069B69007F4A19 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = findMe/Parse.framework; sourceTree = "<group>"; };
@@ -848,6 +853,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECCD47041ADC211200804B06 /* AddressBook.framework in Frameworks */,
 				ECFDAAF81AB38BA000E42C33 /* libz.dylib in Frameworks */,
 				ECE6B18B1A0DAA54007F4A19 /* MapKit.framework in Frameworks */,
 				ECE6B1891A0DAA4E007F4A19 /* ImageIO.framework in Frameworks */,
@@ -897,6 +903,7 @@
 		D31DF2F419CEFC0C00A37725 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ECCD47031ADC211200804B06 /* AddressBook.framework */,
 				ECFDAAF71AB38BA000E42C33 /* libz.dylib */,
 				ECE6B18A1A0DAA54007F4A19 /* MapKit.framework */,
 				ECE6B1791A0D9C83007F4A19 /* ImageIO.framework */,
@@ -950,6 +957,8 @@
 				D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */,
 				ECCD46FD1ADB31D900804B06 /* mapPinViewController.h */,
 				ECCD46FE1ADB31D900804B06 /* mapPinViewController.m */,
+				ECCD47001ADC1F8700804B06 /* myLocation.h */,
+				ECCD47011ADC1F8700804B06 /* myLocation.m */,
 				D31DF30D19CEFC0C00A37725 /* ViewCasesViewController.h */,
 				D31DF30E19CEFC0C00A37725 /* ViewCasesViewController.m */,
 				EC0823021A186B13000B6684 /* HomePageViewController.h */,
@@ -2025,6 +2034,7 @@
 				ECE6B1811A0D9FF3007F4A19 /* UIImageView+UIActivityIndicatorForSDWebImage.m in Sources */,
 				ECA7A2BD1AA8B86C00F899D5 /* JSQMessagesLabel.m in Sources */,
 				ECFDAADE1AB38B5C00E42C33 /* PNChannelGroupRemoveRequest.m in Sources */,
+				ECCD47021ADC1F8700804B06 /* myLocation.m in Sources */,
 				EC0822FE1A0EE7F0000B6684 /* UIImageView+WebCache.m in Sources */,
 				ECFDAABA1AB38B5C00E42C33 /* PNChannelGroup.m in Sources */,
 				ECA7A2B91AA8B86C00F899D5 /* JSQMessagesCollectionViewCellOutgoing.m in Sources */,
