@@ -8,6 +8,9 @@
 
 #import "caseDetailsCarouselViewController.h"
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
+#import <QuartzCore/QuartzCore.h>
+#import "XMLWriter.h"
+#import "mapPinViewController.h"
 
 @implementation caseDetailsCarouselViewController
 
@@ -48,6 +51,7 @@ NSString *caseBeingUpdated;
 BOOL templateMode;
 
 int suggestedCaseDisplayedIndex;
+int carouselCaseUpdateTicker = 0;
 
 
 NSArray *selectedCaseItemAnswersList;
@@ -81,10 +85,11 @@ CGPoint startLocation;
 NSMutableArray *propertyTableOptionsArray;
 UIView *bgDarkenView;
 
+NSMutableArray *selectedCaseItemAnswersDictionary;
+
 -(void)viewDidLoad
 {
    
-    
    self.carousel.type = iCarouselTypeCoverFlow2;
     
     //set up delegates
@@ -113,7 +118,6 @@ UIView *bgDarkenView;
         
         caseObject = [allCases objectAtIndex:selectedCaseInt];
     }
-    
     
     NSString *caseObjectID = [caseObject objectForKey:@"caseId"];
     
@@ -163,6 +167,7 @@ UIView *bgDarkenView;
     priorCaseIDS = [[NSMutableArray alloc] init];
     templateOptionsCounts = [[NSMutableArray alloc] init];
     propertyTableOptionsArray = [[NSMutableArray alloc] init];
+    selectedCaseItemAnswersDictionary = [[NSMutableArray alloc] init];
     
     //fill an array of the prior cases so the client can look for a new previously non-existing caseId if the user is submitting a new template
     NSArray *cases = [self.itsMTLObject objectForKey:@"cases"];
@@ -388,13 +393,17 @@ UIView *bgDarkenView;
 - (NSInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
     //return the total number of items in the carousel
-    return [sortedCaseItems count];
+    return [sortedCaseItems count]+1;
 }
 
 - (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
 {
     UILabel *label = nil;
     UIImageView *iconImgView = nil;
+    UILabel *propertyClassLabel = nil;
+    UIButton *deleteButton = nil;
+    UIButton *createACaseItem = nil;
+    
     //create new view if no view is available for recycling
     if (view == nil)
     {
@@ -404,35 +413,119 @@ UIView *bgDarkenView;
         
         //view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200.0f, 200.0f)];
        // ((UIImageView *)view).image = [UIImage imageNamed:@"page.png"];
-        view = [[UIView alloc] initWithFrame:CGRectMake(0,50,200.0f,150.0f)];
+        view = [[UIView alloc] initWithFrame:CGRectMake(0,0,200.0f,self.carousel.frame.size.height)];
+        
         view.layer.borderColor = (__bridge CGColorRef)([UIColor blueColor]);
-        view.layer.borderWidth = 3.0f;
+        //view.layer.borderWidth = 25.0f;
+        [view.layer setBorderWidth:20];
+        
         
         view.contentMode = UIViewContentModeCenter;
         
-        view.backgroundColor = [UIColor blueColor];
+        //view.backgroundColor = [UIColor blueColor];
         
-        label = [[UILabel alloc] initWithFrame:CGRectMake(0,100,200,50)];
+        UIView *borderView = [[UIView alloc] initWithFrame:view.bounds];
+        borderView.layer.borderColor =[UIColor blueColor].CGColor;
+        borderView.layer.borderWidth = 2.0f;
+        borderView.layer.cornerRadius = 10.0f;
+        
+        //borderView.backgroundColor = [UIColor redColor];
+        
+        [view addSubview:borderView];
+        
+        
+        label = [[UILabel alloc] initWithFrame:CGRectMake(0,125,200,50)];
         label.backgroundColor = [UIColor clearColor];
         label.textAlignment = NSTextAlignmentCenter;
         label.font = [label.font fontWithSize:16];
         label.tag = 1;
+        label.numberOfLines = 2;
         
-        iconImgView = [[UIImageView alloc] initWithFrame:CGRectMake(60,10,80,80)];
+        iconImgView = [[UIImageView alloc] initWithFrame:CGRectMake(60,50,80,80)];
         iconImgView.tag = 2;
+        
+      
+        propertyClassLabel = [[UILabel alloc] initWithFrame:CGRectMake(5,5,100,25)];
+        propertyClassLabel.tag = 3;
+        propertyClassLabel.text = @" Template Question ";
+        propertyClassLabel.font = [UIFont boldSystemFontOfSize:12];
+        
+        propertyClassLabel.textColor = [UIColor blackColor];
+        UIColor *defaultLabelColor = [UIColor colorWithRed:255/255 green:255/255 blue:204.0f/255.0f alpha:1];
+        
+        
+        propertyClassLabel.backgroundColor = defaultLabelColor;
+        propertyClassLabel.layer.cornerRadius = 5.0f;
+        propertyClassLabel.layer.masksToBounds = YES;
+        propertyClassLabel.layer.borderColor = [UIColor blueColor].CGColor;
+        propertyClassLabel.layer.borderWidth = 1.0f;
+        
+        int deleteButtonWidth = 50;
+        int deleteButtonHeight = 30;
+        
+        deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(view.frame.size.width-deleteButtonWidth-5,5,deleteButtonWidth,deleteButtonHeight)];
+        
+        [deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
+        [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [deleteButton setBackgroundColor:[UIColor redColor]];
+        [deleteButton addTarget:self action:@selector(deleteCaseItem:) forControlEvents:UIControlEventTouchUpInside];
+        [deleteButton.titleLabel setFont:[UIFont boldSystemFontOfSize:12]];
+        deleteButton.tag = 100+index;
+        
+        //create near the bottom
+        int createButtonWidth = 180;
+        int createButtonHeight = 75;
+        createACaseItem = [[UIButton alloc] initWithFrame:CGRectMake(view.frame.size.width/2-createButtonWidth/2,view.frame.size.height-createButtonHeight-10,createButtonWidth,createButtonHeight)];
+        [createACaseItem setTitle:@"Create A Question!" forState:UIControlStateNormal];
+         UIColor *createCaseItemBGColor = [UIColor colorWithRed:0/255.0f green:204.0f/255.0f blue:102.0f/255.0f alpha:1];
+        [createACaseItem setBackgroundColor:createCaseItemBGColor];
+        [createACaseItem.titleLabel setTextColor:[UIColor whiteColor]];
+        createACaseItem.titleLabel.font = [UIFont boldSystemFontOfSize:15];
+        createACaseItem.layer.cornerRadius = 5.0f;
+        [createACaseItem addTarget:self action:@selector(createCaseItem:) forControlEvents:UIControlEventTouchUpInside];
+        createACaseItem.tag = 5;
         
         [view addSubview:label];
         [view addSubview:iconImgView];
+        [view addSubview:propertyClassLabel];
+        [view addSubview:deleteButton];
+        [view addSubview:createACaseItem];
         
-     
-        
-    
     }
     else
     {
         //get a reference to the label in the recycled view
         label = (UILabel *)[view viewWithTag:1];
         iconImgView = (UIImageView *)[view viewWithTag:2];
+        propertyClassLabel = (UILabel *)[view viewWithTag:3];
+        deleteButton = (UIButton *)[view viewWithTag:4];
+        createACaseItem = (UIButton *) [view viewWithTag:5];
+        
+    }
+    
+    if(index ==[sortedCaseItems count])
+    {
+        //display UI to create your own case item
+        createACaseItem.alpha = 1;
+        deleteButton.alpha = 0;
+        label.text = @"Create A Question";
+        propertyClassLabel.text = @" Create Question ";
+       UIColor *propertyCreateBGColor = [UIColor colorWithRed:0/255.0f green:204.0f/255.0f blue:102.0f/255.0f alpha:1];
+        propertyClassLabel.backgroundColor = propertyCreateBGColor;
+        propertyClassLabel.textColor = [UIColor whiteColor];
+       
+        //set the iconImageView
+        [iconImgView setImage:nil];
+        
+        [propertyClassLabel sizeToFit];
+        
+        return view;
+        
+    }
+    else
+    {
+        createACaseItem.alpha =0;
+        deleteButton.alpha =1;
         
     }
     
@@ -474,11 +567,44 @@ UIView *bgDarkenView;
     
     NSString *imgURL = [propAtIndex objectForKey:@"iconImageURL"];
     
+    if([imgURL length]==0)
+    {
+       imgURL = @"http://icons.iconarchive.com/icons/igh0zt/ios7-style-metro-ui/512/MetroUI-Google-Maps-icon.png";
+    }
     //set the iconImageView
     UIActivityIndicatorViewStyle activityStyle = UIActivityIndicatorViewStyleGray;
     
     [iconImgView setImageWithURL:[NSURL URLWithString:imgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
    // iconImgView.image = [UIImage imageNamed:@"carselfie1.jpg"];
+    
+    //get property type and customize the label
+    NSString *propType = [propAtIndex objectForKey:@"propertyType"];
+   
+    if([propType  isEqual:@"I"])
+    {
+        //property is an info message
+        propertyClassLabel.text = @" Info Message ";
+        propertyClassLabel.textColor = [UIColor blackColor];
+        propertyClassLabel.backgroundColor = [UIColor whiteColor];
+        
+        
+    }
+    else if([propType isEqual:@"N"])
+    {
+        propertyClassLabel.text = @" New Suggestion ";
+        propertyClassLabel.textColor = [UIColor whiteColor];
+        propertyClassLabel.backgroundColor = [UIColor blueColor];
+        
+    }
+    
+    else if([propType isEqual:@"B"])
+    {
+        propertyClassLabel.text = @" View Matches! ";
+        propertyClassLabel.textColor = [UIColor whiteColor];
+        propertyClassLabel.backgroundColor = [UIColor redColor];
+    }
+    
+    [propertyClassLabel sizeToFit];
     
     return view;
 }
@@ -503,21 +629,92 @@ UIView *bgDarkenView;
     [self.propertiesTableView reloadData];
     */
     
+    
+    
+}
+-(void)carouselCurrentItemIndexDidChange:(iCarousel *)carousel
+{
+    
+    NSInteger index = self.carousel.currentItemIndex;
+    
+    if(index ==propsArray.count)
+    {
+        self.propertiesTableView.alpha = 0;
+        return;
+    }
+    else
+    {
+        self.propertiesTableView.alpha =1;
+        PFObject *propertyObject = [propsArray objectAtIndex:index];
+        
+        //get choices
+        NSString *propOptions = [propertyObject objectForKey:@"options"];
+        propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
+        [self.propertiesTableView reloadData];
+    }
+   
+
 }
 
 - (void)carouselDidEndScrollingAnimation:(iCarousel *)carousel
 {
-    NSInteger index = self.carousel.currentItemIndex;
+    /*
+     NSInteger index = self.carousel.currentItemIndex;
     PFObject *propertyObject = [propsArray objectAtIndex:index];
     
     //get choices
     NSString *propOptions = [propertyObject objectForKey:@"options"];
     propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
     [self.propertiesTableView reloadData];
-
+     */
 }
 
+- (void)removeDelegateDataAtIndex:(NSInteger) index
+{
+    [sortedCaseItems removeObjectAtIndex:index];
+    [propsArray removeObjectAtIndex:index];
+    
+    [self.carousel removeItemAtIndex:index animated:YES];
+    
+    [self.carousel reloadData];
+    [self carouselCurrentItemIndexDidChange:self.carousel];
+    
+    [self.propertiesTableView reloadData];
+    
+    
+    //[self.carousel reloadData];
+    
+}
 
+-(void)deleteCaseItem:(id)sender
+{
+    UIButton *sendingButton = (UIButton *)sender;
+    NSInteger index = sendingButton.tag -100;
+    
+    //do delete actions for this index
+    
+    //if no data remains, do not delete
+    if(sortedCaseItems.count ==1)
+    {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot Delete", nil) message:@"Case must retain at least one question" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+    }
+    [self removeDelegateDataAtIndex:index];
+    
+   // [self.carousel scrollToItemAtIndex:index animated:NO];
+    
+    [self carouselCurrentItemIndexDidChange:self.carousel];
+}
+
+-(void)createCaseItem:(id)sender
+{
+    //do stuff with button
+    NSLog(@"create a new case");
+    NewPropertyViewController *npvc = [self.storyboard instantiateViewControllerWithIdentifier:@"npvc"];
+    npvc.userName = self.userName;
+    npvc.delegate = self;
+    
+    [self.navigationController pushViewController:npvc animated:YES];
+}
 
 -(void)getLocation:(id)sender
 {
@@ -655,7 +852,7 @@ UIView *bgDarkenView;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    /*
+    
     //for the last cell, show a keyboard to type a new option
     if(indexPath.row==propertyTableOptionsArray.count)
     {
@@ -708,7 +905,7 @@ UIView *bgDarkenView;
         return;
         
     }
-    
+    /*
     UIView *cell = [tableView cellForRowAtIndexPath:indexPath];
     
     if(cell.backgroundColor==[UIColor greenColor])
@@ -726,9 +923,7 @@ UIView *bgDarkenView;
             NSInteger indexOfObject = [answersArray indexOfObject:optionTxt];
             
             [answersArray removeObject:optionTxt];
-            [popupanswersDictionary removeObjectAtIndex:indexOfObject];
-            
-            
+            [selectedCaseItemAnswersDictionary removeObjectAtIndex:indexOfObject];
         }
         
         for (NSString *eachAns in answersArray)
@@ -786,5 +981,1193 @@ UIView *bgDarkenView;
     
     */
 }
+
+#pragma mark DataDelegateMethods
+- (void)recieveData:(NSString *)OptionsList AcceptableAnswersList:(NSArray *)Answers QuestionText:(NSString *) question {
+    
+    carouselCaseUpdateTicker = carouselCaseUpdateTicker  +1;
+    int newCaseNumber = 9000 +carouselCaseUpdateTicker ;
+    
+    NSString *newPropNum = [NSString stringWithFormat:@"%d",carouselCaseUpdateTicker ];
+    NSString *newCaseNum = [NSString stringWithFormat:@"%d",newCaseNumber];
+    
+    //loop through the incoming array of answers and set them to an array of NSMutableDictionaries
+    
+    //add the data to the list sortedCaseList and propertiesArray
+    
+    NSMutableDictionary *propertyObject = [[NSMutableDictionary alloc] init];
+    [propertyObject setObject:OptionsList forKey:@"options"];
+    [propertyObject setObject:question forKey:@"propertyDescr"];
+    [propertyObject setObject:newPropNum forKey:@"propertyNum"];
+    [propertyObject setObject:@"U" forKey:@"propertyType"];
+    [propertyObject setObject:newPropNum forKey:@"objectId"];
+    
+    
+    NSMutableDictionary *caseItemObject = [[NSMutableDictionary alloc] init];
+    [caseItemObject setObject:newCaseNum forKey:@"caseItem"];
+    [caseItemObject setObject:Answers forKey:@"answers"];
+    [caseItemObject setObject:newPropNum forKey:@"propertyNum"];
+    
+    
+    //[self.pickerView reloadAllComponents];
+    //  [self.caseDetailsTableView reloadData];
+    
+    //Do something with data here
+    NSLog(@"this fired");
+    self.submitAnswersButton.enabled = 1;
+    self.submitAnswersButton.backgroundColor = [UIColor blueColor];
+    
+    //reload data
+    if(templateMode==0)
+    {
+        //add a progress HUD to show it is retrieving list of properts
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:HUD];
+        
+        // Set determinate mode
+        HUD.mode = MBProgressHUDModeDeterminate;
+        HUD.delegate = self;
+        HUD.labelText = @"Updating With The New Case Item";
+        [HUD show:YES];
+        
+        [self updateNewCaseItem:propertyObject CaseItemObject:caseItemObject];
+        
+        
+    }
+    else
+    {
+        int g = (int)sortedCaseItems.count;
+        
+        [sortedCaseItems addObject:caseItemObject];
+        [propsArray addObject:propertyObject];
+        
+        NSNumber *indexNum = [[NSNumber alloc] initWithInt:g];
+        [newlyCreatedPropertiesIndex addObject:indexNum];
+        [changedCaseItemsIndex addObject:indexNum];
+        
+        [self.navigationController popViewControllerAnimated:NO];
+        
+        [self.carousel reloadData];
+        [self.propertiesTableView reloadData];
+        
+        
+    }
+    
+    
+}
+
+-(void)updateNewCaseItem:(NSDictionary *)propertyObject CaseItemObject:(NSDictionary *)caseItemObject
+{
+    
+    NSString *xmlForUpdate = [self createXMLFunctionSingleCaseItem:propertyObject CaseItemObject:caseItemObject];
+    
+    if([xmlForUpdate isEqualToString:@"no"])
+    {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invalid Update", nil) message:@"New Case Must Include At Least One Answered Question" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        return;
+        
+    }
+    
+    //use parse cloud code function
+    [PFCloud callFunctionInBackground:@"submitXML"
+                       withParameters:@{@"payload": xmlForUpdate}
+                                block:^(NSString *responseString, NSError *error) {
+                                    
+                                    if (!error)
+                                    {
+                                        
+                                        NSString *responseText = responseString;
+                                        NSLog(responseText);
+                                        
+                                        //commenting out as it was needed for polling
+                                        /*
+                                         NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+                                         PFObject *caseObject = [allCases objectAtIndex:[selectedCaseIndex integerValue]];
+                                         caseBeingUpdated = [caseObject objectForKey:@"caseId"];
+                                         
+                                         NSString *timeStampReturn = [caseObject objectForKey:@"timestamp"];
+                                         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                                         f.numberStyle = NSNumberFormatterDecimalStyle;
+                                         lastTimestamp = [f numberFromString:timeStampReturn];
+                                         
+                                         [self pollForCaseRefresh];
+                                         */
+                                        
+                                        //convert to NSDictionaryHere
+                                        
+                                        NSString *responseTextWithoutHeader = [responseText
+                                                                               stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+                                        NSError *jsonError;
+                                        NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+                                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                                             options:NSJSONReadingMutableContainers
+                                                                                               error:&jsonError];
+                                        
+                                        NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [self reloadData:jsonCaseChange reloadMode:@"fromSingleNewProperty"];
+                                        });
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSLog(error.localizedDescription);
+                                        [HUD hide:YES];
+                                    }
+                                }];
+}
+
+- (void)reloadData:(PFObject *) myObject reloadMode:(NSString *)reloadModeString
+{
+    
+    //code for old refresh/poll mode where the entire itsMTLobject is returned on the refresh
+    NSArray *casesArray;
+    int indexOfCase = 0;
+    PFObject *caseItemObject;
+    
+    if([reloadModeString isEqualToString:@"polledForMTL"])
+    {
+        self.itsMTLObject = myObject;
+        
+        casesArray = [self.itsMTLObject objectForKey:@"cases"];
+        
+        int i = 0;
+        
+        if(templateMode ==1)
+        {
+            for (PFObject *eachReturnedCase in casesArray)
+            {
+                NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+                //make sure CaseString is not nil/blank
+                if([caseString length] >0)
+                {
+                    if([priorCaseIDS containsObject:caseString])
+                    {
+                        //continue
+                    }
+                    else
+                    {
+                        indexOfCase = i;
+                        break;
+                    }
+                }
+                i = i+1;
+            }
+        }
+        else if (templateMode ==0)
+        {
+            for (PFObject *eachReturnedCase in casesArray)
+            {
+                NSString *caseString = [eachReturnedCase objectForKey:@"caseId"];
+                if([caseBeingUpdated isEqualToString:caseString])
+                {
+                    indexOfCase = i;
+                    NSLog(@"match found on case");
+                    break;
+                }
+                else
+                {
+                    //continue
+                }
+                i = i+1;
+            }
+            
+        }
+        
+        self.selectedCaseIndex = [NSNumber numberWithInt:indexOfCase];
+        caseItemObject = [casesArray objectAtIndex:indexOfCase];
+        
+    }
+    else //case where reload data is not called as a result of polling but is given case directly
+    {
+        caseItemObject = myObject;
+        self.jsonDisplayMode = @"singleCase";
+        self.jsonObject = (PFObject *)caseItemObject;
+    }
+    caseBeingUpdated = [caseItemObject objectForKey:@"caseId"];
+    templateMode =0;
+    
+    //define sort descriptors for sorting caseItems by priority
+    NSArray *sortDescriptors;
+    NSSortDescriptor *sortDescriptor;
+    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"priority"
+                                                 ascending:NO];
+    sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    
+    caseItems= [caseItemObject objectForKey:@"caseItems"];
+    sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+    
+    //setting up arrays for storing three sets of properties and cases based on type: info messages, already answered properties, and new suggested properties
+    
+    [propertyIDSArray removeAllObjects];
+    [answeredPropertiesIndex removeAllObjects];
+    [answeredProperties removeAllObjects];
+    [answeredCases removeAllObjects];
+    [infoCases removeAllObjects];
+    [infoMessageProperties removeAllObjects];
+    [suggestedProperties removeAllObjects];
+    [suggestedCases removeAllObjects];
+    [suggestedCaseIndex removeAllObjects];
+    [updatedPropertiesIndex removeAllObjects];
+    [customAnsweredCases removeAllObjects];
+    [customAnsweredProperties removeAllObjects];
+    [customAnsweredPropertiesIndex removeAllObjects];
+    [browseCases removeAllObjects];
+    [browseProperties removeAllObjects];
+    [browsePropertiesIndex removeAllObjects];
+    [newlyCreatedPropertiesIndex removeAllObjects];
+    suggestedCaseDisplayedIndex = -1;
+    [changedCaseItemsIndex removeAllObjects];
+    
+    //get all the property ID's from each item in the selected case.
+    
+    for (PFObject *eachCaseItem in sortedCaseItems)
+    {
+        NSString *propNum = [eachCaseItem objectForKey:@"propertyNum"];
+        [propertyIDSArray addObject:propNum];
+    }
+    
+    //get all the property information for the list of properties to consider
+    PFQuery *propertsQuery = [PFQuery queryWithClassName:@"Properts"];
+    [propertsQuery whereKey:@"objectId" containedIn:propertyIDSArray];
+    
+    [propsArray removeAllObjects];
+    
+    propsArray = [[propertsQuery findObjects] mutableCopy];
+    
+    //check the propsArray and re-query if one of them doesn't have a property description filled in yet
+    
+    BOOL queryGood = 0;
+    /*
+     while (queryGood==0)
+     {
+     propsArray = [[propertsQuery findObjects] mutableCopy];
+     int gj = 0;
+     for (PFObject *property in propsArray)
+     {
+     NSString *propDescr =[property objectForKey:@"propertyDescr"];
+     if([propDescr length] ==0)
+     {
+     [propsArray removeAllObjects];
+     queryGood =0;
+     break;
+     
+     }
+     gj=gj+1;
+     if(gj== [propsArray count])
+     {
+     queryGood =1;
+     
+     }
+     }
+     NSLog(@"re-querying properties due to empty propertyDescr");
+     
+     }
+     */
+    
+    //sort the propsArray based on the order in sortedCaseItems
+    NSMutableArray *sortingPropsArray = [[NSMutableArray alloc] init];
+    
+    for(PFObject *caseItem in sortedCaseItems)
+    {
+        NSString *propID = [caseItem objectForKey:@"propertyNum"];
+        
+        for (PFObject *propObject in propsArray)
+        {
+            NSString *propObjectID = propObject.objectId;
+            
+            if([propObjectID isEqualToString:propID])
+            {
+                [sortingPropsArray addObject:propObject];
+                
+            }
+        }
+    }
+    
+    propsArray = sortingPropsArray;
+    
+    //sort the properties into four categories based on their type: info messages, answerableQuestions, customAnswerableQuestions, and new suggestions
+    int g = 0;
+    for (PFObject *property in propsArray)
+    {
+        NSString *propType = [property objectForKey:@"propertyType"];
+        NSString *options = [property objectForKey:@"options"];
+        
+        if([propType  isEqual:@"I"])
+        {
+            //property is an info message
+            [infoMessageProperties addObject:property];
+            [infoCases addObject:sortedCaseItems[g]];
+        }
+        else if([propType isEqual:@"N"])
+        {
+            [NoAnswerProperties addObject:property];
+            [NoAnswerCases addObject:sortedCaseItems[g]];
+        }
+        
+        else if([propType isEqual:@"B"])
+        {
+            [browseProperties addObject:property];
+            [browseCases addObject:sortedCaseItems[g]];
+        }
+        
+        else if([options length]==0)
+        {
+            [customAnsweredProperties addObject:property];
+            [customAnsweredProperties addObject:sortedCaseItems[g]];
+        }
+        else
+            
+        {
+            PFObject *caseItemObject = sortedCaseItems[g];
+            NSArray *answers = [caseItemObject objectForKey:@"answers"];
+            
+            if(answers.count>=1)
+            {
+                NSNumber *indexNum = [[NSNumber alloc] initWithInt:g];
+                [answeredPropertiesIndex addObject:indexNum];
+                //array for keeping track of the properties with answers.  Some of these may be info messages so that is dealt with further down.  It is assumed info messages can not have answers.
+                //add the property to the list of answeredProperties
+                [answeredProperties addObject:property];
+                [answeredCases addObject:sortedCaseItems[g]];
+                
+            }
+            else
+            {
+                [suggestedProperties addObject:property];
+                [suggestedCases addObject:sortedCaseItems[g]];
+                NSNumber *caseIndex = [NSNumber numberWithInt:g];
+                [suggestedCaseIndex addObject:caseIndex];
+            }
+        }
+        g=g+1;
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self.carousel reloadData];
+        [self.propertiesTableView reloadData];
+        
+        //remove the updating HUD
+        [HUD hide:YES];
+    });
+    
+    if([reloadModeString isEqualToString:@"fromSingleNewProperty"])
+    {
+        [self.navigationController popViewControllerAnimated:NO];
+    }
+    
+    //set the last timestamp for the case if there needs to be polling.
+    NSString *timeStampReturn = [caseItemObject objectForKey:@"timestamp"];
+    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+    f.numberStyle = NSNumberFormatterDecimalStyle;
+    lastTimestamp = [f numberFromString:timeStampReturn];
+    
+    
+    if([self.popupVC.popupOrSlideout isEqualToString:@"slideout"])
+    {
+        //[self.slidingViewController resetTopViewAnimated:YES];
+    }
+    else
+    {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+    
+    
+    
+}
+
+-(NSString *)createXMLFunctionSingleCaseItem:(NSDictionary *) propertyObject CaseItemObject:(NSDictionary *)caseItemObjForXML
+{
+    //iterate through all items still in the caseitems and property arrays and send XML to update all of these (either with their original contents or the modifications/new entries)
+    
+    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+    
+    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+    
+    PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
+    
+    //newCaseItem is always the last on sortedCaseItems because it was just added
+    PFObject *caseItemObject = (PFObject *)caseItemObjForXML;
+    
+    NSString *caseName = [caseObject objectForKey:@"caseName"];
+    NSString *caseObjID = [caseObject objectForKey:@"caseId"];
+    
+    PFObject *selectedPropertyObject = (PFObject *)propertyObject;
+    NSString *propertyNum = [selectedPropertyObject objectForKey:@"propertyNum"];
+    NSString *propertyDescr = [selectedPropertyObject objectForKey:@"propertyDescr"];
+    
+    if(propertyNum==nil)
+    {
+        propertyNum =@"1";
+        
+    }
+    
+    //get the selected property from the chooser element.
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    NSString *itsMTLObjectUserName = self.itsMTLObject.objectId;
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:itsMTLObjectUserName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    //if it's a brand new case, this will be nil
+    if(caseObjID != nil)
+    {
+        
+        [xmlWriter writeStartElement:@"CASEOBJECTID"];
+        [xmlWriter writeCharacters:caseObjID];
+        [xmlWriter writeEndElement];
+    }
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:caseName];
+    [xmlWriter writeEndElement];
+    
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"LATITUDE"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"LONGITUDE"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
+    
+    //check to see if this caseItem is a brand new property
+    
+    //add the XML for a new or updated property here
+    [xmlWriter writeStartElement:@"PROPERTY"];
+    
+    [xmlWriter writeStartElement:@"PROPERTYNUM"];
+    
+    [xmlWriter writeCharacters:propertyNum];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"PROPERTYDESCR"];
+    [xmlWriter writeCharacters:propertyDescr];
+    [xmlWriter writeEndElement];
+    
+    //get the options value from the property object
+    NSString *fullCharsString = [selectedPropertyObject objectForKey:@"options"];
+    
+    if([fullCharsString length]>0)
+    {
+        
+        [xmlWriter writeStartElement:@"OPTIONS"];
+        [xmlWriter writeCharacters:fullCharsString];
+        [xmlWriter writeEndElement];
+    }
+    //close property element
+    [xmlWriter writeEndElement];
+    
+    //write logic for updating the caseItem
+    //build strings for building item
+    [xmlWriter writeStartElement:@"ITEM"];
+    
+    //check to see if this caseItem has a number.  Otherwise give it a number of 9000 to indicate it is a brand new caseItem.
+    NSString *myCaseItem = [caseItemObject objectForKey:@"caseItem"];
+    NSString *caseItemNumber;
+    if(myCaseItem==nil)
+    {
+        caseItemNumber =@"9000";
+        
+    }
+    else
+    {
+        caseItemNumber = myCaseItem;
+        
+    }
+    
+    [xmlWriter writeStartElement:@"CASEITEM"];
+    [xmlWriter writeCharacters:caseItemNumber];
+    [xmlWriter writeEndElement];
+    
+    
+    [xmlWriter writeStartElement:@"PROPERTYNUM"];
+    [xmlWriter writeCharacters:propertyNum];
+    [xmlWriter writeEndElement];
+    
+    //write out the answers value of this case Item
+    
+    //need to check if the case type is custom answers
+    
+    //if case type is I or N, don't update anything for answers
+    NSString *propertyType = [selectedPropertyObject objectForKey:@"propertyType"];
+    NSString *optionText = [selectedPropertyObject objectForKey:@"options"];
+    
+    NSArray *cdeanswersDictionary = [caseItemObject objectForKey:@"answers"];
+    
+    if([propertyType isEqualToString:@"I"] || [propertyType isEqualToString:@"N"] || [propertyType isEqualToString:@"B"])
+    {
+        //do nothing
+    }
+    else if([optionText length] == 0)
+    {
+        //write the answer as type Custom
+        
+        for (PFObject *ansObj in cdeanswersDictionary)
+        {
+            NSString *ansString = [ansObj objectForKey:@"custom"];
+            [xmlWriter writeStartElement:@"ANSWER"];
+            
+            [xmlWriter writeStartElement:@"CUSTOM"];
+            [xmlWriter writeCharacters:ansString];
+            [xmlWriter writeEndElement];
+            
+            [xmlWriter writeEndElement];
+            
+        }
+        
+    }
+    else
+    {
+        NSString *semiColonDelimitedCustomAnswers;
+        NSString *semiColonDelimitedAAnswers;
+        NSMutableArray *arrayOfCustomAnswers = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayOfAAnswers = [[NSMutableArray alloc] init];
+        
+        for (PFObject *ansObj in cdeanswersDictionary)
+        {
+            
+            //if the object responds to the key a, then write it as an answer a
+            NSString *ansString = [ansObj objectForKey:@"a"];
+            if([ansString length] ==0)
+            {
+                ansString = [ansObj objectForKey:@"custom"];
+                if([ansString length] >0)
+                {
+                    [arrayOfCustomAnswers addObject:ansString];
+                }
+            }
+            else
+            {
+                [arrayOfAAnswers addObject:ansString];
+                
+            }
+        }
+        semiColonDelimitedAAnswers = [arrayOfAAnswers componentsJoinedByString:@";"];
+        semiColonDelimitedCustomAnswers  = [arrayOfCustomAnswers componentsJoinedByString:@";"];
+        
+        if ([semiColonDelimitedAAnswers length] ==0 && [semiColonDelimitedCustomAnswers length] ==0)
+        {
+            
+            
+        }
+        else
+        {
+            [xmlWriter writeStartElement:@"ANSWER"];
+        }
+        
+        if([semiColonDelimitedAAnswers length]>0)
+        {
+            [xmlWriter writeStartElement:@"A"];
+            [xmlWriter writeCharacters:semiColonDelimitedAAnswers];
+            [xmlWriter writeEndElement];
+            
+        }
+        if([semiColonDelimitedCustomAnswers length]>0)
+        {
+            [xmlWriter writeStartElement:@"CUSTOM"];
+            [xmlWriter writeCharacters:semiColonDelimitedCustomAnswers];
+            [xmlWriter writeEndElement];
+            
+        }
+        if ([semiColonDelimitedAAnswers length] ==0 && [semiColonDelimitedCustomAnswers length] ==0)
+        {
+            
+        }
+        else
+        {
+            [xmlWriter writeEndElement];
+        }
+    }
+    
+    //close item element
+    [xmlWriter writeEndElement];
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    return xml;
+}
+
+-(IBAction)doUpdate:(id)sender
+{
+    
+    NSString *xmlForUpdate = [self createXMLTemplateModeFunction];
+    
+    if([xmlForUpdate isEqualToString:@"no"])
+    {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invalid Update", nil) message:@"New Case Must Include At Least One Answered Question" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        return;
+        
+    }
+    //add a progress HUD to show it is retrieving list of properts
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Updating The Properties And Answers";
+    [HUD show:YES];
+    
+    //use parse cloud code function
+    [PFCloud callFunctionInBackground:@"submitXML"
+                       withParameters:@{@"payload": xmlForUpdate}
+                                block:^(NSString *responseString, NSError *error) {
+                                    
+                                    if (!error)
+                                    {
+                                        NSString *responseText = responseString;
+                                        NSLog(responseText);
+                                        
+                                        [HUD hide:NO];
+                                        
+                                        //setting timestamp to compare to for the subsequent update
+                                        NSString *timeStampReturn;
+                                        if([self.jsonDisplayMode isEqualToString:@"template"])
+                                        {
+                                            timeStampReturn = [self.jsonObject objectForKey:@"timestamp"];
+                                            
+                                        }
+                                        else
+                                        {
+                                            NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+                                            PFObject *caseObject = [allCases objectAtIndex:[selectedCaseIndex integerValue]];
+                                            caseBeingUpdated = [caseObject objectForKey:@"caseId"];
+                                            
+                                            timeStampReturn = [caseObject objectForKey:@"timestamp"];
+                                            
+                                        }
+                                        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                                        f.numberStyle = NSNumberFormatterDecimalStyle;
+                                        lastTimestamp = [f numberFromString:timeStampReturn];
+                                        
+                                        //convert to NSDictionaryHere
+                                        
+                                        NSString *responseTextWithoutHeader = [responseText
+                                                                               stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+                                        NSError *jsonError;
+                                        NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+                                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                                             options:NSJSONReadingMutableContainers
+                                                                                               error:&jsonError];
+                                        
+                                        NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+                                        
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [self reloadData:jsonCaseChange reloadMode:@"fromJSON"];
+                                        });
+                                        
+                                        //[self pollForCaseRefresh];
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSLog(error.localizedDescription);
+                                        [HUD hide:YES];
+                                    }
+                                }];
+}
+
+-(NSString *)createXMLTemplateModeFunction
+{
+    //iterate through all items still in the caseitems and property arrays and send XML to update all of these (either with their original contents or the modifications/new entries)
+    
+    NSInteger selectedCaseInt = [selectedCaseIndex integerValue];
+    //the case object includes the list of all caseItems and the caseId
+    
+    PFObject *caseObject;
+    if([self.jsonDisplayMode isEqualToString:@"template"])
+    {
+        caseObject = self.jsonObject;
+    }
+    else
+    {
+        NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+        
+        caseObject = [allCases objectAtIndex:selectedCaseInt];
+    }
+    
+    
+    NSString *caseName = [caseObject objectForKey:@"caseName"];
+    NSString *caseObjID = [caseObject objectForKey:@"caseId"];
+    
+    //get the selected property from the chooser element.
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:self.userName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    //if it's a brand new case, this will be nil
+    if(caseObjID != nil)
+    {
+        
+        [xmlWriter writeStartElement:@"CASEOBJECTID"];
+        [xmlWriter writeCharacters:caseObjID];
+        [xmlWriter writeEndElement];
+    }
+    
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:caseName];
+    [xmlWriter writeEndElement];
+    
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"LATITUDE"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"LONGITUDE"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
+    //Jan 18
+    //updating to put ALL NEW property tags first before caseItem tags
+    int j = 0;
+    
+    for (PFObject *eachCaseItem in sortedCaseItems)
+    {
+        
+        //check to see if this caseItem is a brand new property
+        
+        if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:j]])
+            
+        {
+            PFObject *newPropObject = [propsArray objectAtIndex:j];
+            NSString *propertyDescr = [newPropObject objectForKey:@"propertyDescr"];
+            //add the XML for a new or updated property here
+            [xmlWriter writeStartElement:@"PROPERTY"];
+            
+            [xmlWriter writeStartElement:@"PROPERTYNUM"];
+            NSString *propNumString = [NSString stringWithFormat:@"%d",j];
+            [xmlWriter writeCharacters:propNumString];
+            [xmlWriter writeEndElement];
+            
+            [xmlWriter writeStartElement:@"PROPERTYDESCR"];
+            [xmlWriter writeCharacters:propertyDescr];
+            [xmlWriter writeEndElement];
+            
+            //get the options value from the property object
+            NSString *fullCharsString = [newPropObject objectForKey:@"options"];
+            
+            if([fullCharsString length]>0)
+            {
+                
+                [xmlWriter writeStartElement:@"OPTIONS"];
+                [xmlWriter writeCharacters:fullCharsString];
+                [xmlWriter writeEndElement];
+            }
+            //close property element
+            [xmlWriter writeEndElement];
+        }
+        j = j+1;
+        
+    }
+    
+    int h = 0;
+    for (PFObject *eachCaseItem in sortedCaseItems)
+    {
+        
+        NSString *caseItemPickedPropertyNum = [eachCaseItem objectForKey:@"propertyNum"];
+        PFObject *propAtIndex;
+        
+        if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:h]])
+        {
+            propAtIndex = [propsArray objectAtIndex:h];
+            
+        }
+        
+        else
+        {
+            
+            
+            for(PFObject *propObject in propsArray)
+            {
+                if([propObject.objectId isEqualToString:caseItemPickedPropertyNum])
+                {
+                    propAtIndex = propObject;
+                    break;
+                }
+            }
+        }
+        
+        
+        
+        
+        PFObject *updatedProperty = propAtIndex;
+        
+        
+        NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
+        
+        //write logic for updating the caseItem
+        //build strings for building item
+        [xmlWriter writeStartElement:@"ITEM"];
+        
+        //check to see if this caseItem has a number.  Otherwise give it a number of 9000 to indicate it is a brand new caseItem.
+        NSString *myCaseItem = [eachCaseItem objectForKey:@"caseItem"];
+        NSString *caseItemNumber;
+        
+        int caseNum = 12000+h;
+        
+        if(myCaseItem==nil)
+        {
+            caseItemNumber =[NSString stringWithFormat:@"%d",caseNum];;
+            
+        }
+        else
+        {
+            caseItemNumber = myCaseItem;
+            
+        }
+        
+        [xmlWriter writeStartElement:@"CASEITEM"];
+        [xmlWriter writeCharacters:caseItemNumber];
+        [xmlWriter writeEndElement];
+        
+        NSString *propNumString;
+        if ([newlyCreatedPropertiesIndex containsObject:[NSNumber numberWithInt:h]])
+        {
+            propNumString = [NSString stringWithFormat:@"%d",h];
+        }
+        else
+        {
+            propNumString = propertyNum;
+        }
+        
+        h = h+1;
+        [xmlWriter writeStartElement:@"PROPERTYNUM"];
+        [xmlWriter writeCharacters:propNumString];
+        [xmlWriter writeEndElement];
+        
+        //write out the answers value of this case Item
+        
+        //need to check if the case type is custom answers
+        
+        //if case type is I or N, don't update anything for answers
+        NSString *propertyType = [updatedProperty objectForKey:@"propertyType"];
+        NSString *optionText = [updatedProperty objectForKey:@"options"];
+        NSArray *cdeAnswersDictionary = [eachCaseItem objectForKey:@"answers"];
+        
+        if([propertyType isEqualToString:@"I"] || [propertyType isEqualToString:@"N"] || [propertyType isEqualToString:@"B"])
+        {
+            //do nothing
+        }
+        else if([optionText length] == 0)
+        {
+            //write the answer as type Custom
+            
+            for (PFObject *ansObj in cdeAnswersDictionary)
+            {
+                NSString *ansString = [ansObj objectForKey:@"custom"];
+                [xmlWriter writeStartElement:@"ANSWER"];
+                
+                [xmlWriter writeStartElement:@"CUSTOM"];
+                [xmlWriter writeCharacters:ansString];
+                [xmlWriter writeEndElement];
+                
+                [xmlWriter writeEndElement];
+                
+            }
+            
+        }
+        else
+        {
+            NSString *semiColonDelimitedCustomAnswers;
+            NSString *semiColonDelimitedAAnswers;
+            NSMutableArray *arrayOfCustomAnswers = [[NSMutableArray alloc] init];
+            NSMutableArray *arrayOfAAnswers = [[NSMutableArray alloc] init];
+            
+            for (PFObject *ansObj in cdeAnswersDictionary)
+            {
+                
+                //if the object responds to the key a, then write it as an answer a
+                NSString *ansString = [ansObj objectForKey:@"a"];
+                if([ansString length] ==0)
+                {
+                    ansString = [ansObj objectForKey:@"custom"];
+                    if([ansString length] >0)
+                    {
+                        [arrayOfCustomAnswers addObject:ansString];
+                    }
+                }
+                else
+                {
+                    [arrayOfAAnswers addObject:ansString];
+                    
+                }
+            }
+            
+            semiColonDelimitedAAnswers = [arrayOfAAnswers componentsJoinedByString:@";"];
+            semiColonDelimitedCustomAnswers  = [arrayOfCustomAnswers componentsJoinedByString:@";"];
+            
+            if ([semiColonDelimitedAAnswers length] ==0 && [semiColonDelimitedCustomAnswers length] ==0)
+            {
+                
+                //don't write any answers, do nothing
+                /*
+                 [xmlWriter writeStartElement:@"ANSWER"];
+                 [xmlWriter writeStartElement:@"A"];
+                 [xmlWriter writeCharacters:@"1"];
+                 [xmlWriter writeEndElement];
+                 [xmlWriter writeEndElement];
+                 */
+            }
+            else
+            {
+                [xmlWriter writeStartElement:@"ANSWER"];
+                if([semiColonDelimitedAAnswers length]>0)
+                {
+                    [xmlWriter writeStartElement:@"A"];
+                    [xmlWriter writeCharacters:semiColonDelimitedAAnswers];
+                    [xmlWriter writeEndElement];
+                    
+                }
+                if([semiColonDelimitedCustomAnswers length]>0)
+                {
+                    [xmlWriter writeStartElement:@"CUSTOM"];
+                    [xmlWriter writeCharacters:semiColonDelimitedCustomAnswers];
+                    [xmlWriter writeEndElement];
+                    
+                }
+                //close answer element
+                [xmlWriter writeEndElement];
+            }
+            
+        }
+        
+        //close item element
+        [xmlWriter writeEndElement];
+        
+    }
+    
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    return xml;
+    
+    
+}
+
+//need to modify this function to show the acceptable answers list
+/*
+- (void)updateCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers
+{
+    NSLog(@"got this");
+    
+    //update the data and modify the sortedCaseItems and propsArray to take on the new data coming back
+    
+    //loop through the caseItems and select the one with this caseItemID
+    PFObject *selectedCaseItem;
+    
+    for(PFObject *eachCaseItem in sortedCaseItems)
+    {
+        if([[eachCaseItem objectForKey:@"caseItem"] isEqualToString:caseItemID])
+        {
+            selectedCaseItem = eachCaseItem;
+        }
+    }
+    //set the answers for this case to an array of a-value NSDicts
+    
+    [selectedCaseItem setObject:Answers forKey:@"answers"];
+    
+    NSString *propNum = [selectedCaseItem objectForKey:@"propertyNum"];
+    
+    //add to the list of options for the relevant property if the answer is a custom answer
+    
+    //check only the latest answer added.  Assumes right now that no custom answers are added and then deleted by user.
+    
+    NSDictionary *ansDict = [Answers objectAtIndex:Answers.count-1];
+    NSString *ansCustomVal = [ansDict objectForKey:@"custom"];
+    
+    if([ansCustomVal length] >0)
+    {
+        //loop through the propsArray to get the matching property and add to it only if this answer hasn't already been added.
+        for (PFObject *propObject in propsArray)
+        {
+            if([propObject.objectId isEqualToString:propNum])
+            {
+                NSString *options = [propObject objectForKey:@"options"];
+                
+                //loop through op
+                
+                options = [[options stringByAppendingString:@"; "] stringByAppendingString:ansCustomVal];
+                [propObject setObject:options forKey:@"options"];
+                
+            }
+        }
+        
+        
+    }
+    self.submitAnswersButton.enabled = 1;
+    self.submitAnswersButton.backgroundColor = [UIColor blueColor];
+    
+    
+    [self.caseDetailsEmailTableView reloadData];
+    
+    if([self.popupVC.popupOrSlideout isEqualToString:@"slideout"])
+    {
+        [self.slidingViewController resetTopViewAnimated:YES];
+    }
+    else
+    {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+    
+}
+*/
+
+/*
+-(void)updateAnswersCarousel:(NSInteger)caseIndex
+{
+    //should comment out this part
+    [popupanswersDictionary removeAllObjects];
+        
+    NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+    [AnsObj setValue:self.customAnswerTextField.text forKey:@"custom"];
+    [popupanswersDictionary addObject:AnsObj];
+ 
+    
+    PFObject *selectedCaseObject;
+    
+    NSArray *cases = [self.itsMTLObject objectForKey:@"cases"];
+    selectedCaseObject = [cases objectAtIndex:[selectedCaseIndex integerValue]];
+    
+    PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:caseIndex];
+    NSString *caseIDBeingUpdated;
+    
+    if(templateMode ==1)
+    {
+        //update the data for sortedCaseItems and propsArray to prepare for updating on the CaseDetailsEmailViewController
+        
+        caseIDBeingUpdated = [selectedCaseItemObject objectForKey:@"caseItem"];
+        
+        [self updateCaseItem:caseIDBeingUpdated AcceptableAnswersList:popupanswersDictionary];
+        return;
+    }
+    
+    NSString *generatedXMLString;
+    if([self.popupjsonDisplayMode isEqualToString:@"singleCase"])
+    {
+        generatedXMLString = [self createXMLFunctionSingleJSONCase];
+    }
+    else
+    {
+        generatedXMLString = [self createXMLFunction];
+    }
+    
+    
+    //add a progress HUD to show it is retrieving list of properts
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Updating The Properties And Answers";
+    [HUD show:YES];
+    
+    //use parse cloud code function
+    [PFCloud callFunctionInBackground:@"submitXML"
+                       withParameters:@{@"payload": generatedXMLString}
+                                block:^(NSString *responseString, NSError *error) {
+                                    
+                                    if (!error)
+                                    {
+                                        
+                                        NSString *responseText = responseString;
+                                        NSLog(responseText);
+                                        
+                                        [HUD hide:NO];
+                                        
+                                        caseIDBeingUpdated = [selectedCaseObject objectForKey:@"caseId"];
+                                        
+                                        NSString *timeStampReturn = [selectedCaseObject  objectForKey:@"timestamp"];
+                                        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                                        f.numberStyle = NSNumberFormatterDecimalStyle;
+                                        lastTimestamp = [f numberFromString:timeStampReturn];
+                                        
+                                        //convert to NSDictionaryHere
+                                        
+                                        NSString *responseTextWithoutHeader = [responseText
+                                                                               stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+                                        NSError *jsonError;
+                                        NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+                                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                                             options:NSJSONReadingMutableContainers
+                                                                                               error:&jsonError];
+                                        NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+                                        
+                                        [self.UCIdelegate reloadData:jsonCaseChange reloadMode:@"json"];
+                                        
+                                        //[self pollForCaseRefresh];
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSLog(error.localizedDescription);
+                                        [HUD hide:YES];
+                                    }
+                                }];
+}
+*/
+
+-(IBAction)showLocationPicker:(id)sender
+{
+    mapPinViewController *mpvc = [self.storyboard instantiateViewControllerWithIdentifier:@"mpvc"];
+  //  mpvc.delegate = self;
+    
+    [self.navigationController pushViewController:mpvc animated:YES];
+    
+}
+
 
 @end

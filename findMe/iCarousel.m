@@ -145,7 +145,7 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
     _bounceDistance = 1.0;
     _stopAtItemBoundary = YES;
     _scrollToItemBoundary = YES;
-    _ignorePerpendicularSwipes = YES;
+    _ignorePerpendicularSwipes = NO;
     _centerItemWhenSelected = YES;
     
     _contentView = [[UIView alloc] initWithFrame:self.bounds];
@@ -262,6 +262,15 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
     {
         _vertical = vertical;
         [self layOutItemViews];
+    }
+}
+
+- (void)setVerticalPan:(BOOL)verticalPan
+{
+    if (_verticalPan != verticalPan)
+    {
+        _verticalPan = verticalPan;
+        //[self layOutItemViews];
     }
 }
 
@@ -2043,6 +2052,8 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
         //ignore vertical swipes
         UIPanGestureRecognizer *panGesture = (UIPanGestureRecognizer *)gesture;
         CGPoint translation = [panGesture translationInView:self];
+        
+        /*
         if (_ignorePerpendicularSwipes)
         {
             if (_vertical)
@@ -2054,6 +2065,9 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
                 return fabs(translation.x) >= fabs(translation.y);
             }
         }
+         */
+        
+         self.verticalPan = fabs(translation.y) > fabs(translation.x); // BOOL property
     }
     return YES;
 }
@@ -2061,7 +2075,9 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
 - (void)didTap:(UITapGestureRecognizer *)tapGesture
 {
     //check for tapped view
+   
     NSInteger index = [self indexOfItemView:[self itemViewAtPoint:[tapGesture locationInView:_contentView]]];
+    
     if (index != NSNotFound)
     {
         if (!_delegate || [_delegate carousel:self shouldSelectItemAtIndex:index])
@@ -2078,10 +2094,20 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
             [self scrollToItemAtIndex:self.currentItemIndex animated:YES];
         }
     }
+    
+   /*
+    [self.delegate removeDelegateDataAtIndex:index];
+    
+    [self scrollToItemAtIndex:index animated:NO];
+    
+    [self.delegate carouselCurrentItemIndexDidChange:self];
+    */
 }
 
 - (void)didPan:(UIPanGestureRecognizer *)panGesture
 {
+     NSInteger panindex = [self indexOfItemView:[self itemViewAtPoint:[panGesture locationInView:_contentView]]];
+    
     if (_scrollEnabled && _numberOfItems)
     {
         switch (panGesture.state)
@@ -2091,7 +2117,7 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
                 _dragging = YES;
                 _scrolling = NO;
                 _decelerating = NO;
-                _previousTranslation = _vertical? [panGesture translationInView:self].y: [panGesture translationInView:self].x;
+                _previousTranslation = _verticalPan? [panGesture translationInView:self].y: [panGesture translationInView:self].x;
                 [_delegate carouselWillBeginDragging:self];
                 break;
             }
@@ -2110,9 +2136,10 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
                 [self pushAnimationState:YES];
                 [_delegate carouselDidEndDragging:self willDecelerate:_decelerating];
                 [self popAnimationState];
-                
+               
                 if (!_decelerating)
                 {
+                    
                     if ((_scrollToItemBoundary || fabs(_scrollOffset - [self clampedOffset:_scrollOffset]) > FLOAT_ERROR_MARGIN) && !_autoscroll)
                     {
                         if (fabs(_scrollOffset - self.currentItemIndex) < FLOAT_ERROR_MARGIN)
@@ -2120,15 +2147,36 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
                             //call scroll to trigger events for legacy support reasons
                             //even though technically we don't need to scroll at all
                             [self scrollToItemAtIndex:self.currentItemIndex duration:0.01];
+                            NSLog(@"call scroll offset");
+                            
                         }
                         else if ([self shouldScroll])
                         {
+                            NSLog(@"doing scroll");
+                            if(_verticalPan==TRUE)
+                            {
+                                NSLog(@"should do vertical pan");
+                                
+                            }
                             NSInteger direction = (int)(_startVelocity / fabs(_startVelocity));
                             [self scrollToItemAtIndex:self.currentItemIndex + direction animated:YES];
                         }
                         else
                         {
-                            [self scrollToItemAtIndex:self.currentItemIndex animated:YES];
+                            NSLog(@"scrolling here");
+                            if(_verticalPan ==TRUE)
+                            {
+                                NSLog(@"can discriminate here");
+                                //[self removeViewAtIndex:self.currentItemIndex];
+                                //[self scrollToItemAtIndex:self.currentItemIndex animated:YES];
+                                [self.delegate removeDelegateDataAtIndex:panindex];
+                                
+                                [self scrollToItemAtIndex:panindex animated:NO];
+                                
+                                [self.delegate carouselCurrentItemIndexDidChange:self];
+                                break;
+                            }
+                            //[self scrollToItemAtIndex:self.currentItemIndex animated:YES];
                         }
                     }
                     else
@@ -2146,17 +2194,26 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
             }
             case UIGestureRecognizerStateChanged:
             {
-                CGFloat translation = (_vertical? [panGesture translationInView:self].y: [panGesture translationInView:self].x) - _previousTranslation;
+                NSLog(@"state change");
+                CGFloat translation = (_verticalPan? [panGesture translationInView:self].y: [panGesture translationInView:self].x) - _previousTranslation;
                 CGFloat factor = 1.0;
                 if (!_wrapEnabled && _bounces)
                 {
                     factor = 1.0 - MIN(fabs(_scrollOffset - [self clampedOffset:_scrollOffset]), _bounceDistance) / _bounceDistance;
                 }
                 
-                _previousTranslation = _vertical? [panGesture translationInView:self].y: [panGesture translationInView:self].x;
-                _startVelocity = -(_vertical? [panGesture velocityInView:self].y: [panGesture velocityInView:self].x) * factor * _scrollSpeed / _itemWidth;
+                _previousTranslation = _verticalPan? [panGesture translationInView:self].y: [panGesture translationInView:self].x;
+                _startVelocity = -(_verticalPan? [panGesture velocityInView:self].y: [panGesture velocityInView:self].x) * factor * _scrollSpeed / _itemWidth;
                 _scrollOffset -= translation * factor * _offsetMultiplier / _itemWidth;
-                [self didScroll];
+                if(_verticalPan==TRUE)
+                {
+                    //do nothing
+                }
+                else
+                {
+                     [self didScroll];
+                }
+               
                 break;
             }
             case UIGestureRecognizerStatePossible:

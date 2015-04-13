@@ -257,10 +257,7 @@ int selectedPic = 1;
                                         
                                     }
                                 }];
-    
-   
-    
-    
+
 }
 
 -(void)pollForTemplateMaker

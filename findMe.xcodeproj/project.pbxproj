@@ -134,6 +134,7 @@
 		ECC9E5151AA153070099C46A /* Icon-Small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECC9E50D1AA153070099C46A /* Icon-Small@3x.png */; };
 		ECCD46F91AD30FD300804B06 /* caseDetailsCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD46F81AD30FD300804B06 /* caseDetailsCarouselViewController.m */; };
 		ECCD46FC1AD3135100804B06 /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD46FB1AD3135100804B06 /* iCarousel.m */; };
+		ECCD46FF1ADB31D900804B06 /* mapPinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD46FE1ADB31D900804B06 /* mapPinViewController.m */; };
 		ECD591BC1ABC930700D32D5D /* carselfie1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECD591BB1ABC930700D32D5D /* carselfie1.jpg */; };
 		ECE6B1631A069AC3007F4A19 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1621A069AC3007F4A19 /* Bolts.framework */; };
 		ECE6B1671A069B69007F4A19 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE6B1661A069B69007F4A19 /* Parse.framework */; };
@@ -507,6 +508,8 @@
 		ECCD46F81AD30FD300804B06 /* caseDetailsCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = caseDetailsCarouselViewController.m; sourceTree = "<group>"; };
 		ECCD46FA1AD3135100804B06 /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
 		ECCD46FB1AD3135100804B06 /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
+		ECCD46FD1ADB31D900804B06 /* mapPinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mapPinViewController.h; sourceTree = "<group>"; };
+		ECCD46FE1ADB31D900804B06 /* mapPinViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mapPinViewController.m; sourceTree = "<group>"; };
 		ECD591BB1ABC930700D32D5D /* carselfie1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = carselfie1.jpg; sourceTree = "<group>"; };
 		ECE6B1621A069AC3007F4A19 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = findMe/Bolts.framework; sourceTree = "<group>"; };
 		ECE6B1661A069B69007F4A19 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = findMe/Parse.framework; sourceTree = "<group>"; };
@@ -945,6 +948,8 @@
 				ECB1D5101A7748B5008CC684 /* popupViewController.m */,
 				D31DF30719CEFC0C00A37725 /* Main_iPhone.storyboard */,
 				D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */,
+				ECCD46FD1ADB31D900804B06 /* mapPinViewController.h */,
+				ECCD46FE1ADB31D900804B06 /* mapPinViewController.m */,
 				D31DF30D19CEFC0C00A37725 /* ViewCasesViewController.h */,
 				D31DF30E19CEFC0C00A37725 /* ViewCasesViewController.m */,
 				EC0823021A186B13000B6684 /* HomePageViewController.h */,
@@ -1972,6 +1977,7 @@
 				ECFDAAE11AB38B5C00E42C33 /* PNChannelsListUpdateForChannelGroupRequest.m in Sources */,
 				ECFDAAD81AB38B5C00E42C33 /* PNLogger.m in Sources */,
 				D31DF30619CEFC0C00A37725 /* AppDelegate.m in Sources */,
+				ECCD46FF1ADB31D900804B06 /* mapPinViewController.m in Sources */,
 				ECFDAAD61AB38B5C00E42C33 /* NSString+PNAddition.m in Sources */,
 				ECFDAACD1AB38B5C00E42C33 /* NSDate+PNAdditions.m in Sources */,
 				ECEE00D31AC1B9E70070908C /* findMeBaseViewController.m in Sources */,

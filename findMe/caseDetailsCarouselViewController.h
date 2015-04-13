@@ -12,11 +12,14 @@
 #import <Parse/Parse.h>
 #import "popupViewController.h"
 
-@interface caseDetailsCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate>
+@interface caseDetailsCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate,MyDataDelegate>
 
 -(IBAction)doUpdate:(id)sender;
 
 @property (weak,nonatomic) IBOutlet UIButton *submitAnswersButton;
+@property (weak,nonatomic) IBOutlet UIButton *locationButton;
+-(IBAction)showLocationPicker:(id)sender;
+
 @property (nonatomic, strong) IBOutlet iCarousel *carousel;
 @property (weak,nonatomic) NSNumber *selectedCaseIndex;
 @property (strong,nonatomic) PFObject *itsMTLObject;
