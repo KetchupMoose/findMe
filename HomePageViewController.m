@@ -43,8 +43,6 @@ MBProgressHUD *HUD;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    
-    
     //check to see if the parse connection is available.  If not, remove the HomePageViewController and show a ParseUnavailableViewController
     Reachability *singletonReach = [[reachabilitySingleton sharedReachability] reacher];
     
@@ -76,7 +74,6 @@ MBProgressHUD *HUD;
 -(void)LoadingHomePage
 {
     [self setPubNubConfigDetails];
-    
     
     //create an itsMTL Object if necessary
     [self createParseUser];
@@ -457,7 +454,6 @@ MBProgressHUD *HUD;
     
     [self ReloadHomePageData];
    
-    
 }
 
 -(void)ReloadHomePageData {
@@ -466,7 +462,6 @@ MBProgressHUD *HUD;
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:HUD];
     
- 
     // Set determinate mode
     HUD.mode = MBProgressHUDModeDeterminate;
     HUD.delegate = self;
@@ -599,7 +594,6 @@ MBProgressHUD *HUD;
     
     //put the string of the text field onto a label now in the same cell
     //put -100 so it doesn't interfere with the uilabel tag of 3 in every cell
- 
     
     [textField resignFirstResponder];
     

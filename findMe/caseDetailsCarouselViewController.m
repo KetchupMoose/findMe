@@ -69,8 +69,6 @@ NSDate *updateDate;
 NSDate *secondUpdateCompare;
 NSNumber *lastTimestamp;
 
-
-
 //location manager variables
 
 CLGeocoder *geocoder;
@@ -91,6 +89,8 @@ NSMutableArray *selectedCaseItemAnswersArray;
 NSMutableArray *selectedCaseItemAnswersArrayOfDictionaries;
 NSMutableArray *selectedCaseItemOriginalOptions;
 NSInteger selectedCarouselIndex;
+
+UIView *deleteBGView;
 
 -(void)viewDidLoad
 {
@@ -130,7 +130,10 @@ NSInteger selectedCarouselIndex;
     
     if(length==0)
     {
-        self.submitAnswersButton.titleLabel.text = @"Create Case";
+        //self.submitAnswersButton.titleLabel.text = @"Create Case";
+        [self.submitAnswersButton setTitle:@"Create Case" forState:UIControlStateNormal];
+        self.submitAnswersButton.titleLabel.textColor = [UIColor whiteColor];
+        
         templateMode = 1;
     }
     else
@@ -322,7 +325,6 @@ NSInteger selectedCarouselIndex;
                     
                     [templateOptionsCounts addObject:templateOptionCountNum];
                     
-                    
                 }
             }
             
@@ -338,9 +340,8 @@ NSInteger selectedCarouselIndex;
     NSString *propOptions = [propertyObject objectForKey:@"options"];
     propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
     
-    
     [self.carousel reloadData];
-     [self.propertiesTableView reloadData];
+    [self.propertiesTableView reloadData];
     [self carouselCurrentItemIndexDidChange:self.carousel];
     
     
@@ -387,7 +388,10 @@ NSInteger selectedCarouselIndex;
     
     if(length==0)
     {
-        self.submitAnswersButton.titleLabel.text = @"Create Case";
+        //self.submitAnswersButton.titleLabel.text = @"Create Case";
+        [self.submitAnswersButton setTitle:@"Create Case" forState:UIControlStateNormal];
+        self.submitAnswersButton.titleLabel.textColor = [UIColor whiteColor];
+        
         templateMode = 1;
     }
     else
@@ -444,14 +448,14 @@ NSInteger selectedCarouselIndex;
         [view addSubview:borderView];
         
         
-        label = [[UILabel alloc] initWithFrame:CGRectMake(0,125,200,50)];
+        label = [[UILabel alloc] initWithFrame:CGRectMake(0,40,200,50)];
         label.backgroundColor = [UIColor clearColor];
         label.textAlignment = NSTextAlignmentCenter;
         label.font = [label.font fontWithSize:16];
         label.tag = 1;
         label.numberOfLines = 2;
         
-        iconImgView = [[UIImageView alloc] initWithFrame:CGRectMake(60,50,80,80)];
+        iconImgView = [[UIImageView alloc] initWithFrame:CGRectMake(60,100,80,80)];
         iconImgView.tag = 2;
         
       
@@ -640,6 +644,7 @@ NSInteger selectedCarouselIndex;
     if(index ==propsArray.count)
     {
         self.propertiesTableView.alpha = 0;
+        
         return;
     }
     else
@@ -653,16 +658,20 @@ NSInteger selectedCarouselIndex;
         
         selectedCaseItemOriginalOptions = propertyTableOptionsArray;
         
-
         //set the answers array
         PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:index];
         
-        [selectedCaseItemAnswersArrayOfDictionaries removeAllObjects];
+        
         if([selectedCaseItemObject objectForKey:@"answers"] !=nil)
         {
             selectedCaseItemAnswersArrayOfDictionaries  = [selectedCaseItemObject objectForKey:@"answers"];
         }
-       
+        else
+        {
+            selectedCaseItemAnswersArrayOfDictionaries = [[NSMutableArray alloc] init];
+            
+            
+        }
        
         //build the mutableArray of answers from the dictionary
         
@@ -702,7 +711,6 @@ NSInteger selectedCarouselIndex;
         
     }
    
-
 }
 
 - (void)carouselDidEndScrollingAnimation:(iCarousel *)carousel
@@ -718,8 +726,46 @@ NSInteger selectedCarouselIndex;
      */
 }
 
+-(void)showDeleteBGView
+{
+    //show a UIView to indicate that the delete is in progress
+    if(deleteBGView !=nil)
+    {
+        return;
+    }
+    deleteBGView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,400)];
+    
+    deleteBGView.backgroundColor = [UIColor blackColor];
+    
+    deleteBGView.layer.cornerRadius = 10.0f;
+    
+    UILabel *deletionInProgress = [[UILabel alloc] initWithFrame:CGRectMake(0,200,self.view.bounds.size.width,100)];
+    deletionInProgress.text = @"Deletion In Progress";
+    deletionInProgress.textAlignment = NSTextAlignmentCenter;
+    
+    deletionInProgress.textColor = [UIColor whiteColor];
+    
+    [deleteBGView addSubview:deletionInProgress];
+    
+    [self.view addSubview:deleteBGView];
+}
+
+-(void)popDeleteBGView
+{
+    [deleteBGView removeFromSuperview];
+    
+}
+
 - (void)removeDelegateDataAtIndex:(NSInteger) index
 {
+    
+    [self showDeleteBGView];
+    
+    //start the XML for processing the delete
+    PFObject *caseItemObjectAtIndex = [sortedCaseItems objectAtIndex:index];
+    [self deleteACaseItem:caseItemObjectAtIndex atIndex:index];
+    
+    /*
     [sortedCaseItems removeObjectAtIndex:index];
     [propsArray removeObjectAtIndex:index];
     
@@ -729,7 +775,7 @@ NSInteger selectedCarouselIndex;
     [self carouselCurrentItemIndexDidChange:self.carousel];
     
     [self.propertiesTableView reloadData];
-    
+    */
     
     //[self.carousel reloadData];
     
@@ -747,11 +793,14 @@ NSInteger selectedCarouselIndex;
     {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot Delete", nil) message:@"Case must retain at least one question" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
     }
-    [self removeDelegateDataAtIndex:index];
     
-   // [self.carousel scrollToItemAtIndex:index animated:NO];
+    [self showDeleteBGView];
     
-    [self carouselCurrentItemIndexDidChange:self.carousel];
+    //start the XML for processing the delete
+    PFObject *caseItemObjectAtIndex = [sortedCaseItems objectAtIndex:index];
+    [self deleteACaseItem:caseItemObjectAtIndex atIndex:index];
+    
+   
 }
 
 -(void)createCaseItem:(id)sender
@@ -1034,10 +1083,10 @@ NSInteger selectedCarouselIndex;
     PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
     NSString *caseItemObjectID = [selectedCaseItemObject objectForKey:@"caseItem"];
     
-    [self updateCaseItem:caseItemObjectID AcceptableAnswersList:selectedCaseItemAnswersArrayOfDictionaries];
+    [self updateCaseItem:caseItemObjectID AcceptableAnswersList:selectedCaseItemAnswersArrayOfDictionaries ForNewAnswer:NO];
     
     self.submitAnswersButton.enabled = 1;
-    [self.submitAnswersButton.titleLabel setTextColor:[UIColor blueColor]];
+    [self.submitAnswersButton.titleLabel setBackgroundColor:[UIColor blueColor]];
     
     
 }
@@ -1062,15 +1111,13 @@ NSInteger selectedCarouselIndex;
     [propertyObject setObject:@"U" forKey:@"propertyType"];
     [propertyObject setObject:newPropNum forKey:@"objectId"];
     
-    
     NSMutableDictionary *caseItemObject = [[NSMutableDictionary alloc] init];
     [caseItemObject setObject:newCaseNum forKey:@"caseItem"];
     [caseItemObject setObject:Answers forKey:@"answers"];
     [caseItemObject setObject:newPropNum forKey:@"propertyNum"];
     
-    
     //[self.pickerView reloadAllComponents];
-    //  [self.caseDetailsTableView reloadData];
+    //[self.caseDetailsTableView reloadData];
     
     //Do something with data here
     NSLog(@"this fired");
@@ -1092,7 +1139,6 @@ NSInteger selectedCarouselIndex;
         
         [self updateNewCaseItem:propertyObject CaseItemObject:caseItemObject];
         
-        
     }
     else
     {
@@ -1108,18 +1154,21 @@ NSInteger selectedCarouselIndex;
         [self.navigationController popViewControllerAnimated:NO];
         
         [self.carousel reloadData];
-        [self.propertiesTableView reloadData];
+        [self.carousel scrollToItemAtIndex:self.carousel.numberOfItems-2 duration:0.0f];
+        [self carouselCurrentItemIndexDidChange:self.carousel];
         
+        [self.propertiesTableView reloadData];
+        self.propertiesTableView.alpha = 1;
         
     }
-    
     
 }
 
 -(void)updateNewCaseItem:(NSDictionary *)propertyObject CaseItemObject:(NSDictionary *)caseItemObject
 {
-    
-    NSString *xmlForUpdate = [self createXMLFunctionSingleCaseItem:propertyObject CaseItemObject:caseItemObject];
+    NSString *xmlForUpdate;
+
+   xmlForUpdate = [self createXMLFunctionSingleCaseItem:propertyObject CaseItemObject:caseItemObject];
     
     if([xmlForUpdate isEqualToString:@"no"])
     {
@@ -1278,10 +1327,10 @@ NSInteger selectedCarouselIndex;
     [newlyCreatedPropertiesIndex removeAllObjects];
     suggestedCaseDisplayedIndex = -1;
     [changedCaseItemsIndex removeAllObjects];
-    [propertyTableOptionsArray removeAllObjects];
-    [selectedCaseItemAnswersArray removeAllObjects];
-    [selectedCaseItemAnswersArrayOfDictionaries removeAllObjects];
-    [selectedCaseItemOriginalOptions removeAllObjects];
+    //[propertyTableOptionsArray removeAllObjects];
+    //[selectedCaseItemAnswersArray removeAllObjects];
+    //[selectedCaseItemAnswersArrayOfDictionaries removeAllObjects];
+    //[selectedCaseItemOriginalOptions removeAllObjects];
     
     //get all the property ID's from each item in the selected case.
     
@@ -1409,8 +1458,18 @@ NSInteger selectedCarouselIndex;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
+        //decide the selected index of the carousel and load that data
+        //for now just default to 0 selected index
+        PFObject *propertyObject = [propsArray objectAtIndex:0];
+        
+        //get choices
+        NSString *propOptions = [propertyObject objectForKey:@"options"];
+        propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
+        
+        
         [self.carousel reloadData];
         [self.propertiesTableView reloadData];
+        [self carouselCurrentItemIndexDidChange:self.carousel];
         
         //remove the updating HUD
         [HUD hide:YES];
@@ -1437,10 +1496,14 @@ NSInteger selectedCarouselIndex;
         [self dismissViewControllerAnimated:NO completion:nil];
     }
     
-    
+     [self.submitAnswersButton setTitle:@"Update Answers" forState:UIControlStateNormal];
     
 }
 
+//changed this function to work for updating single case items when not in template mode
+
+//two modes of calling this function.  In one, propertyObject and caseItemObjForXML are set to nil.  This is for updating existing items.
+//2nd Mode these values are passed, this is for updating brand new case items
 -(NSString *)createXMLFunctionSingleCaseItem:(NSDictionary *) propertyObject CaseItemObject:(NSDictionary *)caseItemObjForXML
 {
     //iterate through all items still in the caseitems and property arrays and send XML to update all of these (either with their original contents or the modifications/new entries)
@@ -1449,16 +1512,33 @@ NSInteger selectedCarouselIndex;
     
     NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
     
+   
     PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
-    
-    //newCaseItem is always the last on sortedCaseItems because it was just added
-    PFObject *caseItemObject = (PFObject *)caseItemObjForXML;
+    PFObject *caseItemObject;
+    if(caseItemObjForXML ==nil)
+    {
+          caseItemObject = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
+    }
+    else
+    {
+        caseItemObject = (PFObject *)caseItemObjForXML;
+    }
     
     NSString *caseName = [caseObject objectForKey:@"caseName"];
     NSString *caseObjID = [caseObject objectForKey:@"caseId"];
     
-    PFObject *selectedPropertyObject = (PFObject *)propertyObject;
-    NSString *propertyNum = [selectedPropertyObject objectForKey:@"propertyNum"];
+    PFObject *selectedPropertyObject;
+    
+    if(propertyObject ==nil)
+    {
+       selectedPropertyObject = [propsArray objectAtIndex:selectedCarouselIndex];
+    }
+    else
+    {
+        selectedPropertyObject = (PFObject *)propertyObject;
+    }
+    
+    NSString *propertyNum = [caseItemObject objectForKey:@"propertyNum"];
     NSString *propertyDescr = [selectedPropertyObject objectForKey:@"propertyDescr"];
     
     if(propertyNum==nil)
@@ -1517,6 +1597,14 @@ NSInteger selectedCarouselIndex;
     
     //check to see if this caseItem is a brand new property
     
+    if(propertyObject ==nil)
+    {
+        //don't write property information
+    }
+    else
+    {
+        
+    
     //add the XML for a new or updated property here
     [xmlWriter writeStartElement:@"PROPERTY"];
     
@@ -1541,7 +1629,7 @@ NSInteger selectedCarouselIndex;
     }
     //close property element
     [xmlWriter writeEndElement];
-    
+    }
     //write logic for updating the caseItem
     //build strings for building item
     [xmlWriter writeStartElement:@"ITEM"];
@@ -1680,8 +1768,17 @@ NSInteger selectedCarouselIndex;
 
 -(IBAction)doUpdate:(id)sender
 {
-    
-    NSString *xmlForUpdate = [self createXMLTemplateModeFunction];
+    NSString *xmlForUpdate;
+    if(templateMode ==YES)
+    {
+        xmlForUpdate = [self createXMLTemplateModeFunction];
+    }
+    else
+    {
+        //generate XML for updating a single caseItem
+        xmlForUpdate = [self createXMLFunctionSingleCaseItem:nil CaseItemObject:nil];
+        
+    }
     
     if([xmlForUpdate isEqualToString:@"no"])
     {
@@ -1773,10 +1870,8 @@ NSInteger selectedCarouselIndex;
     else
     {
         NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
-        
         caseObject = [allCases objectAtIndex:selectedCaseInt];
     }
-    
     
     NSString *caseName = [caseObject objectForKey:@"caseName"];
     NSString *caseObjID = [caseObject objectForKey:@"caseId"];
@@ -1899,8 +1994,6 @@ NSInteger selectedCarouselIndex;
         }
         
         PFObject *updatedProperty = propAtIndex;
-        
-        
         NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
         
         //write logic for updating the caseItem
@@ -2060,7 +2153,7 @@ NSInteger selectedCarouselIndex;
 
 //need to modify this function to show the acceptable answers list
 
-- (void)updateCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers
+- (void)updateCaseItem:(NSString *)caseItemID AcceptableAnswersList:(NSArray *)Answers ForNewAnswer:(BOOL) NewAns
 {
     
     NSLog(@"got this");
@@ -2073,7 +2166,7 @@ NSInteger selectedCarouselIndex;
     {
         self.submitAnswersButton.enabled = 1;
         self.submitAnswersButton.backgroundColor = [UIColor blueColor];
-        
+      
         
         [self.propertiesTableView reloadData];
         return;
@@ -2100,7 +2193,7 @@ NSInteger selectedCarouselIndex;
     
     NSDictionary *ansDict = [Answers objectAtIndex:Answers.count-1];
     NSString *ansCustomVal = [ansDict objectForKey:@"custom"];
-    
+    NSString *options;
     if([ansCustomVal length] >0)
     {
         //loop through the propsArray to get the matching property and add to it only if this answer hasn't already been added.
@@ -2108,7 +2201,7 @@ NSInteger selectedCarouselIndex;
         {
             if([propObject.objectId isEqualToString:propNum])
             {
-                NSString *options = [propObject objectForKey:@"options"];
+               options = [propObject objectForKey:@"options"];
                 
                 //loop through op
                 
@@ -2123,6 +2216,12 @@ NSInteger selectedCarouselIndex;
     self.submitAnswersButton.enabled = 1;
     self.submitAnswersButton.backgroundColor = [UIColor blueColor];
     
+    if(NewAns ==TRUE)
+    {
+        NSString *propOptions = options;
+        propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
+    }
+  
     
     [self.propertiesTableView reloadData];
     
@@ -2242,5 +2341,187 @@ NSInteger selectedCarouselIndex;
     manualLocationLongitude = [NSString stringWithFormat:@"%f", longitude];
 }
 
+- (void)addNewAnswerView:(id)sender
+{
+    UIButton *sendingButton = (UIButton *)sender;
+    UIView *NewAnswerView = sendingButton.superview;
+    
+    for (UIView *theView in NewAnswerView.subviews)
+    {
+        if(theView.tag ==88)
+        {
+            UITextField *newAnsTextField = (UITextField *) theView;
+            //add the answer from this text field.
+            
+            if([newAnsTextField.text length] >0)
+            {
+                NSString *newAnsString = newAnsTextField.text;
+                
+                //add the new answer to the local storage of answers for the carousel's selected CaseItem
+                
+                [selectedCaseItemAnswersArray addObject:@"newAnsString"];
+                NSMutableDictionary *newAnsCustom = [[NSMutableDictionary alloc] init];
+                [newAnsCustom setObject:newAnsString forKey:@"custom"];
+                [selectedCaseItemAnswersArrayOfDictionaries addObject:newAnsCustom];
+            }
+        }
+        
+    }
+    [NewAnswerView removeFromSuperview];
+    [bgDarkenView removeFromSuperview];
+    
+    PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
+    NSString *caseItemObjectID = [selectedCaseItemObject objectForKey:@"caseItem"];
+    
+    
+    
+    [self updateCaseItem:caseItemObjectID AcceptableAnswersList:selectedCaseItemAnswersArrayOfDictionaries ForNewAnswer:YES];
+    
+}
+
+- (void)deleteACaseItem:(PFObject *)itemObject atIndex:(NSInteger) index
+{
+    //construct XML to delete the caseItemObject
+    //hardcoded example:
+    /*
+     <PAYLOAD>
+     <USEROBJECTID>iGsK0mxn1A</USEROBJECTID>
+     <LAISO>EN</LAISO>
+     <CASEOBJECTID>kqIKYJnTj8</CASEOBJECTID>
+     <CASENAME>Multiple answers example</CASENAME>
+     <ITEM>
+     <CASEITEM>1</CASEITEM>
+     <PROPERTYNUM>cpJqMRQnSs</PROPERTYNUM>
+     <DELETIONFLAG>X</DELETIONFLAG>
+     </ITEM>
+     </PAYLOAD>
+     */
+    
+    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+    //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
+    
+    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+    
+    PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
+    NSString *caseObjectID = [caseObject objectForKey:@"caseId"];
+    
+    NSString *caseItem = [itemObject objectForKey:@"caseItem"];
+    NSString *propertyNum = [itemObject objectForKey:@"propertyNum"];
+    NSString *caseName = [caseObject objectForKey:@"caseName"];
+    
+    //get the selected property from the chooser element.
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:self.itsMTLObject.objectId];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"CASEOBJECTID"];
+    [xmlWriter writeCharacters:caseObjectID];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:caseName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"ITEM"];
+    
+    [xmlWriter writeStartElement:@"CASEITEM"];
+    [xmlWriter writeCharacters:caseItem];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"PROPERTYNUM"];
+    [xmlWriter writeCharacters:propertyNum];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"DELETIONFLAG"];
+    [xmlWriter writeCharacters:@"X"];
+    [xmlWriter writeEndElement];
+    
+    // close ITEM element
+    [xmlWriter writeEndElement];
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    //add a progress HUD to show it is retrieving list of properts
+   /*
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Deleting the CaseItem";
+    [HUD show:YES];
+    */
+    //use parse cloud code function
+    [PFCloud callFunctionInBackground:@"submitXML"
+                       withParameters:@{@"payload": xml}
+                                block:^(NSString *responseString, NSError *error) {
+                                    if (!error) {
+                                        
+                                        
+                                        
+                                        //commented out as no longer polling
+                                        /*
+                                         NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+                                         
+                                         PFObject *caseObject = [allCases objectAtIndex:[selectedCaseIndex integerValue]];
+                                         caseBeingUpdated = [caseObject objectForKey:@"caseId"];
+                                         
+                                         
+                                         NSString *timeStampReturn = [caseObject objectForKey:@"timestamp"];
+                                         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                                         f.numberStyle = NSNumberFormatterDecimalStyle;
+                                         lastTimestamp = [f numberFromString:timeStampReturn];
+                                         */
+                                        //[self pollForCaseRefresh];
+                                        
+                                        //load data from synchronous data return
+                                        NSString *responseTextWithoutHeader = [responseString
+                                                                               stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+                                        NSError *jsonError;
+                                        NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+                                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                                             options:NSJSONReadingMutableContainers
+                                                                                               error:&jsonError];
+                                        
+                                        NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+                                        [self reloadData:jsonCaseChange reloadMode:@"fromJSON"];
+                                        
+                                        //remove deleteBGView
+                                        [self popDeleteBGView];
+                                        
+                                        
+                                        
+                                        //[HUD hide:NO];
+                                    }
+                                    else
+                                    {
+                                        NSString *errorString = error.localizedDescription;
+                                        NSLog(errorString);
+                                      //  [HUD hide:NO];
+                                        [self popDeleteBGView];
+                                        
+                                    }
+                                }];
+    
+}
 
 @end

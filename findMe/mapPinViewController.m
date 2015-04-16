@@ -11,10 +11,13 @@
 
 @interface mapPinViewController ()
 #define METERS_PER_MILE 1609.344
+
+
 @end
 
 @implementation mapPinViewController
-
+CLLocation *location;
+BOOL shouldUpdateLocation = YES;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -22,12 +25,44 @@
     self.mapView.delegate = self;
     
     // Create a gesture recognizer for long presses (for example in viewDidLoad)
-    UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
-    lpgr.minimumPressDuration = 0.5; //user needs to press for half a second.
-    [self.mapView addGestureRecognizer:lpgr];
-
+    //UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    //lpgr.minimumPressDuration = 0.5; //user needs to press for half a second.
+    //[self.mapView addGestureRecognizer:lpgr];
+   
+    
+    //add a uiview to center of map
+   /*
+    CLLocationCoordinate2D center = self.mapView.centerCoordinate;
+    location = [[CLLocation alloc] initWithLatitude:center.latitude longitude:center.longitude];
+     MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+    point.coordinate = center;
+    for (id annotation in self.mapView.annotations) {
+        [self.mapView removeAnnotation:annotation];
+    }
+    [self.mapView addAnnotation:point];
+    */
 }
 
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    CLLocationCoordinate2D center = self.mapView.centerCoordinate;
+    location = [[CLLocation alloc] initWithLatitude:center.latitude longitude:center.longitude];
+    
+    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+    point.coordinate = center;
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    
+    for (id annotation in self.mapView.annotations) {
+        [self.mapView removeAnnotation:annotation];
+        
+    }
+    
+    point.title = @"userPoint";
+    
+    [self.mapView addAnnotation:point];
+
+}
+/*
 - (void)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {
     if (gestureRecognizer.state != UIGestureRecognizerStateBegan) {
         return;
@@ -41,7 +76,7 @@
     }
     [self.mapView addAnnotation:point];
 }
-
+*/
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -63,16 +98,27 @@
 */
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 800, 800);
-    [self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
+   
+    if(shouldUpdateLocation)
+   {
+       MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 800, 800);
+       [self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
+       
+       /*
+       // Add an annotation
+       MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+       point.coordinate = userLocation.coordinate;
+       point.title = @"Where am I?";
+       point.subtitle = @"I'm here!!!";
+       
+       [self.mapView addAnnotation:point];
+    */
+       shouldUpdateLocation = NO;
+       self.mapView.showsUserLocation = NO;
+       
+   }
     
-    // Add an annotation
-    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-    point.coordinate = userLocation.coordinate;
-    point.title = @"Where am I?";
-    point.subtitle = @"I'm here!!!";
-    
-    [self.mapView addAnnotation:point];
+
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
@@ -102,10 +148,16 @@
     float longitude = 0.0;
     float latitude = 0.0;
     
-    for (id annotation in self.mapView.annotations) {
+    for (MKPointAnnotation *annotation in self.mapView.annotations) {
+        if((annotation.title = @"blah"))
+        {
+            
+        
         NSLog(@"lon: %f, lat %f", ((MKPointAnnotation*)annotation).coordinate.longitude,((MKPointAnnotation*)annotation).coordinate.latitude);
+        
         longitude =((MKPointAnnotation*)annotation).coordinate.longitude;
         latitude =((MKPointAnnotation*)annotation).coordinate.latitude;
+        }
     }
     
     //send the longitude and latitude to the delegate

@@ -17,6 +17,7 @@
 #import "CaseDetailsViewController.h"
 #import "CaseDetailsEmailViewController.h"
 #import "BaseCaseDetailsSlidingViewController.h"
+#import "caseDetailsCarouselViewController.h"
 
 
 @interface newCaseViewController ()
@@ -602,7 +603,8 @@ NSString *locationLongitude;
                                         NSLog(responseText);
                                         [HUD hide:NO];
                                         
-                                        [self showCaseDetailsWithTemplateJSON:jsonObjectChange];
+                                        //[self showCaseDetailsWithTemplateJSON:jsonObjectChange];
+                                        [self showCaseDetailsCarouselWithTemplateJSON:jsonObjectChange];
                                         
                                         
                                        // NSLog(@"starting to poll for template maker update");
@@ -785,6 +787,18 @@ NSString *locationLongitude;
     [bcdsvc setTopViewController:cdevc];
     
     [self.navigationController pushViewController:bcdsvc animated:YES];
+}
+
+-(void) showCaseDetailsCarouselWithTemplateJSON:(NSMutableDictionary *)templateJSON
+{
+    caseDetailsCarouselViewController *cdcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdcvc"];
+    
+    cdcvc.jsonObject = templateJSON;
+    cdcvc.jsonDisplayMode = @"template";
+    cdcvc.userName = self.itsMTLObject.objectId;
+    cdcvc.itsMTLObject = self.itsMTLObject;
+    
+    [self.navigationController pushViewController:cdcvc animated:YES];
 }
 
 
