@@ -16,5 +16,6 @@
 -(IBAction)newCase:(id)sender;
 @property (strong,nonatomic) NSString *userName;
 @property (strong,nonatomic) PFObject *itsMTLObject;
+@property (strong,nonatomic) NSString *manualLocationPropertyNum;
 
 @end

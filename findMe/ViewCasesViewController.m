@@ -460,7 +460,7 @@ NSMutableArray *caseShowNames;
     
     cdcvc.userName = userName;
     cdcvc.itsMTLObject = self.itsMTLObject;
-    
+    cdcvc.manualLocationPropertyNum = self.manualLocationPropertyNum;
     //close the popupView
     UIView *popupView = sendingButton.superview;
     [popupView removeFromSuperview];

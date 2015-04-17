@@ -765,7 +765,7 @@ NSString *locationLongitude;
 
     cdevc.userName = itsMTLObject.objectId;
     cdevc.itsMTLObject = queryReturnPFObject;
-    
+
      [bcdsvc setTopViewController:cdevc];
     
     [self.navigationController pushViewController:bcdsvc animated:YES];
@@ -797,7 +797,7 @@ NSString *locationLongitude;
     cdcvc.jsonDisplayMode = @"template";
     cdcvc.userName = self.itsMTLObject.objectId;
     cdcvc.itsMTLObject = self.itsMTLObject;
-    
+    cdcvc.manualLocationPropertyNum = self.manualLocationPropertyNum;
     [self.navigationController pushViewController:cdcvc animated:YES];
 }
 

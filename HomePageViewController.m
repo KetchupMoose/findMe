@@ -38,6 +38,19 @@ MBProgressHUD *HUD;
 @synthesize testUserTextField;
 @synthesize homePageCases;
 @synthesize connectedMTLLabel;
+NSString *homePageManualLocationPropertyNum;
+
+-(void)setManualLocationProperty
+{
+    //query for the property number to use
+    PFQuery *locationPropertyQuery = [PFQuery queryWithClassName:@"Properts"];
+    [locationPropertyQuery whereKey:@"designation" equalTo:@"EN~PinDrop"];
+    
+    [locationPropertyQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        homePageManualLocationPropertyNum = object.objectId;
+    }];
+    
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -77,6 +90,8 @@ MBProgressHUD *HUD;
     
     //create an itsMTL Object if necessary
     [self createParseUser];
+    
+    [self setManualLocationProperty];
     
     //add a progress HUD to show it is retrieving list of cases
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -295,7 +310,7 @@ MBProgressHUD *HUD;
     newCaseViewController *ncvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ncvc"];
     
     ncvc.itsMTLObject = HomePageITSMTLObject;
-    
+    ncvc.manualLocationPropertyNum = homePageManualLocationPropertyNum;
     //UINavigationController *uinc = self.navigationController;
     
     [self.navigationController pushViewController:ncvc animated:YES];
@@ -305,6 +320,7 @@ MBProgressHUD *HUD;
     ViewCasesViewController *vcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"vcvc"];
     vcvc.userName = HomePageuserName;
     vcvc.itsMTLObject = HomePageITSMTLObject;
+    vcvc.manualLocationPropertyNum = homePageManualLocationPropertyNum;
     [self.navigationController pushViewController:vcvc animated:YES];
     
 }

@@ -21,5 +21,7 @@
 @property (weak,nonatomic) IBOutlet UIButton *setLocation;
 -(IBAction)setLocation:(id)sender;
 @property (nonatomic, weak) id<mapPinViewControllerDelegate> delegate;
+@property (strong,nonatomic) NSString *priorLatitude;
+@property (strong,nonatomic) NSString *priorLongitude;
 
 @end

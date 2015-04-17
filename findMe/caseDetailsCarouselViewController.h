@@ -11,8 +11,8 @@
 #import "NewPropertyViewController.h"
 #import <Parse/Parse.h>
 #import "popupViewController.h"
-
-@interface caseDetailsCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate,MyDataDelegate,CLLocationManagerDelegate>
+#import "mapPinViewController.h"
+@interface caseDetailsCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate,MyDataDelegate,CLLocationManagerDelegate,mapPinViewControllerDelegate>
 
 -(IBAction)doUpdate:(id)sender;
 
@@ -32,6 +32,6 @@
 @property (strong,nonatomic) NSMutableDictionary *jsonObject;
 
 @property (strong,nonatomic) IBOutlet UITableView *propertiesTableView;
-
+@property (strong,nonatomic) NSString *manualLocationPropertyNum;
 
 @end

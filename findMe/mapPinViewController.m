@@ -8,16 +8,16 @@
 
 #import "mapPinViewController.h"
 #import "myLocation.h"
-
+#import "MBProgressHUD.h"
 @interface mapPinViewController ()
 #define METERS_PER_MILE 1609.344
-
 
 @end
 
 @implementation mapPinViewController
 CLLocation *location;
 BOOL shouldUpdateLocation = YES;
+MBProgressHUD *HUD;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -84,7 +84,23 @@ BOOL shouldUpdateLocation = YES;
 
 - (void)viewWillAppear:(BOOL)animated {
     
-
+    if([self.priorLatitude length] >0)
+        {
+            shouldUpdateLocation = NO;
+            self.mapView.showsUserLocation = NO;
+            CLLocationCoordinate2D priorCoordinate;
+            float priorLatitudeFloat = [self.priorLatitude floatValue];
+            float priorLongitudeFloat = [self.priorLongitude floatValue];
+            
+            priorCoordinate.latitude = priorLatitudeFloat;
+            priorCoordinate.longitude = priorLongitudeFloat;
+            
+            MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(priorCoordinate, 800, 800);
+            [self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
+            
+        }
+    shouldUpdateLocation = YES;
+    
 }
 
 /*
@@ -118,7 +134,6 @@ BOOL shouldUpdateLocation = YES;
        
    }
     
-
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
@@ -144,6 +159,12 @@ BOOL shouldUpdateLocation = YES;
 -(void)setLocation:(id)sender
 {
     //save the location that the annotation is set to
+    
+    HUD = [[MBProgressHUD alloc] init];
+    HUD.labelText = @"Setting Location";
+    [self.view addSubview:HUD];
+    
+    [HUD show:YES];
     
     float longitude = 0.0;
     float latitude = 0.0;

@@ -18,7 +18,7 @@
 @property (weak,nonatomic) IBOutlet UICollectionView *CaseOptionsCollectionView;
 
 @property (strong,nonatomic) UITableView *TemplateSecondLevelTableView;
-
+@property (strong,nonatomic) NSString *manualLocationPropertyNum;
 
 @property (strong,nonatomic) PFObject *itsMTLObject;
 

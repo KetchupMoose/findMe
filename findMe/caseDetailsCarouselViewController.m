@@ -79,6 +79,9 @@ NSString *locationLongitude;
 
 NSString *manualLocationLatitude;
 NSString *manualLocationLongitude;
+@synthesize manualLocationPropertyNum;
+NSString *manualLocationCaseItemID;
+BOOL useManualLocation = NO;
 //used for calcaulting swipe gestures
 CGPoint startLocation;
 
@@ -92,10 +95,46 @@ NSInteger selectedCarouselIndex;
 
 UIView *deleteBGView;
 
+
+
+-(NSMutableArray *)filterOutLocationProperty:(NSMutableArray *)incomingCaseItems
+{
+    int j = 0;
+    int indexToRemove = -1;
+    for(PFObject *caseItemObject in incomingCaseItems)
+    {
+        NSString *propNum = [caseItemObject objectForKey:@"propertyNum"];
+        if([propNum isEqualToString:manualLocationPropertyNum])
+            {
+                indexToRemove = j;
+                //get the longitude and latitude;
+                NSArray *answersArray = [caseItemObject objectForKey:@"answers"];
+                NSDictionary *customAns = [answersArray objectAtIndex:0];
+                NSString *longitudeLatitudeString = [customAns objectForKey:@"custom"];
+                
+                NSArray *longitudeLatitudeArray = [longitudeLatitudeString componentsSeparatedByString:@"; "];
+                manualLocationLatitude = [longitudeLatitudeArray objectAtIndex:0];
+                manualLocationLongitude = [longitudeLatitudeArray objectAtIndex:1];
+                manualLocationCaseItemID = [caseItemObject objectForKey:@"caseItem"];
+                
+            }
+        j = j+1;
+    }
+    
+    if(indexToRemove>-1)
+    {
+         [incomingCaseItems removeObjectAtIndex:indexToRemove];
+    }
+   
+    
+    return incomingCaseItems;
+    
+}
 -(void)viewDidLoad
 {
    
-   self.carousel.type = iCarouselTypeCoverFlow2;
+        
+    self.carousel.type = iCarouselTypeCoverFlow2;
     
     //set up delegates
     self.carousel.delegate = self;
@@ -150,6 +189,7 @@ UIView *deleteBGView;
                                                  ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+    sortedCaseItems = [self filterOutLocationProperty:sortedCaseItems];
     
     //setting up arrays for storing three sets of properties and cases based on type: info messages, already answered properties, and new suggested properties
     
@@ -1229,6 +1269,7 @@ UIView *deleteBGView;
 - (void)reloadData:(PFObject *) myObject reloadMode:(NSString *)reloadModeString
 {
     
+    
     //code for old refresh/poll mode where the entire itsMTLobject is returned on the refresh
     NSArray *casesArray;
     int indexOfCase = 0;
@@ -1305,7 +1346,10 @@ UIView *deleteBGView;
     
     caseItems= [caseItemObject objectForKey:@"caseItems"];
     sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+    sortedCaseItems = [self filterOutLocationProperty:sortedCaseItems];
+    //loop through sortedCaseItems and remove the pinDrop Property
     
+
     //setting up arrays for storing three sets of properties and cases based on type: info messages, already answered properties, and new suggested properties
     
     [propertyIDSArray removeAllObjects];
@@ -2330,6 +2374,11 @@ UIView *deleteBGView;
     mapPinViewController *mpvc = [self.storyboard instantiateViewControllerWithIdentifier:@"mpvc"];
     mpvc.delegate = self;
     
+    if([manualLocationLatitude length] >0)
+    {
+        mpvc.priorLatitude = manualLocationLatitude;
+        mpvc.priorLongitude = manualLocationLongitude;
+    }
     [self.navigationController pushViewController:mpvc animated:YES];
     
 }
@@ -2339,6 +2388,154 @@ UIView *deleteBGView;
     //set manual location variables which will take priority over automatic variables when present
     manualLocationLatitude = [NSString stringWithFormat:@"%f",latitude];
     manualLocationLongitude = [NSString stringWithFormat:@"%f", longitude];
+    
+    useManualLocation = YES;
+    
+    if(templateMode)
+    {
+        //save this data for later when the user submits the case
+        
+    }
+    else
+    {
+        //submit the manual location override right away when receiving this delegate function
+        [self submitLocationXMLUpdate];
+    }
+    
+    
+    //when there is a manual location latitude/longitude set, this will insert on each XML update the insertion of the location property
+    //format below
+    /*
+    <ITEM>
+    <CASEITEM>848</CASEITEM>
+    <PROPERTYNUM>7M7BcXdi3G</PROPERTYNUM>
+    <ANSWER>
+    <CUSTOM>33.242211; -122.11232</CUSTOM>
+    </ANSWER>
+    </ITEM>
+     */
+    
+}
+
+-(void)submitLocationXMLUpdate
+{
+    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+    
+    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+    
+    
+    PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
+    
+    NSString *caseName = [caseObject objectForKey:@"caseName"];
+    NSString *caseObjID = [caseObject objectForKey:@"caseId"];
+    
+    //get the selected property from the chooser element.
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    NSString *itsMTLObjectUserName = self.itsMTLObject.objectId;
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:itsMTLObjectUserName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    //if it's a brand new case, this will be nil
+    if(caseObjID != nil)
+    {
+        
+        [xmlWriter writeStartElement:@"CASEOBJECTID"];
+        [xmlWriter writeCharacters:caseObjID];
+        [xmlWriter writeEndElement];
+    }
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:caseName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"ITEM"];
+    
+    [xmlWriter writeStartElement:@"CASEITEM"];
+    if([manualLocationCaseItemID length]>0)
+    {
+      [xmlWriter writeCharacters:manualLocationCaseItemID];
+    }
+    else
+    {
+      [xmlWriter writeCharacters:@"900"];
+    }
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"PROPERTYNUM"];
+    [xmlWriter writeCharacters:manualLocationPropertyNum];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"ANSWER"];
+    
+    [xmlWriter writeStartElement:@"CUSTOM"];
+    NSString *locationForUpdate = [[manualLocationLatitude stringByAppendingString:@"; "] stringByAppendingString:manualLocationLongitude];
+    
+    [xmlWriter writeCharacters:locationForUpdate];
+    
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeEndElement];
+    
+    //close item element
+    [xmlWriter writeEndElement];
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+   //send this via submit XML
+    
+    [PFCloud callFunctionInBackground:@"submitXML"
+                       withParameters:@{@"payload": xml}
+                                block:^(NSString *responseString, NSError *error) {
+                                    if (!error) {
+                                        
+                                        //load data from synchronous data return
+                                        NSString *responseTextWithoutHeader = [responseString
+                                                                               stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+                                        NSError *jsonError;
+                                        NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+                                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                                             options:NSJSONReadingMutableContainers
+                                                                                               error:&jsonError];
+                                        
+                                        NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+                                        
+                                        
+                                        [self reloadData:jsonCaseChange reloadMode:@"fromJSON"];
+                                        
+                                        //pop the mapViewController
+                                        [self.navigationController popViewControllerAnimated:NO];
+                                        
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSString *errorString = error.localizedDescription;
+                                        NSLog(errorString);
+                                        
+                                        //pop the mapViewController
+                                        [self.navigationController popViewControllerAnimated:NO];
+                                    }
+                                }];
+
+    
+
 }
 
 - (void)addNewAnswerView:(id)sender
