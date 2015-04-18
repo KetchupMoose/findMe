@@ -2171,9 +2171,9 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
                                 //[self scrollToItemAtIndex:self.currentItemIndex animated:YES];
                                 [self.delegate removeDelegateDataAtIndex:panindex];
                                 
-                                [self scrollToItemAtIndex:panindex animated:NO];
+                                //[self scrollToItemAtIndex:panindex animated:NO];
                                 
-                                [self.delegate carouselCurrentItemIndexDidChange:self];
+                                //[self.delegate carouselCurrentItemIndexDidChange:self];
                                 break;
                             }
                             //[self scrollToItemAtIndex:self.currentItemIndex animated:YES];

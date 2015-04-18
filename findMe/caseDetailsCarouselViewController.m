@@ -11,6 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "XMLWriter.h"
 #import "mapPinViewController.h"
+#import "verticalPanGestureRecognizer.h"
 
 @implementation caseDetailsCarouselViewController
 
@@ -539,6 +540,11 @@ UIView *deleteBGView;
         [createACaseItem addTarget:self action:@selector(createCaseItem:) forControlEvents:UIControlEventTouchUpInside];
         createACaseItem.tag = 5;
         
+       
+         verticalPanGestureRecognizer *panRecognizer = [[verticalPanGestureRecognizer alloc] initWithTarget:self action:@selector(carouselViewPanDetected:)];
+        panRecognizer.cancelsTouchesInView = NO;
+        
+        [view addGestureRecognizer:panRecognizer];
         [view addSubview:label];
         [view addSubview:iconImgView];
         [view addSubview:propertyClassLabel];
@@ -556,6 +562,9 @@ UIView *deleteBGView;
         createACaseItem = (UIButton *) [view viewWithTag:5];
         
     }
+    
+    view.tag = index;
+    
     
     if(index ==[sortedCaseItems count])
     {
@@ -672,6 +681,31 @@ UIView *deleteBGView;
     return value;
 }
 
+#pragma mark -gestureDelegateFunctions
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    return YES;
+}
+
+-(void)carouselViewPanDetected:(UIPanGestureRecognizer *)sendingPan
+{
+    UIView *carouselView = (UIView *)sendingPan.view;
+    NSInteger viewTag = carouselView.tag;
+    NSLog([NSString stringWithFormat:@"%ld",(long)viewTag]);
+    [self.carousel gestureRecognizerShouldBegin:sendingPan];
+    
+    
+}
 - (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index
 {
   
@@ -793,6 +827,7 @@ UIView *deleteBGView;
 -(void)popDeleteBGView
 {
     [deleteBGView removeFromSuperview];
+    deleteBGView = nil;
     
 }
 
