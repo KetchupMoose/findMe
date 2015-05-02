@@ -23,6 +23,7 @@
 #import "JSQSystemSoundPlayer+JSQMessages.h"
 #import "UIView+Animation.h"
 #import "sharedUserDataSingleton.h"
+#import "CarouselTestViewController.h"
 
 @interface HomePageViewController ()
 
@@ -557,7 +558,13 @@ NSString *homePageManualLocationPropertyNum;
     
     [self.navigationController pushViewController:myecvc animated:YES];
     */
-    [self cloudCodeTest];
+    //[self cloudCodeTest];
+    
+    CarouselTestViewController *ctvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ctest"];
+    [self.navigationController pushViewController:ctvc animated:YES];
+    
+    
+    
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField

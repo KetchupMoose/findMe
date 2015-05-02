@@ -114,7 +114,6 @@ typedef NS_ENUM(NSInteger, iCarouselOption)
 @property (nonatomic, assign, getter = isPagingEnabled) BOOL pagingEnabled;
 @property (nonatomic, assign, getter = isVertical) BOOL vertical;
 @property (nonatomic, assign,getter = isVerticalPan) BOOL verticalPan;
-
 @property (nonatomic, readonly, getter = isWrapEnabled) BOOL wrapEnabled;
 @property (nonatomic, assign) BOOL bounces;
 @property (nonatomic, assign) CGFloat scrollOffset;

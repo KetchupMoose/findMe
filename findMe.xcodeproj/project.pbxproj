@@ -63,6 +63,8 @@
 		EC0822FF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0822EF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m */; };
 		EC0823011A18689C000B6684 /* cityLightsBG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC0823001A18689C000B6684 /* cityLightsBG.jpg */; };
 		EC0823041A186B13000B6684 /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0823031A186B13000B6684 /* HomePageViewController.m */; };
+		EC5B30B41AF40061002046E3 /* CarouselTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC5B30B31AF40061002046E3 /* CarouselTestViewController.m */; };
+		EC5B30B61AF4066D002046E3 /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = EC5B30B51AF4066D002046E3 /* iCarousel.m */; };
 		EC6595051A8E89E900678E6C /* METransitions.m in Sources */ = {isa = PBXBuildFile; fileRef = EC6595041A8E89E900678E6C /* METransitions.m */; };
 		EC65950E1A8E8BCA00678E6C /* MEFoldAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC6595091A8E8BCA00678E6C /* MEFoldAnimationController.m */; };
 		EC65950F1A8E8BCA00678E6C /* MEZoomAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC65950B1A8E8BCA00678E6C /* MEZoomAnimationController.m */; };
@@ -133,7 +135,6 @@
 		ECC9E5141AA153070099C46A /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECC9E50C1AA153070099C46A /* Icon-Small@2x.png */; };
 		ECC9E5151AA153070099C46A /* Icon-Small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECC9E50D1AA153070099C46A /* Icon-Small@3x.png */; };
 		ECCD46F91AD30FD300804B06 /* caseDetailsCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD46F81AD30FD300804B06 /* caseDetailsCarouselViewController.m */; };
-		ECCD46FC1AD3135100804B06 /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD46FB1AD3135100804B06 /* iCarousel.m */; };
 		ECCD46FF1ADB31D900804B06 /* mapPinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD46FE1ADB31D900804B06 /* mapPinViewController.m */; };
 		ECCD47021ADC1F8700804B06 /* myLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD47011ADC1F8700804B06 /* myLocation.m */; };
 		ECCD47041ADC211200804B06 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECCD47031ADC211200804B06 /* AddressBook.framework */; };
@@ -368,6 +369,10 @@
 		EC0823001A18689C000B6684 /* cityLightsBG.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cityLightsBG.jpg; sourceTree = "<group>"; };
 		EC0823021A186B13000B6684 /* HomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomePageViewController.h; path = ../HomePageViewController.h; sourceTree = "<group>"; };
 		EC0823031A186B13000B6684 /* HomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomePageViewController.m; path = ../HomePageViewController.m; sourceTree = "<group>"; };
+		EC5B30B11AF3FFAF002046E3 /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iCarousel.h; path = ../iCarousel.h; sourceTree = "<group>"; };
+		EC5B30B21AF40061002046E3 /* CarouselTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarouselTestViewController.h; sourceTree = "<group>"; };
+		EC5B30B31AF40061002046E3 /* CarouselTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarouselTestViewController.m; sourceTree = "<group>"; };
+		EC5B30B51AF4066D002046E3 /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
 		EC6595031A8E89E900678E6C /* METransitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = METransitions.h; path = ECSlidingViewController/METransitions.h; sourceTree = "<group>"; };
 		EC6595041A8E89E900678E6C /* METransitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = METransitions.m; path = ECSlidingViewController/METransitions.m; sourceTree = "<group>"; };
 		EC6595081A8E8BCA00678E6C /* MEFoldAnimationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEFoldAnimationController.h; sourceTree = "<group>"; };
@@ -509,8 +514,6 @@
 		ECC9E50D1AA153070099C46A /* Icon-Small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@3x.png"; sourceTree = "<group>"; };
 		ECCD46F71AD30FD200804B06 /* caseDetailsCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = caseDetailsCarouselViewController.h; sourceTree = "<group>"; };
 		ECCD46F81AD30FD300804B06 /* caseDetailsCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = caseDetailsCarouselViewController.m; sourceTree = "<group>"; };
-		ECCD46FA1AD3135100804B06 /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
-		ECCD46FB1AD3135100804B06 /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
 		ECCD46FD1ADB31D900804B06 /* mapPinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mapPinViewController.h; sourceTree = "<group>"; };
 		ECCD46FE1ADB31D900804B06 /* mapPinViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mapPinViewController.m; sourceTree = "<group>"; };
 		ECCD47001ADC1F8700804B06 /* myLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myLocation.h; sourceTree = "<group>"; };
@@ -958,6 +961,8 @@
 				ECB1D5101A7748B5008CC684 /* popupViewController.m */,
 				D31DF30719CEFC0C00A37725 /* Main_iPhone.storyboard */,
 				D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */,
+				EC5B30B21AF40061002046E3 /* CarouselTestViewController.h */,
+				EC5B30B31AF40061002046E3 /* CarouselTestViewController.m */,
 				ECCD46FD1ADB31D900804B06 /* mapPinViewController.h */,
 				ECCD46FE1ADB31D900804B06 /* mapPinViewController.m */,
 				ECCD47001ADC1F8700804B06 /* myLocation.h */,
@@ -1346,8 +1351,8 @@
 		ECE6B17B1A0D9FAB007F4A19 /* commonControls */ = {
 			isa = PBXGroup;
 			children = (
-				ECCD46FA1AD3135100804B06 /* iCarousel.h */,
-				ECCD46FB1AD3135100804B06 /* iCarousel.m */,
+				EC5B30B11AF3FFAF002046E3 /* iCarousel.h */,
+				EC5B30B51AF4066D002046E3 /* iCarousel.m */,
 				ECEE00D11AC1B9E70070908C /* findMeBaseViewController.h */,
 				ECEE00D21AC1B9E70070908C /* findMeBaseViewController.m */,
 				ECEE00D71AC497FE0070908C /* messageIdentifierButton.h */,
@@ -1945,6 +1950,7 @@
 				ECFDAA951AB38B5C00E42C33 /* PubNub+PAM.m in Sources */,
 				ECE6B1801A0D9FF3007F4A19 /* UIImageView+Scaling.m in Sources */,
 				ECA7A2B41AA8B86C00F899D5 /* JSQMessagesCellTextView.m in Sources */,
+				EC5B30B41AF40061002046E3 /* CarouselTestViewController.m in Sources */,
 				ECFDAAE61AB38B5C00E42C33 /* PNLatencyMeasureRequest.m in Sources */,
 				ECFDAAB41AB38B5C00E42C33 /* PNWhereNowResponseParser.m in Sources */,
 				ECCD47071AE1984300804B06 /* verticalPanGestureRecognizer.m in Sources */,
@@ -1985,7 +1991,6 @@
 				ECFDAAA61AB38B5C00E42C33 /* PNChannelGroupRemoveResponseParser.m in Sources */,
 				ECFDAAC61AB38B5C00E42C33 /* PNOperationStatus.m in Sources */,
 				ECFDAAB51AB38B5C00E42C33 /* PNAccessRightOptions.m in Sources */,
-				ECCD46FC1AD3135100804B06 /* iCarousel.m in Sources */,
 				EC0822F11A0EE7F0000B6684 /* NSData+ImageContentType.m in Sources */,
 				ECFDAA9A1AB38B5C00E42C33 /* PubNub+Time.m in Sources */,
 				ECFDAABB1AB38B5C00E42C33 /* PNChannelGroupChange.m in Sources */,
@@ -2043,6 +2048,7 @@
 				ECCD47021ADC1F8700804B06 /* myLocation.m in Sources */,
 				EC0822FE1A0EE7F0000B6684 /* UIImageView+WebCache.m in Sources */,
 				ECFDAABA1AB38B5C00E42C33 /* PNChannelGroup.m in Sources */,
+				EC5B30B61AF4066D002046E3 /* iCarousel.m in Sources */,
 				ECA7A2B91AA8B86C00F899D5 /* JSQMessagesCollectionViewCellOutgoing.m in Sources */,
 				ECFDAAC31AB38B5C00E42C33 /* PNJSONSerialization.m in Sources */,
 				ECFDAAAA1AB38B5C00E42C33 /* PNClientStateResponseParser.m in Sources */,
