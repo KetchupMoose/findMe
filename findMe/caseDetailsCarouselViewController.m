@@ -97,6 +97,8 @@ NSInteger selectedCarouselIndex;
 
 UIView *deleteBGView;
 
+NSString *answerabilityFlag;
+NSString *propertyBeingUpdated;
 
 
 -(NSMutableArray *)filterOutLocationProperty:(NSMutableArray *)incomingCaseItems
@@ -387,10 +389,12 @@ UIView *deleteBGView;
     //get choices
     NSString *propOptions = [propertyObject objectForKey:@"options"];
     propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
-    
+    selectedCaseItemOriginalOptions = propertyTableOptionsArray;
+     answerabilityFlag = [propertyObject objectForKey:@"answerability"];
+    [self.carousel scrollToItemAtIndex:0 duration:0.0f];
     [self.carousel reloadData];
     [self.propertiesTableView reloadData];
-    [self carouselCurrentItemIndexDidChange:self.carousel];
+    
     
     
 }
@@ -760,6 +764,8 @@ UIView *deleteBGView;
         NSString *propOptions = [propertyObject objectForKey:@"options"];
         propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
         
+        answerabilityFlag = [propertyObject objectForKey:@"answerability"];
+        
         selectedCaseItemOriginalOptions = propertyTableOptionsArray;
         
         //set the answers array
@@ -858,15 +864,9 @@ UIView *deleteBGView;
     else
     {
         
-    
-    [self showDeleteBGView];
-    
-    NSLog(@"deleting for this index");
-    NSLog(@"%ld",index);
+    [self showDeleteChoiceView:index];
         
-    //start the XML for processing the delete
-    PFObject *caseItemObjectAtIndex = [sortedCaseItems objectAtIndex:index];
-    [self deleteACaseItem:caseItemObjectAtIndex atIndex:index];
+   
     
     }
     
@@ -885,6 +885,40 @@ UIView *deleteBGView;
     
     //[self.carousel reloadData];
     
+}
+
+-(void)showDeleteChoiceView:(NSInteger) index
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Delete Case Item"
+                                                        message:@"Are You Sure You Want To Delete This Case Item?"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Delete", nil];
+    alertView.tag = index;
+    [alertView show];
+}
+
+#pragma mark UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 0)//Cancel button pressed
+    {
+        //start delete process
+        
+        
+    }
+    else if(buttonIndex == 1)//Delete button pressed.
+    {
+         //start delete process
+        [self showDeleteBGView];
+        
+        NSLog(@"deleting for this index");
+        NSLog(@"%ld",alertView.tag);
+        
+        //start the XML for processing the delete
+        PFObject *caseItemObjectAtIndex = [sortedCaseItems objectAtIndex:alertView.tag];
+        [self deleteACaseItem:caseItemObjectAtIndex atIndex:alertView.tag];
+    }
 }
 
 -(void)deleteCaseItem:(id)sender
@@ -1271,7 +1305,6 @@ UIView *deleteBGView;
         
         [self.carousel reloadData];
         [self.carousel scrollToItemAtIndex:self.carousel.numberOfItems-2 duration:0.0f];
-        [self carouselCurrentItemIndexDidChange:self.carousel];
         
         [self.propertiesTableView reloadData];
         self.propertiesTableView.alpha = 1;
@@ -1342,10 +1375,24 @@ UIView *deleteBGView;
                                 }];
 }
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    
+    //free up memory by releasing subviews
+    self.carousel = nil;
+}
+
+- (void)dealloc
+{
+    //it's a good idea to set these to nil here to avoid
+    //sending messages to a deallocated viewcontroller
+    self.carousel.delegate = nil;
+    self.carousel.dataSource = nil;
+}
+
 - (void)reloadData:(PFObject *) myObject reloadMode:(NSString *)reloadModeString
 {
-    
-    
     //code for old refresh/poll mode where the entire itsMTLobject is returned on the refresh
     NSArray *casesArray;
     int indexOfCase = 0;
@@ -1412,7 +1459,7 @@ UIView *deleteBGView;
         self.jsonDisplayMode = @"singleCase";
         self.jsonObject = (PFObject *)caseItemObject;
     }
-    caseObjectBeingUpdated = caseItemObject;
+    caseObjectBeingUpdated = (PFObject *)caseItemObject;
     
     
     templateMode =0;
@@ -1580,20 +1627,32 @@ UIView *deleteBGView;
         g=g+1;
     }
     
+    //loop through the sortedCaseItems to get the new index after reload for where the user just left off.
+    int loop =0;
+    int indexForCarouselReload = 0;
+    
+    for(PFObject *caseItemObject in sortedCaseItems)
+    {
+        NSString *propNum = [caseItemObject objectForKey:@"propertyNum"];
+        if([propNum isEqualToString:propertyBeingUpdated])
+            {
+                indexForCarouselReload = loop;
+            }
+        
+        loop = loop+1;
+    }
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        //decide the selected index of the carousel and load that data
-        //for now just default to 0 selected index
-        PFObject *propertyObject = [propsArray objectAtIndex:0];
+        PFObject *propertyObject = [propsArray objectAtIndex:indexForCarouselReload];
         
         //get choices
         NSString *propOptions = [propertyObject objectForKey:@"options"];
         propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
         
-        
+        [self.carousel scrollToItemAtIndex:indexForCarouselReload duration:0.0f];
         [self.carousel reloadData];
         [self.propertiesTableView reloadData];
-        [self carouselCurrentItemIndexDidChange:self.carousel];
         
         //remove the updating HUD
         [HUD hide:YES];
@@ -1625,20 +1684,16 @@ UIView *deleteBGView;
 }
 
 //changed this function to work for updating single case items when not in template mode
-
 //two modes of calling this function.  In one, propertyObject and caseItemObjForXML are set to nil.  This is for updating existing items.
 //2nd Mode these values are passed, this is for updating brand new case items
 -(NSString *)createXMLFunctionSingleCaseItem:(NSDictionary *) propertyObject CaseItemObject:(NSDictionary *)caseItemObjForXML
 {
     //iterate through all items still in the caseitems and property arrays and send XML to update all of these (either with their original contents or the modifications/new entries)
     
-    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+    PFObject *caseObject = caseObjectBeingUpdated;
     
-    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
-    
-   
-    PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
     PFObject *caseItemObject;
+    
     if(caseItemObjForXML ==nil)
     {
           caseItemObject = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
@@ -1899,6 +1954,7 @@ UIView *deleteBGView;
     }
     else
     {
+        
         //generate XML for updating a single caseItem
         xmlForUpdate = [self createXMLFunctionSingleCaseItem:nil CaseItemObject:nil];
         
@@ -1910,6 +1966,12 @@ UIView *deleteBGView;
         return;
         
     }
+    
+    //store a local value of the property (or last property for template mode) being updated based on the current carousel index and sortedCaseItems
+    
+    PFObject *caseItemBeingUpdated = sortedCaseItems[selectedCarouselIndex];
+    propertyBeingUpdated = [caseItemBeingUpdated objectForKey:@"propertyNum"];
+    
     //add a progress HUD to show it is retrieving list of properts
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:HUD];
@@ -2672,10 +2734,10 @@ UIView *deleteBGView;
      </PAYLOAD>
      */
     
-    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+   
     //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
     
-    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+    
     
     //PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
     NSString *caseObjectID = [caseObjectBeingUpdated objectForKey:@"caseId"];
@@ -2788,9 +2850,6 @@ UIView *deleteBGView;
                                         //remove deleteBGView
                                         [self popDeleteBGView];
                                         
-                                        
-                                        
-                                        
                                         //[HUD hide:NO];
                                     }
                                     else
@@ -2799,6 +2858,11 @@ UIView *deleteBGView;
                                         NSLog(errorString);
                                       //  [HUD hide:NO];
                                         [self popDeleteBGView];
+                                        
+                                    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Cannot Be Deleted"message:@"This Case Item Cannot Be Deleted." delegate:self
+                                                                             cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                        
+                                    [alertView show];
                                         
                                     }
                                 }];
@@ -2999,10 +3063,9 @@ UIView *deleteBGView;
         NSString *propOptions = [propertyObject objectForKey:@"options"];
         propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
         
-        [self.carousel removeItemAtIndex:caseIndex animated:NO];
-        [self carouselCurrentItemIndexDidChange:self.carousel];
-        
-        //[self.carousel reloadData];
+        //[self.carousel removeItemAtIndex:caseIndex animated:NO];
+       [self.carousel scrollToItemAtIndex:0 duration:0.0f];
+        [self.carousel reloadData];
         [self.propertiesTableView reloadData];
     
         self.carousel.userInteractionEnabled = TRUE;
@@ -3011,8 +3074,6 @@ UIView *deleteBGView;
          [HUD hide:YES];
     });
     
-    
-
     //set the last timestamp for the case if there needs to be polling.
     NSString *timeStampReturn = [caseItemObject objectForKey:@"timestamp"];
     NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
