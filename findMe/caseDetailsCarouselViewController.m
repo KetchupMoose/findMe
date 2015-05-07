@@ -12,6 +12,7 @@
 #import "XMLWriter.h"
 #import "mapPinViewController.h"
 #import "verticalPanGestureRecognizer.h"
+#import "matchesViewController.h"
 
 @implementation caseDetailsCarouselViewController
 
@@ -96,9 +97,9 @@ NSMutableArray *selectedCaseItemOriginalOptions;
 NSInteger selectedCarouselIndex;
 
 UIView *deleteBGView;
-
 NSString *answerabilityFlag;
 NSString *propertyBeingUpdated;
+BOOL LoadedBOOL = NO;
 
 
 -(NSMutableArray *)filterOutLocationProperty:(NSMutableArray *)incomingCaseItems
@@ -148,8 +149,11 @@ NSString *propertyBeingUpdated;
     self.carousel.delegate = self;
     self.carousel.dataSource = self;
     
-    self.propertiesTableView.delegate = self;
-    self.propertiesTableView.dataSource = self;
+    [self.carousel scrollToItemAtIndex:0 duration:0.0f];
+    
+    manualLocationLatitude = @"";
+    manualLocationLongitude = @"";
+    self.viewMatchesButton.alpha = 0;
     
     //location manager instance variable allocs
     locationManager = [[CLLocationManager alloc] init];
@@ -184,10 +188,12 @@ NSString *propertyBeingUpdated;
         self.submitAnswersButton.titleLabel.textColor = [UIColor whiteColor];
         
         templateMode = 1;
+        
     }
     else
     {
         templateMode= 0;
+        self.carousel.animateSwipeUp = YES;
         
         
     }
@@ -391,10 +397,16 @@ NSString *propertyBeingUpdated;
     propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
     selectedCaseItemOriginalOptions = propertyTableOptionsArray;
      answerabilityFlag = [propertyObject objectForKey:@"answerability"];
-    [self.carousel scrollToItemAtIndex:0 duration:0.0f];
+    
+    
     [self.carousel reloadData];
+    
+    self.propertiesTableView.delegate = self;
+    self.propertiesTableView.dataSource = self;
+    
     [self.propertiesTableView reloadData];
     
+    LoadedBOOL = YES;
     
     
 }
@@ -746,19 +758,33 @@ NSString *propertyBeingUpdated;
 
 -(void)carouselCurrentItemIndexDidChange:(iCarousel *)carousel
 {
-
     NSInteger index = self.carousel.currentItemIndex;
+    NSLog(@"carousel index fired");
+    NSLog(@"%ld",index);
+    
     selectedCarouselIndex = self.carousel.currentItemIndex;
-    if(index ==propsArray.count)
+    NSInteger carouselNumOfItems = self.carousel.numberOfItems;
+    if(index ==carouselNumOfItems-1)
     {
         self.propertiesTableView.alpha = 0;
-        
+        self.viewMatchesButton.alpha = 0;
         return;
     }
     else
     {
-        self.propertiesTableView.alpha =1;
+        
         PFObject *propertyObject = [propsArray objectAtIndex:index];
+        
+        NSString *propTypeString = [propertyObject objectForKey:@"propertyType"];
+        
+        if([propTypeString isEqualToString:@"B"])
+        {
+            self.propertiesTableView.alpha = 0;
+            self.viewMatchesButton.alpha = 1;
+            
+            return;
+            
+        }
         
         //get choices
         NSString *propOptions = [propertyObject objectForKey:@"options"];
@@ -770,8 +796,8 @@ NSString *propertyBeingUpdated;
         
         //set the answers array
         PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:index];
-        
-        
+        self.propertiesTableView.alpha =1;
+        self.viewMatchesButton.alpha = 0;
         if([selectedCaseItemObject objectForKey:@"answers"] !=nil)
         {
             selectedCaseItemAnswersArrayOfDictionaries  = [selectedCaseItemObject objectForKey:@"answers"];
@@ -821,6 +847,93 @@ NSString *propertyBeingUpdated;
         
     }
    
+}
+
+-(IBAction)viewMatches:(id)sender
+{
+    PFObject *caseItemPicked = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
+    
+    
+    //display matches view controller (to be created)
+    matchesViewController *mvc = [self.storyboard instantiateViewControllerWithIdentifier:@"mvc"];
+    
+    [mvc.matchViewControllerMode isEqualToString:@"singleCaseMatches"];
+    
+    //loop through the itsMTLObject and gather all the user's matches
+    NSMutableArray *allMatchesArray = [[NSMutableArray alloc] init];
+    NSMutableArray *allMatchCaseObjectsArray = [[NSMutableArray alloc] init];
+    NSMutableArray *allMatchCaseItemObjectsArray = [[NSMutableArray alloc] init];
+    NSMutableArray *allMatchesCaseTypes = [[NSMutableArray alloc] init];
+    
+    NSString *matchesString = [caseItemPicked objectForKey:@"browse"];
+    NSString *matchesYesString = [caseItemPicked objectForKey:@"yeses"];
+    NSString *matchesRejectedYesString = [caseItemPicked objectForKey:@"rejectedYeses"];
+    NSArray *matchesArray = [matchesString componentsSeparatedByString:@";"];
+    NSArray *matchesYesArray = [matchesYesString componentsSeparatedByString:@";"];
+    NSArray *matchesRejectedYesArray= [matchesRejectedYesString componentsSeparatedByString:@";"];
+    
+    PFObject *caseObject;
+    int selectedCaseInt = (int)[selectedCaseIndex integerValue];
+    NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
+    
+    caseObject = [allCases objectAtIndex:selectedCaseInt];
+    if([matchesRejectedYesArray count] >0)
+    {
+        for(NSString *caseMatchID in matchesRejectedYesArray)
+        {
+            [allMatchesArray addObject:caseMatchID];
+            [allMatchCaseObjectsArray addObject:caseObject];
+            NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
+            
+            [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+            [allMatchesCaseTypes addObject:@"rejected"];
+            
+        }
+        
+    }
+    
+    if([matchesYesArray count] >0)
+    {
+        for(NSString *caseMatchID in matchesYesArray)
+        {
+            // if(![allMatchesArray containsObject:caseMatchID])
+            //{
+            [allMatchesArray addObject:caseMatchID];
+            [allMatchCaseObjectsArray addObject:caseObject];
+            NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
+            
+            [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+            [allMatchesCaseTypes addObject:@"yes"];
+            // }
+            
+        }
+        
+    }
+    
+    if([matchesArray count] >0)
+    {
+        for(NSString *caseMatchID in matchesArray)
+        {
+            // if(![allMatchesArray containsObject:caseMatchID])
+            //{
+            [allMatchesArray addObject:caseMatchID];
+            [allMatchCaseObjectsArray addObject:caseObject];
+            NSString *caseItemObjectString = [caseItemPicked objectForKey:@"caseItem"];
+            
+            [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+            [allMatchesCaseTypes addObject:@"match"];
+            //}
+        }
+        
+    }
+    mvc.matchesArray = [allMatchesArray copy];
+    mvc.matchesCaseObjectArrays = [allMatchCaseObjectsArray copy];
+    mvc.matchesCaseItemArrays = [allMatchCaseItemObjectsArray copy];
+    mvc.matchTypeArray = [allMatchesCaseTypes copy];
+    
+    mvc.matchesUserName = self.userName;
+    
+    [self.navigationController pushViewController:mvc animated:YES];
 }
 
 
@@ -1047,8 +1160,28 @@ NSString *propertyBeingUpdated;
 {
     int caseItemsCount = (int)[propertyTableOptionsArray count];
     
-    return caseItemsCount +1;
+    //check to see answerability of the currently selected case item.  If it is not one that supports custom answers, then do not show the Add Another Answer option.
+    NSInteger index = selectedCarouselIndex;
     
+    PFObject *propertyObject = [propsArray objectAtIndex:index];
+    
+    NSString *answerability = [propertyObject objectForKey:@"answerability"];
+    NSString *propType = [propertyObject objectForKey:@"propertyType"];
+    if([propType  isEqual:@"I"] || [propType isEqual:@"B"] || [propType isEqual:@"N"])
+    {
+        return caseItemsCount;
+    }
+    
+    if([answerability length] ==0 || [answerability containsString:@"+"])
+    {
+         return caseItemsCount +1;
+    }
+    else
+    {
+        return caseItemsCount;
+        
+    }
+   
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -1059,6 +1192,7 @@ NSString *propertyBeingUpdated;
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"propertyCell" forIndexPath:indexPath];
     UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
+    
     
     if(indexPath.row == propertyTableOptionsArray.count)
     {
@@ -1154,7 +1288,61 @@ NSString *propertyBeingUpdated;
         
     }
     
-    UIView *cell = [tableView cellForRowAtIndexPath:indexPath];
+     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    
+    //implement answerability logic:
+    //- Property error: Answerability 0..1 violated
+    //- Property error: Answerability 1 violated
+    //Property error: Answerability 0..n violated
+    //- Property error: Answerability 1..n violated
+    //- Property error: Answerability 0..n+ violated
+    //- Property error: Answerability 1..n+ violated
+    
+    //if answerability 0..1, answer must be 0 answer or 1.
+    //if answerability 1, answer must have exactly one answer
+    //if answerability 0..n, answer must have 0 or multiple answers, but no custom answer
+    //if answerability 1..n, answer must have at least 1 answer, can support multiple answers, but have no custom answers
+    //if answerability 0..n+, answer can have multiple answers,custom answers, and a blank answer
+    //if answerability 1..n+, answer must have at least one answer, can have multiple answers, can have custom answer
+    
+    PFObject *propertyObject = [propsArray objectAtIndex:selectedCarouselIndex];
+    NSString *answerability = [propertyObject objectForKey:@"answerability"];
+    
+    if([answerability length] ==0)
+    {
+        [self HandleAnswer0NPlus:indexPath UITableViewCell:cell];
+        
+    }
+    else
+    {
+        NSArray *items = @[@"1", @"0..n", @"0..1",@"1..n",@"0..n+",@"1..n+"];
+        int item = [items indexOfObject:answerability];
+        switch (item) {
+            case 0:
+                [self HandleAnswer1:indexPath UITableViewCell:cell];
+            break;
+            case 1:
+                [self HandleAnswer0NPlus:indexPath UITableViewCell:cell];
+            break;
+            case 2:
+                [self HandleAnswer01:indexPath UITableViewCell:cell];
+            break;
+            case 3:
+                [self HandleAnswer1NPlus:indexPath UITableViewCell:cell];
+            break;
+            case 4:
+                [self HandleAnswer0NPlus:indexPath UITableViewCell:cell];
+            break;
+            case 5:
+                [self HandleAnswer1NPlus:indexPath UITableViewCell:cell];
+            break;
+            default:
+            break;
+    }
+
+    }
+    
+   
     
     //APR13
     //these two class level variables are already filled each time the user selects a new property with the carousel.
@@ -1162,8 +1350,263 @@ NSString *propertyBeingUpdated;
     //NSMutableArray *selectedCaseItemAnswersArray;
     //NSMutableDictionary *selectedCaseItemAnswersArrayOfDictionaries ;
     //this code will have an error if users enter values with numeric strings (ie; they enter "2" and then it goes to remove 2 twice later
+    
+    PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
+    NSString *caseItemObjectID = [selectedCaseItemObject objectForKey:@"caseItem"];
+    
+    [self updateCaseItem:caseItemObjectID AcceptableAnswersList:selectedCaseItemAnswersArrayOfDictionaries ForNewAnswer:NO];
+    
+    self.submitAnswersButton.enabled = 1;
+    [self.submitAnswersButton.titleLabel setBackgroundColor:[UIColor blueColor]];
+    
+    
+}
+
+-(void)HandleAnswer1:(NSIndexPath *) indexPath UITableViewCell:(UITableViewCell *)cell
+{
+    
+    //01 Answer Updates,
+    //Answer can have no custom values, must have either 0 answers or 1 answer
     if(cell.backgroundColor==[UIColor greenColor])
     {
+        
+        //show an alert explaining this property must have at least one answer
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Remove Answer" message:@"This Case Item Requires At Least One Answer, Select Another To Change" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+
+        
+    }
+    else
+        //add the answer to the answers array and answersDictionary.
+    {
+        if([selectedCaseItemAnswersArray count]>=1)
+        {
+            [selectedCaseItemAnswersArray removeAllObjects];
+            [selectedCaseItemAnswersArrayOfDictionaries removeAllObjects];
+            
+            //clear all the previous green colored cells
+            for (UIView *view in self.propertiesTableView.subviews){
+                for (id subview in view.subviews){
+                    if ([subview isKindOfClass:[UITableViewCell class]]){
+                        UITableViewCell *cell = subview;
+                        cell.backgroundColor = [UIColor clearColor];
+                        
+                    }
+                }
+            }
+
+        }
+        
+        //check to see if the answer is an answer for one of the original properties on this caseItem or a new custom property
+        if(indexPath.row +1 <=[selectedCaseItemOriginalOptions count])
+        {
+            NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
+            [selectedCaseItemAnswersArray addObject:newAns];
+            cell.backgroundColor = [UIColor greenColor];
+            
+            NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+            [AnsObj setValue:newAns forKey:@"a"];
+            NSDictionary *myAnsDict = [AnsObj copy];
+            
+            [selectedCaseItemAnswersArrayOfDictionaries addObject:myAnsDict];
+        }
+        else
+        {
+            UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
+            NSString *newAns = optionLabel.text;
+            [selectedCaseItemAnswersArray addObject:newAns];
+            cell.backgroundColor = [UIColor greenColor];
+            
+            NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+            [AnsObj setValue:newAns forKey:@"custom"];
+            NSDictionary *myAnsDict = [AnsObj copy];
+            [selectedCaseItemAnswersArrayOfDictionaries addObject:myAnsDict];
+        }
+        
+    }
+    
+}
+
+
+-(void)HandleAnswer01:(NSIndexPath *) indexPath UITableViewCell:(UITableViewCell *)cell
+{
+    
+    //01 Answer Updates,
+    //Answer can have no custom values, must have either 0 answers or 1 answer
+    if(cell.backgroundColor==[UIColor greenColor])
+    {
+        //remove this answer from the list.
+        int i = 0;
+        int indexToRemove = -1;
+        
+        //check to see if the answersArray includes the string label
+        UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
+        NSString *optionTxt = optionLabel.text;
+        if ([selectedCaseItemAnswersArray containsObject:optionTxt])
+        {
+            NSInteger indexOfObject = [selectedCaseItemAnswersArray indexOfObject:optionTxt];
+            [selectedCaseItemAnswersArray removeObject:optionTxt];
+            [selectedCaseItemAnswersArrayOfDictionaries removeObjectAtIndex:indexOfObject];
+        }
+        
+        for (NSString *eachAns in selectedCaseItemAnswersArray)
+        {
+            int ansInt = (int)[eachAns integerValue];
+            
+            //making sure to compare to a number +1 since the answersArray has a 1 higher index
+            if(ansInt==indexPath.row+1)
+            {
+                indexToRemove = i;
+                cell.backgroundColor = [UIColor whiteColor];
+                
+            }
+            i = i+1;
+        }
+        if(indexToRemove>-1)
+        {
+            [selectedCaseItemAnswersArray removeObjectAtIndex:indexToRemove];
+            [selectedCaseItemAnswersArrayOfDictionaries removeObjectAtIndex:indexToRemove];
+        }
+        
+    }
+    else
+        //add the answer to the answers array and answersDictionary.
+    {
+        
+        [selectedCaseItemAnswersArray removeAllObjects];
+        [selectedCaseItemAnswersArrayOfDictionaries removeAllObjects];
+        
+        //clear all the previous green colored cells
+        for (UIView *view in self.propertiesTableView.subviews){
+            for (id subview in view.subviews){
+                if ([subview isKindOfClass:[UITableViewCell class]]){
+                    UITableViewCell *cell = subview;
+                    cell.backgroundColor = [UIColor clearColor];
+                    
+                }
+            }
+        }
+        //check to see if the answer is an answer for one of the original properties on this caseItem or a new custom property
+        if(indexPath.row +1 <=[selectedCaseItemOriginalOptions count])
+        {
+            NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
+            [selectedCaseItemAnswersArray addObject:newAns];
+            cell.backgroundColor = [UIColor greenColor];
+            
+            NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+            [AnsObj setValue:newAns forKey:@"a"];
+            NSDictionary *myAnsDict = [AnsObj copy];
+            
+            [selectedCaseItemAnswersArrayOfDictionaries addObject:myAnsDict];
+        }
+        else
+        {
+            UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
+            NSString *newAns = optionLabel.text;
+            [selectedCaseItemAnswersArray addObject:newAns];
+            cell.backgroundColor = [UIColor greenColor];
+            
+            NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+            [AnsObj setValue:newAns forKey:@"custom"];
+            NSDictionary *myAnsDict = [AnsObj copy];
+            [selectedCaseItemAnswersArrayOfDictionaries addObject:myAnsDict];
+        }
+        
+    }
+    
+}
+
+
+-(void)HandleAnswer0NPlus:(NSIndexPath *) indexPath UITableViewCell:(UITableViewCell *)cell
+{
+   
+    //0NPLUS Answer Updates,
+    //Answer can have custom values, multiple values or 0 values
+    if(cell.backgroundColor==[UIColor greenColor])
+    {
+        //remove this answer from the list.
+        int i = 0;
+        int indexToRemove = -1;
+        
+        //check to see if the answersArray includes the string label
+        UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
+        NSString *optionTxt = optionLabel.text;
+        if ([selectedCaseItemAnswersArray containsObject:optionTxt])
+        {
+            NSInteger indexOfObject = [selectedCaseItemAnswersArray indexOfObject:optionTxt];
+            [selectedCaseItemAnswersArray removeObject:optionTxt];
+            [selectedCaseItemAnswersArrayOfDictionaries removeObjectAtIndex:indexOfObject];
+        }
+        
+        for (NSString *eachAns in selectedCaseItemAnswersArray)
+        {
+            int ansInt = (int)[eachAns integerValue];
+            
+            //making sure to compare to a number +1 since the answersArray has a 1 higher index
+            if(ansInt==indexPath.row+1)
+            {
+                indexToRemove = i;
+                cell.backgroundColor = [UIColor whiteColor];
+                
+            }
+            i = i+1;
+        }
+        if(indexToRemove>-1)
+        {
+            [selectedCaseItemAnswersArray removeObjectAtIndex:indexToRemove];
+            [selectedCaseItemAnswersArrayOfDictionaries removeObjectAtIndex:indexToRemove];
+        }
+        
+    }
+    else
+        //add the answer to the answers array and answersDictionary.
+    {
+        
+        //check to see if the answer is an answer for one of the original properties on this caseItem or a new custom property
+        if(indexPath.row +1 <=[selectedCaseItemOriginalOptions count])
+        {
+            NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
+            [selectedCaseItemAnswersArray addObject:newAns];
+            cell.backgroundColor = [UIColor greenColor];
+            
+            NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+            [AnsObj setValue:newAns forKey:@"a"];
+            NSDictionary *myAnsDict = [AnsObj copy];
+            
+            [selectedCaseItemAnswersArrayOfDictionaries addObject:myAnsDict];
+        }
+        else
+        {
+            UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
+            NSString *newAns = optionLabel.text;
+            [selectedCaseItemAnswersArray addObject:newAns];
+            cell.backgroundColor = [UIColor greenColor];
+            
+            NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+            [AnsObj setValue:newAns forKey:@"custom"];
+            NSDictionary *myAnsDict = [AnsObj copy];
+            [selectedCaseItemAnswersArrayOfDictionaries addObject:myAnsDict];
+        }
+        
+    }
+
+}
+
+-(void)HandleAnswer1NPlus:(NSIndexPath *) indexPath UITableViewCell:(UITableViewCell *)cell
+{
+    
+    //0NPLUS Answer Updates,
+    //Answer can have custom values, multiple values or 0 values
+    if(cell.backgroundColor==[UIColor greenColor])
+    {
+        //check to see if there is only one answer in selectedCaseItemAnswersArray, if so do not remove
+        if([selectedCaseItemAnswersArray count] <=1)
+        {
+            //show an alert explaining this property must have at least one answer
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Remove Answer" message:@"This Case Item Requires At Least One Answer" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert show];
+            
+        }
         
         //remove this answer from the list.
         int i = 0;
@@ -1230,16 +1673,10 @@ NSString *propertyBeingUpdated;
         }
         
     }
-    PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
-    NSString *caseItemObjectID = [selectedCaseItemObject objectForKey:@"caseItem"];
-    
-    [self updateCaseItem:caseItemObjectID AcceptableAnswersList:selectedCaseItemAnswersArrayOfDictionaries ForNewAnswer:NO];
-    
-    self.submitAnswersButton.enabled = 1;
-    [self.submitAnswersButton.titleLabel setBackgroundColor:[UIColor blueColor]];
-    
     
 }
+
+
 
 #pragma mark DataDelegateMethods
 - (void)recieveData:(NSString *)OptionsList AcceptableAnswersList:(NSArray *)Answers QuestionText:(NSString *) question {
@@ -1381,14 +1818,41 @@ NSString *propertyBeingUpdated;
     
     //free up memory by releasing subviews
     self.carousel = nil;
+    self.carousel.delegate = nil;
+    self.carousel.dataSource = nil;
+    sortedCaseItems = nil;
+    propertyTableOptionsArray = nil;
+    self.propertiesTableView = nil;
+    self.propertiesTableView.delegate = nil;
+    self.propertiesTableView.dataSource = nil;
+}
+
+- (void) viewWillDisappear:(BOOL)animated
+{
+    //self.carousel = nil;
+    [self.carousel scrollToItemAtIndex:0 animated:0];
+    //self.carousel = nil;
+    //self.carousel.delegate = nil;
+    //self.carousel.dataSource = nil;
+    
 }
 
 - (void)dealloc
 {
     //it's a good idea to set these to nil here to avoid
     //sending messages to a deallocated viewcontroller
+    self.carousel.currentItemIndex = 0;
+    self.carousel = nil;
     self.carousel.delegate = nil;
     self.carousel.dataSource = nil;
+    sortedCaseItems = nil;
+     propsArray = nil;
+    propertyTableOptionsArray = nil;
+    self.propertiesTableView = nil;
+    self.propertiesTableView.delegate = nil;
+    self.propertiesTableView.dataSource = nil;
+    
+    LoadedBOOL = NO;
 }
 
 - (void)reloadData:(PFObject *) myObject reloadMode:(NSString *)reloadModeString
@@ -1461,9 +1925,9 @@ NSString *propertyBeingUpdated;
     }
     caseObjectBeingUpdated = (PFObject *)caseItemObject;
     
-    
     templateMode =0;
-    
+    self.carousel.animateSwipeUp = YES;
+
     //define sort descriptors for sorting caseItems by priority
     NSArray *sortDescriptors;
     NSSortDescriptor *sortDescriptor;
@@ -1476,7 +1940,6 @@ NSString *propertyBeingUpdated;
     sortedCaseItems = [self filterOutLocationProperty:sortedCaseItems];
     //loop through sortedCaseItems and remove the pinDrop Property
     
-
     //setting up arrays for storing three sets of properties and cases based on type: info messages, already answered properties, and new suggested properties
     
     [propertyIDSArray removeAllObjects];

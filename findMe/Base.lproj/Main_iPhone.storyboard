@@ -219,6 +219,17 @@
                                     <action selector="doUpdate:" destination="ubz-9T-mj9" eventType="touchUpInside" id="U2s-dt-OTy"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v0m-YO-T74">
+                                <rect key="frame" x="103" y="367" width="114" height="30"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="View Matches">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="viewMatches:" destination="KJv-BZ-cwS" eventType="touchUpInside" id="0FU-R0-ADD"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -241,6 +252,7 @@
                         <outlet property="locationButton" destination="iKs-9O-IfQ" id="mcX-a0-gfe"/>
                         <outlet property="propertiesTableView" destination="2QU-c2-OsA" id="6jc-tN-kkM"/>
                         <outlet property="submitAnswersButton" destination="viG-Yy-aaG" id="rci-KN-NwL"/>
+                        <outlet property="viewMatchesButton" destination="v0m-YO-T74" id="cnf-LS-a7N"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YJr-Cv-TaV" userLabel="First Responder" sceneMemberID="firstResponder"/>

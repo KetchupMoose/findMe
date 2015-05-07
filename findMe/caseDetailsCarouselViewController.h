@@ -33,5 +33,7 @@
 
 @property (strong,nonatomic) IBOutlet UITableView *propertiesTableView;
 @property (strong,nonatomic) NSString *manualLocationPropertyNum;
+@property (weak,nonatomic) IBOutlet UIButton *viewMatchesButton;
+-(IBAction)viewMatches:(id)sender;
 
 @end

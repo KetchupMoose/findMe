@@ -449,6 +449,9 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
         if(error)
         {
             NSLog(@"There was a parse upload error: @%@",error.localizedDescription);
+            UIAlertView *msgUploadError = [[UIAlertView alloc] initWithTitle:@"Message Error" message:@"The Message Failed to Upload To The Server, Your Recipient May Not Receive It" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [msgUploadError show];
+            
         }
     }
      ];

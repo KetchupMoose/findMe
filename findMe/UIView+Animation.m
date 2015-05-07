@@ -558,6 +558,27 @@
                       }];
 }
 
+-(void)BounceSmallVertical:(UIView *)view duration:(float)secs
+{
+    [UIView animateWithDuration:secs delay:0.0 options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                          view.frame = CGRectMake(view.frame.origin.x,view.frame.origin.y-20, view.frame.size.width, view.frame.size.height);
+                     }
+                     completion:^(BOOL finished)
+     {
+         [self BounceBackDown:view duration:secs];
+     }];
+    
+}
+
+-(void)BounceBackDown:(UIView *)view duration:(float) secs
+{
+    [UIView animateWithDuration:secs delay:0.0 options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         view.frame = CGRectMake(view.frame.origin.x,view.frame.origin.y+20, view.frame.size.width, view.frame.size.height);
+                     }
+                     completion:nil];
+}
 
 
 @end

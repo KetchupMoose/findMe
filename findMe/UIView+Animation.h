@@ -38,4 +38,7 @@
 -(void)fadeAView:(UIView *) view WithNewImage:(UIImage *) newImage;
 -(void) SlideOffRight:(UIView *) view duration:(float) secs;
 
+-(void)BounceSmallVertical:(UIView *)view duration:(float)secs;
+
+
 @end

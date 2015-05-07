@@ -32,7 +32,7 @@
 
 #import "iCarousel.h"
 #import <objc/message.h>
-
+#import "UIView+Animation.h"
 
 #import <Availability.h>
 #if !__has_feature(objc_arc)
@@ -130,6 +130,7 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
 
 @implementation iCarousel
 NSInteger *panIndex;
+@synthesize animateSwipeUp;
 #pragma mark -
 #pragma mark Initialisation
 
@@ -2070,6 +2071,7 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
          */
         
         self.verticalPan = fabs(translation.y) > fabs(translation.x); // BOOL property
+       
     }
     return YES;
 }
@@ -2108,10 +2110,36 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
 
 - (void)didPan:(UIPanGestureRecognizer *)panGesture
 {
+    if(animateSwipeUp == YES)
+    {
+        
+    CGPoint translation = [panGesture translationInView:self];
+    NSLog(@"%f", translation.y);
+    NSInteger touchedViewIndex = [self indexOfItemView:[self itemViewAtPoint:[panGesture locationInView:_contentView]]];
     
-   
-    
-   
+    if(translation.y<-10)
+    {
+        NSArray *visibleViews = [self visibleItemViews];
+        
+        for (UIView *itemview in visibleViews)
+        {
+            NSInteger indexOfThisView = [self indexOfItemView:itemview];
+            
+            if(touchedViewIndex==indexOfThisView)
+            {
+                /*
+                CGRect frame = itemview.frame;
+                CGPoint currentLocation = self.center;
+                frame.origin.y += translation.y;
+                [itemview setFrame:frame];
+                 */
+                [itemview BounceSmallVertical:itemview duration:0.2];
+                
+            }
+        }
+    }
+        
+    }
     
     if (_scrollEnabled && _numberOfItems)
     {

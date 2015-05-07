@@ -238,7 +238,6 @@ BOOL notifierLoaded;
     
     CGPoint originalOrigin= msgButton.frame.origin;
    
-    
     CGRect newLabelFrame =  CGRectMake(msgButton.frame.origin.x +translation.x,msgButton.frame.origin.y,msgButton.frame.size.width,msgButton.frame.size.height);
     
     msgButton.frame = newLabelFrame;

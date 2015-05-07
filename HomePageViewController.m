@@ -66,15 +66,20 @@ NSString *homePageManualLocationPropertyNum;
     {
         NSLog(@"reached it!");
         [self LoadingHomePage];
-        
-        
+
         
     }
     else
     {
         NSLog(@"no connection");
         //show the internet offline view controller
-        internetOfflineViewController *iovc = [self.storyboard instantiateViewControllerWithIdentifier:@"iovc"];
+        internetOfflineViewController *iovc = [[internetOfflineViewController alloc] init];
+        iovc = [self.storyboard instantiateViewControllerWithIdentifier:@"iovc"];
+        
+        iovc.delegate = self;
+        
+        //[self.view addSubview:iovc.view];
+        
         [self.navigationController presentViewController:iovc animated:YES completion:nil];
         
     }
@@ -633,6 +638,9 @@ NSString *homePageManualLocationPropertyNum;
 - (void)dismissIOVC
 {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    [self LoadingHomePage];
+    
+    
     
 }
 

@@ -9,6 +9,8 @@
 #import "internetOfflineViewController.h"
 #import "reachabilitySingleton.h"
 #import "Reachability.h"
+#import "MBProgressHUD.h"
+
 
 @interface internetOfflineViewController ()
 
@@ -17,7 +19,8 @@
 @implementation internetOfflineViewController
 NSTimer *checkInternetTimer;
 int checkInternetTimerTicks;
-
+@synthesize delegate;
+MBProgressHUD *internetProgressHUD;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -44,15 +47,22 @@ int checkInternetTimerTicks;
     
     NetworkStatus *status = [singletonReach currentReachabilityStatus];
     
+    
+    
     if (status !=NotReachable)
     {
         NSLog(@"reached it!");
-        [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+        //[self.view removeFromSuperview];
+        [self.delegate dismissIOVC];
         
     }
     else
     {
         NSLog(@"no connection");
+        internetProgressHUD = [[MBProgressHUD alloc] init];
+        
+        internetProgressHUD.labelText = @"Polling For Internet";
+        [internetProgressHUD show:YES];
         //start a timer to refresh and try again
         if(checkInternetTimer ==nil)
         {
@@ -77,9 +87,12 @@ int checkInternetTimerTicks;
         NSLog(@"reached it!");
         [checkInternetTimer invalidate];
         checkInternetTimerTicks = 0;
+        [internetProgressHUD hide:NO];
         
+        //[self.view removeFromSuperview];
+        
+        //[self.delegate dismissIOVC];
         [self.delegate dismissIOVC];
-        
     }
     else
     {
@@ -88,7 +101,7 @@ int checkInternetTimerTicks;
         if(checkInternetTimerTicks ==10)
         {
             [checkInternetTimer invalidate];
-            
+             [internetProgressHUD hide:NO];
              [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Internet Detected", nil) message:@"No Connection Detected.  Hit Retry to Try Again" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
             
         }
