@@ -24,6 +24,16 @@ MBProgressHUD *HUD;
     
     self.mapView.delegate = self;
     
+    UIImageView *image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pinRedHighRes.png"]];
+    image.frame = CGRectMake(0,0,32,32);
+    image.center = self.mapView.center;
+    CGRect changeframe = image.frame;
+    changeframe.origin.x = changeframe.origin.x+8;
+    changeframe.origin.y = changeframe.origin.y+18;
+    [image setFrame:changeframe];
+    
+    [self.mapView addSubview:image];
+    
     // Create a gesture recognizer for long presses (for example in viewDidLoad)
     //UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     //lpgr.minimumPressDuration = 0.5; //user needs to press for half a second.
@@ -43,8 +53,12 @@ MBProgressHUD *HUD;
     */
 }
 
-- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+- (void)mapView:(MKMapView *)mapView
+ annotationView:(MKAnnotationView *)annotationView
+didChangeDragState:(MKAnnotationViewDragState)newState
+   fromOldState:(MKAnnotationViewDragState)oldState
 {
+   /*
     CLLocationCoordinate2D center = self.mapView.centerCoordinate;
     location = [[CLLocation alloc] initWithLatitude:center.latitude longitude:center.longitude];
     
@@ -60,7 +74,28 @@ MBProgressHUD *HUD;
     point.title = @"userPoint";
     
     [self.mapView addAnnotation:point];
+    */
+}
 
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    
+    CLLocationCoordinate2D center = self.mapView.centerCoordinate;
+    location = [[CLLocation alloc] initWithLatitude:center.latitude longitude:center.longitude];
+    
+    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+    point.coordinate = center;
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    
+    for (id annotation in self.mapView.annotations) {
+        [self.mapView removeAnnotation:annotation];
+        
+    }
+ 
+    point.title = @"userPoint";
+    
+    [self.mapView addAnnotation:point];
+    
 }
 /*
 - (void)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {
@@ -101,6 +136,7 @@ MBProgressHUD *HUD;
         }
     shouldUpdateLocation = YES;
     
+    
 }
 
 /*
@@ -128,7 +164,7 @@ MBProgressHUD *HUD;
        point.subtitle = @"I'm here!!!";
        
        [self.mapView addAnnotation:point];
-    */
+        */
        shouldUpdateLocation = NO;
        self.mapView.showsUserLocation = NO;
        
@@ -143,16 +179,30 @@ MBProgressHUD *HUD;
         MKAnnotationView *annotationView = (MKAnnotationView *) [_mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
         if (annotationView == nil) {
             annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
+            annotationView.alpha =0;
+            
             annotationView.enabled = YES;
             annotationView.canShowCallout = YES;
-            annotationView.image = [UIImage imageNamed:@"arrest.png"];//here we use a nice image instead of the default pins
+            //annotationView.image = [UIImage imageNamed:@"arrest.png"];//here we use a nice image instead of the default pins
         } else {
             annotationView.annotation = annotation;
         }
         
+        annotationView.alpha =0;
+        
         return annotationView;
     }
+    else
+    {
+        MKPinAnnotationView* anView =[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"test"];
+        anView.pinColor=MKPinAnnotationColorPurple;
+        anView.alpha = 0;
+        
+        return anView;
+        
+    }
     
+   
     return nil;
 }
 
@@ -172,8 +222,7 @@ MBProgressHUD *HUD;
     for (MKPointAnnotation *annotation in self.mapView.annotations) {
         if((annotation.title = @"blah"))
         {
-            
-        
+     
         NSLog(@"lon: %f, lat %f", ((MKPointAnnotation*)annotation).coordinate.longitude,((MKPointAnnotation*)annotation).coordinate.latitude);
         
         longitude =((MKPointAnnotation*)annotation).coordinate.longitude;

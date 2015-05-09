@@ -65,6 +65,8 @@
 		EC0823041A186B13000B6684 /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0823031A186B13000B6684 /* HomePageViewController.m */; };
 		EC5B30B41AF40061002046E3 /* CarouselTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC5B30B31AF40061002046E3 /* CarouselTestViewController.m */; };
 		EC5B30B61AF4066D002046E3 /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = EC5B30B51AF4066D002046E3 /* iCarousel.m */; };
+		EC641E051AFD35270005073C /* pinRed.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641E041AFD35270005073C /* pinRed.png */; };
+		EC641E071AFD37170005073C /* pinRedHighRes.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641E061AFD37170005073C /* pinRedHighRes.png */; };
 		EC6595051A8E89E900678E6C /* METransitions.m in Sources */ = {isa = PBXBuildFile; fileRef = EC6595041A8E89E900678E6C /* METransitions.m */; };
 		EC65950E1A8E8BCA00678E6C /* MEFoldAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC6595091A8E8BCA00678E6C /* MEFoldAnimationController.m */; };
 		EC65950F1A8E8BCA00678E6C /* MEZoomAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC65950B1A8E8BCA00678E6C /* MEZoomAnimationController.m */; };
@@ -373,6 +375,8 @@
 		EC5B30B21AF40061002046E3 /* CarouselTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarouselTestViewController.h; sourceTree = "<group>"; };
 		EC5B30B31AF40061002046E3 /* CarouselTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarouselTestViewController.m; sourceTree = "<group>"; };
 		EC5B30B51AF4066D002046E3 /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
+		EC641E041AFD35270005073C /* pinRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinRed.png; sourceTree = "<group>"; };
+		EC641E061AFD37170005073C /* pinRedHighRes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinRedHighRes.png; sourceTree = "<group>"; };
 		EC6595031A8E89E900678E6C /* METransitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = METransitions.h; path = ECSlidingViewController/METransitions.h; sourceTree = "<group>"; };
 		EC6595041A8E89E900678E6C /* METransitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = METransitions.m; path = ECSlidingViewController/METransitions.m; sourceTree = "<group>"; };
 		EC6595081A8E8BCA00678E6C /* MEFoldAnimationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEFoldAnimationController.h; sourceTree = "<group>"; };
@@ -1043,6 +1047,8 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				EC641E061AFD37170005073C /* pinRedHighRes.png */,
+				EC641E041AFD35270005073C /* pinRed.png */,
 				ECD591BB1ABC930700D32D5D /* carselfie1.jpg */,
 				D3207B0319E9CF8B00085B7C /* green-checkmark.jpg */,
 				ECA7A21C1AA7B77900F899D5 /* internetOfflineIcon.png */,
@@ -1882,6 +1888,7 @@
 				ECE6B16C1A069DAB007F4A19 /* stockphotowoman2.jpg in Resources */,
 				ECE6B16E1A06AD0E007F4A19 /* sawyousubway.jpg in Resources */,
 				ECA7A21D1AA7B77900F899D5 /* internetOfflineIcon.png in Resources */,
+				EC641E051AFD35270005073C /* pinRed.png in Resources */,
 				ECD591BC1ABC930700D32D5D /* carselfie1.jpg in Resources */,
 				ECC9E5131AA153070099C46A /* Icon-Small.png in Resources */,
 				D3F4574219FD920A000EDF25 /* ManButton.png in Resources */,
@@ -1893,6 +1900,7 @@
 				EC0403F71A9CFE3400151796 /* femalesilhouette.jpeg in Resources */,
 				D3F4574B1A003772000EDF25 /* stockphotoguy1.jpg in Resources */,
 				D31DF31119CEFC0C00A37725 /* Images.xcassets in Resources */,
+				EC641E071AFD37170005073C /* pinRedHighRes.png in Resources */,
 				ECC9E5151AA153070099C46A /* Icon-Small@3x.png in Resources */,
 				ECA7A2BF1AA8B86C00F899D5 /* JSQMessagesLoadEarlierHeaderView.xib in Resources */,
 				EC9F51DF1A2AC68B00CFED6E /* blurredlights.jpg in Resources */,

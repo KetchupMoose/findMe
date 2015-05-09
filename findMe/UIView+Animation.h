@@ -39,6 +39,6 @@
 -(void) SlideOffRight:(UIView *) view duration:(float) secs;
 
 -(void)BounceSmallVertical:(UIView *)view duration:(float)secs;
-
+-(void)BounceSmallerVertical:(UIView *)view duration:(float)secs;
 
 @end

@@ -340,7 +340,20 @@ NSMutableArray *caseShowNames;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
- 
+    
+    NSNumber *selectedIndex = [NSNumber numberWithInteger:indexPath.row];
+    
+    caseDetailsCarouselViewController *cdcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdcvc"];
+    
+    cdcvc.selectedCaseIndex=selectedIndex;
+    
+    cdcvc.userName = userName;
+    cdcvc.itsMTLObject = self.itsMTLObject;
+    cdcvc.manualLocationPropertyNum = self.manualLocationPropertyNum;
+    
+    [self.navigationController pushViewController:cdcvc animated:NO];
+
+    /*
     //bring up the case details view controller
     
     UIView *caseDetailsSelectorPopup = [[UIView alloc] initWithFrame:CGRectMake(25,50,250,250)];
@@ -380,7 +393,7 @@ NSMutableArray *caseShowNames;
     caseDetailsSelectorPopup.backgroundColor = [UIColor lightGrayColor];
     
     [self.view addSubview:caseDetailsSelectorPopup];
-    
+    */
     
     /*
     NSNumber *selectedIndex = [NSNumber numberWithInteger:indexPath.row];

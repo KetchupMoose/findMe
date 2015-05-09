@@ -408,6 +408,24 @@ BOOL LoadedBOOL = NO;
     
     LoadedBOOL = YES;
     
+    //check to see if we should fire bubble burst
+    //only fire a bubble burst if there is at least one new flag
+    BOOL fireBubbleBurst = NO;
+    for(PFObject *eachCaseItem in sortedCaseItems)
+    {
+        NSString *stringVal = [eachCaseItem objectForKey:@"new"];
+        
+        if([stringVal isEqualToString:@"X"])
+        {
+            //found one
+            fireBubbleBurst = YES;
+        }
+    }
+    if(fireBubbleBurst ==YES)
+    {
+        [self sendBubbleBurst:caseObjectBeingUpdated];
+        
+    }
     
 }
 -(void) viewWillAppear:(BOOL)animated
@@ -467,6 +485,80 @@ BOOL LoadedBOOL = NO;
     }
 
 }
+
+//XML of bubble burst
+/*
+ <PAYLOAD>
+ <USEROBJECTID>NoJW05Xwsq</USEROBJECTID>
+ <LAISO>EN</LAISO>
+ <CASEOBJECTID>2giurY8F9c</CASEOBJECTID>
+ <CASENAME>I just saw you</CASENAME>
+ <BUBBLEBURST>320</BUBBLEBURST>
+ </PAYLOAD>
+ */
+
+-(void)sendBubbleBurst:(PFObject *) caseObject
+{
+    NSString *caseName = [caseObject objectForKey:@"caseName"];
+    NSString *caseObjID = [caseObject objectForKey:@"caseId"];
+    NSString *version = [caseObject objectForKey:@"version"];
+    
+    //get the selected property from the chooser element.
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:self.userName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"CASEOBJECTID"];
+    [xmlWriter writeCharacters:caseObjID];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:caseName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"BUBBLEBURST"];
+    [xmlWriter writeCharacters:version];
+    [xmlWriter writeEndElement];
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+
+    [PFCloud callFunctionInBackground:@"submitXML"
+                       withParameters:@{@"payload": xml}
+                                block:^(NSString *responseString, NSError *error) {
+                                    
+                                    if (!error)
+                                    {
+                                        NSLog(@"bubble bursted successfully");
+                                        
+                                    }
+                                    else
+                                        
+                                    {
+                                        NSLog(@"error bursting bubble for case");
+                                    }
+                                }];
+    
+    
+}
+
+
 #pragma mark -
 #pragma mark iCarousel methods
 
@@ -560,6 +652,8 @@ BOOL LoadedBOOL = NO;
         [deleteButton addTarget:self action:@selector(deleteCaseItem:) forControlEvents:UIControlEventTouchUpInside];
         [deleteButton.titleLabel setFont:[UIFont boldSystemFontOfSize:12]];
         deleteButton.tag = 100+index;
+        deleteButton.alpha = 0;
+        
         
         //create near the bottom
         int createButtonWidth = 180;
@@ -574,11 +668,9 @@ BOOL LoadedBOOL = NO;
         [createACaseItem addTarget:self action:@selector(createCaseItem:) forControlEvents:UIControlEventTouchUpInside];
         createACaseItem.tag = 5;
         
-       
          verticalPanGestureRecognizer *panRecognizer = [[verticalPanGestureRecognizer alloc] initWithTarget:self action:@selector(carouselViewPanDetected:)];
         panRecognizer.cancelsTouchesInView = NO;
        
-        
         //[view addGestureRecognizer:panRecognizer];
         [view addSubview:carouselLabel];
         [view addSubview:iconImgView];
@@ -590,7 +682,6 @@ BOOL LoadedBOOL = NO;
     else
     {
         //get a reference to the label in the recycled view
-        
         
          carouselLabel = (UILabel *)[view viewWithTag:1];
         iconImgView = (UIImageView *)[view viewWithTag:2];
@@ -609,10 +700,7 @@ BOOL LoadedBOOL = NO;
     deleteButton.tag = 100+index;
     //createACaseItem.tag = 5;
     
-   
-    
-    
-    
+       
     if(index ==[sortedCaseItems count])
     {
         //display UI to create your own case item
@@ -635,7 +723,7 @@ BOOL LoadedBOOL = NO;
     else
     {
         createACaseItem.alpha =0;
-        deleteButton.alpha =1;
+        deleteButton.alpha =0;
         
     }
     
@@ -695,6 +783,7 @@ BOOL LoadedBOOL = NO;
     //get property type and customize the label
     NSString *propType = [propAtIndex objectForKey:@"propertyType"];
    
+    /*
     if([propType  isEqual:@"I"])
     {
         //property is an info message
@@ -718,7 +807,21 @@ BOOL LoadedBOOL = NO;
         propertyClassLabel.textColor = [UIColor whiteColor];
         propertyClassLabel.backgroundColor = [UIColor redColor];
     }
+    */
     
+    NSString *newVal = [caseItemPicked objectForKey:@"new"];
+    if([newVal isEqualToString:@"X"])
+    {
+        propertyClassLabel.text = @"NEW";
+        propertyClassLabel.textColor = [UIColor whiteColor];
+        propertyClassLabel.backgroundColor = [UIColor blueColor];
+    }
+    else
+    {
+        propertyClassLabel.text = @"";
+        propertyClassLabel.backgroundColor = [UIColor clearColor];
+        
+    }
     [propertyClassLabel sizeToFit];
     
     
@@ -781,9 +884,26 @@ BOOL LoadedBOOL = NO;
         {
             self.propertiesTableView.alpha = 0;
             self.viewMatchesButton.alpha = 1;
+            self.customAnswerTextField.alpha = 0;
+            self.customAnswerLabel.alpha = 0;
+            self.customAnswerButton.alpha = 0;
+            self.customAnswerLabel.text = @"";
+            self.customAnswerCheckmark.alpha = 0;
             
             return;
             
+        }
+        if([propTypeString isEqualToString:@"N"] || [propTypeString isEqualToString:@"I"])
+        {
+            self.propertiesTableView.alpha = 0;
+            self.viewMatchesButton.alpha = 0;
+            self.customAnswerTextField.alpha = 0;
+            self.customAnswerLabel.alpha = 0;
+            self.customAnswerButton.alpha = 0;
+             self.customAnswerCheckmark.alpha = 0;
+            self.customAnswerLabel.text = @"";
+            
+            return;
         }
         
         //get choices
@@ -800,7 +920,7 @@ BOOL LoadedBOOL = NO;
         self.viewMatchesButton.alpha = 0;
         if([selectedCaseItemObject objectForKey:@"answers"] !=nil)
         {
-            selectedCaseItemAnswersArrayOfDictionaries  = [selectedCaseItemObject objectForKey:@"answers"];
+            selectedCaseItemAnswersArrayOfDictionaries  = [[selectedCaseItemObject objectForKey:@"answers"] mutableCopy];
         }
         else
         {
@@ -826,6 +946,13 @@ BOOL LoadedBOOL = NO;
             //WORKINPROGRESS APR 13
             //answersLabel.text = customAns;
             self.propertiesTableView.alpha = 0;
+             self.customAnswerCheckmark.alpha = 0;
+            self.customAnswerTextField.alpha = 1;
+            self.customAnswerLabel.alpha = 1;
+            self.customAnswerButton.alpha = 1;
+            self.customAnswerLabel.text = customAns;
+            
+            
         }
         else
         {
@@ -842,6 +969,11 @@ BOOL LoadedBOOL = NO;
                 
             }
         self.propertiesTableView.alpha=1;
+        self.customAnswerTextField.alpha = 0;
+        self.customAnswerLabel.alpha = 0;
+        self.customAnswerCheckmark.alpha = 0;
+        self.customAnswerButton.alpha = 0;
+        self.customAnswerLabel.text = @"";
         [self.propertiesTableView reloadData];
         }
         
@@ -1067,6 +1199,41 @@ BOOL LoadedBOOL = NO;
 
 -(void)createCaseItem:(id)sender
 {
+   /*
+    //code to spoof a new carousel item
+    NSMutableDictionary *newCaseItem = [[NSMutableDictionary alloc] init];
+    NSMutableArray *myArray = [[NSMutableArray alloc] init];
+    
+    for (int i = 1; i <= 4; i++)
+    {
+        NSMutableDictionary *newAns = [[NSMutableDictionary alloc] init];
+        NSString *ansString = [[NSString alloc] initWithFormat:@"%d",i];
+        
+        [newAns setObject:ansString forKey:@"a"];
+        
+        [myArray addObject:newAns];
+    }
+    [newCaseItem setObject:myArray forKey:@"answers"];
+    NSMutableDictionary *propObject = [[NSMutableDictionary alloc] init];
+    [propObject setObject:@"blah, blah2, blah3, blah4" forKey:@"options"];
+    [propObject setObject:@"testprop" forKey:@"propertyDescr"];
+     NSString *ansString = [[NSString alloc] initWithFormat:@"%d",444];
+    [propObject setObject:ansString forKey:@"propertyNum"];
+    NSString *newNum =[[NSString alloc] initWithFormat:@"%d",9444];
+    [newCaseItem setObject:newNum forKey:@"caseItem"];
+    [newCaseItem setObject:ansString forKey:@"propertyNum"];
+    
+    [sortedCaseItems addObject:newCaseItem];
+    [propsArray addObject:propObject];
+    
+    int g = (int)sortedCaseItems.count-1;
+    
+    NSNumber *indexNum = [[NSNumber alloc] initWithInt:g];
+    [newlyCreatedPropertiesIndex addObject:indexNum];
+   
+    [self.carousel reloadData];
+*/
+    
     //do stuff with button
     NSLog(@"create a new case");
     NewPropertyViewController *npvc = [self.storyboard instantiateViewControllerWithIdentifier:@"npvc"];
@@ -1074,6 +1241,7 @@ BOOL LoadedBOOL = NO;
     npvc.delegate = self;
     
     [self.navigationController pushViewController:npvc animated:YES];
+    
 }
 
 -(void)getLocation:(id)sender
@@ -1234,10 +1402,15 @@ BOOL LoadedBOOL = NO;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     //for the last cell, show a keyboard to type a new option
     if(indexPath.row==propertyTableOptionsArray.count)
     {
+        
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        //cell.backgroundColor = [UIColor clearColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
         bgDarkenView = [[UIView alloc] initWithFrame:self.view.bounds];
         bgDarkenView.backgroundColor = [UIColor blackColor];
         bgDarkenView.alpha = 0.2;
@@ -1308,6 +1481,15 @@ BOOL LoadedBOOL = NO;
     PFObject *propertyObject = [propsArray objectAtIndex:selectedCarouselIndex];
     NSString *answerability = [propertyObject objectForKey:@"answerability"];
     
+    //if the property is user created, use a different method for removing it from the list since it's defined as numeric
+    NSString *propType = [propertyObject objectForKey:@"propertyType"];
+    if([propType isEqualToString:@"U"])
+       {
+           //handling removing and re-adding answers for custom answer type
+           [self HandleCustomAnswerChange:indexPath UITableViewCell:cell];
+           return;
+       }
+    
     if([answerability length] ==0)
     {
         [self HandleAnswer0NPlus:indexPath UITableViewCell:cell];
@@ -1342,8 +1524,6 @@ BOOL LoadedBOOL = NO;
 
     }
     
-   
-    
     //APR13
     //these two class level variables are already filled each time the user selects a new property with the carousel.
     //the mutable dictionary will be the object that is populated and sent eventually to the JSON when updates are being done.
@@ -1360,6 +1540,60 @@ BOOL LoadedBOOL = NO;
     [self.submitAnswersButton.titleLabel setBackgroundColor:[UIColor blueColor]];
     
     
+}
+
+-(void)HandleCustomAnswerChange:(NSIndexPath *) indexPath UITableViewCell:(UITableViewCell *)cell
+{
+    
+    NSString *indexPathString = [NSString stringWithFormat:@"%ld",(long)indexPath.row+1];
+     UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
+    if(cell.backgroundColor == [UIColor greenColor])
+    {
+        int i = 0;
+        int indexToRemove = -1;
+        for (NSString *eachAns in selectedCaseItemAnswersArray)
+        {
+            int ansInt = (int)[eachAns integerValue];
+            
+            //making sure to compare to a number +1 since the answersArray has a 1 higher index
+            if(ansInt==indexPath.row+1)
+            {
+                indexToRemove = i;
+                
+                
+            }
+            i = i+1;
+        }
+        if(indexToRemove>-1)
+        {
+            [selectedCaseItemAnswersArray removeObjectAtIndex:indexToRemove];
+            [selectedCaseItemAnswersArrayOfDictionaries removeObjectAtIndex:indexToRemove];
+            
+            //update the answers on the caseItem itself
+            PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
+            [selectedCaseItem setObject:selectedCaseItemAnswersArrayOfDictionaries forKey:@"answers"];
+            cell.backgroundColor = [UIColor whiteColor];
+        }
+        
+    }
+    else
+    {
+        NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
+        [selectedCaseItemAnswersArray addObject:newAns];
+        cell.backgroundColor = [UIColor greenColor];
+        
+        NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
+        [AnsObj setValue:newAns forKey:@"a"];
+        NSDictionary *myAnsDict = [AnsObj copy];
+        
+        [selectedCaseItemAnswersArrayOfDictionaries addObject:myAnsDict];
+        
+        //update the answers on the caseItem itself
+        PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
+        [selectedCaseItem setObject:selectedCaseItemAnswersArrayOfDictionaries forKey:@"answers"];
+        
+         cell.backgroundColor = [UIColor greenColor];
+    }
 }
 
 -(void)HandleAnswer1:(NSIndexPath *) indexPath UITableViewCell:(UITableViewCell *)cell
@@ -1389,7 +1623,7 @@ BOOL LoadedBOOL = NO;
                 for (id subview in view.subviews){
                     if ([subview isKindOfClass:[UITableViewCell class]]){
                         UITableViewCell *cell = subview;
-                        cell.backgroundColor = [UIColor clearColor];
+                        cell.backgroundColor = [UIColor whiteColor];
                         
                     }
                 }
@@ -1679,7 +1913,7 @@ BOOL LoadedBOOL = NO;
 
 
 #pragma mark DataDelegateMethods
-- (void)recieveData:(NSString *)OptionsList AcceptableAnswersList:(NSArray *)Answers QuestionText:(NSString *) question {
+- (void)recieveData:(NSString *)OptionsList AcceptableAnswersList:(NSMutableArray *)Answers QuestionText:(NSString *) question {
     
     carouselCaseUpdateTicker = carouselCaseUpdateTicker  +1;
     int newCaseNumber = 9000 +carouselCaseUpdateTicker ;
@@ -2144,6 +2378,25 @@ BOOL LoadedBOOL = NO;
     
      [self.submitAnswersButton setTitle:@"Update Answers" forState:UIControlStateNormal];
     
+    //check to see if we should fire bubble burst
+    //only fire a bubble burst if there is at least one new flag
+    BOOL fireBubbleBurst = NO;
+    for(PFObject *eachCaseItem in sortedCaseItems)
+    {
+        NSString *stringVal = [eachCaseItem objectForKey:@"new"];
+        
+        if([stringVal isEqualToString:@"X"])
+        {
+            //found one
+            fireBubbleBurst = YES;
+        }
+    }
+    if(fireBubbleBurst ==YES)
+    {
+        [self sendBubbleBurst:caseObjectBeingUpdated];
+        
+    }
+
 }
 
 //changed this function to work for updating single case items when not in template mode
@@ -3557,8 +3810,135 @@ BOOL LoadedBOOL = NO;
     
     NSLog(@"deletion processed");
     
-    
-
 }
+
+-(void)closeNewAnswerView:(id)sender
+{
+    UIView *closeButton = (UIView *)sender;
+    UIView *newAnswerContainerView= closeButton.superview;
+    [newAnswerContainerView removeFromSuperview];
+    [bgDarkenView removeFromSuperview];
+    
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    textField.text = @"";
+    
+    [self animateTextField:textField up:YES];
+}
+
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [self animateTextField:textField up:NO];
+    if(textField.tag ==77)
+    {
+        //set the question text.
+        NSString *customText;
+        customText = textField.text;
+        //self.checkMark1.alpha = 1;
+        
+    }
+    
+}
+
+-(void)updateCustomAnswer:(NSString *)customAnsString
+{
+    //if template mode, just save it locally.
+    //if not template mode, fire off the update in background
+    
+    if(templateMode ==1)
+    {
+        PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
+        NSMutableDictionary *AnsDict = [[NSMutableDictionary alloc] init];
+        [AnsDict setObject:customAnsString forKey:@"custom"];
+        [selectedCaseItem setObject:AnsDict forKey:@"answers"];
+        
+    }
+    else
+    {
+        //fire off XML for update
+        PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
+        NSMutableDictionary *AnsDict = [[NSMutableDictionary alloc] init];
+        [AnsDict setObject:customAnsString forKey:@"custom"];
+        NSMutableArray *answersArray = [[NSMutableArray alloc] init];
+        [answersArray addObject:AnsDict];
+        
+        [selectedCaseItem setObject:answersArray forKey:@"answers"];
+        
+        [self doUpdate:self];
+        
+        
+    }
+    
+    
+}
+
+-(IBAction)customAnswerSet:(id)sender
+{
+    //if template mode, just save it locally.
+    //if not template mode, fire off the update in background
+
+    if([self.customAnswerTextField.text length] >0)
+    {
+        self.customAnswerCheckmark.alpha = 1;
+        
+    }
+    else
+    {
+        return;
+    }
+    
+    [self updateCustomAnswer:self.customAnswerTextField.text];
+    
+    
+}
+
+- (void) animateTextField: (UITextField*) textField up: (BOOL) up
+{
+    int animatedDistance;
+    int moveUpValue = textField.frame.origin.y+ textField.frame.size.height;
+    UIInterfaceOrientation orientation =
+    [[UIApplication sharedApplication] statusBarOrientation];
+    if (orientation == UIInterfaceOrientationPortrait ||
+        orientation == UIInterfaceOrientationPortraitUpsideDown)
+    {
+        
+        animatedDistance = 216-(460-moveUpValue-5);
+    }
+    else
+    {
+        animatedDistance = 162-(320-moveUpValue-5);
+    }
+    
+    if(animatedDistance>0)
+    {
+        const int movementDistance = animatedDistance;
+        const float movementDuration = 0.3f;
+        int movement = (up ? -movementDistance : movementDistance);
+        [UIView beginAnimations: nil context: nil];
+        [UIView setAnimationBeginsFromCurrentState: YES];
+        [UIView setAnimationDuration: movementDuration];
+        self.view.frame = CGRectOffset(self.view.frame, 0, movement);
+        [UIView commitAnimations];
+    }
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
+    //put the string of the text field onto a label now in the same cell
+    //put -100 so it doesn't interfere with the uilabel tag of 3 in every cell
+    
+    [textField resignFirstResponder];
+    
+    return YES;
+}
+
+-(void)dismissKeyboard {
+    
+    [self.view endEditing:YES];
+}
+
 
 @end

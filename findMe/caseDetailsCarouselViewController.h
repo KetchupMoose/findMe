@@ -12,7 +12,7 @@
 #import <Parse/Parse.h>
 #import "popupViewController.h"
 #import "mapPinViewController.h"
-@interface caseDetailsCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate,MyDataDelegate,CLLocationManagerDelegate,mapPinViewControllerDelegate,UIGestureRecognizerDelegate>
+@interface caseDetailsCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate,MyDataDelegate,CLLocationManagerDelegate,mapPinViewControllerDelegate,UIGestureRecognizerDelegate,UITextFieldDelegate>
 
 -(IBAction)doUpdate:(id)sender;
 
@@ -35,5 +35,10 @@
 @property (strong,nonatomic) NSString *manualLocationPropertyNum;
 @property (weak,nonatomic) IBOutlet UIButton *viewMatchesButton;
 -(IBAction)viewMatches:(id)sender;
+@property (strong,nonatomic) IBOutlet UITextField *customAnswerTextField;
+-(IBAction)customAnswerSet:(id)sender;
+@property (strong,nonatomic) IBOutlet UIButton *customAnswerButton;
 
+@property (strong,nonatomic) IBOutlet UILabel *customAnswerLabel;
+@property (strong,nonatomic) IBOutlet UIImageView *customAnswerCheckmark;
 @end
