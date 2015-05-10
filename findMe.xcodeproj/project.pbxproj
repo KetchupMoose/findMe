@@ -63,18 +63,31 @@
 		EC0822FF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0822EF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m */; };
 		EC0823011A18689C000B6684 /* cityLightsBG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC0823001A18689C000B6684 /* cityLightsBG.jpg */; };
 		EC0823041A186B13000B6684 /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0823031A186B13000B6684 /* HomePageViewController.m */; };
+		EC4173181AFFDCCE00DC79FE /* lostdog.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC4173151AFFDCCE00DC79FE /* lostdog.jpg */; };
+		EC4173191AFFDCCE00DC79FE /* officerelationship.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC4173161AFFDCCE00DC79FE /* officerelationship.jpg */; };
+		EC41731A1AFFDCCE00DC79FE /* missedConnection.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC4173171AFFDCCE00DC79FE /* missedConnection.jpg */; };
 		EC5B30B41AF40061002046E3 /* CarouselTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC5B30B31AF40061002046E3 /* CarouselTestViewController.m */; };
 		EC5B30B61AF4066D002046E3 /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = EC5B30B51AF4066D002046E3 /* iCarousel.m */; };
 		EC641E051AFD35270005073C /* pinRed.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641E041AFD35270005073C /* pinRed.png */; };
 		EC641E071AFD37170005073C /* pinRedHighRes.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641E061AFD37170005073C /* pinRedHighRes.png */; };
 		EC641E091AFF9BFE0005073C /* calm.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641E081AFF9BFE0005073C /* calm.png */; };
 		EC641E0C1AFF9C5B0005073C /* HomeLoadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC641E0B1AFF9C5B0005073C /* HomeLoadingViewController.m */; };
+		EC641EA31AFFACF00005073C /* FindMeLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC641EA21AFFACF00005073C /* FindMeLoginViewController.m */; };
+		EC641EA91AFFADC00005073C /* FrontSplashPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC641EA61AFFADC00005073C /* FrontSplashPageViewController.m */; };
+		EC641EAA1AFFADC00005073C /* FrontSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC641EA81AFFADC00005073C /* FrontSplashViewController.m */; };
+		EC641EAD1AFFB0F30005073C /* login-button.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641EAC1AFFB0F30005073C /* login-button.png */; };
+		EC641EAF1AFFB1030005073C /* signup-button.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641EAE1AFFB1030005073C /* signup-button.png */; };
+		EC641EB11AFFB1160005073C /* new-background-for-login-screen.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641EB01AFFB1160005073C /* new-background-for-login-screen.png */; };
+		EC641EB31AFFB1220005073C /* line.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641EB21AFFB1220005073C /* line.png */; };
 		EC6595051A8E89E900678E6C /* METransitions.m in Sources */ = {isa = PBXBuildFile; fileRef = EC6595041A8E89E900678E6C /* METransitions.m */; };
 		EC65950E1A8E8BCA00678E6C /* MEFoldAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC6595091A8E8BCA00678E6C /* MEFoldAnimationController.m */; };
 		EC65950F1A8E8BCA00678E6C /* MEZoomAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC65950B1A8E8BCA00678E6C /* MEZoomAnimationController.m */; };
 		EC6595101A8E8BCA00678E6C /* MEDynamicTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = EC65950D1A8E8BCA00678E6C /* MEDynamicTransition.m */; };
 		EC6595131A8EAF4600678E6C /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC6595121A8EAF4600678E6C /* MenuTableViewController.m */; };
 		EC6595161A8EB43700678E6C /* BaseCaseDetailsSlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC6595151A8EB43700678E6C /* BaseCaseDetailsSlidingViewController.m */; };
+		EC93C6A21AFFE1D200D3DE2A /* MySignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC93C6A11AFFE1D200D3DE2A /* MySignUpViewController.m */; };
+		EC93C6A41AFFE79800D3DE2A /* newsignup-button.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6A31AFFE79800D3DE2A /* newsignup-button.png */; };
+		EC93C6A61AFFE7B300D3DE2A /* background-login.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6A51AFFE7B300D3DE2A /* background-login.png */; };
 		EC9F51DB1A2AC53B00CFED6E /* longexposurestreetlights.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DA1A2AC53B00CFED6E /* longexposurestreetlights.jpeg */; };
 		EC9F51DD1A2AC63F00CFED6E /* gaussianblur.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DC1A2AC63F00CFED6E /* gaussianblur.jpg */; };
 		EC9F51DF1A2AC68B00CFED6E /* blurredlights.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DE1A2AC68B00CFED6E /* blurredlights.jpg */; };
@@ -373,6 +386,9 @@
 		EC0823001A18689C000B6684 /* cityLightsBG.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cityLightsBG.jpg; sourceTree = "<group>"; };
 		EC0823021A186B13000B6684 /* HomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomePageViewController.h; path = ../HomePageViewController.h; sourceTree = "<group>"; };
 		EC0823031A186B13000B6684 /* HomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomePageViewController.m; path = ../HomePageViewController.m; sourceTree = "<group>"; };
+		EC4173151AFFDCCE00DC79FE /* lostdog.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lostdog.jpg; sourceTree = "<group>"; };
+		EC4173161AFFDCCE00DC79FE /* officerelationship.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = officerelationship.jpg; sourceTree = "<group>"; };
+		EC4173171AFFDCCE00DC79FE /* missedConnection.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = missedConnection.jpg; sourceTree = "<group>"; };
 		EC5B30B11AF3FFAF002046E3 /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iCarousel.h; path = ../iCarousel.h; sourceTree = "<group>"; };
 		EC5B30B21AF40061002046E3 /* CarouselTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarouselTestViewController.h; sourceTree = "<group>"; };
 		EC5B30B31AF40061002046E3 /* CarouselTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarouselTestViewController.m; sourceTree = "<group>"; };
@@ -382,6 +398,16 @@
 		EC641E081AFF9BFE0005073C /* calm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calm.png; sourceTree = "<group>"; };
 		EC641E0A1AFF9C5B0005073C /* HomeLoadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeLoadingViewController.h; sourceTree = "<group>"; };
 		EC641E0B1AFF9C5B0005073C /* HomeLoadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeLoadingViewController.m; sourceTree = "<group>"; };
+		EC641EA11AFFACF00005073C /* FindMeLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindMeLoginViewController.h; sourceTree = "<group>"; };
+		EC641EA21AFFACF00005073C /* FindMeLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindMeLoginViewController.m; sourceTree = "<group>"; };
+		EC641EA51AFFADC00005073C /* FrontSplashPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrontSplashPageViewController.h; sourceTree = "<group>"; };
+		EC641EA61AFFADC00005073C /* FrontSplashPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FrontSplashPageViewController.m; sourceTree = "<group>"; };
+		EC641EA71AFFADC00005073C /* FrontSplashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrontSplashViewController.h; sourceTree = "<group>"; };
+		EC641EA81AFFADC00005073C /* FrontSplashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FrontSplashViewController.m; sourceTree = "<group>"; };
+		EC641EAC1AFFB0F30005073C /* login-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-button.png"; sourceTree = "<group>"; };
+		EC641EAE1AFFB1030005073C /* signup-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "signup-button.png"; sourceTree = "<group>"; };
+		EC641EB01AFFB1160005073C /* new-background-for-login-screen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "new-background-for-login-screen.png"; sourceTree = "<group>"; };
+		EC641EB21AFFB1220005073C /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = line.png; sourceTree = "<group>"; };
 		EC6595031A8E89E900678E6C /* METransitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = METransitions.h; path = ECSlidingViewController/METransitions.h; sourceTree = "<group>"; };
 		EC6595041A8E89E900678E6C /* METransitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = METransitions.m; path = ECSlidingViewController/METransitions.m; sourceTree = "<group>"; };
 		EC6595081A8E8BCA00678E6C /* MEFoldAnimationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEFoldAnimationController.h; sourceTree = "<group>"; };
@@ -394,6 +420,10 @@
 		EC6595121A8EAF4600678E6C /* MenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewController.m; sourceTree = "<group>"; };
 		EC6595141A8EB43700678E6C /* BaseCaseDetailsSlidingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseCaseDetailsSlidingViewController.h; sourceTree = "<group>"; };
 		EC6595151A8EB43700678E6C /* BaseCaseDetailsSlidingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseCaseDetailsSlidingViewController.m; sourceTree = "<group>"; };
+		EC93C6A01AFFE1D200D3DE2A /* MySignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MySignUpViewController.h; sourceTree = "<group>"; };
+		EC93C6A11AFFE1D200D3DE2A /* MySignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MySignUpViewController.m; sourceTree = "<group>"; };
+		EC93C6A31AFFE79800D3DE2A /* newsignup-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "newsignup-button.png"; sourceTree = "<group>"; };
+		EC93C6A51AFFE7B300D3DE2A /* background-login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background-login.png"; sourceTree = "<group>"; };
 		EC9F51DA1A2AC53B00CFED6E /* longexposurestreetlights.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = longexposurestreetlights.jpeg; sourceTree = "<group>"; };
 		EC9F51DC1A2AC63F00CFED6E /* gaussianblur.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = gaussianblur.jpg; sourceTree = "<group>"; };
 		EC9F51DE1A2AC68B00CFED6E /* blurredlights.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = blurredlights.jpg; sourceTree = "<group>"; };
@@ -947,6 +977,7 @@
 		D31DF2FB19CEFC0C00A37725 /* findMe */ = {
 			isa = PBXGroup;
 			children = (
+				EC641EA41AFFADB30005073C /* tutorialControls */,
 				ECFDA9701AB38B5C00E42C33 /* PubNub */,
 				ECA7A2271AA8B81C00F899D5 /* chatControls */,
 				ECC9E5051AA153070099C46A /* icons */,
@@ -960,8 +991,6 @@
 				D3FBD13E19D05062008240F5 /* JSON Parsing */,
 				D31DF30419CEFC0C00A37725 /* AppDelegate.h */,
 				D31DF30519CEFC0C00A37725 /* AppDelegate.m */,
-				EC641E0A1AFF9C5B0005073C /* HomeLoadingViewController.h */,
-				EC641E0B1AFF9C5B0005073C /* HomeLoadingViewController.m */,
 				ECEF944E1A8C29DF0000A444 /* matchesViewController.h */,
 				ECEF944F1A8C29DF0000A444 /* matchesViewController.m */,
 				ECC9E5021AA1126F0099C46A /* conversationsViewController.h */,
@@ -1054,6 +1083,7 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				EC641EAB1AFFB0AF0005073C /* tutorialAssets */,
 				EC641E081AFF9BFE0005073C /* calm.png */,
 				EC641E061AFD37170005073C /* pinRedHighRes.png */,
 				EC641E041AFD35270005073C /* pinRed.png */,
@@ -1128,6 +1158,39 @@
 				EC0822EF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m */,
 			);
 			path = SDWebImage;
+			sourceTree = "<group>";
+		};
+		EC641EA41AFFADB30005073C /* tutorialControls */ = {
+			isa = PBXGroup;
+			children = (
+				EC641EA51AFFADC00005073C /* FrontSplashPageViewController.h */,
+				EC641EA61AFFADC00005073C /* FrontSplashPageViewController.m */,
+				EC641EA11AFFACF00005073C /* FindMeLoginViewController.h */,
+				EC641EA21AFFACF00005073C /* FindMeLoginViewController.m */,
+				EC641EA71AFFADC00005073C /* FrontSplashViewController.h */,
+				EC641EA81AFFADC00005073C /* FrontSplashViewController.m */,
+				EC93C6A01AFFE1D200D3DE2A /* MySignUpViewController.h */,
+				EC93C6A11AFFE1D200D3DE2A /* MySignUpViewController.m */,
+				EC641E0A1AFF9C5B0005073C /* HomeLoadingViewController.h */,
+				EC641E0B1AFF9C5B0005073C /* HomeLoadingViewController.m */,
+			);
+			name = tutorialControls;
+			sourceTree = "<group>";
+		};
+		EC641EAB1AFFB0AF0005073C /* tutorialAssets */ = {
+			isa = PBXGroup;
+			children = (
+				EC93C6A31AFFE79800D3DE2A /* newsignup-button.png */,
+				EC93C6A51AFFE7B300D3DE2A /* background-login.png */,
+				EC4173151AFFDCCE00DC79FE /* lostdog.jpg */,
+				EC4173161AFFDCCE00DC79FE /* officerelationship.jpg */,
+				EC4173171AFFDCCE00DC79FE /* missedConnection.jpg */,
+				EC641EB01AFFB1160005073C /* new-background-for-login-screen.png */,
+				EC641EAE1AFFB1030005073C /* signup-button.png */,
+				EC641EB21AFFB1220005073C /* line.png */,
+				EC641EAC1AFFB0F30005073C /* login-button.png */,
+			);
+			name = tutorialAssets;
 			sourceTree = "<group>";
 		};
 		EC6595061A8E89F200678E6C /* slidingViewControllerTest */ = {
@@ -1902,30 +1965,39 @@
 				D3F4574219FD920A000EDF25 /* ManButton.png in Resources */,
 				ECA7A29A1AA8B86C00F899D5 /* JSQMessagesAssets.bundle in Resources */,
 				ECC9E5141AA153070099C46A /* Icon-Small@2x.png in Resources */,
+				EC4173181AFFDCCE00DC79FE /* lostdog.jpg in Resources */,
 				ECC9E5111AA153070099C46A /* Icon-76.png in Resources */,
+				EC641EB31AFFB1220005073C /* line.png in Resources */,
 				ECC9E50E1AA153070099C46A /* Icon-40.png in Resources */,
 				D31DF30C19CEFC0C00A37725 /* Main_iPad.storyboard in Resources */,
 				EC0403F71A9CFE3400151796 /* femalesilhouette.jpeg in Resources */,
 				D3F4574B1A003772000EDF25 /* stockphotoguy1.jpg in Resources */,
+				EC641EAD1AFFB0F30005073C /* login-button.png in Resources */,
 				D31DF31119CEFC0C00A37725 /* Images.xcassets in Resources */,
 				EC641E071AFD37170005073C /* pinRedHighRes.png in Resources */,
 				ECC9E5151AA153070099C46A /* Icon-Small@3x.png in Resources */,
+				EC641EAF1AFFB1030005073C /* signup-button.png in Resources */,
 				ECA7A2BF1AA8B86C00F899D5 /* JSQMessagesLoadEarlierHeaderView.xib in Resources */,
 				EC9F51DF1A2AC68B00CFED6E /* blurredlights.jpg in Resources */,
 				D3F457491A0031F0000EDF25 /* stockphotowoman1.jpg in Resources */,
 				ECA7A2A41AA8B86C00F899D5 /* JSQMessagesViewController.xib in Resources */,
+				EC641EB11AFFB1160005073C /* new-background-for-login-screen.png in Resources */,
 				ECA7A2BA1AA8B86C00F899D5 /* JSQMessagesCollectionViewCellOutgoing.xib in Resources */,
 				D31DF30919CEFC0C00A37725 /* Main_iPhone.storyboard in Resources */,
 				ECA7A2C41AA8B86C00F899D5 /* JSQMessagesTypingIndicatorFooterView.xib in Resources */,
 				ECE6B1721A06B8A9007F4A19 /* thinkingaboutyou.jpg in Resources */,
 				ECA7A29B1AA8B86C00F899D5 /* JSQMessages.strings in Resources */,
 				ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */,
+				EC4173191AFFDCCE00DC79FE /* officerelationship.jpg in Resources */,
 				ECFDAAF61AB38B5C00E42C33 /* PNLoggerSymbols.plist in Resources */,
+				EC93C6A61AFFE7B300D3DE2A /* background-login.png in Resources */,
 				EC9F51DD1A2AC63F00CFED6E /* gaussianblur.jpg in Resources */,
+				EC93C6A41AFFE79800D3DE2A /* newsignup-button.png in Resources */,
 				ECC9E5101AA153070099C46A /* Icon-60@2x.png in Resources */,
 				ECE6B1711A06B8A9007F4A19 /* alwaysloveyou.png in Resources */,
 				ECA7A2C21AA8B86C00F899D5 /* JSQMessagesToolbarContentView.xib in Resources */,
 				EC0823011A18689C000B6684 /* cityLightsBG.jpg in Resources */,
+				EC41731A1AFFDCCE00DC79FE /* missedConnection.jpg in Resources */,
 				D3207B0419E9CF8B00085B7C /* green-checkmark.jpg in Resources */,
 				ECA7A2B81AA8B86C00F899D5 /* JSQMessagesCollectionViewCellIncoming.xib in Resources */,
 				ECC9E50F1AA153070099C46A /* Icon-40@2x.png in Resources */,
@@ -2001,6 +2073,7 @@
 				ECFDAAE91AB38B5C00E42C33 /* PNMessagePostRequest.m in Sources */,
 				ECFDAA9E1AB38B5C00E42C33 /* PNChannelPresence.m in Sources */,
 				ECFDAAA41AB38B5C00E42C33 /* PNChannelGroupNamespaceRemoveResponseParser.m in Sources */,
+				EC93C6A21AFFE1D200D3DE2A /* MySignUpViewController.m in Sources */,
 				EC0822FC1A0EE7F0000B6684 /* UIImage+WebP.m in Sources */,
 				ECEF94631A8D127F0000A444 /* ECSlidingViewController.m in Sources */,
 				ECA7A2A81AA8B86C00F899D5 /* JSQMessagesTimestampFormatter.m in Sources */,
@@ -2075,6 +2148,7 @@
 				ECFDAA9D1AB38B5C00E42C33 /* PNChannel.m in Sources */,
 				EC641E0C1AFF9C5B0005073C /* HomeLoadingViewController.m in Sources */,
 				ECFDAAF11AB38B5C00E42C33 /* PNNetworkHelper.m in Sources */,
+				EC641EA91AFFADC00005073C /* FrontSplashPageViewController.m in Sources */,
 				ECFDAA961AB38B5C00E42C33 /* PubNub+Presence.m in Sources */,
 				ECA7A2A71AA8B86C00F899D5 /* JSQMessagesMediaViewBubbleImageMasker.m in Sources */,
 				ECE6B1841A0DA01D007F4A19 /* UIImage+Scaling.m in Sources */,
@@ -2100,6 +2174,7 @@
 				ECFDAAB81AB38B5C00E42C33 /* PNCache.m in Sources */,
 				EC0822F51A0EE7F0000B6684 /* SDWebImageDownloader.m in Sources */,
 				ECFDAACE1AB38B5C00E42C33 /* NSDictionary+PNAdditions.m in Sources */,
+				EC641EA31AFFACF00005073C /* FindMeLoginViewController.m in Sources */,
 				EC0822F81A0EE7F0000B6684 /* SDWebImagePrefetcher.m in Sources */,
 				ECFDAACC1AB38B5C00E42C33 /* NSData+PNAdditions.m in Sources */,
 				ECFDAAC71AB38B5C00E42C33 /* PNRequestsQueue.m in Sources */,
@@ -2118,6 +2193,7 @@
 				ECA7A2201AA7B84C00F899D5 /* internetOfflineViewController.m in Sources */,
 				ECFDAAB71AB38B5C00E42C33 /* PNAccessRightsInformation.m in Sources */,
 				ECFDAAF01AB38B5C00E42C33 /* PNMessagingChannel.m in Sources */,
+				EC641EAA1AFFADC00005073C /* FrontSplashViewController.m in Sources */,
 				ECA7A2C31AA8B86C00F899D5 /* JSQMessagesTypingIndicatorFooterView.m in Sources */,
 				ECF19FB81A76DAF200607E6D /* CaseDetailsEmailViewController.m in Sources */,
 				ECA7A2B71AA8B86C00F899D5 /* JSQMessagesCollectionViewCellIncoming.m in Sources */,

@@ -7,7 +7,9 @@
 //
 
 #import "HomeLoadingViewController.h"
-
+#import "FindMeLoginViewController.h"
+#import "MySignUpViewController.h"
+#import "HomePageViewController.h"
 @interface HomeLoadingViewController ()
 
 @end
@@ -17,6 +19,40 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    // Check if user is logged in
+    if (![PFUser currentUser]) {
+        
+        // Instantiate our custom log in view controller
+        FindMeLoginViewController *logInViewController = [[FindMeLoginViewController alloc] init];
+        [logInViewController setDelegate:self];
+        [logInViewController setFacebookPermissions:[NSArray arrayWithObjects:@"friends_about_me,publish_actions", nil]];
+        [logInViewController setFields:PFLogInFieldsUsernameAndPassword
+         | PFLogInFieldsFacebook
+         | PFLogInFieldsSignUpButton
+         | PFLogInFieldsLogInButton
+         ];
+        
+        // Instantiate our custom sign up view controller
+        MySignUpViewController *signUpViewController = [[MySignUpViewController alloc] init];
+        [signUpViewController setDelegate:self];
+        [signUpViewController setFields:PFSignUpFieldsDefault];
+        
+        // Link the sign up view controller
+        [logInViewController setSignUpController:signUpViewController];
+        
+        // Present log in view controller
+        
+        [self presentViewController:logInViewController animated:YES completion:NULL];
+        
+    }
+    else
+    {
+        //display the home page view controller
+        HomePageViewController *hpvc = [self.storyboard instantiateViewControllerWithIdentifier:@"hpvc"];
+        [self.navigationController pushViewController:hpvc animated:YES];
+
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -35,6 +71,7 @@
 */
 
 //PFLoginViewController code
+
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -68,7 +105,11 @@
 
 // Sent to the delegate when a PFUser is logged in.
 - (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user {
-    [self dismissViewControllerAnimated:YES completion:NULL];
+    [self.navigationController dismissViewControllerAnimated:YES completion:NULL];
+    
+    HomePageViewController *hpvc = [self.storyboard instantiateViewControllerWithIdentifier:@"hpvc"];
+    [self.navigationController pushViewController:hpvc animated:YES];
+
 }
 
 // Sent to the delegate when the log in attempt fails.
@@ -108,7 +149,13 @@
 
 // Sent to the delegate when a PFUser is signed up.
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user {
-    [self dismissModalViewControllerAnimated:YES]; // Dismiss the PFSignUpViewController
+    //[self dismissModalViewControllerAnimated:YES]; // Dismiss the PFSignUpViewController
+    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController dismissViewControllerAnimated:YES completion:^{
+        //launch the home screen view controller
+        HomePageViewController *hpvc = [self.storyboard instantiateViewControllerWithIdentifier:@"hpvc"];
+         [self.navigationController pushViewController:hpvc animated:YES];
+    }];
 }
 
 // Sent to the delegate when the sign up attempt fails.

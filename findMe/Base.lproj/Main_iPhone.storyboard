@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="zQX-A0-4m7">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="zQX-A0-4m7">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
@@ -856,7 +856,7 @@
         <!--Home Page View Controller-->
         <scene sceneID="au7-rL-zJ3">
             <objects>
-                <viewController id="e02-Df-S4d" customClass="HomePageViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="hpvc" id="e02-Df-S4d" customClass="HomePageViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Tb4-2a-sUH"/>
                         <viewControllerLayoutGuide type="bottom" id="Krm-WE-cPr"/>
@@ -1036,6 +1036,25 @@
             </objects>
             <point key="canvasLocation" x="97" y="531"/>
         </scene>
+        <!--Find Me Login View Controller-->
+        <scene sceneID="T3h-ca-ISB">
+            <objects>
+                <viewController id="Yc1-5c-pSV" customClass="FindMeLoginViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="oeW-Uw-3TL"/>
+                        <viewControllerLayoutGuide type="bottom" id="qpd-zi-RcG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="wMZ-vy-dhc">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="5Lg-X1-joW"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RMF-4f-cSn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1699" y="717"/>
+        </scene>
         <!--Internet Offline View Controller-->
         <scene sceneID="DU5-hZ-cIg">
             <objects>
@@ -1078,7 +1097,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="usF-Vc-2vP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-970" y="1118"/>
+            <point key="canvasLocation" x="-936" y="1112"/>
         </scene>
         <!--Conversations View Controller-->
         <scene sceneID="VXm-G5-yEh">
@@ -1378,12 +1397,12 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="Sb0-tH-ZrE" kind="relationship" relationship="rootViewController" id="iBh-TJ-ZSA"/>
+                        <segue destination="Sb0-tH-ZrE" kind="relationship" relationship="rootViewController" id="d7p-ft-KML"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hyc-iO-QcB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1444" y="12"/>
+            <point key="canvasLocation" x="-1595" y="-52"/>
         </scene>
         <!--Home Loading View Controller-->
         <scene sceneID="uDJ-lZ-ByZ">
@@ -1407,7 +1426,70 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vBq-o2-nZR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-946" y="-130"/>
+            <point key="canvasLocation" x="-1116" y="-62"/>
+        </scene>
+        <!--Front Splash View Controller-->
+        <scene sceneID="cl9-Ny-iKw">
+            <objects>
+                <viewController storyboardIdentifier="frontsplash" id="cL3-d9-R4c" customClass="FrontSplashViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="SH5-5K-9SC"/>
+                        <viewControllerLayoutGuide type="bottom" id="LGj-70-MRo"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="5MS-gz-yvW">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="missedConnection.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="jhc-rx-aof">
+                                <rect key="frame" x="16" y="70" width="71" height="66"/>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="VZ1-NT-ezG">
+                                <rect key="frame" x="20" y="373" width="280" height="116"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.18039215689999999" green="0.19215686269999999" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pLO-NA-O4w">
+                                <rect key="frame" x="99" y="70" width="213" height="320"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="officerelationship.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="kdv-54-5QK">
+                                <rect key="frame" x="16" y="144" width="71" height="66"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="lostdog.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="VS1-Tv-PkK">
+                                <rect key="frame" x="16" y="218" width="71" height="66"/>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Testing Font Here" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="XrH-w8-mI7">
+                                <rect key="frame" x="20" y="-12" width="280" height="116"/>
+                                <fontDescription key="fontDescription" name="Futura-CondensedMedium" family="Futura" pointSize="24"/>
+                                <color key="textColor" red="0.18039215689999999" green="0.19215686269999999" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CfF-Js-Qai">
+                                <rect key="frame" x="28" y="457" width="265" height="52"/>
+                                <state key="normal" image="login-button.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="startPlayingClick:" destination="cL3-d9-R4c" eventType="touchUpInside" id="DfL-qz-5A7"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <connections>
+                        <outlet property="screenText" destination="VZ1-NT-ezG" id="tTq-wY-Sg3"/>
+                        <outlet property="screenshot" destination="pLO-NA-O4w" id="tBQ-SB-h8S"/>
+                        <outlet property="selection1Image" destination="jhc-rx-aof" id="Mlh-Mx-f6l"/>
+                        <outlet property="selection2Image" destination="kdv-54-5QK" id="JjD-qd-OgU"/>
+                        <outlet property="selection3Image" destination="VS1-Tv-PkK" id="bmo-p6-Hoe"/>
+                        <outlet property="startPlayingButton" destination="CfF-Js-Qai" id="vdg-rv-3ci"/>
+                        <outlet property="titleText" destination="XrH-w8-mI7" id="PBe-3F-c46"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9lo-bv-eCm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1291" y="673"/>
         </scene>
     </scenes>
     <resources>
@@ -1417,6 +1499,10 @@
         <image name="cityLightsBG.jpg" width="640" height="1136"/>
         <image name="green-checkmark.jpg" width="425" height="425"/>
         <image name="internetOfflineIcon.png" width="128" height="128"/>
+        <image name="login-button.png" width="175" height="53"/>
+        <image name="lostdog.jpg" width="347" height="338"/>
+        <image name="missedConnection.jpg" width="279" height="181"/>
+        <image name="officerelationship.jpg" width="670" height="503"/>
         <image name="womanbutton.png" width="135" height="135"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
