@@ -1378,17 +1378,42 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="e02-Df-S4d" kind="relationship" relationship="rootViewController" id="t1O-w6-xMq"/>
+                        <segue destination="Sb0-tH-ZrE" kind="relationship" relationship="rootViewController" id="iBh-TJ-ZSA"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hyc-iO-QcB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-980" y="24"/>
+            <point key="canvasLocation" x="-1444" y="12"/>
+        </scene>
+        <!--Home Loading View Controller-->
+        <scene sceneID="uDJ-lZ-ByZ">
+            <objects>
+                <viewController id="Sb0-tH-ZrE" customClass="HomeLoadingViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="fhj-4N-dhd"/>
+                        <viewControllerLayoutGuide type="bottom" id="qnp-tO-L0H"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="hxr-d0-Tab">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="calm.png" translatesAutoresizingMaskIntoConstraints="NO" id="7U0-GT-iHE">
+                                <rect key="frame" x="0.0" y="-8" width="320" height="576"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="bvv-T2-34f"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vBq-o2-nZR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-946" y="-130"/>
         </scene>
     </scenes>
     <resources>
         <image name="ManButton.png" width="135" height="136"/>
         <image name="blurredlights.jpg" width="640" height="1136"/>
+        <image name="calm.png" width="600" height="800"/>
         <image name="cityLightsBG.jpg" width="640" height="1136"/>
         <image name="green-checkmark.jpg" width="425" height="425"/>
         <image name="internetOfflineIcon.png" width="128" height="128"/>

@@ -24,7 +24,7 @@
    
     [Parse setApplicationId:@"XaleNqb8plMKReJIkuAwbokajOkcKo1RkOGdPUcN" clientKey:@"EqxiSF75OYaPQcOMYRR3K8yJursh6sbyHSLpldTT"];
     
-    [PFUser enableAutomaticUser];
+    //[PFUser enableAutomaticUser];
     
     
     PFACL *defaultACL = [PFACL ACL];
@@ -34,8 +34,8 @@
     
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    PFUser *currentUser = [PFUser currentUser];
-    [currentUser save];
+    //PFUser *currentUser = [PFUser currentUser];
+    //currentUser save];
     
     //setup singleton for checking internet status
     [reachabilitySingleton sharedReachability];

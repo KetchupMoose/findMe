@@ -67,6 +67,8 @@
 		EC5B30B61AF4066D002046E3 /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = EC5B30B51AF4066D002046E3 /* iCarousel.m */; };
 		EC641E051AFD35270005073C /* pinRed.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641E041AFD35270005073C /* pinRed.png */; };
 		EC641E071AFD37170005073C /* pinRedHighRes.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641E061AFD37170005073C /* pinRedHighRes.png */; };
+		EC641E091AFF9BFE0005073C /* calm.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641E081AFF9BFE0005073C /* calm.png */; };
+		EC641E0C1AFF9C5B0005073C /* HomeLoadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC641E0B1AFF9C5B0005073C /* HomeLoadingViewController.m */; };
 		EC6595051A8E89E900678E6C /* METransitions.m in Sources */ = {isa = PBXBuildFile; fileRef = EC6595041A8E89E900678E6C /* METransitions.m */; };
 		EC65950E1A8E8BCA00678E6C /* MEFoldAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC6595091A8E8BCA00678E6C /* MEFoldAnimationController.m */; };
 		EC65950F1A8E8BCA00678E6C /* MEZoomAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC65950B1A8E8BCA00678E6C /* MEZoomAnimationController.m */; };
@@ -377,6 +379,9 @@
 		EC5B30B51AF4066D002046E3 /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
 		EC641E041AFD35270005073C /* pinRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinRed.png; sourceTree = "<group>"; };
 		EC641E061AFD37170005073C /* pinRedHighRes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinRedHighRes.png; sourceTree = "<group>"; };
+		EC641E081AFF9BFE0005073C /* calm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calm.png; sourceTree = "<group>"; };
+		EC641E0A1AFF9C5B0005073C /* HomeLoadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeLoadingViewController.h; sourceTree = "<group>"; };
+		EC641E0B1AFF9C5B0005073C /* HomeLoadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeLoadingViewController.m; sourceTree = "<group>"; };
 		EC6595031A8E89E900678E6C /* METransitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = METransitions.h; path = ECSlidingViewController/METransitions.h; sourceTree = "<group>"; };
 		EC6595041A8E89E900678E6C /* METransitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = METransitions.m; path = ECSlidingViewController/METransitions.m; sourceTree = "<group>"; };
 		EC6595081A8E8BCA00678E6C /* MEFoldAnimationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEFoldAnimationController.h; sourceTree = "<group>"; };
@@ -955,6 +960,8 @@
 				D3FBD13E19D05062008240F5 /* JSON Parsing */,
 				D31DF30419CEFC0C00A37725 /* AppDelegate.h */,
 				D31DF30519CEFC0C00A37725 /* AppDelegate.m */,
+				EC641E0A1AFF9C5B0005073C /* HomeLoadingViewController.h */,
+				EC641E0B1AFF9C5B0005073C /* HomeLoadingViewController.m */,
 				ECEF944E1A8C29DF0000A444 /* matchesViewController.h */,
 				ECEF944F1A8C29DF0000A444 /* matchesViewController.m */,
 				ECC9E5021AA1126F0099C46A /* conversationsViewController.h */,
@@ -1047,6 +1054,7 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				EC641E081AFF9BFE0005073C /* calm.png */,
 				EC641E061AFD37170005073C /* pinRedHighRes.png */,
 				EC641E041AFD35270005073C /* pinRed.png */,
 				ECD591BB1ABC930700D32D5D /* carselfie1.jpg */,
@@ -1922,6 +1930,7 @@
 				ECA7A2B81AA8B86C00F899D5 /* JSQMessagesCollectionViewCellIncoming.xib in Resources */,
 				ECC9E50F1AA153070099C46A /* Icon-40@2x.png in Resources */,
 				EC9F51DB1A2AC53B00CFED6E /* longexposurestreetlights.jpeg in Resources */,
+				EC641E091AFF9BFE0005073C /* calm.png in Resources */,
 				ECC9E5121AA153070099C46A /* Icon-76@2x.png in Resources */,
 				D31DF30019CEFC0C00A37725 /* InfoPlist.strings in Resources */,
 			);
@@ -2064,6 +2073,7 @@
 				ECA7A2AF1AA8B86C00F899D5 /* JSQMessage.m in Sources */,
 				ECFDAABC1AB38B5C00E42C33 /* PNChannelGroupNamespace.m in Sources */,
 				ECFDAA9D1AB38B5C00E42C33 /* PNChannel.m in Sources */,
+				EC641E0C1AFF9C5B0005073C /* HomeLoadingViewController.m in Sources */,
 				ECFDAAF11AB38B5C00E42C33 /* PNNetworkHelper.m in Sources */,
 				ECFDAA961AB38B5C00E42C33 /* PubNub+Presence.m in Sources */,
 				ECA7A2A71AA8B86C00F899D5 /* JSQMessagesMediaViewBubbleImageMasker.m in Sources */,
