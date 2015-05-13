@@ -59,8 +59,6 @@ UIView *bgDarkenView;
     answersArray = [[NSMutableArray alloc] init];
     popupanswersDictionary = [[NSMutableArray alloc] init];
     
-    
-    
     //setup sliding view controller variables
      //[self.slidingViewController setAnchorRightRevealAmount:260.0f];
     [self.slidingViewController setAnchorLeftRevealAmount:190.0f];
@@ -344,7 +342,7 @@ UIView *bgDarkenView;
         addBtnLabel.font = [UIFont systemFontOfSize:12];
         addButton.backgroundColor = [UIColor blueColor];
         [addButton addTarget:self
-                        action:@selector(addNewAnswerView:)
+                      action:@selector(addNewAnswerView:)
               forControlEvents:UIControlEventTouchUpInside];
         
         [newOptionView addSubview:closeButton];

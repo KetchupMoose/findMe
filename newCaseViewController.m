@@ -18,7 +18,7 @@
 #import "CaseDetailsEmailViewController.h"
 #import "BaseCaseDetailsSlidingViewController.h"
 #import "caseDetailsCarouselViewController.h"
-
+#import "caseTitleSetViewController.h"
 
 @interface newCaseViewController ()
 
@@ -798,7 +798,10 @@ NSString *locationLongitude;
     cdcvc.userName = self.itsMTLObject.objectId;
     cdcvc.itsMTLObject = self.itsMTLObject;
     cdcvc.manualLocationPropertyNum = self.manualLocationPropertyNum;
-    [self.navigationController pushViewController:cdcvc animated:YES];
+    
+    [self.navigationController pushViewController:cdcvc animated:NO];
+    //[self.navigationController pushViewController:ctsvc animated:NO];
+
 }
 
 

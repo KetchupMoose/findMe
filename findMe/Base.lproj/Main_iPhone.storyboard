@@ -160,6 +160,86 @@
             </objects>
             <point key="canvasLocation" x="214" y="-146"/>
         </scene>
+        <!--Case Title Set View Controller-->
+        <scene sceneID="9JY-Jv-jpj">
+            <objects>
+                <viewController storyboardIdentifier="ctsvc" id="aXU-1r-ccC" customClass="CaseTitleSetViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ysA-ZD-kIU"/>
+                        <viewControllerLayoutGuide type="bottom" id="GB1-o1-TJo"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="HCU-pq-b5J">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Personalize Your Case For Yourself &amp; Others!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xDq-rd-Lu8">
+                                <rect key="frame" x="16" y="81" width="288" height="21"/>
+                                <fontDescription key="fontDescription" name="Futura-CondensedMedium" family="Futura" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Your Case Image, Completely Optional" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tP8-Mo-N8f">
+                                <rect key="frame" x="174" y="147" width="140" height="75"/>
+                                <fontDescription key="fontDescription" name="Futura-CondensedMedium" family="Futura" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Your Internal Name To Remember Your Case" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="njg-DZ-F2B">
+                                <rect key="frame" x="0.0" y="263" width="116" height="75"/>
+                                <fontDescription key="fontDescription" name="Futura-CondensedMedium" family="Futura" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zfZ-jh-nuc">
+                                <rect key="frame" x="58" y="438" width="204" height="65"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="Make It!">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="MakeCase:" destination="aXU-1r-ccC" eventType="touchUpInside" id="KuP-1U-G5x"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="imageselect.png" translatesAutoresizingMaskIntoConstraints="NO" id="zfu-fk-6Xh">
+                                <rect key="frame" x="16" y="120" width="150" height="150"/>
+                            </imageView>
+                            <textField opaque="NO" clipsSubviews="YES" tag="8" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="The woman in the red dress" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fMx-cP-2Gd">
+                                <rect key="frame" x="116" y="286" width="198" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="The External Name Others Will See" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vpi-6f-2JC">
+                                <rect key="frame" x="0.0" y="342" width="116" height="75"/>
+                                <fontDescription key="fontDescription" name="Futura-CondensedMedium" family="Futura" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iae-G6-XTP">
+                                <rect key="frame" x="16" y="110" width="150" height="160"/>
+                                <state key="normal">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="setPhoto:" destination="aXU-1r-ccC" eventType="touchUpInside" id="T61-w9-am2"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" tag="9" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Handsome Man On TTC" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ksx-g8-4yu">
+                                <rect key="frame" x="116" y="365" width="198" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="caseImageView" destination="zfu-fk-6Xh" id="hJg-G8-Ykw"/>
+                        <outlet property="externalCaseNameTextField" destination="ksx-g8-4yu" id="hjN-gr-cfY"/>
+                        <outlet property="internalCaseNameTextField" destination="fMx-cP-2Gd" id="qi6-fw-DlM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5Sa-uQ-EI1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="223" y="-807"/>
+        </scene>
         <!--Case Details Carousel View Controller-->
         <scene sceneID="SyM-lv-Xzh">
             <objects>
@@ -1097,7 +1177,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="usF-Vc-2vP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-936" y="1112"/>
+            <point key="canvasLocation" x="-936" y="1068"/>
         </scene>
         <!--Conversations View Controller-->
         <scene sceneID="VXm-G5-yEh">
@@ -1498,6 +1578,7 @@
         <image name="calm.png" width="600" height="800"/>
         <image name="cityLightsBG.jpg" width="640" height="1136"/>
         <image name="green-checkmark.jpg" width="425" height="425"/>
+        <image name="imageselect.png" width="256" height="256"/>
         <image name="internetOfflineIcon.png" width="128" height="128"/>
         <image name="login-button.png" width="175" height="53"/>
         <image name="lostdog.jpg" width="347" height="338"/>

@@ -14,6 +14,7 @@
 #import "mapPinViewController.h"
 #import "verticalPanGestureRecognizer.h"
 #import "matchesViewController.h"
+#import "CaseTitleSetViewController.h"
 
 @implementation caseDetailsCarouselViewController
 
@@ -48,6 +49,8 @@ NSMutableArray *changedCaseItemsIndex;
 NSMutableArray *priorCaseIDS;
 NSMutableArray *templateOptionsCounts;
 NSMutableArray *items;
+NSMutableArray *customAnsweredCaseItems;
+
 
 PFObject *returnedITSMTLObject;
 //this variable stores the case being updated so it's clear which one to show when the json returns.  Used for a case where we're not in "template mode".
@@ -138,6 +141,14 @@ BOOL LoadedBOOL = NO;
 }
 -(void)viewDidLoad
 {
+    if([self.jsonDisplayMode isEqualToString:@"template"])
+    {
+        CaseTitleSetViewController *ctsvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ctsvc"];
+        ctsvc.delegate = self;
+        
+        [self presentViewController:ctsvc animated:NO completion:nil];
+        
+    }
     items = [NSMutableArray array];
     for (int i = 0; i < 1000; i++)
     {
@@ -235,6 +246,7 @@ BOOL LoadedBOOL = NO;
     selectedCaseItemAnswersArray = [[NSMutableArray alloc] init];
     selectedCaseItemAnswersArrayOfDictionaries  = [[NSMutableArray alloc] init];
     selectedCaseItemOriginalOptions = [[NSMutableArray alloc] init];
+    customAnsweredCaseItems = [[NSMutableArray alloc] init];
     
     //fill an array of the prior cases so the client can look for a new previously non-existing caseId if the user is submitting a new template
     NSArray *cases = [self.itsMTLObject objectForKey:@"cases"];
@@ -432,6 +444,7 @@ BOOL LoadedBOOL = NO;
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    
     
     
     // Tell it which view should be created under Right
@@ -1361,7 +1374,7 @@ BOOL LoadedBOOL = NO;
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"propertyCell" forIndexPath:indexPath];
     UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
-    
+    NSString *optionTxt;
     
     if(indexPath.row == propertyTableOptionsArray.count)
     {
@@ -1369,12 +1382,23 @@ BOOL LoadedBOOL = NO;
         optionLabel.font = [UIFont systemFontOfSize:17];
         optionLabel.textColor = [UIColor blueColor];
         optionLabel.text = @"Add Another Answer";
+        
+        NSNumber *indexNum = [NSNumber numberWithInteger:selectedCarouselIndex];
+        if([customAnsweredCaseItems containsObject:indexNum])
+        {
+            //change the label to gray color
+            
+            optionLabel.textColor = [UIColor grayColor];
+            optionLabel.text = @"Add More Answers After Submitting Case";
+            
+        }
     }
     else
     {
         optionLabel.font = [UIFont systemFontOfSize:17];
         optionLabel.textColor = [UIColor blackColor];
         optionLabel.text = [propertyTableOptionsArray objectAtIndex:indexPath.row];
+        optionTxt =[propertyTableOptionsArray objectAtIndex:indexPath.row];
     }
     
     NSString *rowNumber = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
@@ -1389,7 +1413,7 @@ BOOL LoadedBOOL = NO;
         cell.backgroundColor = [UIColor whiteColor];
         
     }
-    NSString *optionTxt = optionLabel.text;
+   
     
     if ([selectedCaseItemAnswersArray  containsObject:optionTxt])
     {
@@ -1407,6 +1431,13 @@ BOOL LoadedBOOL = NO;
     //for the last cell, show a keyboard to type a new option
     if(indexPath.row==propertyTableOptionsArray.count)
     {
+        NSNumber *indexNum = [NSNumber numberWithInteger:selectedCarouselIndex];
+        if([customAnsweredCaseItems containsObject:indexNum])
+        {
+            //don't respond when this is selected
+            
+            return;
+        }
         
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         //cell.backgroundColor = [UIColor clearColor];
@@ -2358,7 +2389,10 @@ BOOL LoadedBOOL = NO;
     
     if([reloadModeString isEqualToString:@"fromSingleNewProperty"])
     {
-        [self.navigationController popViewControllerAnimated:NO];
+        //commenting out as single new properties are no longer added on a separate view controller
+        //[self.navigationController popViewControllerAnimated:NO];
+       
+        
     }
     
     //set the last timestamp for the case if there needs to be polling.
@@ -3104,7 +3138,7 @@ BOOL LoadedBOOL = NO;
                 
                 //loop through op
                 
-                options = [[options stringByAppendingString:@"; "] stringByAppendingString:ansCustomVal];
+                options = [[options stringByAppendingString:@";"] stringByAppendingString:ansCustomVal];
                 [propObject setObject:options forKey:@"options"];
                 
             }
@@ -3119,6 +3153,10 @@ BOOL LoadedBOOL = NO;
     {
         NSString *propOptions = options;
         propertyTableOptionsArray = [[propOptions componentsSeparatedByString:@";"] mutableCopy];
+        
+        //add answer array to selectedCaseItem
+        [selectedCaseItem setObject:Answers forKey:@"answers"];
+        
     }
   
     
@@ -3411,10 +3449,139 @@ BOOL LoadedBOOL = NO;
                 
                 //add the new answer to the local storage of answers for the carousel's selected CaseItem
                 
-                [selectedCaseItemAnswersArray addObject:@"newAnsString"];
-                NSMutableDictionary *newAnsCustom = [[NSMutableDictionary alloc] init];
-                [newAnsCustom setObject:newAnsString forKey:@"custom"];
-                [selectedCaseItemAnswersArrayOfDictionaries addObject:newAnsCustom];
+                PFObject *propObject = [propsArray objectAtIndex:selectedCarouselIndex];
+                NSString *propString = [propObject objectForKey:@"propertyType"];
+                NSString *options = [propObject objectForKey:@"options"];
+                
+                //check to see if we are in template mode
+
+                if(templateMode ==YES)
+                {
+                   
+                    
+                    if([propString isEqualToString:@"U"])
+                    {
+                        //can add unlimited custom answers
+                        //custom answers should be added to both the property in text form and the answers array in numeric form
+                        
+                    //may12
+                    NSString *updatedPropertyOptions = [[options stringByAppendingString:@";" ]stringByAppendingString:newAnsString];
+                    
+                    [propObject setObject:updatedPropertyOptions forKey:@"options"];
+                    
+                    //get count of options
+                        NSArray *optionsArray = [[updatedPropertyOptions componentsSeparatedByString:@";"] mutableCopy];
+                        int optionCount = [optionsArray count];
+                        
+                    //add index of answer as option count
+                        NSString *optionCountString = [NSString stringWithFormat:@"%d",optionCount];
+                        
+                        [selectedCaseItemAnswersArray addObject:optionCountString];
+                        NSMutableDictionary *newAnsCustom =[[NSMutableDictionary alloc] init];
+                        [newAnsCustom setObject:optionCountString forKey:@"a"];
+                        [selectedCaseItemAnswersArrayOfDictionaries addObject:newAnsCustom];
+                        
+                        propertyTableOptionsArray = [optionsArray mutableCopy];
+                        
+                        
+                    }
+                    
+                    //template mode logic for adding custom answers to non user created answers:
+                    //only allow adding 1 answer, add it with custom flag
+                    //add the option to the property options for display purposes but do NOT update the property when updating the template, just update the answer with custom flag
+                    //add the property index to an index of customAnsweredCaseItems so the tableview knows not to display another "add your answer" field
+                    else
+                    {
+                        NSString *updatedPropertyOptions = [[options stringByAppendingString:@";" ]stringByAppendingString:newAnsString];
+                         NSArray *optionsArray = [[updatedPropertyOptions componentsSeparatedByString:@";"] mutableCopy];
+                        [propObject setObject:updatedPropertyOptions forKey:@"options"];
+                        
+                        [selectedCaseItemAnswersArray addObject:newAnsString];
+                        NSMutableDictionary *newAnsCustom = [[NSMutableDictionary alloc] init];
+                        [newAnsCustom setObject:newAnsString forKey:@"custom"];
+                        [selectedCaseItemAnswersArrayOfDictionaries addObject:newAnsCustom];
+                        
+                         propertyTableOptionsArray = [optionsArray mutableCopy];
+                        NSNumber *customAnswerIndex = [NSNumber numberWithInteger:selectedCarouselIndex];
+                        
+                        [customAnsweredCaseItems addObject:customAnswerIndex];
+                        
+                    }
+                }
+                else
+                //update this with XML right away since out of template mode
+                {
+                 
+                    //update caseItem with custom tagged answer
+                    [selectedCaseItemAnswersArray addObject:newAnsString];
+                    NSMutableDictionary *newAnsCustom = [[NSMutableDictionary alloc] init];
+                    [newAnsCustom setObject:newAnsString forKey:@"custom"];
+                    [selectedCaseItemAnswersArrayOfDictionaries addObject:newAnsCustom];
+                    
+                    PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
+                    [selectedCaseItemObject setObject:selectedCaseItemAnswersArrayOfDictionaries forKey:@"answers"];
+                    
+                    //update XML
+                    NSDictionary *propObjectForUpdate = (NSDictionary *)propObject;
+                    NSDictionary *selectedCaseObjectDict = (NSDictionary *)selectedCaseItemObject;
+                    
+                    
+                    NSString *xmlForUpdate = [self createXMLFunctionSingleCaseItem:nil CaseItemObject:selectedCaseObjectDict];
+                    
+                    //add code to do the actual update
+                    
+                    //add a progress HUD to show it is retrieving list of properts
+                    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+                    [self.view addSubview:HUD];
+                    
+                    // Set determinate mode
+                    HUD.mode = MBProgressHUDModeDeterminate;
+                    HUD.delegate = self;
+                    HUD.labelText = @"Updating With The New Case Item";
+                    [HUD show:YES];
+                    //may13
+                    //use parse cloud code function
+                    [PFCloud callFunctionInBackground:@"submitXML"
+                                       withParameters:@{@"payload": xmlForUpdate}
+                                                block:^(NSString *responseString, NSError *error) {
+                                                    
+                        if (!error)
+                        {
+                                                        
+                        NSString *responseText = responseString;
+                        NSLog(responseText);
+                                                        
+                                                        
+                        //convert to NSDictionaryHere
+            
+                        NSString *responseTextWithoutHeader = [responseText
+                                                                                               stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+                        NSError *jsonError;
+                        NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData options:NSJSONReadingMutableContainers error:&jsonError];
+                                                        
+                        NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                        [self reloadData:jsonCaseChange reloadMode:@"fromSingleNewProperty"];
+                                                        });
+                                                        
+                        }
+                    else
+                        {
+                       NSLog(error.localizedDescription);
+                       [HUD hide:YES];
+                       }
+                     }];
+
+                }
+                
+            }
+            else
+            {
+                UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Empty Message"message:@"Must enter text for custom message" delegate:self
+                                                         cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+                
             }
         }
         
@@ -3422,13 +3589,14 @@ BOOL LoadedBOOL = NO;
     [NewAnswerView removeFromSuperview];
     [bgDarkenView removeFromSuperview];
     
+    [self.propertiesTableView reloadData];
+    
+    /*
     PFObject *selectedCaseItemObject = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
     NSString *caseItemObjectID = [selectedCaseItemObject objectForKey:@"caseItem"];
     
-    
-    
     [self updateCaseItem:caseItemObjectID AcceptableAnswersList:selectedCaseItemAnswersArrayOfDictionaries ForNewAnswer:YES];
-    
+    */
 }
 
 - (void)deleteACaseItem:(PFObject *)itemObject atIndex:(NSInteger) index
@@ -3530,7 +3698,6 @@ BOOL LoadedBOOL = NO;
                        withParameters:@{@"payload": xml}
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {
-                                        
                                         
                                         
                                         //commented out as no longer polling
@@ -3870,7 +4037,6 @@ BOOL LoadedBOOL = NO;
         
         [self doUpdate:self];
         
-        
     }
     
     
@@ -3939,6 +4105,11 @@ BOOL LoadedBOOL = NO;
 -(void)dismissKeyboard {
     
     [self.view endEditing:YES];
+}
+
+-(void)dismissCaseTitleSetViewController:(NSString *)internalCaseName withExt:(NSString *)externalCaseName withImg:(UIImage *)caseImage
+{
+     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 

@@ -60,7 +60,6 @@ PNChannel *sharedChannel;
         
     }
 
-    
     /**
      *  You can set custom avatar sizes
      */
@@ -144,7 +143,6 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     }
 }];
  */
-    
     
 }
 

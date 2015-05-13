@@ -12,10 +12,10 @@
 #import <Parse/Parse.h>
 #import "popupViewController.h"
 #import "mapPinViewController.h"
-@interface caseDetailsCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate,MyDataDelegate,CLLocationManagerDelegate,mapPinViewControllerDelegate,UIGestureRecognizerDelegate,UITextFieldDelegate>
+#import "CaseTitleSetViewController.h"
+@interface caseDetailsCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate,MyDataDelegate,CLLocationManagerDelegate,mapPinViewControllerDelegate,UIGestureRecognizerDelegate,UITextFieldDelegate,CaseTitleSetViewControllerDelegate>
 
 -(IBAction)doUpdate:(id)sender;
-
 @property (weak,nonatomic) IBOutlet UIButton *submitAnswersButton;
 @property (weak,nonatomic) IBOutlet UIButton *locationButton;
 -(IBAction)showLocationPicker:(id)sender;
@@ -41,4 +41,9 @@
 
 @property (strong,nonatomic) IBOutlet UILabel *customAnswerLabel;
 @property (strong,nonatomic) IBOutlet UIImageView *customAnswerCheckmark;
+
+@property (strong,nonatomic) NSString *internalCaseName;
+@property (strong,nonatomic) NSString *externalCaseName;
+@property (strong,nonatomic) UIImage *caseImage;
+
 @end

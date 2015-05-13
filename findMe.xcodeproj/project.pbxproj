@@ -88,6 +88,22 @@
 		EC93C6A21AFFE1D200D3DE2A /* MySignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC93C6A11AFFE1D200D3DE2A /* MySignUpViewController.m */; };
 		EC93C6A41AFFE79800D3DE2A /* newsignup-button.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6A31AFFE79800D3DE2A /* newsignup-button.png */; };
 		EC93C6A61AFFE7B300D3DE2A /* background-login.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6A51AFFE7B300D3DE2A /* background-login.png */; };
+		EC93C6A81B03A0C100D3DE2A /* imageselect.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6A71B03A0C100D3DE2A /* imageselect.png */; };
+		EC93C6AB1B03A26A00D3DE2A /* CaseTitleSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC93C6AA1B03A26A00D3DE2A /* CaseTitleSetViewController.m */; };
+		EC93C6C21B03B9CD00D3DE2A /* GKCropBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = EC93C6AE1B03B9CD00D3DE2A /* GKCropBorderView.m */; };
+		EC93C6C31B03B9CD00D3DE2A /* GKImageCropOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EC93C6B01B03B9CD00D3DE2A /* GKImageCropOverlayView.m */; };
+		EC93C6C41B03B9CD00D3DE2A /* GKImageCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = EC93C6B21B03B9CD00D3DE2A /* GKImageCropView.m */; };
+		EC93C6C51B03B9CD00D3DE2A /* GKImageCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC93C6B41B03B9CD00D3DE2A /* GKImageCropViewController.m */; };
+		EC93C6C61B03B9CD00D3DE2A /* GKImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = EC93C6B61B03B9CD00D3DE2A /* GKImagePicker.m */; };
+		EC93C6C71B03B9CD00D3DE2A /* GKResizeableCropOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EC93C6B81B03B9CD00D3DE2A /* GKResizeableCropOverlayView.m */; };
+		EC93C6C81B03B9CD00D3DE2A /* PLCameraSheetButton.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6BA1B03B9CD00D3DE2A /* PLCameraSheetButton.png */; };
+		EC93C6C91B03B9CD00D3DE2A /* PLCameraSheetButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6BB1B03B9CD00D3DE2A /* PLCameraSheetButton@2x.png */; };
+		EC93C6CA1B03B9CD00D3DE2A /* PLCameraSheetButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6BC1B03B9CD00D3DE2A /* PLCameraSheetButtonPressed.png */; };
+		EC93C6CB1B03B9CD00D3DE2A /* PLCameraSheetButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6BD1B03B9CD00D3DE2A /* PLCameraSheetButtonPressed@2x.png */; };
+		EC93C6CC1B03B9CD00D3DE2A /* PLCameraSheetDoneButton.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6BE1B03B9CD00D3DE2A /* PLCameraSheetDoneButton.png */; };
+		EC93C6CD1B03B9CD00D3DE2A /* PLCameraSheetDoneButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6BF1B03B9CD00D3DE2A /* PLCameraSheetDoneButton@2x.png */; };
+		EC93C6CE1B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6C01B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed.png */; };
+		EC93C6CF1B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6C11B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed@2x.png */; };
 		EC9F51DB1A2AC53B00CFED6E /* longexposurestreetlights.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DA1A2AC53B00CFED6E /* longexposurestreetlights.jpeg */; };
 		EC9F51DD1A2AC63F00CFED6E /* gaussianblur.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DC1A2AC63F00CFED6E /* gaussianblur.jpg */; };
 		EC9F51DF1A2AC68B00CFED6E /* blurredlights.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DE1A2AC68B00CFED6E /* blurredlights.jpg */; };
@@ -424,6 +440,29 @@
 		EC93C6A11AFFE1D200D3DE2A /* MySignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MySignUpViewController.m; sourceTree = "<group>"; };
 		EC93C6A31AFFE79800D3DE2A /* newsignup-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "newsignup-button.png"; sourceTree = "<group>"; };
 		EC93C6A51AFFE7B300D3DE2A /* background-login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background-login.png"; sourceTree = "<group>"; };
+		EC93C6A71B03A0C100D3DE2A /* imageselect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = imageselect.png; sourceTree = "<group>"; };
+		EC93C6A91B03A26A00D3DE2A /* CaseTitleSetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaseTitleSetViewController.h; sourceTree = "<group>"; };
+		EC93C6AA1B03A26A00D3DE2A /* CaseTitleSetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaseTitleSetViewController.m; sourceTree = "<group>"; };
+		EC93C6AD1B03B9CD00D3DE2A /* GKCropBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKCropBorderView.h; sourceTree = "<group>"; };
+		EC93C6AE1B03B9CD00D3DE2A /* GKCropBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKCropBorderView.m; sourceTree = "<group>"; };
+		EC93C6AF1B03B9CD00D3DE2A /* GKImageCropOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKImageCropOverlayView.h; sourceTree = "<group>"; };
+		EC93C6B01B03B9CD00D3DE2A /* GKImageCropOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKImageCropOverlayView.m; sourceTree = "<group>"; };
+		EC93C6B11B03B9CD00D3DE2A /* GKImageCropView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKImageCropView.h; sourceTree = "<group>"; };
+		EC93C6B21B03B9CD00D3DE2A /* GKImageCropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKImageCropView.m; sourceTree = "<group>"; };
+		EC93C6B31B03B9CD00D3DE2A /* GKImageCropViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKImageCropViewController.h; sourceTree = "<group>"; };
+		EC93C6B41B03B9CD00D3DE2A /* GKImageCropViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKImageCropViewController.m; sourceTree = "<group>"; };
+		EC93C6B51B03B9CD00D3DE2A /* GKImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKImagePicker.h; sourceTree = "<group>"; };
+		EC93C6B61B03B9CD00D3DE2A /* GKImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKImagePicker.m; sourceTree = "<group>"; };
+		EC93C6B71B03B9CD00D3DE2A /* GKResizeableCropOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKResizeableCropOverlayView.h; sourceTree = "<group>"; };
+		EC93C6B81B03B9CD00D3DE2A /* GKResizeableCropOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKResizeableCropOverlayView.m; sourceTree = "<group>"; };
+		EC93C6BA1B03B9CD00D3DE2A /* PLCameraSheetButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PLCameraSheetButton.png; sourceTree = "<group>"; };
+		EC93C6BB1B03B9CD00D3DE2A /* PLCameraSheetButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PLCameraSheetButton@2x.png"; sourceTree = "<group>"; };
+		EC93C6BC1B03B9CD00D3DE2A /* PLCameraSheetButtonPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PLCameraSheetButtonPressed.png; sourceTree = "<group>"; };
+		EC93C6BD1B03B9CD00D3DE2A /* PLCameraSheetButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PLCameraSheetButtonPressed@2x.png"; sourceTree = "<group>"; };
+		EC93C6BE1B03B9CD00D3DE2A /* PLCameraSheetDoneButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PLCameraSheetDoneButton.png; sourceTree = "<group>"; };
+		EC93C6BF1B03B9CD00D3DE2A /* PLCameraSheetDoneButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PLCameraSheetDoneButton@2x.png"; sourceTree = "<group>"; };
+		EC93C6C01B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PLCameraSheetDoneButtonPressed.png; sourceTree = "<group>"; };
+		EC93C6C11B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PLCameraSheetDoneButtonPressed@2x.png"; sourceTree = "<group>"; };
 		EC9F51DA1A2AC53B00CFED6E /* longexposurestreetlights.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = longexposurestreetlights.jpeg; sourceTree = "<group>"; };
 		EC9F51DC1A2AC63F00CFED6E /* gaussianblur.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = gaussianblur.jpg; sourceTree = "<group>"; };
 		EC9F51DE1A2AC68B00CFED6E /* blurredlights.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = blurredlights.jpg; sourceTree = "<group>"; };
@@ -929,6 +968,8 @@
 		D31DF2E919CEFC0C00A37725 = {
 			isa = PBXGroup;
 			children = (
+				EC93C6AC1B03B9CD00D3DE2A /* GKClasses */,
+				EC93C6B91B03B9CD00D3DE2A /* GKImages */,
 				EC0822CE1A0EE7F0000B6684 /* SDWebImage */,
 				D31DF2FB19CEFC0C00A37725 /* findMe */,
 				D31DF31D19CEFC0C00A37725 /* findMeTests */,
@@ -998,6 +1039,8 @@
 				ECB1D50F1A7748B5008CC684 /* popupViewController.h */,
 				ECB1D5101A7748B5008CC684 /* popupViewController.m */,
 				D31DF30719CEFC0C00A37725 /* Main_iPhone.storyboard */,
+				EC93C6A91B03A26A00D3DE2A /* CaseTitleSetViewController.h */,
+				EC93C6AA1B03A26A00D3DE2A /* CaseTitleSetViewController.m */,
 				D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */,
 				EC5B30B21AF40061002046E3 /* CarouselTestViewController.h */,
 				EC5B30B31AF40061002046E3 /* CarouselTestViewController.m */,
@@ -1083,6 +1126,7 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				EC93C6A71B03A0C100D3DE2A /* imageselect.png */,
 				EC641EAB1AFFB0AF0005073C /* tutorialAssets */,
 				EC641E081AFF9BFE0005073C /* calm.png */,
 				EC641E061AFD37170005073C /* pinRedHighRes.png */,
@@ -1220,6 +1264,40 @@
 				EC65950D1A8E8BCA00678E6C /* MEDynamicTransition.m */,
 			);
 			name = transitions;
+			sourceTree = "<group>";
+		};
+		EC93C6AC1B03B9CD00D3DE2A /* GKClasses */ = {
+			isa = PBXGroup;
+			children = (
+				EC93C6AD1B03B9CD00D3DE2A /* GKCropBorderView.h */,
+				EC93C6AE1B03B9CD00D3DE2A /* GKCropBorderView.m */,
+				EC93C6AF1B03B9CD00D3DE2A /* GKImageCropOverlayView.h */,
+				EC93C6B01B03B9CD00D3DE2A /* GKImageCropOverlayView.m */,
+				EC93C6B11B03B9CD00D3DE2A /* GKImageCropView.h */,
+				EC93C6B21B03B9CD00D3DE2A /* GKImageCropView.m */,
+				EC93C6B31B03B9CD00D3DE2A /* GKImageCropViewController.h */,
+				EC93C6B41B03B9CD00D3DE2A /* GKImageCropViewController.m */,
+				EC93C6B51B03B9CD00D3DE2A /* GKImagePicker.h */,
+				EC93C6B61B03B9CD00D3DE2A /* GKImagePicker.m */,
+				EC93C6B71B03B9CD00D3DE2A /* GKResizeableCropOverlayView.h */,
+				EC93C6B81B03B9CD00D3DE2A /* GKResizeableCropOverlayView.m */,
+			);
+			path = GKClasses;
+			sourceTree = "<group>";
+		};
+		EC93C6B91B03B9CD00D3DE2A /* GKImages */ = {
+			isa = PBXGroup;
+			children = (
+				EC93C6BA1B03B9CD00D3DE2A /* PLCameraSheetButton.png */,
+				EC93C6BB1B03B9CD00D3DE2A /* PLCameraSheetButton@2x.png */,
+				EC93C6BC1B03B9CD00D3DE2A /* PLCameraSheetButtonPressed.png */,
+				EC93C6BD1B03B9CD00D3DE2A /* PLCameraSheetButtonPressed@2x.png */,
+				EC93C6BE1B03B9CD00D3DE2A /* PLCameraSheetDoneButton.png */,
+				EC93C6BF1B03B9CD00D3DE2A /* PLCameraSheetDoneButton@2x.png */,
+				EC93C6C01B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed.png */,
+				EC93C6C11B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed@2x.png */,
+			);
+			path = GKImages;
 			sourceTree = "<group>";
 		};
 		ECA7A2271AA8B81C00F899D5 /* chatControls */ = {
@@ -1965,6 +2043,7 @@
 				D3F4574219FD920A000EDF25 /* ManButton.png in Resources */,
 				ECA7A29A1AA8B86C00F899D5 /* JSQMessagesAssets.bundle in Resources */,
 				ECC9E5141AA153070099C46A /* Icon-Small@2x.png in Resources */,
+				EC93C6C91B03B9CD00D3DE2A /* PLCameraSheetButton@2x.png in Resources */,
 				EC4173181AFFDCCE00DC79FE /* lostdog.jpg in Resources */,
 				ECC9E5111AA153070099C46A /* Icon-76.png in Resources */,
 				EC641EB31AFFB1220005073C /* line.png in Resources */,
@@ -1977,11 +2056,13 @@
 				EC641E071AFD37170005073C /* pinRedHighRes.png in Resources */,
 				ECC9E5151AA153070099C46A /* Icon-Small@3x.png in Resources */,
 				EC641EAF1AFFB1030005073C /* signup-button.png in Resources */,
+				EC93C6CF1B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed@2x.png in Resources */,
 				ECA7A2BF1AA8B86C00F899D5 /* JSQMessagesLoadEarlierHeaderView.xib in Resources */,
 				EC9F51DF1A2AC68B00CFED6E /* blurredlights.jpg in Resources */,
 				D3F457491A0031F0000EDF25 /* stockphotowoman1.jpg in Resources */,
 				ECA7A2A41AA8B86C00F899D5 /* JSQMessagesViewController.xib in Resources */,
 				EC641EB11AFFB1160005073C /* new-background-for-login-screen.png in Resources */,
+				EC93C6CD1B03B9CD00D3DE2A /* PLCameraSheetDoneButton@2x.png in Resources */,
 				ECA7A2BA1AA8B86C00F899D5 /* JSQMessagesCollectionViewCellOutgoing.xib in Resources */,
 				D31DF30919CEFC0C00A37725 /* Main_iPhone.storyboard in Resources */,
 				ECA7A2C41AA8B86C00F899D5 /* JSQMessagesTypingIndicatorFooterView.xib in Resources */,
@@ -1989,21 +2070,27 @@
 				ECA7A29B1AA8B86C00F899D5 /* JSQMessages.strings in Resources */,
 				ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */,
 				EC4173191AFFDCCE00DC79FE /* officerelationship.jpg in Resources */,
+				EC93C6CA1B03B9CD00D3DE2A /* PLCameraSheetButtonPressed.png in Resources */,
 				ECFDAAF61AB38B5C00E42C33 /* PNLoggerSymbols.plist in Resources */,
+				EC93C6CB1B03B9CD00D3DE2A /* PLCameraSheetButtonPressed@2x.png in Resources */,
 				EC93C6A61AFFE7B300D3DE2A /* background-login.png in Resources */,
 				EC9F51DD1A2AC63F00CFED6E /* gaussianblur.jpg in Resources */,
 				EC93C6A41AFFE79800D3DE2A /* newsignup-button.png in Resources */,
 				ECC9E5101AA153070099C46A /* Icon-60@2x.png in Resources */,
 				ECE6B1711A06B8A9007F4A19 /* alwaysloveyou.png in Resources */,
 				ECA7A2C21AA8B86C00F899D5 /* JSQMessagesToolbarContentView.xib in Resources */,
+				EC93C6CE1B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed.png in Resources */,
 				EC0823011A18689C000B6684 /* cityLightsBG.jpg in Resources */,
 				EC41731A1AFFDCCE00DC79FE /* missedConnection.jpg in Resources */,
+				EC93C6A81B03A0C100D3DE2A /* imageselect.png in Resources */,
 				D3207B0419E9CF8B00085B7C /* green-checkmark.jpg in Resources */,
 				ECA7A2B81AA8B86C00F899D5 /* JSQMessagesCollectionViewCellIncoming.xib in Resources */,
 				ECC9E50F1AA153070099C46A /* Icon-40@2x.png in Resources */,
 				EC9F51DB1A2AC53B00CFED6E /* longexposurestreetlights.jpeg in Resources */,
+				EC93C6C81B03B9CD00D3DE2A /* PLCameraSheetButton.png in Resources */,
 				EC641E091AFF9BFE0005073C /* calm.png in Resources */,
 				ECC9E5121AA153070099C46A /* Icon-76@2x.png in Resources */,
+				EC93C6CC1B03B9CD00D3DE2A /* PLCameraSheetDoneButton.png in Resources */,
 				D31DF30019CEFC0C00A37725 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2040,6 +2127,8 @@
 				ECE6B1801A0D9FF3007F4A19 /* UIImageView+Scaling.m in Sources */,
 				ECA7A2B41AA8B86C00F899D5 /* JSQMessagesCellTextView.m in Sources */,
 				EC5B30B41AF40061002046E3 /* CarouselTestViewController.m in Sources */,
+				EC93C6C71B03B9CD00D3DE2A /* GKResizeableCropOverlayView.m in Sources */,
+				EC93C6C61B03B9CD00D3DE2A /* GKImagePicker.m in Sources */,
 				ECFDAAE61AB38B5C00E42C33 /* PNLatencyMeasureRequest.m in Sources */,
 				ECFDAAB41AB38B5C00E42C33 /* PNWhereNowResponseParser.m in Sources */,
 				ECCD47071AE1984300804B06 /* verticalPanGestureRecognizer.m in Sources */,
@@ -2079,6 +2168,7 @@
 				ECA7A2A81AA8B86C00F899D5 /* JSQMessagesTimestampFormatter.m in Sources */,
 				ECA7A2BC1AA8B86C00F899D5 /* JSQMessagesInputToolbar.m in Sources */,
 				ECFDAAA61AB38B5C00E42C33 /* PNChannelGroupRemoveResponseParser.m in Sources */,
+				EC93C6AB1B03A26A00D3DE2A /* CaseTitleSetViewController.m in Sources */,
 				ECFDAAC61AB38B5C00E42C33 /* PNOperationStatus.m in Sources */,
 				ECFDAAB51AB38B5C00E42C33 /* PNAccessRightOptions.m in Sources */,
 				EC0822F11A0EE7F0000B6684 /* NSData+ImageContentType.m in Sources */,
@@ -2097,6 +2187,7 @@
 				ECEF944A1A832A4F0000A444 /* SWLongPressGestureRecognizer.m in Sources */,
 				ECA7A2B11AA8B86C00F899D5 /* JSQMessagesBubbleImage.m in Sources */,
 				ECA7A2AE1AA8B86C00F899D5 /* JSQMediaItem.m in Sources */,
+				EC93C6C31B03B9CD00D3DE2A /* GKImageCropOverlayView.m in Sources */,
 				ECFDAA911AB38B5C00E42C33 /* PubNub+ChannelRegistry.m in Sources */,
 				ECFDAABF1AB38B5C00E42C33 /* PNContextInformation.m in Sources */,
 				ECA7A2B01AA8B86C00F899D5 /* JSQMessagesAvatarImage.m in Sources */,
@@ -2203,6 +2294,7 @@
 				ECFDAA931AB38B5C00E42C33 /* PubNub+History.m in Sources */,
 				ECFDAAD91AB38B5C00E42C33 /* PNAccessRightsAuditRequest.m in Sources */,
 				ECA7A2A11AA8B86C00F899D5 /* UIView+JSQMessages.m in Sources */,
+				EC93C6C51B03B9CD00D3DE2A /* GKImageCropViewController.m in Sources */,
 				ECA7A2A01AA8B86C00F899D5 /* UIImage+JSQMessages.m in Sources */,
 				ECEF94621A8D127F0000A444 /* ECSlidingSegue.m in Sources */,
 				ECFDAACA1AB38B5C00E42C33 /* PNWhereNow.m in Sources */,
@@ -2212,6 +2304,7 @@
 				EC0822FF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m in Sources */,
 				ECFDAA941AB38B5C00E42C33 /* PubNub+Messaging.m in Sources */,
 				ECFDAABE1AB38B5C00E42C33 /* PNConfiguration.m in Sources */,
+				EC93C6C21B03B9CD00D3DE2A /* GKCropBorderView.m in Sources */,
 				EC0822F31A0EE7F0000B6684 /* SDWebImageCompat.m in Sources */,
 				D318324D19D062ED003D51A3 /* CaseBuilder.m in Sources */,
 				ECFDAAB31AB38B5C00E42C33 /* PNTimeTokenResponseParser.m in Sources */,
@@ -2219,6 +2312,7 @@
 				ECA7A2AB1AA8B86C00F899D5 /* JSQMessagesCollectionViewFlowLayoutInvalidationContext.m in Sources */,
 				ECE6B1761A0D8AE5007F4A19 /* newCaseViewController.m in Sources */,
 				ECA7A2B31AA8B86C00F899D5 /* JSQVideoMediaItem.m in Sources */,
+				EC93C6C41B03B9CD00D3DE2A /* GKImageCropView.m in Sources */,
 				ECFDAA901AB38B5C00E42C33 /* PubNub+APNS.m in Sources */,
 				ECEF94641A8D127F0000A444 /* UIViewController+ECSlidingViewController.m in Sources */,
 				ECA7A2A51AA8B86C00F899D5 /* JSQMessagesAvatarImageFactory.m in Sources */,
