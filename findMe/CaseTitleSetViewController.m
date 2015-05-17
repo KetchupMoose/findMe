@@ -42,6 +42,16 @@ UIImage *selectedCaseImage;
    // self.cdcvc.caseImage = selectedCaseImage;
    // self.cdcvc.externalCaseName = externalNameString;
     //self.cdcvc.internalCaseName = internalNameString;
+    internalNameString = self.internalCaseNameTextField.text;
+    externalNameString = self.externalCaseNameTextField.text;
+    
+    if([internalNameString length] <=0 || [externalNameString length] <=0)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Must Enter Case Names" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        return;
+        
+    }
     
     //remove this view controller
     [self.delegate dismissCaseTitleSetViewController:internalNameString withExt:externalNameString withImg:selectedCaseImage];
@@ -128,6 +138,7 @@ UIImage *selectedCaseImage;
 {
     //UIImage *scaledImage = [self imageWithImage:image scaledToSize:CGSizeMake(150, 150)];
     self.caseImageView.image = image;
+    selectedCaseImage = image;
     
     //NSLog(@"view %f %f, image %f %f", self.currentCardView.cardImage.frame.size.width, self.currentCardView.cardImage.frame.size.height, image.size.width, image.size.height);
     

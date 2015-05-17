@@ -31,6 +31,7 @@ UIRefreshControl *refreshControl;
 @synthesize userName;
 NSMutableArray *caseIDSList;
 NSArray *caseObjects;
+NSArray *caseProfileObjects;
 NSMutableArray *caseImages;
 NSMutableArray *caseShowNames;
 
@@ -211,7 +212,11 @@ NSMutableArray *caseShowNames;
         [caseQuery whereKey:@"objectId" containedIn:caseIDSList];
         caseObjects = [caseQuery findObjects];
     
+        PFQuery *caseProfileQuery = [PFQuery queryWithClassName:@"CaseProfile"];
+        [caseProfileQuery whereKey:@"caseID" containedIn:caseIDSList];
+        caseProfileObjects = [caseProfileQuery findObjects];
     
+        
         [refreshControl endRefreshing];
         [casesTableView reloadData];
         
@@ -304,37 +309,113 @@ NSMutableArray *caseShowNames;
     */
     PFObject *caseObj =  [caseListPruned objectAtIndex:indexPath.row];
     
-    caseDetail1.text = [caseObj objectForKey:@"caseId"];
-    
-    PFObject *caseParseObj = [caseObjects objectAtIndex:indexPath.row];
-    if([[caseParseObj objectForKey:@"caseShowName"] length]>0)
+   NSString *caseID = [caseObj objectForKey:@"caseId"];
+    caseDetail1.text = caseID;
+    //check to see if there is a caseProfile for this caseID
+    NSString *caseimgURL;
+    for (PFObject *caseProfileObj in caseProfileObjects)
     {
-         caseShowNameLabel.text = [caseParseObj objectForKey:@"caseShowName"];
+        NSString *caseProfileCaseID = [caseProfileObj objectForKey:@"caseID"];
+        if([caseID isEqualToString:caseProfileCaseID])
+        {
+            //display case information
+            caseShowNameLabel.text = [caseProfileObj objectForKey:@"internalCaseName"];
+            PFFile *imgFile = [caseProfileObj objectForKey:@"caseImage"];
+            caseimgURL = imgFile.url;
+        }
     }
-    
-    NSString *caseImgURL = @"";
-   if([[caseParseObj objectForKey:@"caseImgURL"] length]>0)
-   {
-       caseImgURL =[caseParseObj objectForKey:@"caseImgURL"];
-   }
-    else
-    {
-        caseImgURL = @"http://www.carascravings.com/wp-content/uploads/2012/07/profile-photo-220x183.jpg";
-    }
-    
     
     UIActivityIndicatorViewStyle *activityStyle = UIActivityIndicatorViewStyleGray;
 
     //NSString *caseImgURL = [caseImages objectAtIndex:indexPath.row];
-  
-    
-    if([caseImgURL length] ==0)
+    if([caseimgURL length] ==0)
     {
-        caseImgURL = @"http://www.carascravings.com/wp-content/uploads/2012/07/profile-photo-220x183.jpg";
+        caseimgURL = @"http://www.carascravings.com/wp-content/uploads/2012/07/profile-photo-220x183.jpg";
     }
-    [caseImgView setImageWithURL:[NSURL URLWithString:caseImgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
-   
+    [caseImgView setImageWithURL:[NSURL URLWithString:caseimgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
     
+    //check number of matches in case
+    NSArray *caseItems = [caseObj objectForKey:@"caseItems"];
+    
+    //loop through the itsMTLObject and gather all the user's matches
+    NSMutableArray *allMatchesArray = [[NSMutableArray alloc] init];
+    NSMutableArray *allMatchCaseObjectsArray = [[NSMutableArray alloc] init];
+    NSMutableArray *allMatchCaseItemObjectsArray = [[NSMutableArray alloc] init];
+    NSMutableArray *allMatchesCaseTypes = [[NSMutableArray alloc] init];
+  
+    //get the properties
+        
+        for(PFObject *caseItemObject in caseItems)
+        {
+            NSString *origin = [caseItemObject objectForKey:@"origin"];
+            if([origin isEqualToString:@"B"])
+            {
+                NSString *matchesString = [caseItemObject objectForKey:@"browse"];
+                
+                NSString *matchesYesString = [caseItemObject objectForKey:@"yeses"];
+                
+                NSString *matchesRejectedYesString = [caseItemObject objectForKey:@"rejectedYeses"];
+                
+                NSArray *matchesArray = [matchesString componentsSeparatedByString:@";"];
+                NSArray *matchesYesArray = [matchesYesString componentsSeparatedByString:@";"];
+                NSArray *matchesRejectedYesArray= [matchesRejectedYesString componentsSeparatedByString:@";"];
+                
+                
+                if([matchesRejectedYesArray count] >0)
+                {
+                    for(NSString *caseMatchID in matchesRejectedYesArray)
+                    {
+                        [allMatchesArray addObject:caseMatchID];
+                        [allMatchCaseObjectsArray addObject:caseObj];
+                        NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                        
+                        [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                        [allMatchesCaseTypes addObject:@"rejected"];
+                        
+                    }
+                    
+                }
+                
+                if([matchesYesArray count] >0)
+                {
+                    for(NSString *caseMatchID in matchesYesArray)
+                    {
+                        
+                        //if(![allMatchesArray containsObject:caseMatchID])
+                        // {
+                        [allMatchesArray addObject:caseMatchID];
+                        [allMatchCaseObjectsArray addObject:caseObj];
+                        NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                        
+                        [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                        [allMatchesCaseTypes addObject:@"yes"];
+                        //  }
+                        
+                    }
+                    
+                }
+                if([matchesArray count] >0)
+                {
+                    for(NSString *caseMatchID in matchesArray)
+                    {
+                        // if(![allMatchesArray containsObject:caseMatchID])
+                        //{
+                        [allMatchesArray addObject:caseMatchID];
+                        [allMatchCaseObjectsArray addObject:caseObj];
+                        NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                        
+                        [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                        [allMatchesCaseTypes addObject:@"match"];
+                        // }
+                    }
+                    
+                }
+            }
+        }
+    NSInteger numOfMatches = [allMatchesArray count];
+    NSString *numOfMatchesString = [[NSString stringWithFormat:@"%ld",(long)numOfMatches] stringByAppendingString:@" Matches"];
+    matchesCountLabel.text = numOfMatchesString;
+   
     return cell;
 }
 
@@ -352,7 +433,8 @@ NSMutableArray *caseShowNames;
     cdcvc.manualLocationPropertyNum = self.manualLocationPropertyNum;
     
     [self.navigationController pushViewController:cdcvc animated:NO];
-
+    
+    
     /*
     //bring up the case details view controller
     

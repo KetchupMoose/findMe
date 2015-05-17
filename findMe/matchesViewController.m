@@ -14,6 +14,7 @@
 #import "conversationsViewController.h"
 #import "conversationJSQViewController.h"
 #import "conversationModelData.h"
+#import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 
 @interface matchesViewController ()
 
@@ -103,11 +104,38 @@ MBProgressHUD *HUD;
         
     }
     
-    matchImage.image = [UIImage imageNamed:@"femalesilhouette.jpeg"];
+    NSString *matchCaseID = [self.matchesArray objectAtIndex:indexPath.row];
     
-    NSString *matchNameString = [self.matchesArray objectAtIndex:indexPath.row];
+    //matchNameLabel.text = matchNameString;
     
-    matchNameLabel.text = matchNameString;
+    //check to see if there is a caseProfile for this caseID
+    NSString *caseimgURL;
+    for (PFObject *caseProfileObj in self.matchesCaseProfileArrays)
+    {
+        NSString *caseProfileCaseID = [caseProfileObj objectForKey:@"caseID"];
+        if([matchCaseID isEqualToString:caseProfileCaseID])
+        {
+            //display case information
+            matchNameLabel.text = [caseProfileObj objectForKey:@"externalCaseName"];
+            PFFile *imgFile = [caseProfileObj objectForKey:@"caseImage"];
+            caseimgURL = imgFile.url;
+        }
+    }
+    UIActivityIndicatorViewStyle *activityStyle = UIActivityIndicatorViewStyleGray;
+    
+    if([caseimgURL length] ==0)
+    {
+        NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"femalesilhouette" ofType:@"jpeg"];
+        matchImage.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
+        
+    }
+    else
+    {
+        [matchImage setImageWithURL:[NSURL URLWithString:caseimgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
+    }
+    
+    
+    
     
     NSString *matchType = [self.matchTypeArray objectAtIndex:indexPath.row];
     if([matchType isEqualToString:@"yes"])
@@ -452,9 +480,7 @@ MBProgressHUD *HUD;
         
         [self.matchesTableView reloadData];
         
-        
-        
-    }];
+        }];
     
 
 }

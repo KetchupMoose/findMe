@@ -252,7 +252,7 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="2QU-c2-OsA">
+                            <tableView clipsSubviews="YES" tag="8999" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="2QU-c2-OsA">
                                 <rect key="frame" x="16" y="225" width="288" height="285"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -335,6 +335,36 @@
                             <imageView userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="green-checkmark.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="i3s-O1-AUi">
                                 <rect key="frame" x="214" y="372" width="47" height="47"/>
                             </imageView>
+                            <tableView clipsSubviews="YES" alpha="0.0" tag="8745" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="90" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="HQd-AP-c5X">
+                                <rect key="frame" x="16" y="291" width="288" height="218"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="matchCell" rowHeight="90" id="Any-D1-q1Y">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Any-D1-q1Y" id="Km9-Xl-ZSm">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" tag="201" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nKa-dq-1br">
+                                                    <rect key="frame" x="0.0" y="0.0" width="89" height="89"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="202" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="I just saw you" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9gU-Ek-xHW">
+                                                    <rect key="frame" x="97" y="0.0" width="191" height="21"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="203" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Custom Story About My Case Here" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kcs-M8-aTW">
+                                                    <rect key="frame" x="103" y="29" width="178" height="52"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -359,6 +389,7 @@
                         <outlet property="customAnswerLabel" destination="vQw-vU-OMN" id="OfI-5e-9ft"/>
                         <outlet property="customAnswerTextField" destination="1Cn-bU-La3" id="QGV-cM-wsF"/>
                         <outlet property="locationButton" destination="iKs-9O-IfQ" id="mcX-a0-gfe"/>
+                        <outlet property="matchesTableView" destination="HQd-AP-c5X" id="6Sw-3N-rbE"/>
                         <outlet property="propertiesTableView" destination="2QU-c2-OsA" id="6jc-tN-kkM"/>
                         <outlet property="submitAnswersButton" destination="viG-Yy-aaG" id="rci-KN-NwL"/>
                         <outlet property="viewMatchesButton" destination="v0m-YO-T74" id="cnf-LS-a7N"/>
@@ -1569,7 +1600,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9lo-bv-eCm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1291" y="673"/>
+            <point key="canvasLocation" x="-1315" y="647"/>
         </scene>
     </scenes>
     <resources>

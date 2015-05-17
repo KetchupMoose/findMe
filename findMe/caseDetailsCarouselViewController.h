@@ -32,6 +32,8 @@
 @property (strong,nonatomic) NSMutableDictionary *jsonObject;
 
 @property (strong,nonatomic) IBOutlet UITableView *propertiesTableView;
+@property (strong,nonatomic) IBOutlet UITableView *matchesTableView;
+
 @property (strong,nonatomic) NSString *manualLocationPropertyNum;
 @property (weak,nonatomic) IBOutlet UIButton *viewMatchesButton;
 -(IBAction)viewMatches:(id)sender;

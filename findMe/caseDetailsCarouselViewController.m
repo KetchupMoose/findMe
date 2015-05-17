@@ -416,6 +416,8 @@ BOOL LoadedBOOL = NO;
     
     self.propertiesTableView.delegate = self;
     self.propertiesTableView.dataSource = self;
+    self.matchesTableView.delegate = self;
+    self.matchesTableView.dataSource = self;
     
     [self.propertiesTableView reloadData];
     
@@ -444,8 +446,6 @@ BOOL LoadedBOOL = NO;
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    
-    
     
     // Tell it which view should be created under Right
     
@@ -884,7 +884,13 @@ BOOL LoadedBOOL = NO;
     if(index ==carouselNumOfItems-1)
     {
         self.propertiesTableView.alpha = 0;
+        self.matchesTableView.alpha = 0;
         self.viewMatchesButton.alpha = 0;
+        self.customAnswerTextField.alpha = 0;
+        self.customAnswerLabel.alpha = 0;
+        self.customAnswerButton.alpha = 0;
+        self.customAnswerLabel.text = @"";
+        self.customAnswerCheckmark.alpha = 0;
         return;
     }
     else
@@ -896,19 +902,24 @@ BOOL LoadedBOOL = NO;
         
         if([propTypeString isEqualToString:@"B"])
         {
+            self.matchesTableView.alpha = 1;
             self.propertiesTableView.alpha = 0;
-            self.viewMatchesButton.alpha = 1;
+            self.viewMatchesButton.alpha = 0;
             self.customAnswerTextField.alpha = 0;
             self.customAnswerLabel.alpha = 0;
             self.customAnswerButton.alpha = 0;
             self.customAnswerLabel.text = @"";
             self.customAnswerCheckmark.alpha = 0;
             
+            //gather the full array of matches to display
+            
+            
             return;
             
         }
         if([propTypeString isEqualToString:@"N"] || [propTypeString isEqualToString:@"I"])
         {
+            self.matchesTableView.alpha = 0;
             self.propertiesTableView.alpha = 0;
             self.viewMatchesButton.alpha = 0;
             self.customAnswerTextField.alpha = 0;
@@ -959,6 +970,7 @@ BOOL LoadedBOOL = NO;
             //set a textbox value as that current answer, don't show the tableview
             //WORKINPROGRESS APR 13
             //answersLabel.text = customAns;
+            self.matchesTableView.alpha = 0;
             self.propertiesTableView.alpha = 0;
              self.customAnswerCheckmark.alpha = 0;
             self.customAnswerTextField.alpha = 1;
@@ -983,6 +995,7 @@ BOOL LoadedBOOL = NO;
                 
             }
         self.propertiesTableView.alpha=1;
+        self.matchesTableView.alpha = 0;
         self.customAnswerTextField.alpha = 0;
         self.customAnswerLabel.alpha = 0;
         self.customAnswerCheckmark.alpha = 0;
@@ -1340,6 +1353,10 @@ BOOL LoadedBOOL = NO;
 #pragma mark UITableViewDelegateMethods
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+if(tableView.tag ==8999)
+{
+        
+    
     int caseItemsCount = (int)[propertyTableOptionsArray count];
     
     //check to see answerability of the currently selected case item.  If it is not one that supports custom answers, then do not show the Add Another Answer option.
@@ -1363,16 +1380,30 @@ BOOL LoadedBOOL = NO;
         return caseItemsCount;
         
     }
+}
+    else
+    {
+        return 4;
+        
+    }
    
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    
     return 1;
 }
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"propertyCell" forIndexPath:indexPath];
+    
+    NSInteger tableViewTag = tableView.tag;
+    UITableViewCell *cell;
+if(tableViewTag ==8999)
+    {
+        
+    
+    cell = [tableView dequeueReusableCellWithIdentifier:@"propertyCell" forIndexPath:indexPath];
     UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
     NSString *optionTxt;
     
@@ -1421,8 +1452,15 @@ BOOL LoadedBOOL = NO;
         
     }
     
+    
+ }
+else
+{
+    cell = [tableView dequeueReusableCellWithIdentifier:@"matchCell" forIndexPath:indexPath];
+}
     return cell;
     
+
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -2191,6 +2229,16 @@ BOOL LoadedBOOL = NO;
     }
     caseObjectBeingUpdated = (PFObject *)caseItemObject;
     
+    if(templateMode==1)
+        
+    {
+        //get the new caseID
+        NSString *caseString = [caseItemObject objectForKey:@"caseId"];
+        //create the case profile
+        [self submitCaseProfileInfo:caseString];
+        
+    }
+
     templateMode =0;
     self.carousel.animateSwipeUp = YES;
 
@@ -2243,7 +2291,9 @@ BOOL LoadedBOOL = NO;
     //get all the property information for the list of properties to consider
     PFQuery *propertsQuery = [PFQuery queryWithClassName:@"Properts"];
     [propertsQuery whereKey:@"objectId" containedIn:propertyIDSArray];
-    
+    //loop through properties
+    //check designation == "the match"
+    //play popup
     [propsArray removeAllObjects];
     
     propsArray = [[propertsQuery findObjects] mutableCopy];
@@ -2772,6 +2822,7 @@ BOOL LoadedBOOL = NO;
                                                                                                error:&jsonError];
                                         
                                         NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+                                        
                                         
                                         dispatch_async(dispatch_get_main_queue(), ^{
                                             [self reloadData:jsonCaseChange reloadMode:@"fromJSON"];
@@ -4109,7 +4160,39 @@ BOOL LoadedBOOL = NO;
 
 -(void)dismissCaseTitleSetViewController:(NSString *)internalCaseName withExt:(NSString *)externalCaseName withImg:(UIImage *)caseImage
 {
-     [self dismissViewControllerAnimated:YES completion:nil];
+    self.internalCaseName = internalCaseName;
+    self.externalCaseName = externalCaseName;
+    self.caseImage = caseImage;
+    
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)submitCaseProfileInfo:(NSString *)caseID;
+{
+    PFObject *newCaseProfile = [PFObject objectWithClassName:@"CaseProfile"];
+    [newCaseProfile setObject:caseID forKey:@"caseID"];
+    
+    [newCaseProfile setObject:self.internalCaseName forKey:@"internalCaseName"];
+    [newCaseProfile setObject:self.externalCaseName forKey:@"externalCaseName"];
+    
+    UIImage *imgForParse = self.caseImage;
+    
+    
+    // Convert to JPEG with 50% quality
+    NSData* data = UIImageJPEGRepresentation(self.caseImage, 0.8f);
+   
+    PFFile *imageFile = [PFFile fileWithName:@"caseImage.jpg" data:data];
+    [newCaseProfile setObject:imageFile forKey:@"caseImage"];
+    [newCaseProfile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if(error)
+        {
+            NSLog(@"ParseError: %@", error.localizedDescription);
+        }
+        NSLog(@"case profile information saved");
+        
+    }];
+    
 }
 
 

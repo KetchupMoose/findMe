@@ -420,6 +420,12 @@ NSString *homePageManualLocationPropertyNum;
     mvc.matchesCaseItemArrays = [allMatchCaseItemObjectsArray copy];
     mvc.matchTypeArray = [allMatchesCaseTypes copy];
     
+    //query for caseProfiles
+    PFQuery *caseProfileQuery = [PFQuery queryWithClassName:@"CaseProfile"];
+    [caseProfileQuery whereKey:@"caseID" containedIn:allMatchesArray];
+    NSArray *returnedCaseProfiles = [caseProfileQuery findObjects];
+    mvc.matchesCaseProfileArrays = returnedCaseProfiles;
+    
     
     mvc.matchesUserName = HomePageuserName;
     mvc.matchViewControllerMode = @"allMatches";
