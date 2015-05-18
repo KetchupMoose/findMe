@@ -99,6 +99,12 @@ NSMutableArray *selectedCaseItemAnswersArray;
 NSMutableArray *selectedCaseItemAnswersArrayOfDictionaries;
 NSMutableArray *selectedCaseItemOriginalOptions;
 NSInteger selectedCarouselIndex;
+NSMutableArray *activeMatchesArray;
+NSMutableArray *activeMatchesCaseItemObjectsArray;
+NSMutableArray *activeMatchesCaseTypesArray;
+NSMutableArray *activeMatchesCaseProfiles;
+
+
 
 UIView *deleteBGView;
 NSString *answerabilityFlag;
@@ -912,6 +918,82 @@ BOOL LoadedBOOL = NO;
             self.customAnswerCheckmark.alpha = 0;
             
             //gather the full array of matches to display
+            //loop through the itsMTLObject and gather all the user's matches
+            activeMatchesArray = [[NSMutableArray alloc] init];
+            activeMatchesCaseItemObjectsArray = [[NSMutableArray alloc] init];
+            activeMatchesCaseTypesArray = [[NSMutableArray alloc] init];
+           
+            //get selectedCaseItemObject
+            PFObject *caseItemObject = [sortedCaseItems objectAtIndex:index];
+        
+            NSString *origin = [caseItemObject objectForKey:@"origin"];
+                if([origin isEqualToString:@"B"])
+                {
+                    NSString *matchesString = [caseItemObject objectForKey:@"browse"];
+                        
+                    NSString *matchesYesString = [caseItemObject objectForKey:@"yeses"];
+                        
+                    NSString *matchesRejectedYesString = [caseItemObject objectForKey:@"rejectedYeses"];
+                        
+                    NSArray *matchesArray = [matchesString componentsSeparatedByString:@";"];
+                    NSArray *matchesYesArray = [matchesYesString componentsSeparatedByString:@";"];
+                    NSArray *matchesRejectedYesArray= [matchesRejectedYesString componentsSeparatedByString:@";"];
+                    
+                    if([matchesRejectedYesArray count] >0)
+                        {
+                            for(NSString *caseMatchID in matchesRejectedYesArray)
+                            {
+                                [activeMatchesArray addObject:caseMatchID];
+                                NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                                [activeMatchesCaseItemObjectsArray addObject:caseItemObjectString];
+                                [activeMatchesCaseTypesArray addObject:@"rejected"];
+                                
+                            }
+                            
+                        }
+                        
+                        if([matchesYesArray count] >0)
+                        {
+                            for(NSString *caseMatchID in matchesYesArray)
+                            {
+                                
+                                //if(![activeMatchesArray containsObject:caseMatchID])
+                                // {
+                                [activeMatchesArray addObject:caseMatchID];
+                                NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                                [activeMatchesCaseItemObjectsArray addObject:caseItemObjectString];
+                                [activeMatchesCaseTypesArray addObject:@"yes"];
+                                //  }
+                                
+                            }
+                            
+                        }
+                        
+                        if([matchesArray count] >0)
+                        {
+                            for(NSString *caseMatchID in matchesArray)
+                            {
+                                // if(![activeMatchesArray containsObject:caseMatchID])
+                                //{
+                                [activeMatchesArray addObject:caseMatchID];
+                        
+                                NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                                
+                                [activeMatchesCaseItemObjectsArray addObject:caseItemObjectString];
+                                [activeMatchesCaseTypesArray addObject:@"match"];
+                                // }
+                            }
+                            
+                        }
+                    }
+            
+            //query for caseProfiles
+            PFQuery *caseProfileQuery = [PFQuery queryWithClassName:@"CaseProfile"];
+            [caseProfileQuery whereKey:@"caseID" containedIn:activeMatchesArray];
+            NSArray *returnedCaseProfiles = [caseProfileQuery findObjects];
+            activeMatchesCaseProfiles = [returnedCaseProfiles mutableCopy];
+            
+            [self.matchesTableView reloadData];
             
             
             return;
@@ -950,7 +1032,6 @@ BOOL LoadedBOOL = NO;
         else
         {
             selectedCaseItemAnswersArrayOfDictionaries = [[NSMutableArray alloc] init];
-            
             
         }
        
@@ -1355,7 +1436,6 @@ BOOL LoadedBOOL = NO;
 {
 if(tableView.tag ==8999)
 {
-        
     
     int caseItemsCount = (int)[propertyTableOptionsArray count];
     
@@ -1383,7 +1463,7 @@ if(tableView.tag ==8999)
 }
     else
     {
-        return 4;
+        return activeMatchesArray.count;
         
     }
    
@@ -1457,6 +1537,55 @@ if(tableViewTag ==8999)
 else
 {
     cell = [tableView dequeueReusableCellWithIdentifier:@"matchCell" forIndexPath:indexPath];
+    
+    //customize the cell
+    UIImageView *matchImageView = (UIImageView *)[cell viewWithTag:201];
+    UILabel *caseTitleLabel = (UILabel *)[cell viewWithTag:202];
+    UILabel *caseNameLabel = (UILabel *)[cell viewWithTag:203];
+    
+    NSString *matchCaseID = [activeMatchesArray objectAtIndex:indexPath.row];
+    
+    //matchNameLabel.text = matchNameString;
+    
+    //check to see if there is a caseProfile for this caseID
+    NSString *caseimgURL;
+    for (PFObject *caseProfileObj in activeMatchesCaseProfiles)
+    {
+        NSString *caseProfileCaseID = [caseProfileObj objectForKey:@"caseID"];
+        if([matchCaseID isEqualToString:caseProfileCaseID])
+        {
+            //display case information
+            caseNameLabel.text = [caseProfileObj objectForKey:@"externalCaseName"];
+            PFFile *imgFile = [caseProfileObj objectForKey:@"caseImage"];
+            caseimgURL = imgFile.url;
+        }
+    }
+    UIActivityIndicatorViewStyle *activityStyle = UIActivityIndicatorViewStyleGray;
+    
+    if([caseimgURL length] ==0)
+    {
+        NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"femalesilhouette" ofType:@"jpeg"];
+        matchImageView.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
+        
+    }
+    else
+    {
+        [matchImageView setImageWithURL:[NSURL URLWithString:caseimgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
+    }
+    
+    NSString *matchType = [activeMatchesCaseTypesArray objectAtIndex:indexPath.row];
+    if([matchType isEqualToString:@"yes"])
+    {
+        caseNameLabel.textColor = [UIColor greenColor];
+        
+    }
+    else if([matchType isEqualToString:@"rejected"])
+    {
+        caseNameLabel.textColor = [UIColor grayColor];
+        
+    }
+
+    
 }
     return cell;
     
