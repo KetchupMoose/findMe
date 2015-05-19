@@ -13,7 +13,8 @@
 #import "popupViewController.h"
 #import "mapPinViewController.h"
 #import "CaseTitleSetViewController.h"
-@interface caseDetailsCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate,MyDataDelegate,CLLocationManagerDelegate,mapPinViewControllerDelegate,UIGestureRecognizerDelegate,UITextFieldDelegate,CaseTitleSetViewControllerDelegate>
+#import "SWTableViewCell.h"
+@interface caseDetailsCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate,MyDataDelegate,CLLocationManagerDelegate,mapPinViewControllerDelegate,UIGestureRecognizerDelegate,UITextFieldDelegate,CaseTitleSetViewControllerDelegate,SWTableViewCellDelegate>
 
 -(IBAction)doUpdate:(id)sender;
 @property (weak,nonatomic) IBOutlet UIButton *submitAnswersButton;

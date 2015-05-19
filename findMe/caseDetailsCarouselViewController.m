@@ -15,6 +15,9 @@
 #import "verticalPanGestureRecognizer.h"
 #import "matchesViewController.h"
 #import "CaseTitleSetViewController.h"
+#import "conversationJSQViewController.h"
+#import "conversationModelData.h"
+
 
 @implementation caseDetailsCarouselViewController
 
@@ -100,6 +103,7 @@ NSMutableArray *selectedCaseItemAnswersArrayOfDictionaries;
 NSMutableArray *selectedCaseItemOriginalOptions;
 NSInteger selectedCarouselIndex;
 NSMutableArray *activeMatchesArray;
+NSMutableArray *activeMatchCaseObjectsArray;
 NSMutableArray *activeMatchesCaseItemObjectsArray;
 NSMutableArray *activeMatchesCaseTypesArray;
 NSMutableArray *activeMatchesCaseProfiles;
@@ -428,6 +432,9 @@ BOOL LoadedBOOL = NO;
     [self.propertiesTableView reloadData];
     
     LoadedBOOL = YES;
+    
+    [self checkForSureMatch:propsArray];
+    
     
     //check to see if we should fire bubble burst
     //only fire a bubble burst if there is at least one new flag
@@ -920,12 +927,17 @@ BOOL LoadedBOOL = NO;
             //gather the full array of matches to display
             //loop through the itsMTLObject and gather all the user's matches
             activeMatchesArray = [[NSMutableArray alloc] init];
+            activeMatchCaseObjectsArray = [[NSMutableArray alloc] init];
             activeMatchesCaseItemObjectsArray = [[NSMutableArray alloc] init];
             activeMatchesCaseTypesArray = [[NSMutableArray alloc] init];
            
             //get selectedCaseItemObject
             PFObject *caseItemObject = [sortedCaseItems objectAtIndex:index];
-        
+            
+            //get selectedCase
+            //class level variable caseObjectBeingUpdated;
+            
+            
             NSString *origin = [caseItemObject objectForKey:@"origin"];
                 if([origin isEqualToString:@"B"])
                 {
@@ -945,6 +957,8 @@ BOOL LoadedBOOL = NO;
                             {
                                 [activeMatchesArray addObject:caseMatchID];
                                 NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                                [activeMatchCaseObjectsArray addObject:caseObjectBeingUpdated];
+                                
                                 [activeMatchesCaseItemObjectsArray addObject:caseItemObjectString];
                                 [activeMatchesCaseTypesArray addObject:@"rejected"];
                                 
@@ -960,6 +974,7 @@ BOOL LoadedBOOL = NO;
                                 //if(![activeMatchesArray containsObject:caseMatchID])
                                 // {
                                 [activeMatchesArray addObject:caseMatchID];
+                                [activeMatchCaseObjectsArray addObject:caseObjectBeingUpdated];
                                 NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
                                 [activeMatchesCaseItemObjectsArray addObject:caseItemObjectString];
                                 [activeMatchesCaseTypesArray addObject:@"yes"];
@@ -976,7 +991,7 @@ BOOL LoadedBOOL = NO;
                                 // if(![activeMatchesArray containsObject:caseMatchID])
                                 //{
                                 [activeMatchesArray addObject:caseMatchID];
-                        
+                                [activeMatchCaseObjectsArray addObject:caseObjectBeingUpdated];
                                 NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
                                 
                                 [activeMatchesCaseItemObjectsArray addObject:caseItemObjectString];
@@ -1478,12 +1493,18 @@ if(tableView.tag ==8999)
 {
     
     NSInteger tableViewTag = tableView.tag;
-    UITableViewCell *cell;
+ 
 if(tableViewTag ==8999)
     {
         
-    
+       UITableViewCell *cell;
     cell = [tableView dequeueReusableCellWithIdentifier:@"propertyCell" forIndexPath:indexPath];
+        
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc]initWithStyle:
+                    UITableViewCellStyleDefault reuseIdentifier:@"propertyCell"];
+        }
+        
     UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
     NSString *optionTxt;
     
@@ -1525,18 +1546,28 @@ if(tableViewTag ==8999)
         
     }
    
-    
     if ([selectedCaseItemAnswersArray  containsObject:optionTxt])
     {
         cell.backgroundColor = [UIColor greenColor];
         
     }
     
-    
+    return cell;
  }
 else
 {
-    cell = [tableView dequeueReusableCellWithIdentifier:@"matchCell" forIndexPath:indexPath];
+    
+    SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"matchCell" forIndexPath:indexPath];
+    
+    if (cell == nil) {
+        cell = [[SWTableViewCell alloc]initWithStyle:
+                UITableViewCellStyleDefault reuseIdentifier:@"matchCell"];
+    }
+
+    cell.leftUtilityButtons = [self leftButtons];
+    cell.rightUtilityButtons = [self rightButtons];
+    cell.delegate = self;
+
     
     //customize the cell
     UIImageView *matchImageView = (UIImageView *)[cell viewWithTag:201];
@@ -1585,15 +1616,58 @@ else
         
     }
 
-    
+     return cell;
 }
-    return cell;
+   
     
 
 }
+
+- (NSArray *)rightButtons
+{
+    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.0f green:0.78f blue:0.0f alpha:1.0]
+                                                title:@"Yes"];
+    
+    return rightUtilityButtons;
+}
+
+- (NSArray *)leftButtons
+{
+    NSMutableArray *leftUtilityButtons = [NSMutableArray new];
+    
+    [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
+                                               title:@"No"];
+    
+    /*
+     icon:[UIImage imageNamed:@"check.png"]];
+     [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:1.0f blue:0.35f alpha:1.0]
+     icon:[UIImage imageNamed:@"clock.png"]];
+     [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0]
+     icon:[UIImage imageNamed:@"cross.png"]];
+     [leftUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.55f green:0.27f blue:0.07f alpha:1.0]
+     icon:[UIImage imageNamed:@"list.png"]];
+     */
+    
+    return leftUtilityButtons;
+}
+
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    int tableViewTag = tableView.tag;
+    
+if(tableViewTag ==8999)
+{
+    
+    
+    
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     //for the last cell, show a keyboard to type a new option
     if(indexPath.row==propertyTableOptionsArray.count)
@@ -1659,7 +1733,7 @@ else
         return;
         
     }
-    
+   
      UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     
     //implement answerability logic:
@@ -1722,7 +1796,7 @@ else
     }
 
     }
-    
+ 
     //APR13
     //these two class level variables are already filled each time the user selects a new property with the carousel.
     //the mutable dictionary will be the object that is populated and sent eventually to the JSON when updates are being done.
@@ -1738,7 +1812,57 @@ else
     self.submitAnswersButton.enabled = 1;
     [self.submitAnswersButton.titleLabel setBackgroundColor:[UIColor blueColor]];
     
+}
+    else
+{
+        
+   
     
+    //create a conversation PFObject between the two usernames or look up the conversation object
+    PFQuery *query = [PFQuery queryWithClassName:@"Conversations"];
+    
+    NSString *matchID = [activeMatchesArray objectAtIndex:indexPath.row];
+    NSMutableArray *twoMatches = [[NSMutableArray alloc] init];
+    
+    [twoMatches addObject:matchID];
+    PFObject *caseObjAtIndex = [activeMatchCaseObjectsArray objectAtIndex:indexPath.row];
+    
+    NSString *caseForMatch = [caseObjAtIndex objectForKey:@"caseId"];
+    
+    [twoMatches addObject:caseForMatch];
+    NSArray *conversationMembers = [twoMatches mutableCopy];
+    
+    [query whereKey:@"Members" containsAllObjectsInArray:conversationMembers];
+    
+    NSArray *returnedConversations = [query findObjects];
+    
+    PFObject *conversationObject;
+    
+    if([returnedConversations count] ==0)
+    {
+        //create a conversation object
+        conversationObject = [PFObject objectWithClassName:@"Conversations"];
+        [conversationObject setObject:conversationMembers forKey:@"Members"];
+        [conversationObject save];
+        
+        
+    }
+    else
+    {
+        conversationObject = [returnedConversations objectAtIndex:0];
+    }
+    
+    conversationJSQViewController *cJSQvc = [self.storyboard instantiateViewControllerWithIdentifier:@"convojsq"];
+    
+    //conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject userName:caseForMatch];
+    conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject arrayOfCaseUsers:conversationMembers];
+    
+    
+    cJSQvc.conversationData = cmData;
+    
+    [self.navigationController pushViewController:cJSQvc animated:YES];
+
+}
 }
 
 -(void)HandleCustomAnswerChange:(NSIndexPath *) indexPath UITableViewCell:(UITableViewCell *)cell
@@ -2295,6 +2419,24 @@ else
     int indexOfCase = 0;
     PFObject *caseItemObject;
     
+    NSString *selectedPropNumAtUpdateTime;
+    if([reloadModeString isEqualToString:@"fromMatchSwipe"])
+    {
+       //reload the data normally but scroll right after to the carousel index with the matches
+        
+        //assumes we are not in template mode since they have a match
+        
+        //set propertyNum with current carousel index
+        PFObject *CaseObj = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
+        propertyBeingUpdated = [CaseObj objectForKey:@"propertyNum"];
+    
+     
+    }
+   
+    
+    
+    
+    
     if([reloadModeString isEqualToString:@"polledForMTL"])
     {
         self.itsMTLObject = myObject;
@@ -2610,6 +2752,12 @@ else
         [self sendBubbleBurst:caseObjectBeingUpdated];
         
     }
+    
+     if([reloadModeString isEqualToString:@"fromMatchSwipe"])
+     {
+         [self.matchesTableView reloadData];
+         
+     }
 
 }
 
@@ -3705,7 +3853,6 @@ else
                     NSDictionary *propObjectForUpdate = (NSDictionary *)propObject;
                     NSDictionary *selectedCaseObjectDict = (NSDictionary *)selectedCaseItemObject;
                     
-                    
                     NSString *xmlForUpdate = [self createXMLFunctionSingleCaseItem:nil CaseItemObject:selectedCaseObjectDict];
                     
                     //add code to do the actual update
@@ -4160,6 +4307,460 @@ else
     
 }
 
+-(void)checkForSureMatch:(NSArray *)propObjectsArray
+{
+    //loop through the property objects and check their designation after sortedCaseItems and propsArray have been populated on reloading/loading functions
+    
+    //if designation is equal to "TheMatch" or "SureMatches" then check the sortedCaseItem at that index to see if it is flagged new.
+    
+    //if it is flagged new, show a new popup view the user can click to go straight to their match or close to continue editing their case.
+    
+    int indexIterator = 0;
+    for(PFObject *propObject in propObjectsArray)
+    {
+        NSString *designation = [propObject objectForKey:@"designation"];
+        BOOL sureMatchFound = FALSE;
+        
+        if([designation containsString:@"TheMatch"])
+        {
+            sureMatchFound =TRUE;
+        }
+        /*
+        if([designation containsString:@"SureMatches"])
+        {
+            sureMatchFound =TRUE;
+        }
+        */
+        if(sureMatchFound==TRUE)
+        {
+            //get the caseObject for this property and check if it is flagged NEW
+            PFObject *caseItemObject = [sortedCaseItems objectAtIndex:indexIterator];
+            NSString *stringVal = [caseItemObject objectForKey:@"new"];
+            
+            
+                //found one
+               
+                //get the image from the caseProfileObject matching this
+                
+                //get the ID of the match
+                
+                //gather the full array of matches to display
+                //loop through the itsMTLObject and gather all the user's matches
+                activeMatchesArray = [[NSMutableArray alloc] init];
+                activeMatchCaseObjectsArray = [[NSMutableArray alloc] init];
+                activeMatchesCaseItemObjectsArray = [[NSMutableArray alloc] init];
+                activeMatchesCaseTypesArray = [[NSMutableArray alloc] init];
+                
+                //selectedCaseItem defined above as caseItemObject based on index in sortedCaseItems
+                
+                //class level variable caseObjectBeingUpdated;
+                
+                
+                NSString *origin = [caseItemObject objectForKey:@"origin"];
+                if([origin isEqualToString:@"B"])
+                {
+                    NSString *matchesString = [caseItemObject objectForKey:@"browse"];
+                    
+                    NSString *matchesYesString = [caseItemObject objectForKey:@"yeses"];
+                    
+                    NSString *matchesRejectedYesString = [caseItemObject objectForKey:@"rejectedYeses"];
+                    
+                    NSArray *matchesArray = [matchesString componentsSeparatedByString:@";"];
+                    NSArray *matchesYesArray = [matchesYesString componentsSeparatedByString:@";"];
+                    NSArray *matchesRejectedYesArray= [matchesRejectedYesString componentsSeparatedByString:@";"];
+                    
+                    if([matchesRejectedYesArray count] >0)
+                    {
+                        for(NSString *caseMatchID in matchesRejectedYesArray)
+                        {
+                            [activeMatchesArray addObject:caseMatchID];
+                            NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                            [activeMatchCaseObjectsArray addObject:caseObjectBeingUpdated];
+                            
+                            [activeMatchesCaseItemObjectsArray addObject:caseItemObjectString];
+                            [activeMatchesCaseTypesArray addObject:@"rejected"];
+                            
+                        }
+                        
+                    }
+                    
+                    if([matchesYesArray count] >0)
+                    {
+                        for(NSString *caseMatchID in matchesYesArray)
+                        {
+                            
+                            //if(![activeMatchesArray containsObject:caseMatchID])
+                            // {
+                            [activeMatchesArray addObject:caseMatchID];
+                            [activeMatchCaseObjectsArray addObject:caseObjectBeingUpdated];
+                            NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                            [activeMatchesCaseItemObjectsArray addObject:caseItemObjectString];
+                            [activeMatchesCaseTypesArray addObject:@"yes"];
+                            //  }
+                            
+                        }
+                        
+                    }
+                    
+                    if([matchesArray count] >0)
+                    {
+                        for(NSString *caseMatchID in matchesArray)
+                        {
+                            // if(![activeMatchesArray containsObject:caseMatchID])
+                            //{
+                            [activeMatchesArray addObject:caseMatchID];
+                            [activeMatchCaseObjectsArray addObject:caseObjectBeingUpdated];
+                            NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                            
+                            [activeMatchesCaseItemObjectsArray addObject:caseItemObjectString];
+                            [activeMatchesCaseTypesArray addObject:@"match"];
+                            // }
+                        }
+                        
+                    }
+                
+                
+                //should be only one match, take the first index in "activeMatchesArray"
+                NSString *theMatch = [activeMatchesArray objectAtIndex:0];
+                
+                //query for caseProfiles
+                PFQuery *caseProfileQuery = [PFQuery queryWithClassName:@"CaseProfile"];
+                [caseProfileQuery whereKey:@"caseID" equalTo:theMatch];
+                NSArray *returnedCaseProfiles = [caseProfileQuery findObjects];
+                activeMatchesCaseProfiles = [returnedCaseProfiles mutableCopy];
+                
+                //later if they choose to hit the button we create on the "YourSureMatch UIView, it should open up JSQMessagesViewController with data based on the  first index from these arrays.
+                
+                //show the sureMatch View
+                
+                UIView *sureMatchView = [[UIView alloc] initWithFrame:CGRectMake(20,70,self.view.frame.size.width-40,450)];
+                sureMatchView.backgroundColor = [UIColor whiteColor];
+                    CALayer *sureMatchLayer = sureMatchView.layer;
+                    sureMatchLayer.cornerRadius = 8.0f;
+                    
+                    
+                UILabel *sureMatchTitle = [[UILabel alloc] initWithFrame:CGRectMake(20,20,sureMatchView.frame.size.width-40,40)];
+                sureMatchTitle.text = @"You Have A SURE Match!";
+                sureMatchTitle.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:30];
+                sureMatchTitle.textAlignment = NSTextAlignmentCenter;
+                
+                [sureMatchView addSubview:sureMatchTitle];
+                
+                
+                UILabel *sureMatchCaseNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,70,300,50)];
+                sureMatchCaseNameLabel.font =[UIFont fontWithName:@"Futura-CondensedMedium" size:25];
+                
+                UIImageView *sureMatchImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10,120,150,150)];
+                
+                //check to see if there is a caseProfile for this caseID
+                
+                NSString *caseimgURL;
+            for (PFObject *caseProfileObj in activeMatchesCaseProfiles)
+                {
+                    NSString *caseProfileCaseID = [caseProfileObj objectForKey:@"caseID"];
+                    if([theMatch isEqualToString:caseProfileCaseID])
+                    {
+                        //display case information
+                        sureMatchCaseNameLabel.text = [caseProfileObj objectForKey:@"externalCaseName"];
+                        PFFile *imgFile = [caseProfileObj objectForKey:@"caseImage"];
+                        caseimgURL = imgFile.url;
+                    }
+                }
+                UIActivityIndicatorViewStyle *activityStyle = UIActivityIndicatorViewStyleGray;
+                
+                if([caseimgURL length] ==0)
+                {
+                    NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"femalesilhouette" ofType:@"jpeg"];
+                    sureMatchImageView.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
+                    
+                }
+                else
+                {
+                    [sureMatchImageView setImageWithURL:[NSURL URLWithString:caseimgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
+                }
+                
+                NSString *matchType = [activeMatchesCaseTypesArray objectAtIndex:0];
+                if([matchType isEqualToString:@"yes"])
+                {
+                    sureMatchCaseNameLabel.textColor = [UIColor greenColor];
+                    
+                }
+                else if([matchType isEqualToString:@"rejected"])
+                {
+                    sureMatchCaseNameLabel.textColor = [UIColor grayColor];
+                    
+                }
+                
+                [sureMatchView addSubview:sureMatchCaseNameLabel];
+                [sureMatchView addSubview:sureMatchImageView];
+                    
+                //add two buttons for "Not Who I Wanted" and "Start a Conversation"
+                UIButton *notWhoIWantedButton = [[UIButton alloc] initWithFrame:CGRectMake(10,300,sureMatchView.frame.size.width-20,50)];
+                notWhoIWantedButton.backgroundColor = [UIColor redColor];
+                notWhoIWantedButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+                notWhoIWantedButton.titleLabel.textColor = [UIColor whiteColor];
+                notWhoIWantedButton.titleLabel.text = @"Not Who I Wanted";
+                    [notWhoIWantedButton setTitle:@"Not Who I Wanted" forState:UIControlStateNormal];
+                    
+                [notWhoIWantedButton addTarget:self action:@selector(notWhoIWantedButton:) forControlEvents:UIControlEventTouchUpInside];
+                
+                    UIButton *startConversationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
+                    
+                    startConversationButton.backgroundColor = [UIColor blueColor];
+                    startConversationButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+                    startConversationButton.titleLabel.textColor = [UIColor whiteColor];
+                       startConversationButton.titleLabel.text = @"Start Conversation";
+                    [startConversationButton setTitle:@"Start Conversation" forState:UIControlStateNormal];
+                    
+                    [startConversationButton addTarget:self action:@selector(startConversationButton:) forControlEvents:UIControlEventTouchUpInside];
+                    [sureMatchView addSubview:notWhoIWantedButton];
+                    [sureMatchView addSubview:startConversationButton];
+                
+                    bgDarkenView = [[UIView alloc] initWithFrame:self.view.bounds];
+                    bgDarkenView.backgroundColor = [UIColor blackColor];
+                    bgDarkenView.alpha = 0.7;
+                    [self.view addSubview:bgDarkenView];
+                    [self.view addSubview:sureMatchView];
+                
+                    
+                    
+            }
+
+        }
+        
+        indexIterator = indexIterator +1;
+        
+        
+    }
+    
+
+    
+    
+}
+
+-(void)notWhoIWantedButton:(id)sender
+{
+    //close the sending view and send a swipe no to this match
+    UIButton *notWhoIWantedBtn = (UIButton *)sender;
+    UIView *btnHolderView = notWhoIWantedBtn.superview;
+    
+    //send swipe
+    NSString *swipeNoXML = [self createSwipeXML:0 withMode:@"NO"];
+    
+    //add a progress HUD to show it is retrieving list of properts
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Removing the Match";
+    [HUD show:YES];
+    
+    //use parse cloud code function
+    [PFCloud callFunctionInBackground:@"submitXML"
+                       withParameters:@{@"payload": swipeNoXML}
+                                block:^(NSString *responseString, NSError *error) {
+                                    
+                                    //remove the view
+                                    [bgDarkenView removeFromSuperview];
+                                    [btnHolderView removeFromSuperview];
+                                    
+                                    if (!error)
+                                    {
+                                        NSString *responseText = responseString;
+                                        NSLog(responseText);
+                                        
+                                        [HUD hide:NO];
+                                        
+                                        //setting timestamp to compare to for the subsequent update
+                                        NSString *timeStampReturn;
+                                        if([self.jsonDisplayMode isEqualToString:@"template"])
+                                        {
+                                            timeStampReturn = [self.jsonObject objectForKey:@"timestamp"];
+                                            
+                                        }
+                                        else
+                                        {
+                                            
+                                            
+                                        }
+                                        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                                        f.numberStyle = NSNumberFormatterDecimalStyle;
+                                        lastTimestamp = [f numberFromString:timeStampReturn];
+                                        
+                                        //convert to NSDictionaryHere
+                                        
+                                        NSString *responseTextWithoutHeader = [responseText
+                                                                               stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+                                        NSError *jsonError;
+                                        NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+                                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                                             options:NSJSONReadingMutableContainers
+                                                                                               error:&jsonError];
+                                        
+                                        NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+                                        
+                                        
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [self reloadData:jsonCaseChange reloadMode:@"fromJSON"];
+                                        });
+                                        
+                                        //[self pollForCaseRefresh];
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSLog(error.localizedDescription);
+                                        [HUD hide:YES];
+                                        
+                                       
+                                    }
+                                }];
+
+    
+}
+
+-(void)startConversationButton:(id)sender
+{
+    //start a conversation with the match at index 0
+    
+    //create a conversation PFObject between the two usernames or look up the conversation object
+    PFQuery *query = [PFQuery queryWithClassName:@"Conversations"];
+    
+    NSString *matchID = [activeMatchesArray objectAtIndex:0];
+    NSMutableArray *twoMatches = [[NSMutableArray alloc] init];
+    
+    [twoMatches addObject:matchID];
+    PFObject *caseObjAtIndex = [activeMatchCaseObjectsArray objectAtIndex:0];
+    
+    NSString *caseForMatch = [caseObjAtIndex objectForKey:@"caseId"];
+    
+    [twoMatches addObject:caseForMatch];
+    NSArray *conversationMembers = [twoMatches mutableCopy];
+    
+    [query whereKey:@"Members" containsAllObjectsInArray:conversationMembers];
+    
+    NSArray *returnedConversations = [query findObjects];
+    
+    PFObject *conversationObject;
+    
+    if([returnedConversations count] ==0)
+    {
+        //create a conversation object
+        conversationObject = [PFObject objectWithClassName:@"Conversations"];
+        [conversationObject setObject:conversationMembers forKey:@"Members"];
+        [conversationObject save];
+        
+        
+    }
+    else
+    {
+        conversationObject = [returnedConversations objectAtIndex:0];
+    }
+    
+    conversationJSQViewController *cJSQvc = [self.storyboard instantiateViewControllerWithIdentifier:@"convojsq"];
+    
+    //conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject userName:caseForMatch];
+    conversationModelData *cmData = [[conversationModelData alloc] initWithConversationObject:conversationObject arrayOfCaseUsers:conversationMembers];
+    
+    cJSQvc.conversationData = cmData;
+    
+    //remove the UIView sending this
+    UIButton *sendingBtn = (UIButton *)sender;
+    UIView *sendingBtnHolderView = sendingBtn.superview;
+    [sendingBtnHolderView removeFromSuperview];
+    
+    [self.navigationController pushViewController:cJSQvc animated:YES];
+
+}
+
+-(NSString *)createSwipeXML:(NSInteger) index withMode:(NSString *)YesOrNo;
+{
+    //hardcoded XML for sending a swipe
+    /*
+     <PAYLOAD><USEROBJECTID>NoJW05Xwsq</USEROBJECTID><LAISO>EN</LAISO><CASEOBJECTID>77rmIIxX9z</CASEOBJECTID><CASENAME>I just saw you</CASENAME><BUBBLEBURST>22</BUBBLEBURST><ITEM><CASEITEM>18</CASEITEM><PROPERTYNUM>8ZKsAhHzak</PROPERTYNUM><SWIPE><YES>OKXDu5YEJF</YES></SWIPE></ITEM></PAYLOAD>
+     */
+    
+    
+    NSString *selectedMatch = [activeMatchesArray objectAtIndex:index];
+    PFObject *caseObject = [activeMatchCaseObjectsArray objectAtIndex:index];
+    NSString *caseItem = [activeMatchesCaseItemObjectsArray objectAtIndex:index];
+    
+    NSArray *caseObjectCaseItems = [caseObject objectForKey:@"caseItems"];
+    NSString *propertyNum;
+    NSString *caseName;
+    NSString *caseObjectID = [caseObject objectForKey:@"caseId"];
+    
+    caseName = [caseObject objectForKey:@"caseName"];
+    
+    for(PFObject *caseItemObject in caseObjectCaseItems)
+    {
+        NSString *caseItemString = [caseItemObject objectForKey:@"caseItem"];
+        if([caseItemString isEqualToString:caseItem])
+        {
+            propertyNum = [caseItemObject objectForKey:@"propertyNum"];
+        }
+    }
+    
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:self.userName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"CASEOBJECTID"];
+    [xmlWriter writeCharacters:caseObjectID];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:caseName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"ITEM"];
+    
+    [xmlWriter writeStartElement:@"CASEITEM"];
+    [xmlWriter writeCharacters:caseItem];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"PROPERTYNUM"];
+    [xmlWriter writeCharacters:propertyNum];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"SWIPE"];
+    
+    [xmlWriter writeStartElement:YesOrNo];
+    [xmlWriter writeCharacters:selectedMatch];
+    [xmlWriter writeEndElement];
+    
+    //close swipe element
+    [xmlWriter writeEndElement];
+    
+    // close ITEM element
+    [xmlWriter writeEndElement];
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    return xml;
+    
+}
+
+
 -(void)closeNewAnswerView:(id)sender
 {
     UIView *closeButton = (UIView *)sender;
@@ -4323,6 +4924,80 @@ else
     }];
     
 }
+
+
+
+
+#pragma mark swipableTableViewCellsDelegateMethods
+
+// click event on left utility button
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index
+{
+    NSLog(@"No button was pressed");
+    [self doSwipe:index swipeMode:@"NO"];
+}
+
+// click event on right utility button
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
+{
+    NSLog(@"Yes button was pressed");
+    [self doSwipe:index swipeMode:@"YES"];
+    
+}
+
+-(void)doSwipe:(NSInteger) index swipeMode:(NSString *)yesOrNo
+{
+    
+    NSString *xmlToSwipe = [self createSwipeXML:index withMode:yesOrNo];
+    
+    //add a progress HUD to show it is retrieving list of properts
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Sending Swipe to Backend";
+    [HUD show:YES];
+    
+    //use parse cloud code function
+    [PFCloud callFunctionInBackground:@"submitXML"
+                       withParameters:@{@"payload": xmlToSwipe}
+                                block:^(NSString *responseString, NSError *error) {
+                                    if (!error) {
+                                        
+                                        NSString *responseText = responseString;
+                                        NSLog(responseText);
+                                        
+                                        [HUD hide:NO];
+                                        
+                                        NSString *responseTextWithoutHeader = [responseText
+                                                                               stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+                                        NSError *jsonError;
+                                        NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+                                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                                             options:NSJSONReadingMutableContainers
+                                                                                               error:&jsonError];
+                                        
+                                        NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+                                        
+                                        
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [self reloadData:jsonCaseChange reloadMode:@"fromMatchSwipe"];
+                                        });
+
+                                    }
+                                    else
+                                    {
+                                        NSString *errorString = error.localizedDescription;
+                                        NSLog(errorString);
+                                        [HUD hide:NO];
+                                        
+                                    }
+                                }];
+}
+
+
 
 
 @end
