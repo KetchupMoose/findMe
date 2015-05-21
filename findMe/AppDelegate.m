@@ -9,12 +9,15 @@
 #import "AppDelegate.h"
 #import "reachabilitySingleton.h"
 #import <Parse/Parse.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import "PNImports.h"
 #import "JSQMessagesViewController.h"
 #import "conversationModelData.h"
 #import "conversationJSQViewController.h"
 #import "HomePageViewController.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+NSString *const BFTaskMultipleExceptionsException = @"BFMultipleExceptionsException";
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -42,6 +45,8 @@
     
     /* Instantiate PubNub */
     [PubNub setDelegate:self];
+    
+    [PFFacebookUtils initializeFacebookWithApplicationLaunchOptions:nil];
     
     
     //-- Set Notification
@@ -106,7 +111,8 @@
         }
     }
     
-    return YES;
+    return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                    didFinishLaunchingWithOptions:launchOptions];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
@@ -168,6 +174,8 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    
+    [FBSDKAppEvents activateApp];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -207,6 +215,19 @@
     NSLog(@"brianconnected");
     
 }
+
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+    return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                          openURL:url
+                                                sourceApplication:sourceApplication
+                                                       annotation:annotation];
+}
+
+
 
 
 @end

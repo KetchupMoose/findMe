@@ -9,6 +9,8 @@
 #import "FindMeLoginViewController.h"
 #import "AppDelegate.h"
 #import "InternetOfflineViewController.h"
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
+
 @interface FindMeLoginViewController ()
 @property (nonatomic, strong) UIImageView *fieldsBackground;
 @end
@@ -75,7 +77,7 @@ UIView *starscontainer;
     
     [self.logInView setLogo:logoImgView];
     
-    NSString *fbImageFile = [[NSBundle mainBundle] pathForResource:@"facebook-login" ofType:@"png"];
+    NSString *fbImageFile = [[NSBundle mainBundle] pathForResource:@"facebook-login-blue" ofType:@"png"];
     
     UIImage *fbImg = [UIImage imageWithContentsOfFile:fbImageFile];
     
@@ -532,9 +534,6 @@ UIView *starscontainer;
         [self.logInView.passwordField setFrame:CGRectMake(129+55.0f, 780.0f, 400.0f, 75.0f)];
         [self.fieldsBackground setFrame:CGRectMake(35.0f, 145.0f, 250.0f, 100.0f)];
         
-        
-        
-        
     }
     else
     {
@@ -548,9 +547,6 @@ UIView *starscontainer;
         [self.logInView.usernameField setFrame:CGRectMake(50.0f, 334.0f, 214.0f, 32.0f)];
         [self.logInView.passwordField setFrame:CGRectMake(50.0f, 369.0f, 214.0f, 32.0f)];
         [self.fieldsBackground setFrame:CGRectMake(35.0f, 145.0f, 250.0f, 100.0f)];
-        
-        
-        
         
     }
     
@@ -862,5 +858,24 @@ UIView *starscontainer;
     
 }
 */
+
+- (void)_loginWithFacebook {
+    // Set permissions required from the facebook user account
+    NSArray *permissionsArray = @[ @"user_about_me", @"user_relationships", @"user_birthday", @"user_location"];
+    
+    // Login PFUser using Facebook
+  [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error) {
+    //did log in here
+      if (!user) {
+          NSLog(@"Uh oh. The user cancelled the Facebook login.");
+      } else if (user.isNew) {
+          NSLog(@"User signed up and logged in through Facebook!");
+      } else {
+          NSLog(@"User logged in through Facebook!");
+      }
+  }];
+}
+
+
 
 @end

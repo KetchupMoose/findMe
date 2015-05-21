@@ -293,6 +293,7 @@ NSString *homePageManualLocationPropertyNum;
         setProfileViewController *spvc = [self.storyboard instantiateViewControllerWithIdentifier:@"spvc"];
         spvc.delegate = self;
         
+        
         [self.navigationController pushViewController:spvc animated:YES];
         
         [HUD hide:NO];
@@ -432,10 +433,13 @@ NSString *homePageManualLocationPropertyNum;
     
     [self.navigationController pushViewController:mvc animated:YES];
     
+        
 }
 - (IBAction)MyProfile:(id)sender {
     setProfileViewController *spvc = [self.storyboard instantiateViewControllerWithIdentifier:@"spvc"];
     spvc.delegate = self;
+   spvc.openingMode = @"HomeScreen";
+    
     
     [self.navigationController pushViewController:spvc animated:YES];
     

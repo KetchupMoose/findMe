@@ -62,8 +62,6 @@ BOOL templateMode;
 
 int suggestedCaseDisplayedIndex;
 int carouselCaseUpdateTicker = 0;
-
-
 NSArray *selectedCaseItemAnswersList;
 NSArray *optionsArray;
 NSArray *ansStaticArray;
@@ -156,7 +154,7 @@ BOOL LoadedBOOL = NO;
         CaseTitleSetViewController *ctsvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ctsvc"];
         ctsvc.delegate = self;
         
-        [self presentViewController:ctsvc animated:NO completion:nil];
+        [self.navigationController pushViewController:ctsvc animated:NO];
         
     }
     items = [NSMutableArray array];
@@ -170,6 +168,7 @@ BOOL LoadedBOOL = NO;
     //set up delegates
     self.carousel.delegate = self;
     self.carousel.dataSource = self;
+    self.customAnswerTextField.delegate = self;
     
     [self.carousel scrollToItemAtIndex:0 duration:0.0f];
     
@@ -454,6 +453,9 @@ BOOL LoadedBOOL = NO;
         [self sendBubbleBurst:caseObjectBeingUpdated];
         
     }
+    
+    [self carouselCurrentItemIndexDidChange:self.carousel];
+    
     
 }
 -(void) viewWillAppear:(BOOL)animated
@@ -1816,7 +1818,7 @@ if(tableViewTag ==8999)
     else
 {
         
-   
+   [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     //create a conversation PFObject between the two usernames or look up the conversation object
     PFQuery *query = [PFQuery queryWithClassName:@"Conversations"];
@@ -4888,15 +4890,23 @@ if(tableViewTag ==8999)
     [self.view endEditing:YES];
 }
 
+#pragma mark caseTitleSetDelegate Methods
+
 -(void)dismissCaseTitleSetViewController:(NSString *)internalCaseName withExt:(NSString *)externalCaseName withImg:(UIImage *)caseImage
 {
     self.internalCaseName = internalCaseName;
     self.externalCaseName = externalCaseName;
     self.caseImage = caseImage;
     
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
+
+-(void)pressingBack
+{
+    //[self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
+    
+}
+
 
 -(void)submitCaseProfileInfo:(NSString *)caseID;
 {

@@ -86,8 +86,6 @@ MBProgressHUD *HUD;
 
 -(IBAction)addAnswerToList:(id)sender
 {
-   
-    
     NSString *newAnswer = self.answerTextField.text;
     
     [answersListArray addObject:newAnswer];
@@ -154,6 +152,8 @@ MBProgressHUD *HUD;
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"answerCell" forIndexPath:indexPath];
     
     UILabel *answerLabel = (UILabel *)[cell viewWithTag:1];
@@ -180,29 +180,34 @@ MBProgressHUD *HUD;
 
 - (void)tableView:(UITableView *)tableView didHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
     // Add your Colour.
-    UITableViewCell *cell = (UITableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-    [cell setTintColor:[UIColor clearColor]];
-    [cell setBackgroundColor:[UIColor clearColor]];
+    //UITableViewCell *cell = (UITableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+    //[cell setTintColor:[UIColor clearColor]];
+    //[cell setBackgroundColor:[UIColor clearColor]];
     
 }
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UIView *cell = [tableView cellForRowAtIndexPath:indexPath];
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     
     if(cell.backgroundColor==[UIColor greenColor])
     {
         //remove this answer from the list.
+        NSNumber *ansToRemove;
         for (NSNumber *eachAns in acceptableAnswers)
         {
             int ansInt = [eachAns integerValue];
             if(ansInt==indexPath.row)
             {
-                [acceptableAnswers removeObject:eachAns];
+                ansToRemove = eachAns;
+            
                 cell.backgroundColor = [UIColor whiteColor];
             }
         }
+        [acceptableAnswers removeObject:ansToRemove];
     }
     else
         

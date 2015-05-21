@@ -7,6 +7,7 @@
 //
 
 #import <Parse/Parse.h>
+#import <ParseUI/ParseUI.h>
 #import "FrontSplashViewController.h"
 
 @interface FindMeLoginViewController : PFLogInViewController

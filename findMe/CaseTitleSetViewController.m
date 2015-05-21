@@ -19,6 +19,9 @@ UIImage *selectedCaseImage;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.internalCaseNameTextField.delegate = self;
+    self.externalCaseNameTextField.delegate = self;
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -154,6 +157,18 @@ UIImage *selectedCaseImage;
     //[self.imageView setImage:image];
     //[self dismissViewControllerAnimated:YES completion:nil];
     [imagePicker.imagePickerController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    /*
+    if ([self isMovingFromParentViewController]) {
+        //specific stuff for being popped off stack
+        //tell parent view controller to press back button also
+        [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:2] animated:NO];
+        
+    }
+     */
 }
 
 

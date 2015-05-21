@@ -31,6 +31,8 @@
 @property (weak,nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak,nonatomic) IBOutlet UILabel *phoneLabel;
 @property (nonatomic, weak) id<SetProfileDelegate> delegate;
+@property (strong,nonatomic) NSString *openingMode;
+
 
 -(IBAction)selectedMale:(id)sender;
 -(IBAction)selectedFemale:(id)sender;

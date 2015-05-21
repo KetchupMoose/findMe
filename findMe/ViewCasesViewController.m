@@ -34,6 +34,7 @@ NSArray *caseObjects;
 NSArray *caseProfileObjects;
 NSMutableArray *caseImages;
 NSMutableArray *caseShowNames;
+BOOL waitForSyncCompleted = FALSE;
 
 
 - (void)viewDidLoad
@@ -242,6 +243,13 @@ NSMutableArray *caseShowNames;
     self.navigationController.navigationBarHidden = NO;
     
     //call waitForSync first and then refresh the table
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Re-Syncing Data";
+    [HUD show:YES];
+    
+    waitForSyncCompleted = FALSE;
+    self.casesTableView.userInteractionEnabled = FALSE;
     
     [PFCloud callFunctionInBackground:@"waitForSync"
                        withParameters:@{@"payload": userName}
@@ -261,8 +269,9 @@ NSMutableArray *caseShowNames;
                                         
                                         dispatch_async(dispatch_get_main_queue(),
                                                        ^{
-                                        [HUD hide:NO];
-                                        [self refreshTable];
+                                    [HUD hide:NO];
+                                    self.casesTableView.userInteractionEnabled = TRUE;
+                                    [self refreshTable];
                                                        });
                                         
                                     }

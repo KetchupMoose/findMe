@@ -22,8 +22,6 @@ NSString *gender;
 NSString *showName;
 NSString *phoneNum;
 MBProgressHUD *HUD;
-
-
 PFObject *itsMTLObject;
 int timerTicks =0;
 UIImageView *phoneSearchersView;
@@ -37,6 +35,28 @@ int selectedPic = 1;
     }
     return self;
 }
+
+-(void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:NO];
+    
+    self.navigationController.navigationBarHidden = NO;
+    
+    //if it's being opened from the home screen, it should query for the latest profile information for this user.
+    if([self.openingMode isEqualToString:@"HomeScreen"])
+    {
+        PFUser *currentUser = [PFUser currentUser];
+        
+       NSString *userShowName =  [currentUser objectForKey:@"showName"];
+       NSString *userPhoneNum = [currentUser objectForKey:@"cellNumber"];
+       NSString *userGender = [currentUser objectForKey:@"gender"];
+        
+        self.nameTextField.text = userShowName;
+        self.phoneTextField.text = userPhoneNum;
+    }
+    
+}
+
 
 - (void)viewDidLoad
 {

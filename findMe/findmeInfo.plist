@@ -20,7 +20,7 @@
 		<string>Icon-Small@3x.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
-	<string>com.avial.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>com.avial.$(PRODUCT_NAME:rfc1034identifier)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -28,11 +28,24 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.27</string>
+	<string>1.28</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb1604462079792258</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>1.27</string>
+	<string>1.28</string>
+	<key>FacebookAppID</key>
+	<string>1604462079792258</string>
+	<key>FacebookDisplayName</key>
+	<string>FindMe</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>

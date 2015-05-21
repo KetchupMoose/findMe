@@ -12,6 +12,7 @@
 
 @protocol CaseTitleSetViewControllerDelegate
 -(void)dismissCaseTitleSetViewController:(NSString *)internalCaseName withExt:(NSString *)externalCaseName withImg:(UIImage *)caseImage;
+-(void)pressingBack;
 
 @end
 
