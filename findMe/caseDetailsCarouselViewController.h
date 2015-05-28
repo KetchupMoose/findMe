@@ -45,8 +45,13 @@
 @property (strong,nonatomic) IBOutlet UILabel *customAnswerLabel;
 @property (strong,nonatomic) IBOutlet UIImageView *customAnswerCheckmark;
 
+
+
 @property (strong,nonatomic) NSString *internalCaseName;
 @property (strong,nonatomic) NSString *externalCaseName;
 @property (strong,nonatomic) UIImage *caseImage;
+
+-(IBAction)updateCaseProfile;
+
 
 @end

@@ -297,6 +297,10 @@ int selectedPic = 1;
                                     repeats:YES];
     
 }
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self.view endEditing:YES];// this will do the trick
+}
+
 
 -(void) changeSearchPicture:(NSTimer *) timer
 {

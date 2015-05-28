@@ -18,7 +18,7 @@
 
 @interface CaseTitleSetViewController : UIViewController <UITextFieldDelegate,GKImagePickerDelegate>
 
-@property (weak, nonatomic) IBOutlet UITextField *internalCaseNameTextField;
+
 @property (weak, nonatomic) IBOutlet UITextField *externalCaseNameTextField;
 @property (weak, nonatomic) IBOutlet UIImageView *caseImageView;
 @property (strong) GKImagePicker *imagePicker;
@@ -28,5 +28,7 @@
 + (UIImage*)imageWithImage:(UIImage*)image
               scaledToSize:(CGSize)newSize;
 
+@property (strong,nonatomic) UIImage *caseImage;
+@property (strong,nonatomic) NSString *externalCaseName;
 
 @end

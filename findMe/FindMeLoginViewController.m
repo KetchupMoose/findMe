@@ -39,6 +39,14 @@ UIView *starscontainer;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    self.findMeLogo = [[UIImageView alloc] initWithFrame:CGRectMake(110,30,100,100)];
+    
+    NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"Icon-76" ofType:@"png"];
+    self.findMeLogo.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
+    self.findMeLogo.alpha = 0;
+    
+    [self.logInView addSubview:self.findMeLogo];
+    
     
     timer = [NSTimer scheduledTimerWithTimeInterval: 5
                                              target: self
@@ -61,7 +69,9 @@ UIView *starscontainer;
      }
      */
     //setting custom login details for Parse Login Screen
-    
+ 
+    //commmenting out May 25
+    /*
     NSString *fileName = [[NSBundle mainBundle] pathForResource:@"new-background-for-login-screen" ofType:@"png"];
     UIImage *bgimage = [UIImage imageWithContentsOfFile:fileName];
     
@@ -92,15 +102,12 @@ UIView *starscontainer;
     NSString *loginbtnFile = [[NSBundle mainBundle] pathForResource:@"login-button" ofType:@"png"];
     
     UIImage *loginbtnimage = [UIImage imageWithContentsOfFile:loginbtnFile];
-    
-    // [self.logInView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"main_background.png"]]];
-    //[self.logInView setLogo:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo.png"]]];
-    
-    // Set buttons appearance
-    // [self.logInView.dismissButton setImage:[UIImage imageNamed:@"exit.png"] forState:UIControlStateNormal];
-    //[self.logInView.dismissButton setImage:[UIImage imageNamed:@"exit_down.png"] forState:UIControlStateHighlighted];
+
     
     [self.logInView.facebookButton setImage:fbImg forState:UIControlStateNormal];
+    
+    [self.logInView.facebookButton setFrame:CGRectMake(1,1,20,20)];
+    
     
     [self.logInView.signUpButton setImage:signupbtnimage forState:UIControlStateNormal];
     
@@ -113,6 +120,8 @@ UIView *starscontainer;
     
     [self.logInView.logInButton setBackgroundImage:nil forState:UIControlStateHighlighted];
     
+    
+    
     [self.logInView.logInButton setTitle:@"" forState:UIControlStateNormal];
     
     [self.logInView.logInButton setTitle:@"" forState:UIControlStateHighlighted];
@@ -122,6 +131,7 @@ UIView *starscontainer;
     [self.logInView.facebookButton setBackgroundImage:nil forState:UIControlStateNormal];
     [self.logInView.facebookButton setTitle:@"" forState:UIControlStateNormal];
     [self.logInView.facebookButton setTitle:@"" forState:UIControlStateHighlighted];
+    */
     
     // [self.logInView.twitterButton setImage:nil forState:UIControlStateNormal];
     // [self.logInView.twitterButton setImage:nil forState:UIControlStateHighlighted];
@@ -139,6 +149,8 @@ UIView *starscontainer;
     //_fieldsBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background.png"]];
     //[self.logInView insertSubview:_fieldsBackground atIndex:1];
     
+    //commenting out May 25
+    /*
     self.logInView.signUpLabel.text = @"";
     self.logInView.signUpLabel.backgroundColor = [UIColor clearColor];
     
@@ -166,11 +178,16 @@ UIView *starscontainer;
     
     [self.logInView.usernameField setBackgroundColor:[UIColor whiteColor]];
     [self.logInView.passwordField setBackgroundColor:[UIColor whiteColor]];
-    
+    */
     CGRect splashframe;
+    
+    //set splash frame height to be screen size height -40
+    int verticalLimit = [[UIScreen mainScreen] bounds].size.height-10;
+    
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
     {
-        splashframe = CGRectMake(0,0,320,490);
+        //splashframe = CGRectMake(0,0,320,490);
+        splashframe = CGRectMake(0,0,320,verticalLimit);
     }
     else
     {
@@ -181,98 +198,6 @@ UIView *starscontainer;
     [splashcontainer setBackgroundColor:[UIColor clearColor]];
     
     [self.logInView addSubview:splashcontainer];
-    
-    
-    quoteLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,515,320,40)];
-    
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-        quoteLabel.frame = CGRectMake(0,60,768,40);
-        
-    }
-    quoteLabel.text = @"\"5/5.  This game is so awesome you will cry with joy\"";
-    quoteLabel.font = [UIFont fontWithName:@"CooperBlackStd-Italic" size:15];
-    quoteLabel.numberOfLines=2;
-    quoteLabel.textAlignment = NSTextAlignmentCenter;
-    
-    
-    quoteLabel.textColor = [UIColor colorWithRed:43.0/255.0f green:57/255.0f blue:144.0/255.0f alpha:1];
-    
-    
-    
-    //quoteLabel.textColor = [UIColor redColor];
-    
-    quoteLabel.backgroundColor = [UIColor clearColor];
-    
-    quoteLabel.alpha = 0;
-    
-    
-    [self.logInView addSubview:quoteLabel];
-    
-    
-    quote2Label = [[UILabel alloc] initWithFrame:CGRectMake(220,535,100,40)];
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-        quote2Label.frame = CGRectMake(580,75,768,40);
-        
-    }
-    
-    quote2Label.text = @"--Brian's Mom";
-    quote2Label.font = [UIFont fontWithName:@"CooperBlackStd-Italic" size:11];
-    quote2Label.numberOfLines=1;
-    quote2Label.textAlignment = NSTextAlignmentLeft;
-    
-    
-    quote2Label.textColor = [UIColor colorWithRed:43.0/255.0f green:57/255.0f blue:144.0/255.0f alpha:1];
-    
-    
-    
-    //quoteLabel.textColor = [UIColor redColor];
-    
-    quote2Label.backgroundColor = [UIColor clearColor];
-    
-    quote2Label.alpha = 0;
-    
-    
-    [self.logInView addSubview:quote2Label];
-    
-    
-    
-    starscontainer = [[UIView alloc] initWithFrame:CGRectMake(0,485,320,40)];
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-        starscontainer.frame = CGRectMake(0,10,768,80);
-        
-    }
-    for (int i=0; i<5;i++)
-    {
-        
-        int startx = 230+ i*60;
-        
-        UIImageView *star1 = [[UIImageView alloc] initWithFrame:CGRectMake(startx,0,56,54)];
-        
-        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        {
-            startx = 85 + i*30;
-            star1.frame = CGRectMake(startx,0,28,27);
-            
-        }
-        
-        NSString *starFile = [[NSBundle mainBundle] pathForResource:@"ratingstar" ofType:@"png"];
-        
-        UIImage *starFileImage = [UIImage imageWithContentsOfFile:starFile];
-        
-        [star1 setImage:starFileImage];
-        
-        [starscontainer addSubview:star1];
-        
-        
-    }
-    starscontainer.alpha = 0;
-    [self.logInView addSubview:starscontainer];
-    
-    
-    
     
     [self createContentPages];
     NSDictionary *options =
@@ -335,6 +260,7 @@ UIView *starscontainer;
     rightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
     [rightRecognizer setNumberOfTouchesRequired:1];
     [self.logInView addGestureRecognizer:rightRecognizer];
+    
     
 }
 -(UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
@@ -492,6 +418,7 @@ UIView *starscontainer;
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
+    /*
     self.logInView.signUpLabel.text = @"";
     self.logInView.signUpLabel.backgroundColor = [UIColor clearColor];
     // Set frame for elements
@@ -539,9 +466,10 @@ UIView *starscontainer;
     {
         [self.logInView.dismissButton setFrame:CGRectMake(10.0f, 10.0f, 87.5f, 45.5f)];
         [self.logInView.logo setFrame:CGRectMake(46.0f, 52.0f, 250.0f, 188.0f)];
-        [self.logInView.facebookButton setFrame:CGRectMake(31.5f, 251.0f, 255.0f, 74.0f)];
+        //251
+        //[self.logInView.facebookButton setFrame:CGRectMake(31.5f, 1.0f, 55.0f, 74.0f)];
         //[self.logInView.twitterButton setFrame:CGRectMake(35.0f+130.0f, 287.0f, 120.0f, 40.0f)];
-        [self.logInView.signUpButton setFrame:CGRectMake(40.0f, 434.0f, 87.5f, 26.5f)];
+        [self.logInView.signUpButton setFrame:CGRectMake(10.0f, 5.0f, 87.5f, 26.5f)];
         [self.logInView.logInButton setFrame:CGRectMake(184.0f, 434.0f, 87.5f, 26.5f)];
         
         [self.logInView.usernameField setFrame:CGRectMake(50.0f, 334.0f, 214.0f, 32.0f)];
@@ -601,6 +529,24 @@ UIView *starscontainer;
             
         }
     }
+    */
+    
+      //[self.logInView.usernameField setFrame:CGRectMake(self.logInView.usernameField.frame.origin.x+20,self.logInView.usernameField.frame.origin.y,self.logInView.usernameField.frame.size.width-40,self.logInView.usernameField.frame.size.width)];
+    
+    
+   // [self.logInView.passwordField setFrame:CGRectMake(self.logInView.passwordField.frame.origin.x+20,self.logInView.passwordField.frame.origin.y,self.logInView.passwordField.frame.size.width-40,self.logInView.passwordField.frame.size.width)];
+    
+    // Set frame for elements
+    [self.logInView.dismissButton setFrame:CGRectMake(10.0f, 10.0f, 87.5f, 45.5f)];
+    [self.logInView.logo setFrame:CGRectMake(66.5f, 70.0f, 187.0f, 58.5f)];
+    [self.logInView.facebookButton setFrame:CGRectMake(35.0f, 287.0f, 130.0f, 40.0f)];
+    [self.logInView.twitterButton setFrame:CGRectMake(35.0f+140.0f, 287.0f, 120.0f, 40.0f)];
+    [self.logInView.signUpButton setFrame:CGRectMake(35.0f, 405.0f, 250.0f, 40.0f)];
+    [self.logInView.usernameField setFrame:CGRectMake(35.0f, 145.0f, 250.0f, 50.0f)];
+    [self.logInView.passwordField setFrame:CGRectMake(35.0f, 195.0f, 250.0f, 50.0f)];
+    [self.fieldsBackground setFrame:CGRectMake(35.0f, 145.0f, 250.0f, 100.0f)];
+    [self.logInView.logInButton setFrame:CGRectMake(35.0f, 350.0f, 250.0f, 40.0f)];
+    [self.logInView.passwordForgottenButton setFrame:CGRectMake(35.0f, 243.0f, 250.0f, 50.0f)];
     
     
 }
@@ -610,25 +556,29 @@ UIView *starscontainer;
     //[self.view bringSubviewToFront:self.logInView];
     
     
-    
+    /*
     NSString *fileName = [[NSBundle mainBundle] pathForResource:@"new-background-for-login-screen" ofType:@"png"];
     UIImage *bgimage = [UIImage imageWithContentsOfFile:fileName];
     
     UIImage *b = [self imageWithImage:bgimage scaledToSize:self.logInView.bounds.size];
     
     [self.logInView setBackgroundColor:[UIColor colorWithPatternImage:b]];
-    
+    */
     
     splashcontainer.userInteractionEnabled = FALSE;
     splashcontainer.alpha=0;
     
     
-    self.logInView.logo.alpha = 1;
+    self.logInView.logo.alpha = 0;
     self.logInView.facebookButton.alpha=1;
+    self.logInView.twitterButton.alpha = 1;
+    
     self.logInView.usernameField.alpha =1;
     self.logInView.passwordField.alpha =1;
     self.logInView.logInButton.alpha = 1;
     self.logInView.signUpButton.alpha = 1;
+    self.findMeLogo.alpha = 1;
+    self.logInView.passwordForgottenButton.alpha = 1;
     
     
     self.logInView.facebookButton.userInteractionEnabled = TRUE;
@@ -650,9 +600,11 @@ UIView *starscontainer;
     self.logInView.facebookButton.alpha=0;
     self.logInView.usernameField.alpha = 0;
     self.logInView.passwordField.alpha = 0;
-    
+    self.findMeLogo.alpha = 0;
     self.logInView.logInButton.alpha=0;
     self.logInView.signUpButton.alpha=0;
+     self.logInView.passwordForgottenButton.alpha = 0;
+      self.logInView.twitterButton.alpha = 0;
     
     quoteLabel.alpha = 0;
     quote2Label.alpha = 0;
@@ -859,19 +811,27 @@ UIView *starscontainer;
 }
 */
 
+
 - (void)_loginWithFacebook {
     // Set permissions required from the facebook user account
-    NSArray *permissionsArray = @[ @"user_about_me", @"user_relationships", @"user_birthday", @"user_location"];
+    NSArray *permissionsArray = @[ @"user_about_me", @"user_birthday", @"user_location"];
     
     // Login PFUser using Facebook
   [PFFacebookUtils logInInBackgroundWithReadPermissions:permissionsArray block:^(PFUser *user, NSError *error) {
     //did log in here
       if (!user) {
           NSLog(@"Uh oh. The user cancelled the Facebook login.");
+          [self.delegate logInViewControllerDidCancelLogIn:self];
+          
       } else if (user.isNew) {
           NSLog(@"User signed up and logged in through Facebook!");
+          //dismiss this view controller
+          [self.delegate logInViewController:self didLogInUser:user];
+          
+          
       } else {
           NSLog(@"User logged in through Facebook!");
+            [self.delegate logInViewController:self didLogInUser:user];
       }
   }];
 }

@@ -17,7 +17,8 @@
 #import "HomePageViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-NSString *const BFTaskMultipleExceptionsException = @"BFMultipleExceptionsException";
+//uncommented this "quick fix" someone had posted previously, seems the issue is resolved by making sure the project references the correct bolts SDK
+//NSString *const BFTaskMultipleExceptionsException = @"BFMultipleExceptionsException";
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

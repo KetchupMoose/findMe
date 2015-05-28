@@ -328,7 +328,7 @@ BOOL waitForSyncCompleted = FALSE;
         if([caseID isEqualToString:caseProfileCaseID])
         {
             //display case information
-            caseShowNameLabel.text = [caseProfileObj objectForKey:@"internalCaseName"];
+            caseShowNameLabel.text = [caseProfileObj objectForKey:@"externalCaseName"];
             PFFile *imgFile = [caseProfileObj objectForKey:@"caseImage"];
             caseimgURL = imgFile.url;
         }
@@ -440,6 +440,29 @@ BOOL waitForSyncCompleted = FALSE;
     cdcvc.userName = userName;
     cdcvc.itsMTLObject = self.itsMTLObject;
     cdcvc.manualLocationPropertyNum = self.manualLocationPropertyNum;
+    
+    PFObject *caseObj =  [caseListPruned objectAtIndex:[selectedIndex intValue]];
+
+    NSString *caseID = [caseObj objectForKey:@"caseId"];
+    
+    NSString *caseimgURL;
+    for (PFObject *caseProfileObj in caseProfileObjects)
+    {
+        NSString *caseProfileCaseID = [caseProfileObj objectForKey:@"caseID"];
+        if([caseID isEqualToString:caseProfileCaseID])
+        {
+            //display case information
+            cdcvc.externalCaseName = [caseProfileObj objectForKey:@"externalCaseName"];
+            PFFile *imgFile = [caseProfileObj objectForKey:@"caseImage"];
+            caseimgURL = imgFile.url;
+            NSData *imgData = [imgFile getData];
+            
+            UIImage *myCaseImage = [UIImage imageWithData:imgData];
+            cdcvc.caseImage = myCaseImage;
+            
+        }
+    }
+    
     
     [self.navigationController pushViewController:cdcvc animated:NO];
     

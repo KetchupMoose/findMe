@@ -8,4 +8,5 @@
 #import <ParseUI/ParseUI.h>
 @interface MySignUpViewController : PFSignUpViewController
 
+@property (strong,nonatomic) UIImageView *findMeLogo;
 @end

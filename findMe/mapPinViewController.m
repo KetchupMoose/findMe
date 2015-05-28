@@ -18,21 +18,22 @@
 CLLocation *location;
 BOOL shouldUpdateLocation = YES;
 MBProgressHUD *HUD;
+@synthesize pinImageView;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
     self.mapView.delegate = self;
     
-    UIImageView *image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pinRedHighRes.png"]];
-    image.frame = CGRectMake(0,0,32,32);
-    image.center = self.mapView.center;
-    CGRect changeframe = image.frame;
-    changeframe.origin.x = changeframe.origin.x+8;
-    changeframe.origin.y = changeframe.origin.y+18;
-    [image setFrame:changeframe];
+    pinImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pinRedHighRes.png"]];
+    pinImageView.frame = CGRectMake(0,0,32,32);
+    pinImageView.center = self.mapView.center;
+    //CGRect changeframe = image.frame;
+    //changeframe.origin.x = changeframe.origin.x+8;
+    //changeframe.origin.y = changeframe.origin.y;
+    //[image setFrame:changeframe];
     
-    [self.mapView addSubview:image];
+    [self.mapView addSubview:pinImageView];
     
     // Create a gesture recognizer for long presses (for example in viewDidLoad)
     //UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
@@ -51,6 +52,14 @@ MBProgressHUD *HUD;
     }
     [self.mapView addAnnotation:point];
     */
+    
+    CLLocationManager *locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters; // 100 m
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+        [locationManager requestAlwaysAuthorization];
+    }
+    [locationManager startUpdatingLocation];
 }
 
 - (void)mapView:(MKMapView *)mapView
@@ -79,7 +88,7 @@ didChangeDragState:(MKAnnotationViewDragState)newState
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
-    
+    /*
     CLLocationCoordinate2D center = self.mapView.centerCoordinate;
     location = [[CLLocation alloc] initWithLatitude:center.latitude longitude:center.longitude];
     
@@ -95,7 +104,7 @@ didChangeDragState:(MKAnnotationViewDragState)newState
     point.title = @"userPoint";
     
     [self.mapView addAnnotation:point];
-    
+    */
 }
 /*
 - (void)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {
@@ -122,7 +131,7 @@ didChangeDragState:(MKAnnotationViewDragState)newState
     if([self.priorLatitude length] >0)
         {
             shouldUpdateLocation = NO;
-            self.mapView.showsUserLocation = NO;
+            self.mapView.showsUserLocation = YES;
             CLLocationCoordinate2D priorCoordinate;
             float priorLatitudeFloat = [self.priorLatitude floatValue];
             float priorLongitudeFloat = [self.priorLongitude floatValue];
@@ -153,33 +162,41 @@ didChangeDragState:(MKAnnotationViewDragState)newState
    
     if(shouldUpdateLocation)
    {
-       MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 800, 800);
-       [self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
+      // MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 800, 800);
+       //[self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
        
-       /*
+       
        // Add an annotation
-       MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-       point.coordinate = userLocation.coordinate;
-       point.title = @"Where am I?";
-       point.subtitle = @"I'm here!!!";
+       //MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+       //point.coordinate = userLocation.coordinate;
        
-       [self.mapView addAnnotation:point];
-        */
-       shouldUpdateLocation = NO;
-       self.mapView.showsUserLocation = NO;
+       //point.title = @"Where am I?";
+       //point.subtitle = @"I'm here!!!";
+       
+       //[self.mapView addAnnotation:point];
+       
+       //shouldUpdateLocation = NO;
+       self.mapView.showsUserLocation = YES;
        
    }
     
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+    
+    if ([annotation isKindOfClass:MKUserLocation.class]) {
+        //user location view is being requested,
+        //return nil so it uses the default which is a blue dot...
+        return nil;
+    }
+    
     static NSString *identifier = @"MyLocation";
     if ([annotation isKindOfClass:[MyLocation class]]) {
         
         MKAnnotationView *annotationView = (MKAnnotationView *) [_mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
         if (annotationView == nil) {
             annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
-            annotationView.alpha =0;
+            annotationView.alpha =1;
             
             annotationView.enabled = YES;
             annotationView.canShowCallout = YES;
@@ -188,18 +205,25 @@ didChangeDragState:(MKAnnotationViewDragState)newState
             annotationView.annotation = annotation;
         }
         
-        annotationView.alpha =0;
+        annotationView.alpha =1;
         
         return annotationView;
     }
     else
     {
+       /*
         MKPinAnnotationView* anView =[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"test"];
         anView.pinColor=MKPinAnnotationColorPurple;
-        anView.alpha = 0;
+        anView.alpha = 1;
+        
+        MKAnnotationView *annotationView = [[MKAnnotationView alloc] init];
+        
+        annotationView.image
+       
+        
         
         return anView;
-        
+        */
     }
     
    
@@ -219,10 +243,18 @@ didChangeDragState:(MKAnnotationViewDragState)newState
     float longitude = 0.0;
     float latitude = 0.0;
     
+    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+     CLLocationCoordinate2D coord = [self.mapView convertPoint:self.pinImageView.center toCoordinateFromView:self.mapView];
+    point.coordinate = coord;
+    point.title = @"center";
+    point.subtitle = @"I'm here!!!";
+    
+    [self.mapView addAnnotation:point];
+    
     for (MKPointAnnotation *annotation in self.mapView.annotations) {
-        if((annotation.title = @"blah"))
+        if((annotation.title = @"center"))
         {
-     
+    
         NSLog(@"lon: %f, lat %f", ((MKPointAnnotation*)annotation).coordinate.longitude,((MKPointAnnotation*)annotation).coordinate.latitude);
         
         longitude =((MKPointAnnotation*)annotation).coordinate.longitude;

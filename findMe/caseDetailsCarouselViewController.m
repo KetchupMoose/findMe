@@ -149,14 +149,6 @@ BOOL LoadedBOOL = NO;
 }
 -(void)viewDidLoad
 {
-    if([self.jsonDisplayMode isEqualToString:@"template"])
-    {
-        CaseTitleSetViewController *ctsvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ctsvc"];
-        ctsvc.delegate = self;
-        
-        [self.navigationController pushViewController:ctsvc animated:NO];
-        
-    }
     items = [NSMutableArray array];
     for (int i = 0; i < 1000; i++)
     {
@@ -358,7 +350,6 @@ BOOL LoadedBOOL = NO;
         g=g+1;
     }
     
-    
     //submit answers button is set to disabled and gray until the user makes a change
     self.submitAnswersButton.enabled = 0;
     self.submitAnswersButton.backgroundColor = [UIColor lightGrayColor];
@@ -555,6 +546,25 @@ BOOL LoadedBOOL = NO;
     [xmlWriter writeStartElement:@"CASENAME"];
     [xmlWriter writeCharacters:caseName];
     [xmlWriter writeEndElement];
+    
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"LATITUDE"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"LONGITUDE"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
+
     
     [xmlWriter writeStartElement:@"BUBBLEBURST"];
     [xmlWriter writeCharacters:version];
@@ -900,6 +910,7 @@ BOOL LoadedBOOL = NO;
     {
         self.propertiesTableView.alpha = 0;
         self.matchesTableView.alpha = 0;
+       
         self.viewMatchesButton.alpha = 0;
         self.customAnswerTextField.alpha = 0;
         self.customAnswerLabel.alpha = 0;
@@ -917,6 +928,8 @@ BOOL LoadedBOOL = NO;
         
         if([propTypeString isEqualToString:@"B"])
         {
+            
+            
             self.matchesTableView.alpha = 1;
             self.propertiesTableView.alpha = 0;
             self.viewMatchesButton.alpha = 0;
@@ -1019,7 +1032,7 @@ BOOL LoadedBOOL = NO;
         if([propTypeString isEqualToString:@"N"] || [propTypeString isEqualToString:@"I"])
         {
             self.matchesTableView.alpha = 0;
-            self.propertiesTableView.alpha = 0;
+                       self.propertiesTableView.alpha = 0;
             self.viewMatchesButton.alpha = 0;
             self.customAnswerTextField.alpha = 0;
             self.customAnswerLabel.alpha = 0;
@@ -1060,7 +1073,7 @@ BOOL LoadedBOOL = NO;
             //display just one custom answer
             NSString *customAns;
             //check to see if the custom answer is there
-            for (PFObject *eachAnsObj in  selectedCaseItemAnswersArrayOfDictionaries)
+            for (NSDictionary *eachAnsObj in  selectedCaseItemAnswersArrayOfDictionaries)
             {
                 customAns = [eachAnsObj valueForKey:@"custom"];
             }
@@ -1069,12 +1082,18 @@ BOOL LoadedBOOL = NO;
             //WORKINPROGRESS APR 13
             //answersLabel.text = customAns;
             self.matchesTableView.alpha = 0;
+            
             self.propertiesTableView.alpha = 0;
              self.customAnswerCheckmark.alpha = 0;
+            
+            self.customAnswerTextField.text = customAns;
+            
             self.customAnswerTextField.alpha = 1;
             self.customAnswerLabel.alpha = 1;
             self.customAnswerButton.alpha = 1;
-            self.customAnswerLabel.text = customAns;
+            self.customAnswerLabel.text = @"Enter Your Custom Answer";
+            
+            //self.customAnswerLabel.text = customAns;
             
             
         }
@@ -2073,6 +2092,7 @@ if(tableViewTag ==8999)
         
     }
     
+    
 }
 
 
@@ -2273,6 +2293,9 @@ if(tableViewTag ==8999)
     //reload data
     if(templateMode==0)
     {
+        
+        
+        
         //add a progress HUD to show it is retrieving list of properts
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
@@ -2358,6 +2381,7 @@ if(tableViewTag ==8999)
                                                                                                error:&jsonError];
                                         
                                         NSMutableDictionary *jsonCaseChange = [json mutableCopy];
+                                        //update here may 26 to dismiss
                                         dispatch_async(dispatch_get_main_queue(), ^{
                                             [self reloadData:jsonCaseChange reloadMode:@"fromSingleNewProperty"];
                                         });
@@ -2435,10 +2459,6 @@ if(tableViewTag ==8999)
      
     }
    
-    
-    
-    
-    
     if([reloadModeString isEqualToString:@"polledForMTL"])
     {
         self.itsMTLObject = myObject;
@@ -2507,11 +2527,17 @@ if(tableViewTag ==8999)
     {
         //get the new caseID
         NSString *caseString = [caseItemObject objectForKey:@"caseId"];
-        //create the case profile
-        [self submitCaseProfileInfo:caseString];
+        
+        //if the caseProfile has info, then save it.  otherwise skip this step.
+        
+        if([self.externalCaseName length] >0)
+            {
+                //create the case profile
+                [self submitCaseProfileInfo:caseString];
+            }
         
     }
-
+   
     templateMode =0;
     self.carousel.animateSwipeUp = YES;
 
@@ -2710,13 +2736,6 @@ if(tableViewTag ==8999)
         [HUD hide:YES];
     });
     
-    if([reloadModeString isEqualToString:@"fromSingleNewProperty"])
-    {
-        //commenting out as single new properties are no longer added on a separate view controller
-        //[self.navigationController popViewControllerAnimated:NO];
-       
-        
-    }
     
     //set the last timestamp for the case if there needs to be polling.
     NSString *timeStampReturn = [caseItemObject objectForKey:@"timestamp"];
@@ -2725,14 +2744,15 @@ if(tableViewTag ==8999)
     lastTimestamp = [f numberFromString:timeStampReturn];
     
     
-    if([self.popupVC.popupOrSlideout isEqualToString:@"slideout"])
+    //change to only dismiss if this is triggered from the update
+    //may26
+    if([reloadModeString isEqualToString:@"fromSingleNewProperty"])
     {
-        //[self.slidingViewController resetTopViewAnimated:YES];
+        [self.navigationController popViewControllerAnimated:YES];
+        
     }
-    else
-    {
-        [self dismissViewControllerAnimated:NO completion:nil];
-    }
+   
+    
     
      [self.submitAnswersButton setTitle:@"Update Answers" forState:UIControlStateNormal];
     
@@ -3025,6 +3045,235 @@ if(tableViewTag ==8999)
     return xml;
 }
 
+-(NSString *)createXMLCaseUpdate;
+{
+    //iterate through all items still in the caseitems and property arrays and send XML to update all of these (either with their original contents or the modifications/new entries)
+    
+    PFObject *caseObject = caseObjectBeingUpdated;
+    
+    PFObject *caseItemObject;
+    
+    NSString *caseName = [caseObject objectForKey:@"caseName"];
+    NSString *caseObjID = [caseObject objectForKey:@"caseId"];
+    
+    //get the selected property from the chooser element.
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    NSString *itsMTLObjectUserName = self.itsMTLObject.objectId;
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:itsMTLObjectUserName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    //if it's a brand new case, this will be nil
+    if(caseObjID != nil)
+    {
+        
+        [xmlWriter writeStartElement:@"CASEOBJECTID"];
+        [xmlWriter writeCharacters:caseObjID];
+        [xmlWriter writeEndElement];
+    }
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:caseName];
+    [xmlWriter writeEndElement];
+    
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"LATITUDE"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"LONGITUDE"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
+    
+    int h = 0;
+    for (PFObject *eachCaseItem in sortedCaseItems)
+    {
+        
+        NSString *caseItemPickedPropertyNum = [eachCaseItem objectForKey:@"propertyNum"];
+        PFObject *propAtIndex;
+        
+            for(PFObject *propObject in propsArray)
+            {
+                if([propObject.objectId isEqualToString:caseItemPickedPropertyNum])
+                {
+                    propAtIndex = propObject;
+                    break;
+                }
+            }
+        
+        
+        PFObject *updatedProperty = propAtIndex;
+        
+        NSString *propertyNum = [eachCaseItem objectForKey:@"propertyNum"];
+        
+        //write logic for updating the caseItem
+        //build strings for building item
+        [xmlWriter writeStartElement:@"ITEM"];
+        
+        //check to see if this caseItem has a number.  Otherwise give it a number of 9000 to indicate it is a brand new caseItem.
+        NSString *myCaseItem = [eachCaseItem objectForKey:@"caseItem"];
+        NSString *caseItemNumber;
+        
+        int caseNum = 12000+h;
+        
+        if(myCaseItem==nil)
+        {
+            caseItemNumber =[NSString stringWithFormat:@"%d",caseNum];;
+            
+        }
+        else
+        {
+            caseItemNumber = myCaseItem;
+            
+        }
+        
+        [xmlWriter writeStartElement:@"CASEITEM"];
+        [xmlWriter writeCharacters:caseItemNumber];
+        [xmlWriter writeEndElement];
+        
+        NSString *propNumString;
+       
+        propNumString = propertyNum;
+        
+        
+        h = h+1;
+        [xmlWriter writeStartElement:@"PROPERTYNUM"];
+        [xmlWriter writeCharacters:propNumString];
+        [xmlWriter writeEndElement];
+        
+        //write out the answers value of this case Item
+        
+        //need to check if the case type is custom answers
+        
+        //if case type is I or N, don't update anything for answers
+        NSString *propertyType = [updatedProperty objectForKey:@"propertyType"];
+        NSString *optionText = [updatedProperty objectForKey:@"options"];
+        NSArray *cdeAnswersDictionary = [eachCaseItem objectForKey:@"answers"];
+        
+        if([propertyType isEqualToString:@"I"] || [propertyType isEqualToString:@"N"] || [propertyType isEqualToString:@"B"])
+        {
+            //do nothing
+        }
+        else if([optionText length] == 0)
+        {
+            //write the answer as type Custom
+            
+            for (PFObject *ansObj in cdeAnswersDictionary)
+            {
+                NSString *ansString = [ansObj objectForKey:@"custom"];
+                [xmlWriter writeStartElement:@"ANSWER"];
+                
+                [xmlWriter writeStartElement:@"CUSTOM"];
+                [xmlWriter writeCharacters:ansString];
+                [xmlWriter writeEndElement];
+                
+                [xmlWriter writeEndElement];
+                
+            }
+            
+        }
+        else
+        {
+            NSString *semiColonDelimitedCustomAnswers;
+            NSString *semiColonDelimitedAAnswers;
+            NSMutableArray *arrayOfCustomAnswers = [[NSMutableArray alloc] init];
+            NSMutableArray *arrayOfAAnswers = [[NSMutableArray alloc] init];
+            
+            for (PFObject *ansObj in cdeAnswersDictionary)
+            {
+                
+                //if the object responds to the key a, then write it as an answer a
+                NSString *ansString = [ansObj objectForKey:@"a"];
+                if([ansString length] ==0)
+                {
+                    ansString = [ansObj objectForKey:@"custom"];
+                    if([ansString length] >0)
+                    {
+                        [arrayOfCustomAnswers addObject:ansString];
+                    }
+                }
+                else
+                {
+                    [arrayOfAAnswers addObject:ansString];
+                    
+                }
+            }
+            
+            semiColonDelimitedAAnswers = [arrayOfAAnswers componentsJoinedByString:@";"];
+            semiColonDelimitedCustomAnswers  = [arrayOfCustomAnswers componentsJoinedByString:@";"];
+            
+            if ([semiColonDelimitedAAnswers length] ==0 && [semiColonDelimitedCustomAnswers length] ==0)
+            {
+                
+                //don't write any answers, do nothing
+                /*
+                 [xmlWriter writeStartElement:@"ANSWER"];
+                 [xmlWriter writeStartElement:@"A"];
+                 [xmlWriter writeCharacters:@"1"];
+                 [xmlWriter writeEndElement];
+                 [xmlWriter writeEndElement];
+                 */
+            }
+            else
+            {
+                [xmlWriter writeStartElement:@"ANSWER"];
+                if([semiColonDelimitedAAnswers length]>0)
+                {
+                    [xmlWriter writeStartElement:@"A"];
+                    [xmlWriter writeCharacters:semiColonDelimitedAAnswers];
+                    [xmlWriter writeEndElement];
+                    
+                }
+                if([semiColonDelimitedCustomAnswers length]>0)
+                {
+                    [xmlWriter writeStartElement:@"CUSTOM"];
+                    [xmlWriter writeCharacters:semiColonDelimitedCustomAnswers];
+                    [xmlWriter writeEndElement];
+                    
+                }
+                //close answer element
+                [xmlWriter writeEndElement];
+            }
+            
+        }
+        
+        //close item element
+        [xmlWriter writeEndElement];
+        
+    }
+
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    return xml;
+}
+
+
 -(IBAction)doUpdate:(id)sender
 {
     NSString *xmlForUpdate;
@@ -3036,8 +3285,8 @@ if(tableViewTag ==8999)
     {
         
         //generate XML for updating a single caseItem
-        xmlForUpdate = [self createXMLFunctionSingleCaseItem:nil CaseItemObject:nil];
-        
+        //xmlForUpdate = [self createXMLFunctionSingleCaseItem:nil CaseItemObject:nil];
+        xmlForUpdate = [self createXMLCaseUpdate];
     }
     
     if([xmlForUpdate isEqualToString:@"no"])
@@ -3489,7 +3738,6 @@ if(tableViewTag ==8999)
         
     }
   
-    
     [self.propertiesTableView reloadData];
     
 }
@@ -3617,7 +3865,7 @@ if(tableViewTag ==8999)
     if(templateMode)
     {
         //save this data for later when the user submits the case
-        
+         [self.navigationController popViewControllerAnimated:NO];
     }
     else
     {
@@ -3891,7 +4139,7 @@ if(tableViewTag ==8999)
                                                         
                         NSMutableDictionary *jsonCaseChange = [json mutableCopy];
                         dispatch_async(dispatch_get_main_queue(), ^{
-                        [self reloadData:jsonCaseChange reloadMode:@"fromSingleNewProperty"];
+                        [self reloadData:jsonCaseChange reloadMode:@"singleAnswer"];
                                                         });
                                                         
                         }
@@ -3984,6 +4232,24 @@ if(tableViewTag ==8999)
     [xmlWriter writeStartElement:@"CASENAME"];
     [xmlWriter writeCharacters:caseName];
     [xmlWriter writeEndElement];
+    
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"LATITUDE"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"LONGITUDE"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
     
     [xmlWriter writeStartElement:@"ITEM"];
     
@@ -4114,7 +4380,6 @@ if(tableViewTag ==8999)
     sortedCaseItems = [[caseItems sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
     sortedCaseItems = [self filterOutLocationProperty:sortedCaseItems];
     //loop through sortedCaseItems and remove the pinDrop Property
-    
     
     //setting up arrays for storing three sets of properties and cases based on type: info messages, already answered properties, and new suggested properties
     
@@ -4728,6 +4993,25 @@ if(tableViewTag ==8999)
     [xmlWriter writeCharacters:caseName];
     [xmlWriter writeEndElement];
     
+    if([locationRetrieved length]>0)
+    {
+        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        [xmlWriter writeCharacters:locationRetrieved];
+        [xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"LATITUDE"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"LONGITUDE"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
+
+    
     [xmlWriter writeStartElement:@"ITEM"];
     
     [xmlWriter writeStartElement:@"CASEITEM"];
@@ -4774,10 +5058,12 @@ if(tableViewTag ==8999)
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    textField.text = @"";
+   // textField.text = @"";
     
     [self animateTextField:textField up:YES];
 }
+
+
 
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
@@ -4794,17 +5080,26 @@ if(tableViewTag ==8999)
     
 }
 
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self.view endEditing:YES];// this will do the trick
+}
+
 -(void)updateCustomAnswer:(NSString *)customAnsString
 {
     //if template mode, just save it locally.
     //if not template mode, fire off the update in background
+    
+    //dismiss the text entry portion
     
     if(templateMode ==1)
     {
         PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
         NSMutableDictionary *AnsDict = [[NSMutableDictionary alloc] init];
         [AnsDict setObject:customAnsString forKey:@"custom"];
-        [selectedCaseItem setObject:AnsDict forKey:@"answers"];
+        NSMutableArray *newAnswersArray = [[NSMutableArray alloc] init];
+        [newAnswersArray addObject:AnsDict];
+        
+        [selectedCaseItem setObject:newAnswersArray forKey:@"answers"];
         
     }
     else
@@ -4822,14 +5117,13 @@ if(tableViewTag ==8999)
         
     }
     
-    
 }
 
 -(IBAction)customAnswerSet:(id)sender
 {
     //if template mode, just save it locally.
     //if not template mode, fire off the update in background
-
+    [self.view endEditing:YES];
     if([self.customAnswerTextField.text length] >0)
     {
         self.customAnswerCheckmark.alpha = 1;
@@ -4837,6 +5131,8 @@ if(tableViewTag ==8999)
     }
     else
     {
+        self.customAnswerCheckmark.alpha = 0;
+        
         return;
     }
     
@@ -4882,6 +5178,8 @@ if(tableViewTag ==8999)
     
     [textField resignFirstResponder];
     
+    [self dismissKeyboard];
+    
     return YES;
 }
 
@@ -4898,7 +5196,19 @@ if(tableViewTag ==8999)
     self.externalCaseName = externalCaseName;
     self.caseImage = caseImage;
     
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    if(templateMode==YES)
+    {
+        //no caseID, don't update yet until it's created
+        
+    }
+    else
+    {
+        NSString *caseID = [caseObjectBeingUpdated objectForKey:@"caseId"];
+        [self submitCaseProfileInfo:caseID];
+        
+    }
+    
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 -(void)pressingBack
@@ -4910,21 +5220,28 @@ if(tableViewTag ==8999)
 
 -(void)submitCaseProfileInfo:(NSString *)caseID;
 {
-    PFObject *newCaseProfile = [PFObject objectWithClassName:@"CaseProfile"];
-    [newCaseProfile setObject:caseID forKey:@"caseID"];
+    PFQuery *queryForCaseProfile = [PFQuery queryWithClassName:@"CaseProfile"];
+    [queryForCaseProfile whereKey:@"caseID" equalTo:caseID];
+    PFObject *caseProfileObject = [queryForCaseProfile getFirstObject];
+    if(caseProfileObject ==nil)
+    {
+    caseProfileObject = [PFObject objectWithClassName:@"CaseProfile"];
+
+    }
     
-    [newCaseProfile setObject:self.internalCaseName forKey:@"internalCaseName"];
-    [newCaseProfile setObject:self.externalCaseName forKey:@"externalCaseName"];
+    [caseProfileObject setObject:caseID forKey:@"caseID"];
     
-    UIImage *imgForParse = self.caseImage;
+    [caseProfileObject setObject:self.internalCaseName forKey:@"internalCaseName"];
+    [caseProfileObject setObject:self.externalCaseName forKey:@"externalCaseName"];
     
+    //UIImage *imgForParse = self.caseImage;
     
     // Convert to JPEG with 50% quality
-    NSData* data = UIImageJPEGRepresentation(self.caseImage, 0.8f);
+    NSData *data = UIImageJPEGRepresentation(self.caseImage, 0.8f);
    
     PFFile *imageFile = [PFFile fileWithName:@"caseImage.jpg" data:data];
-    [newCaseProfile setObject:imageFile forKey:@"caseImage"];
-    [newCaseProfile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    [caseProfileObject setObject:imageFile forKey:@"caseImage"];
+    [caseProfileObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if(error)
         {
             NSLog(@"ParseError: %@", error.localizedDescription);
@@ -4934,9 +5251,6 @@ if(tableViewTag ==8999)
     }];
     
 }
-
-
-
 
 #pragma mark swipableTableViewCellsDelegateMethods
 
@@ -5005,6 +5319,25 @@ if(tableViewTag ==8999)
                                         
                                     }
                                 }];
+}
+
+-(void)updateCaseProfile
+{
+    CaseTitleSetViewController *ctsvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ctsvc"];
+    ctsvc.delegate = self;
+    
+    if([self.externalCaseName length] >0)
+    {
+        ctsvc.externalCaseName = self.externalCaseName;
+    }
+    if(self.caseImage !=nil)
+    {
+        ctsvc.caseImage = self.caseImage;
+        
+    }
+    
+    [self.navigationController pushViewController:ctsvc animated:YES];
+    
 }
 
 

@@ -23,6 +23,7 @@
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) UIPageControl *pageControl;
 @property (strong, nonatomic) NSArray *pageContent;
+@property (strong,nonatomic) UIImageView *findMeLogo;
 
 -(void) makestuffvisible;
 -(void) makestuffnotvisible;

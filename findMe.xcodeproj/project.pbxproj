@@ -88,13 +88,13 @@
 		EC8B3C181B0D1B0C00DE04A9 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C151B0D1B0C00DE04A9 /* FBSDKCoreKit.framework */; };
 		EC8B3C191B0D1B0C00DE04A9 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C161B0D1B0C00DE04A9 /* FBSDKLoginKit.framework */; };
 		EC8B3C1A1B0D1B0C00DE04A9 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C171B0D1B0C00DE04A9 /* FBSDKShareKit.framework */; };
-		EC8B3C271B0D1E1B00DE04A9 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C211B0D1E1B00DE04A9 /* Bolts.framework */; };
 		EC8B3C281B0D1E1B00DE04A9 /* ParseCrashReporting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C221B0D1E1B00DE04A9 /* ParseCrashReporting.framework */; };
 		EC8B3C2A1B0D1E1B00DE04A9 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C241B0D1E1B00DE04A9 /* ParseFacebookUtilsV4.framework */; };
 		EC8B3C2B1B0D1E1B00DE04A9 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C251B0D1E1B00DE04A9 /* ParseUI.framework */; };
 		EC8B3C2E1B0D20F500DE04A9 /* FindMeLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC8B3C2D1B0D20F500DE04A9 /* FindMeLoginViewController.m */; };
 		EC8B3C301B0D250100DE04A9 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C2F1B0D250100DE04A9 /* Parse.framework */; };
 		EC8B3C321B0D299500DE04A9 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C311B0D299500DE04A9 /* libstdc++.6.dylib */; };
+		EC8B3C391B14C44700DE04A9 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C381B14C44700DE04A9 /* Bolts.framework */; };
 		EC93C6A21AFFE1D200D3DE2A /* MySignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC93C6A11AFFE1D200D3DE2A /* MySignUpViewController.m */; };
 		EC93C6A41AFFE79800D3DE2A /* newsignup-button.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6A31AFFE79800D3DE2A /* newsignup-button.png */; };
 		EC93C6A61AFFE7B300D3DE2A /* background-login.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6A51AFFE7B300D3DE2A /* background-login.png */; };
@@ -447,13 +447,13 @@
 		EC8B3C151B0D1B0C00DE04A9 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		EC8B3C161B0D1B0C00DE04A9 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		EC8B3C171B0D1B0C00DE04A9 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../FacebookSDK/FBSDKShareKit.framework; sourceTree = "<group>"; };
-		EC8B3C211B0D1E1B00DE04A9 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../Downloads/parse-library-1.7.3/Bolts.framework"; sourceTree = "<group>"; };
 		EC8B3C221B0D1E1B00DE04A9 /* ParseCrashReporting.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseCrashReporting.framework; path = "../../Downloads/parse-library-1.7.3/ParseCrashReporting.framework"; sourceTree = "<group>"; };
 		EC8B3C241B0D1E1B00DE04A9 /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseFacebookUtilsV4.framework; path = "../../Downloads/parse-library-1.7.3/ParseFacebookUtilsV4.framework"; sourceTree = "<group>"; };
 		EC8B3C251B0D1E1B00DE04A9 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = "../../Downloads/parse-library-1.7.3/ParseUI.framework"; sourceTree = "<group>"; };
 		EC8B3C2D1B0D20F500DE04A9 /* FindMeLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindMeLoginViewController.m; sourceTree = "<group>"; };
 		EC8B3C2F1B0D250100DE04A9 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "../../Downloads/parse-library-1.7.3/Parse.framework"; sourceTree = "<group>"; };
 		EC8B3C311B0D299500DE04A9 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
+		EC8B3C381B14C44700DE04A9 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../Downloads/parse-library-1.7.3/Bolts.framework"; sourceTree = "<group>"; };
 		EC93C6A01AFFE1D200D3DE2A /* MySignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MySignUpViewController.h; sourceTree = "<group>"; };
 		EC93C6A11AFFE1D200D3DE2A /* MySignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MySignUpViewController.m; sourceTree = "<group>"; };
 		EC93C6A31AFFE79800D3DE2A /* newsignup-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "newsignup-button.png"; sourceTree = "<group>"; };
@@ -953,9 +953,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC8B3C391B14C44700DE04A9 /* Bolts.framework in Frameworks */,
 				EC8B3C321B0D299500DE04A9 /* libstdc++.6.dylib in Frameworks */,
 				EC8B3C301B0D250100DE04A9 /* Parse.framework in Frameworks */,
-				EC8B3C271B0D1E1B00DE04A9 /* Bolts.framework in Frameworks */,
 				EC8B3C281B0D1E1B00DE04A9 /* ParseCrashReporting.framework in Frameworks */,
 				EC8B3C2A1B0D1E1B00DE04A9 /* ParseFacebookUtilsV4.framework in Frameworks */,
 				EC8B3C2B1B0D1E1B00DE04A9 /* ParseUI.framework in Frameworks */,
@@ -1012,9 +1012,9 @@
 		D31DF2F419CEFC0C00A37725 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EC8B3C381B14C44700DE04A9 /* Bolts.framework */,
 				EC8B3C311B0D299500DE04A9 /* libstdc++.6.dylib */,
 				EC8B3C2F1B0D250100DE04A9 /* Parse.framework */,
-				EC8B3C211B0D1E1B00DE04A9 /* Bolts.framework */,
 				EC8B3C221B0D1E1B00DE04A9 /* ParseCrashReporting.framework */,
 				EC8B3C241B0D1E1B00DE04A9 /* ParseFacebookUtilsV4.framework */,
 				EC8B3C251B0D1E1B00DE04A9 /* ParseUI.framework */,

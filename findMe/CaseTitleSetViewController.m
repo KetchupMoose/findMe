@@ -19,9 +19,18 @@ UIImage *selectedCaseImage;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.internalCaseNameTextField.delegate = self;
-    self.externalCaseNameTextField.delegate = self;
+        self.externalCaseNameTextField.delegate = self;
     
+    if([self.externalCaseName length]>0)
+    {
+        self.externalCaseNameTextField.text = self.externalCaseName;
+        
+    }
+    if(self.caseImage !=nil)
+    {
+        self.caseImageView.image = self.caseImage;
+        selectedCaseImage = self.caseImage;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -45,16 +54,17 @@ UIImage *selectedCaseImage;
    // self.cdcvc.caseImage = selectedCaseImage;
    // self.cdcvc.externalCaseName = externalNameString;
     //self.cdcvc.internalCaseName = internalNameString;
-    internalNameString = self.internalCaseNameTextField.text;
+    
     externalNameString = self.externalCaseNameTextField.text;
     
-    if([internalNameString length] <=0 || [externalNameString length] <=0)
+    if([externalNameString length] <=0)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Must Enter Case Names" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
         return;
         
     }
+    internalNameString = @"blah";
     
     //remove this view controller
     [self.delegate dismissCaseTitleSetViewController:internalNameString withExt:externalNameString withImg:selectedCaseImage];
@@ -113,6 +123,10 @@ UIImage *selectedCaseImage;
 -(void)dismissKeyboard {
     
     [self.view endEditing:YES];
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self.view endEditing:YES];// this will do the trick
 }
 
 -(IBAction)setPhoto:(id)sender

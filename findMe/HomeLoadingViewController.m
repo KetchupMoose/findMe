@@ -31,6 +31,8 @@
          | PFLogInFieldsFacebook
          | PFLogInFieldsSignUpButton
          | PFLogInFieldsLogInButton
+         | PFLogInFieldsTwitter
+         | PFLogInFieldsPasswordForgotten
          ];
         
         // Instantiate our custom sign up view controller
@@ -49,8 +51,10 @@
     else
     {
         //display the home page view controller
-        HomePageViewController *hpvc = [self.storyboard instantiateViewControllerWithIdentifier:@"hpvc"];
-        [self.navigationController pushViewController:hpvc animated:YES];
+        UINavigationController *navC = [self.storyboard instantiateViewControllerWithIdentifier:@"navC"];
+    
+        [self.navigationController presentViewController:navC animated:NO completion:nil];
+        
 
     }
 }
@@ -86,6 +90,10 @@
         // Present Log In View Controller
         [self presentViewController:logInViewController animated:YES completion:NULL];
     }
+    else
+    {
+        
+    }
 }
 
 // Sent to the delegate to determine whether the log in request should be submitted to the server.
@@ -107,9 +115,9 @@
 - (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user {
     [self.navigationController dismissViewControllerAnimated:YES completion:NULL];
     
-    HomePageViewController *hpvc = [self.storyboard instantiateViewControllerWithIdentifier:@"hpvc"];
-    [self.navigationController pushViewController:hpvc animated:YES];
-
+    UINavigationController *navC = [self.storyboard instantiateViewControllerWithIdentifier:@"navC"];
+    
+    [self.navigationController presentViewController:navC animated:NO completion:nil];
 }
 
 // Sent to the delegate when the log in attempt fails.
@@ -153,8 +161,9 @@
     [self.navigationController popViewControllerAnimated:YES];
     [self.navigationController dismissViewControllerAnimated:YES completion:^{
         //launch the home screen view controller
-        HomePageViewController *hpvc = [self.storyboard instantiateViewControllerWithIdentifier:@"hpvc"];
-         [self.navigationController pushViewController:hpvc animated:YES];
+        UINavigationController *navC = [self.storyboard instantiateViewControllerWithIdentifier:@"navC"];
+        
+        [self.navigationController presentViewController:navC animated:NO completion:nil];
     }];
 }
 

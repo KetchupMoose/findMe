@@ -293,8 +293,10 @@ NSString *homePageManualLocationPropertyNum;
         setProfileViewController *spvc = [self.storyboard instantiateViewControllerWithIdentifier:@"spvc"];
         spvc.delegate = self;
         
-        
+        //[self presentViewController:spvc animated:NO completion:nil];
         [self.navigationController pushViewController:spvc animated:YES];
+        
+        //[self.navigationController pushViewController:spvc animated:YES];
         
         [HUD hide:NO];
     }
@@ -558,7 +560,10 @@ NSString *homePageManualLocationPropertyNum;
     self.HomePageITSMTLObject = newITSMTLObject;
     
     //[self ReloadHomePageData];
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.navigationController popViewControllerAnimated:YES];
+    
+    
+    
 }
 
 -(IBAction)TestSlidingView:(id)sender

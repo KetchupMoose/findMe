@@ -21,7 +21,16 @@
     [super viewDidLoad];
     
    
+    self.findMeLogo = [[UIImageView alloc] initWithFrame:CGRectMake(110,30,100,100)];
     
+    NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"Icon-76" ofType:@"png"];
+    self.findMeLogo.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
+    
+    [self.signUpView addSubview:self.findMeLogo];
+    
+    self.signUpView.logo.alpha = 0;
+    
+    /*
     NSString *fileName = [[NSBundle mainBundle] pathForResource:@"background-login" ofType:@"png"];
     UIImage *bgimage = [UIImage imageWithContentsOfFile:fileName];
     
@@ -40,6 +49,7 @@
     [self.signUpView setLogo:logoImgView];
      self.signUpView.signUpButton.titleLabel.text = @"";
     
+     */
     // Change button apperance
     //[self.signUpView.dismissButton setImage:[UIImage imageNamed:@"Exit.png"] forState:UIControlStateNormal];
     //[self.signUpView.dismissButton setImage:[UIImage imageNamed:@"ExitDown.png"] forState:UIControlStateHighlighted];
@@ -54,6 +64,8 @@
     //[self.signUpView insertSubview:fieldsBackground atIndex:1];
     
     // Remove text shadow
+    
+    /*
     CALayer *layer = self.signUpView.usernameField.layer;
     layer.shadowOpacity = 0.0f;
     layer.cornerRadius=9.0f;
@@ -84,9 +96,12 @@
      layer.borderColor = [[UIColor blackColor]CGColor];
     layer.borderWidth = 2.0f;
     layer.masksToBounds = YES;
-  
+  */
     
     // Set text color
+    
+    
+    
     [self.signUpView.usernameField setTextColor:[UIColor colorWithRed:135.0f/255.0f green:118.0f/255.0f blue:92.0f/255.0f alpha:1.0]];
     [self.signUpView.passwordField setTextColor:[UIColor colorWithRed:135.0f/255.0f green:118.0f/255.0f blue:92.0f/255.0f alpha:1.0]];
     [self.signUpView.emailField setTextColor:[UIColor colorWithRed:135.0f/255.0f green:118.0f/255.0f blue:92.0f/255.0f alpha:1.0]];
@@ -149,16 +164,16 @@
     }
  
     
-    NSString *filesignbtn = [[NSBundle mainBundle] pathForResource:@"newsignup-button" ofType:@"png"];
-    UIImage *btnimage = [UIImage imageWithContentsOfFile:filesignbtn];
+    //NSString *filesignbtn = [[NSBundle mainBundle] pathForResource:@"newsignup-button" ofType:@"png"];
+    //UIImage *btnimage = [UIImage imageWithContentsOfFile:filesignbtn];
     
-    UIImage *b2 = [self imageWithImage:btnimage scaledToSize:self.signUpView.signUpButton.bounds.size];
+    //UIImage *b2 = [self imageWithImage:btnimage scaledToSize:self.signUpView.signUpButton.bounds.size];
     
-    [self.signUpView.signUpButton setBackgroundImage:b2 forState:UIControlStateNormal];
+    //[self.signUpView.signUpButton setBackgroundImage:b2 forState:UIControlStateNormal];
     
-    self.signUpView.signUpButton.titleLabel.text = @"";
-    
-    
+    //self.signUpView.signUpButton.titleLabel.text = @"Sign Up";
+    //[self.signUpView.signUpButton.titleLabel setText:@"Sign Up"];
+    [self.signUpView.signUpButton setTitle:@"Sign Up" forState:UIControlStateNormal];
     
     CGRect fieldFrame = self.signUpView.usernameField.frame;
 
@@ -174,7 +189,7 @@
    }
     else
     {
-        [self.signUpView.dismissButton setFrame:CGRectMake(25.0f, 235.0f, 87.5f, 45.5f)];
+        [self.signUpView.dismissButton setFrame:CGRectMake(5.0f, 25.0f, 25.5f, 45.5f)];
         [self.signUpView.logo setFrame:CGRectMake(46.0f, 52.0f, 250.0f, 188.0f)];
         [self.signUpView.signUpButton setFrame:CGRectMake(35.0f, 385.0f, 250.0f, 40.0f)];
         
@@ -199,8 +214,6 @@
         NSLog(@"x: %f", view.frame.origin.x);
         NSLog(@"y: %f", view.frame.origin.y);
         UIView *twolevelview = view;
-        
-        
         
         for (UIView *twoview in twolevelview.subviews)
         {

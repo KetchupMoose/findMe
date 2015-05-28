@@ -15,7 +15,7 @@
 
 @end
 
-@interface mapPinViewController : UIViewController <MKMapViewDelegate>
+@interface mapPinViewController : UIViewController <MKMapViewDelegate,CLLocationManagerDelegate>
 
 @property (weak,nonatomic) IBOutlet MKMapView *mapView;
 @property (weak,nonatomic) IBOutlet UIButton *setLocation;
@@ -23,5 +23,5 @@
 @property (nonatomic, weak) id<mapPinViewControllerDelegate> delegate;
 @property (strong,nonatomic) NSString *priorLatitude;
 @property (strong,nonatomic) NSString *priorLongitude;
-
+@property (strong,nonatomic) UIImageView *pinImageView;
 @end
