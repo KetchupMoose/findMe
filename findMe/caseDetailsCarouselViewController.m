@@ -134,6 +134,9 @@ BOOL LoadedBOOL = NO;
                 manualLocationLongitude = [longitudeLatitudeArray objectAtIndex:1];
                 manualLocationCaseItemID = [caseItemObject objectForKey:@"caseItem"];
                 
+                NSLog(@"filtering out location property");
+                NSLog(@"%@",manualLocationLatitude);
+                NSLog(@"%@",manualLocationLongitude);
             }
         j = j+1;
     }
@@ -520,6 +523,12 @@ BOOL LoadedBOOL = NO;
 -(void)sendBubbleBurst:(PFObject *) caseObject
 {
     NSString *caseName = [caseObject objectForKey:@"caseName"];
+    
+    if([self.externalCaseName length] >0)
+    {
+        caseName = self.externalCaseName;
+        
+    }
     NSString *caseObjID = [caseObject objectForKey:@"caseId"];
     NSString *version = [caseObject objectForKey:@"version"];
     
@@ -611,8 +620,8 @@ BOOL LoadedBOOL = NO;
 - (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
 {
     
-    NSLog(@"making view for index");
-    NSLog(@"%ld",(long)index);
+    //NSLog(@"making view for index");
+    //NSLog(@"%ld",(long)index);
     
     
     UILabel *carouselLabel = nil;
@@ -799,13 +808,13 @@ BOOL LoadedBOOL = NO;
     }
     
     NSString *propertyDescr = [propAtIndex objectForKey:@"propertyDescr"];
-    NSLog(@"writing property descr");
+    //NSLog(@"writing property descr");
     
-    NSLog(propertyDescr);
+    //NSLog(propertyDescr);
     
     
     carouselLabel.text = propertyDescr;
-    NSLog(@"writing carousel label ended");
+   // NSLog(@"writing carousel label ended");
     
     NSString *imgURL = [propAtIndex objectForKey:@"iconImageURL"];
     
@@ -864,11 +873,11 @@ BOOL LoadedBOOL = NO;
     [propertyClassLabel sizeToFit];
     
     
-    NSLog(@"prebug");
-    NSLog(@"%ld",carouselLabel.tag);
+    //NSLog(@"prebug");
+   // NSLog(@"%ld",carouselLabel.tag);
     
     
-    NSLog(@"postbug");
+    //NSLog(@"postbug");
     return view;
 }
 
@@ -1422,7 +1431,7 @@ BOOL LoadedBOOL = NO;
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    NSLog(@"didUpdateToLocation: %@", newLocation);
+   // NSLog(@"didUpdateToLocation: %@", newLocation);
     CLLocation *currentLocation = newLocation;
     
     if (currentLocation != nil) {
@@ -1440,7 +1449,7 @@ BOOL LoadedBOOL = NO;
     // Reverse Geocoding
     NSLog(@"Resolving the Address");
     [geocoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error) {
-        NSLog(@"Found placemarks: %@, error: %@", placemarks, error);
+        //NSLog(@"Found placemarks: %@, error: %@", placemarks, error);
         if (error == nil && [placemarks count] > 0) {
             placemark = [placemarks lastObject];
             
@@ -2751,8 +2760,6 @@ if(tableViewTag ==8999)
         [self.navigationController popViewControllerAnimated:YES];
         
     }
-   
-    
     
      [self.submitAnswersButton setTitle:@"Update Answers" forState:UIControlStateNormal];
     
@@ -2804,6 +2811,13 @@ if(tableViewTag ==8999)
     }
     
     NSString *caseName = [caseObject objectForKey:@"caseName"];
+    
+    if([self.externalCaseName length] >0)
+    {
+       caseName = self.externalCaseName;
+        
+    }
+
     NSString *caseObjID = [caseObject objectForKey:@"caseId"];
     
     PFObject *selectedPropertyObject;
@@ -3054,6 +3068,11 @@ if(tableViewTag ==8999)
     PFObject *caseItemObject;
     
     NSString *caseName = [caseObject objectForKey:@"caseName"];
+    if([self.externalCaseName length] >0)
+    {
+        caseName = self.externalCaseName;
+        
+    }
     NSString *caseObjID = [caseObject objectForKey:@"caseId"];
     
     //get the selected property from the chooser element.
@@ -3386,6 +3405,11 @@ if(tableViewTag ==8999)
     }
     
     NSString *caseName = [caseObject objectForKey:@"caseName"];
+    if([self.externalCaseName length] >0)
+    {
+        caseName = self.externalCaseName;
+        
+    }
     NSString *caseObjID = [caseObject objectForKey:@"caseId"];
     
     //get the selected property from the chooser element.
@@ -3847,18 +3871,25 @@ if(tableViewTag ==8999)
     
     if([manualLocationLatitude length] >0)
     {
+        NSLog(@"show location picker");
         mpvc.priorLatitude = manualLocationLatitude;
         mpvc.priorLongitude = manualLocationLongitude;
+        mpvc.myRegion = self.setRegion;
+        
+        NSLog(@"%@",mpvc.priorLatitude);
+        NSLog(@"%@",mpvc.priorLongitude);
+       
     }
     [self.navigationController pushViewController:mpvc animated:YES];
     
 }
 
-- (void)setUserLocation:(float) latitude withLongitude:(float)longitude
+- (void)setUserLocation:(float) latitude withLongitude:(float)longitude andRegion:(MKCoordinateRegion)region
 {
     //set manual location variables which will take priority over automatic variables when present
     manualLocationLatitude = [NSString stringWithFormat:@"%f",latitude];
     manualLocationLongitude = [NSString stringWithFormat:@"%f", longitude];
+    self.setRegion = region;
     
     useManualLocation = YES;
     
@@ -3898,6 +3929,11 @@ if(tableViewTag ==8999)
     PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
     
     NSString *caseName = [caseObject objectForKey:@"caseName"];
+    if([self.externalCaseName length] >0)
+    {
+        caseName = self.externalCaseName;
+        
+    }
     NSString *caseObjID = [caseObject objectForKey:@"caseId"];
     
     //get the selected property from the chooser element.
@@ -4204,6 +4240,11 @@ if(tableViewTag ==8999)
     //PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
     NSString *caseObjectID = [caseObjectBeingUpdated objectForKey:@"caseId"];
     NSString *caseName = [caseObjectBeingUpdated objectForKey:@"caseName"];
+    if([self.externalCaseName length] >0)
+    {
+        caseName = self.externalCaseName;
+        
+    }
     
     NSString *caseItem = [itemObject objectForKey:@"caseItem"];
     NSString *propertyNum = [itemObject objectForKey:@"propertyNum"];
@@ -4960,7 +5001,12 @@ if(tableViewTag ==8999)
     NSString *caseObjectID = [caseObject objectForKey:@"caseId"];
     
     caseName = [caseObject objectForKey:@"caseName"];
-    
+    if([self.externalCaseName length] >0)
+    {
+       caseName = self.externalCaseName;
+        
+    }
+
     for(PFObject *caseItemObject in caseObjectCaseItems)
     {
         NSString *caseItemString = [caseItemObject objectForKey:@"caseItem"];
@@ -5127,7 +5173,15 @@ if(tableViewTag ==8999)
     if([self.customAnswerTextField.text length] >0)
     {
         self.customAnswerCheckmark.alpha = 1;
+        self.submitAnswersButton.enabled = TRUE;
+        self.submitAnswersButton.backgroundColor = [UIColor blueColor];
+      
+        self.submitAnswersButton.titleLabel.textColor = [UIColor whiteColor];
         
+        if(templateMode ==YES)
+        {
+              [self.submitAnswersButton setTitle:@"Create Case" forState:UIControlStateNormal];
+        }
     }
     else
     {
@@ -5237,10 +5291,15 @@ if(tableViewTag ==8999)
     //UIImage *imgForParse = self.caseImage;
     
     // Convert to JPEG with 50% quality
-    NSData *data = UIImageJPEGRepresentation(self.caseImage, 0.8f);
-   
-    PFFile *imageFile = [PFFile fileWithName:@"caseImage.jpg" data:data];
-    [caseProfileObject setObject:imageFile forKey:@"caseImage"];
+    
+    if(self.caseImage !=nil)
+    {
+        NSData *data = UIImageJPEGRepresentation(self.caseImage, 0.8f);
+        
+        PFFile *imageFile = [PFFile fileWithName:@"caseImage.jpg" data:data];
+        [caseProfileObject setObject:imageFile forKey:@"caseImage"];
+    }
+  
     [caseProfileObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if(error)
         {
@@ -5325,6 +5384,14 @@ if(tableViewTag ==8999)
 {
     CaseTitleSetViewController *ctsvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ctsvc"];
     ctsvc.delegate = self;
+    
+    if([self.externalCaseName length] ==0)
+    {
+        //set the external case name as the caseName from XML
+        NSString *caseName = [caseObjectBeingUpdated objectForKey:@"caseName"];
+        self.externalCaseName = caseName;
+        
+    }
     
     if([self.externalCaseName length] >0)
     {

@@ -26,7 +26,7 @@ MBProgressHUD *HUD;
     self.mapView.delegate = self;
     
     pinImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pinRedHighRes.png"]];
-    pinImageView.frame = CGRectMake(0,0,32,32);
+    pinImageView.frame = CGRectMake(0,0,32,30);
     pinImageView.center = self.mapView.center;
     //CGRect changeframe = image.frame;
     //changeframe.origin.x = changeframe.origin.x+8;
@@ -60,6 +60,12 @@ MBProgressHUD *HUD;
         [locationManager requestAlwaysAuthorization];
     }
     [locationManager startUpdatingLocation];
+    
+    if([self.priorLatitude length] >0)
+    {
+         shouldUpdateLocation = NO;
+    }
+   
 }
 
 - (void)mapView:(MKMapView *)mapView
@@ -130,7 +136,7 @@ didChangeDragState:(MKAnnotationViewDragState)newState
     
     if([self.priorLatitude length] >0)
         {
-            shouldUpdateLocation = NO;
+            
             self.mapView.showsUserLocation = YES;
             CLLocationCoordinate2D priorCoordinate;
             float priorLatitudeFloat = [self.priorLatitude floatValue];
@@ -139,12 +145,13 @@ didChangeDragState:(MKAnnotationViewDragState)newState
             priorCoordinate.latitude = priorLatitudeFloat;
             priorCoordinate.longitude = priorLongitudeFloat;
             
-            MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(priorCoordinate, 800, 800);
-            [self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
+            //MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(priorCoordinate, 800, 800);
+            //[self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
+            
+            [self.mapView setRegion:self.myRegion animated:YES];
+            
             
         }
-    shouldUpdateLocation = YES;
-    
     
 }
 
@@ -162,8 +169,8 @@ didChangeDragState:(MKAnnotationViewDragState)newState
    
     if(shouldUpdateLocation)
    {
-      // MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 800, 800);
-       //[self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
+       MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 800, 800);
+       [self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
        
        
        // Add an annotation
@@ -175,7 +182,7 @@ didChangeDragState:(MKAnnotationViewDragState)newState
        
        //[self.mapView addAnnotation:point];
        
-       //shouldUpdateLocation = NO;
+       shouldUpdateLocation = NO;
        self.mapView.showsUserLocation = YES;
        
    }
@@ -244,26 +251,34 @@ didChangeDragState:(MKAnnotationViewDragState)newState
     float latitude = 0.0;
     
     MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-     CLLocationCoordinate2D coord = [self.mapView convertPoint:self.pinImageView.center toCoordinateFromView:self.mapView];
-    point.coordinate = coord;
+     CLLocationCoordinate2D coord = [self.mapView convertPoint:self.pinImageView.center toCoordinateFromView:self.pinImageView];
+    
+    //- (MKCoordinateRegion)convertRect:(CGRect)rect
+//toRegionFromView:(UIView *)view
+    
+    //self.myRegion = [self.mapView convertRect:self.pinImageView.frame  toRegionFromView:self.mapView];
+    
+    point.coordinate = self.mapView.centerCoordinate;
     point.title = @"center";
     point.subtitle = @"I'm here!!!";
     
     [self.mapView addAnnotation:point];
     
     for (MKPointAnnotation *annotation in self.mapView.annotations) {
-        if((annotation.title = @"center"))
+        if([annotation.title isEqualToString:@"center"])
         {
     
         NSLog(@"lon: %f, lat %f", ((MKPointAnnotation*)annotation).coordinate.longitude,((MKPointAnnotation*)annotation).coordinate.latitude);
         
         longitude =((MKPointAnnotation*)annotation).coordinate.longitude;
         latitude =((MKPointAnnotation*)annotation).coordinate.latitude;
+            //latitude = latitude +0.000987999999999545;
+            
         }
     }
     
     //send the longitude and latitude to the delegate
-    [self.delegate setUserLocation:latitude withLongitude:longitude];
+    [self.delegate setUserLocation:latitude withLongitude:longitude andRegion:self.myRegion];
     
 }
 

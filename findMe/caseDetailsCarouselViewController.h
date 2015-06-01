@@ -44,6 +44,7 @@
 
 @property (strong,nonatomic) IBOutlet UILabel *customAnswerLabel;
 @property (strong,nonatomic) IBOutlet UIImageView *customAnswerCheckmark;
+@property MKCoordinateRegion setRegion;
 
 
 

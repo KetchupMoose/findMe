@@ -11,7 +11,7 @@
 
 @protocol mapPinViewControllerDelegate
 
-- (void)setUserLocation:(float) latitude withLongitude:(float)longitude;
+- (void)setUserLocation:(float) latitude withLongitude:(float)longitude andRegion:(MKCoordinateRegion) region;
 
 @end
 
@@ -23,5 +23,7 @@
 @property (nonatomic, weak) id<mapPinViewControllerDelegate> delegate;
 @property (strong,nonatomic) NSString *priorLatitude;
 @property (strong,nonatomic) NSString *priorLongitude;
+@property MKCoordinateRegion myRegion;
+
 @property (strong,nonatomic) UIImageView *pinImageView;
 @end

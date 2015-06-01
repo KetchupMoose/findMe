@@ -100,6 +100,21 @@ UIImage *selectedCaseImage;
     }
 }
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    //textField.text = @"";
+    
+    [self animateTextField:textField up:YES];
+}
+
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [self animateTextField:textField up:NO];
+    
+}
+
+
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
     
     //put the string of the text field onto a label now in the same cell
