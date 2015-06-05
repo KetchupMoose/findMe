@@ -51,7 +51,7 @@ int selectedPic = 1;
        NSString *userPhoneNum = [currentUser objectForKey:@"cellNumber"];
        NSString *userGender = [currentUser objectForKey:@"gender"];
         
-        self.nameTextField.text = userShowName;
+        self.usernameTextField.text = userShowName;
         self.phoneTextField.text = userPhoneNum;
     }
     
@@ -63,18 +63,17 @@ int selectedPic = 1;
     [super viewDidLoad];
     
     self.phoneTextField.delegate = self;
-    self.nameTextField.delegate = self;
+    self.usernameTextField.delegate = self;
+    
+    self.navigationItem.title = @"Edit Profile";
+    
+    UIBarButtonItem *SaveItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:nil];
+    [SaveItem setAction:@selector(saveProfilePress:)];
+    
+    NSArray *actionButtonItems = @[SaveItem];
+    self.navigationItem.rightBarButtonItems = actionButtonItems;
     
     // Do any additional setup after loading the view.
-    
-    
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
-                                   initWithTarget:self
-                                   action:@selector(dismissKeyboard)];
-    tap.cancelsTouchesInView = NO;
-    
-    
-    [self.view addGestureRecognizer:tap];
     
     //brian feb 5
     //commenting out template information as it's no longer relevant
@@ -109,6 +108,11 @@ int selectedPic = 1;
     
 }
 
+-(void)saveProfilePress:(id)sender
+{
+    
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -128,48 +132,18 @@ int selectedPic = 1;
 
 -(IBAction)selectedMale:(id)sender
 {
-    gender = @"M";
-    UIView *selectionView = [[UIView alloc] initWithFrame:self.maleButton.bounds];
-    selectionView.backgroundColor = [UIColor blackColor];
-    selectionView.alpha = 0.8;
-    selectionView.tag = 444;
-    [self.maleButton addSubview:selectionView];
     
-    for(UIView *view in self.femaleButton.subviews)
-    {
-        if(view.tag ==444)
-        {
-             [view removeFromSuperview];
-        }
-      
-    }
 }
 
 -(IBAction)selectedFemale:(id)sender
 {
-    gender =@"F";
-    UIView *selectionView = [[UIView alloc] initWithFrame:self.femaleButton.bounds];
-    selectionView.backgroundColor = [UIColor blackColor];
-    selectionView.alpha = 0.8;
-    selectionView.tag = 444;
-    
-    [self.femaleButton addSubview:selectionView];
-    
-    for(UIView *view in self.maleButton.subviews)
-    {
-        if(view.tag ==444)
-        {
-            [view removeFromSuperview];
-        }
-        
-    }
-
+   
 }
 -(IBAction)submitProfile:(id)sender
 {
     //check if info is complete, if not, show an alert.
     
-      if(self.nameTextField.text.length == 0)
+      if(self.usernameTextField.text.length == 0)
       {
           [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Name", nil) message:NSLocalizedString(@"Please enter a name before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
       }
@@ -196,8 +170,8 @@ int selectedPic = 1;
     */
     //passed validation, run xml to create new user
     
-    showName = self.nameTextField.text;
-    phoneNum = self.phoneTextField.text;
+    self.username = self.usernameTextField.text;
+    self.phoneNumber = self.phoneTextField.text;
     
     PFUser *currentUser = [PFUser currentUser];
     
@@ -299,6 +273,7 @@ int selectedPic = 1;
 }
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:YES];// this will do the trick
+    
 }
 
 
@@ -598,10 +573,173 @@ int selectedPic = 1;
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
     
+    NSInteger textFieldTag = textField.tag;
+    
+    switch (textFieldTag)
+    {
+        case 1:
+        {
+            //username
+            self.username = textField.text;
+        }
+        case 2:
+        {
+            //phone
+            self.phoneNumber = textField.text;
+            
+        }
+        case 3:
+        {
+            //email
+            self.emailAddress = textField.text;
+        }
+        case 4:
+        {
+            //first
+            self.firstName = textField.text;
+            
+        }
+        case 5:
+        {
+            //last
+            self.lastName = textField.text;
+            
+        }
+    }
+    
     [textField resignFirstResponder];
     
     return YES;
 }
+
+-(IBAction)selectGender:(id)sender
+{
+    if(self.genderPicker ==nil)
+    {
+      self.genderPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(10,250,300,200)];
+      
+    }
+    if(self.genderPickerBGView ==nil)
+    {
+        self.genderPickerBGView = [[UIView alloc] initWithFrame:CGRectMake(0,230,320,500)];
+        self.genderPickerBGView.backgroundColor = [UIColor blackColor];
+        self.genderPickerBGView.alpha = 0.7;
+        [self.view addSubview:self.genderPickerBGView];
+        
+    }
+    
+    self.genderPicker.delegate = self;
+    self.genderPicker.dataSource = self;
+    
+    [self.view addSubview:self.genderPicker];
+    
+}
+
+#pragma mark -
+#pragma mark PickerView DataSource
+
+- (NSInteger)numberOfComponentsInPickerView:
+(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView
+numberOfRowsInComponent:(NSInteger)component
+{
+    return 4;
+}
+
+/*
+ - (NSString *)pickerView:(UIPickerView *)pickerView
+ titleForRow:(NSInteger)row
+ forComponent:(NSInteger)component
+ {
+ 
+ 
+ 
+ return stringToReturn;
+ }
+ */
+
+#pragma mark -
+#pragma mark PickerView Delegate
+-(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row
+      inComponent:(NSInteger)component
+{
+    //if they pick the very last row on the wheel, they are selecting to create a new question.
+    if(row ==0)
+    {
+        self.gender = @"Male";
+        [self.genderSelectBtn setTitle:@"Male" forState:UIControlStateNormal];
+        
+    }
+    if(row==1)
+    {
+        self.gender = @"Female";
+        [self.genderSelectBtn setTitle:@"Female" forState:UIControlStateNormal];
+        
+    }
+    if(row==2)
+    {
+        self.gender = @"Other";
+        [self.genderSelectBtn setTitle:@"Other" forState:UIControlStateNormal];
+        
+    }
+    if(row==3)
+    {
+        self.gender = @"Prefer Not To Say";
+        [self.genderSelectBtn setTitle:@"Prefer Not To Say" forState:UIControlStateNormal];
+        
+    }
+    
+    [self.genderPicker removeFromSuperview];
+    [self.genderPickerBGView removeFromSuperview];
+    
+}
+
+
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view{
+    UILabel* tView = (UILabel*)view;
+    if (!tView){
+        tView = [[UILabel alloc] init];
+        
+        tView.backgroundColor = [UIColor whiteColor];
+        
+        // Setup label properties - frame, font, colors etc
+        tView.frame = view.bounds;
+        tView.textAlignment = NSTextAlignmentCenter;
+        
+        tView.font = [UIFont systemFontOfSize:12];
+        
+        tView.backgroundColor = [UIColor whiteColor];
+        tView.alpha =1;
+        
+        //tView.alpha = 0.95;
+        
+        if(row==0)
+        {
+            tView.text = @"Male";
+        }
+        if(row==1)
+        {
+            tView.text = @"Female";
+        }
+        if(row==2)
+        {
+            tView.text = @"Other";
+            
+        }
+        if(row==3)
+        {
+            tView.text = @"Prefer Not To Say";
+        }
+    }
+    
+    return tView;
+    
+}
+
 
 -(void)dismissKeyboard {
     
@@ -718,6 +856,55 @@ numberOfRowsInComponent:(NSInteger)component
 }
 */
 
+
+-(IBAction) setImage:(id)sender
+{
+        self.imagePicker = [[GKImagePicker alloc] init];
+        self.imagePicker.cropSize = CGSizeMake(300, 300);
+        
+        [self.imagePicker.imagePickerController setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+        self.imagePicker.delegate = self;
+        
+        [self presentViewController:self.imagePicker.imagePickerController animated:YES completion:nil];
+
+}
+
+- (void)imagePicker:(GKImagePicker *)imagePicker pickedImage:(UIImage *)image
+{
+    //UIImage *scaledImage = [self imageWithImage:image scaledToSize:CGSizeMake(150, 150)];
+    self.profileImage1.image = image;
+    
+    
+    //NSLog(@"view %f %f, image %f %f", self.currentCardView.cardImage.frame.size.width, self.currentCardView.cardImage.frame.size.height, image.size.width, image.size.height);
+    
+    /*[UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+     animations:^{
+     imageUploadView.alpha = 0;
+     }
+     completion:^(BOOL completed){
+     [imageUploadView removeFromSuperview];
+     }];
+     */
+    
+    //[self.imageView setImage:image];
+    //[self dismissViewControllerAnimated:YES completion:nil];
+    [imagePicker.imagePickerController dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(IBAction) locationToggle:(id)sender
+{
+    if(self.locationPermission ==TRUE)
+    {
+        self.locationPermission = FALSE;
+        self.locationPermissionLabel.text = @"Enable location tracking to help find matches.";
+    }
+    else
+    {
+        self.locationPermission = TRUE;
+       
+         self.locationPermissionLabel.text = @"Your location will be used to help find matches.";
+    }
+}
 
 
 @end

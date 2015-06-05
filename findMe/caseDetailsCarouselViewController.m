@@ -48,7 +48,6 @@ NSMutableArray *browseCases;
 NSMutableArray *browseProperties;
 NSMutableArray *browsePropertiesIndex;
 NSMutableArray *newlyCreatedPropertiesIndex;
-NSMutableArray *changedCaseItemsIndex;
 NSMutableArray *priorCaseIDS;
 NSMutableArray *templateOptionsCounts;
 NSMutableArray *items;
@@ -85,8 +84,8 @@ NSString *locationRetrieved;
 NSString *locationLatitude;
 NSString *locationLongitude;
 
-NSString *manualLocationLatitude;
-NSString *manualLocationLongitude;
+float manualLocationLatitude;
+float manualLocationLongitude;
 @synthesize manualLocationPropertyNum;
 NSString *manualLocationCaseItemID;
 BOOL useManualLocation = NO;
@@ -105,6 +104,7 @@ NSMutableArray *activeMatchCaseObjectsArray;
 NSMutableArray *activeMatchesCaseItemObjectsArray;
 NSMutableArray *activeMatchesCaseTypesArray;
 NSMutableArray *activeMatchesCaseProfiles;
+NSMutableArray *changedCaseItemsIndex;
 
 
 
@@ -130,13 +130,18 @@ BOOL LoadedBOOL = NO;
                 NSString *longitudeLatitudeString = [customAns objectForKey:@"custom"];
                 
                 NSArray *longitudeLatitudeArray = [longitudeLatitudeString componentsSeparatedByString:@"; "];
-                manualLocationLatitude = [longitudeLatitudeArray objectAtIndex:0];
-                manualLocationLongitude = [longitudeLatitudeArray objectAtIndex:1];
+                NSNumber *latitudeNum = [longitudeLatitudeArray objectAtIndex:0];
+                
+                manualLocationLatitude = [latitudeNum floatValue];
+                NSNumber *longitudeNum = [longitudeLatitudeArray objectAtIndex:1];
+                
+                manualLocationLongitude = [longitudeNum floatValue];
+                
                 manualLocationCaseItemID = [caseItemObject objectForKey:@"caseItem"];
                 
                 NSLog(@"filtering out location property");
-                NSLog(@"%@",manualLocationLatitude);
-                NSLog(@"%@",manualLocationLongitude);
+                NSLog(@"%f",manualLocationLatitude);
+                NSLog(@"%f",manualLocationLongitude);
             }
         j = j+1;
     }
@@ -167,8 +172,8 @@ BOOL LoadedBOOL = NO;
     
     [self.carousel scrollToItemAtIndex:0 duration:0.0f];
     
-    manualLocationLatitude = @"";
-    manualLocationLongitude = @"";
+    manualLocationLatitude = 0;
+    manualLocationLongitude = 0;
     self.viewMatchesButton.alpha = 0;
     
     //location manager instance variable allocs
@@ -243,7 +248,6 @@ BOOL LoadedBOOL = NO;
     browsePropertiesIndex = [[NSMutableArray alloc] init];
     newlyCreatedPropertiesIndex= [[NSMutableArray alloc] init];
     suggestedCaseDisplayedIndex = -1;
-    changedCaseItemsIndex =[[NSMutableArray alloc] init];
     priorCaseIDS = [[NSMutableArray alloc] init];
     templateOptionsCounts = [[NSMutableArray alloc] init];
     propertyTableOptionsArray = [[NSMutableArray alloc] init];
@@ -251,6 +255,7 @@ BOOL LoadedBOOL = NO;
     selectedCaseItemAnswersArrayOfDictionaries  = [[NSMutableArray alloc] init];
     selectedCaseItemOriginalOptions = [[NSMutableArray alloc] init];
     customAnsweredCaseItems = [[NSMutableArray alloc] init];
+    changedCaseItemsIndex = [[NSMutableArray alloc] init];
     
     //fill an array of the prior cases so the client can look for a new previously non-existing caseId if the user is submitting a new template
     NSArray *cases = [self.itsMTLObject objectForKey:@"cases"];
@@ -428,7 +433,6 @@ BOOL LoadedBOOL = NO;
     
     [self checkForSureMatch:propsArray];
     
-    
     //check to see if we should fire bubble burst
     //only fire a bubble burst if there is at least one new flag
     BOOL fireBubbleBurst = NO;
@@ -449,7 +453,6 @@ BOOL LoadedBOOL = NO;
     }
     
     [self carouselCurrentItemIndexDidChange:self.carousel];
-    
     
 }
 -(void) viewWillAppear:(BOOL)animated
@@ -1029,10 +1032,16 @@ BOOL LoadedBOOL = NO;
             //query for caseProfiles
             PFQuery *caseProfileQuery = [PFQuery queryWithClassName:@"CaseProfile"];
             [caseProfileQuery whereKey:@"caseID" containedIn:activeMatchesArray];
-            NSArray *returnedCaseProfiles = [caseProfileQuery findObjects];
-            activeMatchesCaseProfiles = [returnedCaseProfiles mutableCopy];
+            [caseProfileQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+             {
+                 activeMatchesCaseProfiles = [objects mutableCopy];
+                  [self.matchesTableView reloadData];
+             }];
             
-            [self.matchesTableView reloadData];
+                                                                
+           
+            
+           
             
             
             return;
@@ -1696,6 +1705,13 @@ else
 if(tableViewTag ==8999)
 {
     
+    //add to changedCaseItemsIndex if this index isn't already represented
+    NSNumber *changedCaseItemIndexNum = [NSNumber numberWithInteger:selectedCarouselIndex];
+    
+    if(![changedCaseItemsIndex containsObject:changedCaseItemIndexNum])
+    {
+        [changedCaseItemsIndex addObject:changedCaseItemIndexNum];
+    }
     
     
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -1841,6 +1857,8 @@ if(tableViewTag ==8999)
     
     self.submitAnswersButton.enabled = 1;
     [self.submitAnswersButton.titleLabel setBackgroundColor:[UIColor blueColor]];
+    
+  
     
 }
     else
@@ -2302,8 +2320,6 @@ if(tableViewTag ==8999)
     //reload data
     if(templateMode==0)
     {
-        
-        
         
         //add a progress HUD to show it is retrieving list of properts
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -2896,8 +2912,6 @@ if(tableViewTag ==8999)
     }
     else
     {
-        
-    
     //add the XML for a new or updated property here
     [xmlWriter writeStartElement:@"PROPERTY"];
     
@@ -3063,6 +3077,8 @@ if(tableViewTag ==8999)
 {
     //iterate through all items still in the caseitems and property arrays and send XML to update all of these (either with their original contents or the modifications/new entries)
     
+    //**update**June 1, now only updating for items in NSMutableArray *changedCaseItemsIndex;
+    
     PFObject *caseObject = caseObjectBeingUpdated;
     
     PFObject *caseItemObject;
@@ -3123,10 +3139,17 @@ if(tableViewTag ==8999)
         [xmlWriter writeEndElement];
     }
     
-    int h = 0;
+    NSInteger h = 0;
+    //**update**June 1, only focusing on items in changedCaseItemsIndex
     for (PFObject *eachCaseItem in sortedCaseItems)
     {
         
+        NSNumber *caseUpdatingIndex = [NSNumber numberWithInteger:h];
+        
+         h = h+1;
+    if([changedCaseItemsIndex containsObject:caseUpdatingIndex])
+{
+    
         NSString *caseItemPickedPropertyNum = [eachCaseItem objectForKey:@"propertyNum"];
         PFObject *propAtIndex;
         
@@ -3138,7 +3161,6 @@ if(tableViewTag ==8999)
                     break;
                 }
             }
-        
         
         PFObject *updatedProperty = propAtIndex;
         
@@ -3174,7 +3196,7 @@ if(tableViewTag ==8999)
         propNumString = propertyNum;
         
         
-        h = h+1;
+    
         [xmlWriter writeStartElement:@"PROPERTYNUM"];
         [xmlWriter writeCharacters:propNumString];
         [xmlWriter writeEndElement];
@@ -3277,7 +3299,7 @@ if(tableViewTag ==8999)
         
         //close item element
         [xmlWriter writeEndElement];
-        
+}
     }
 
     
@@ -3869,11 +3891,15 @@ if(tableViewTag ==8999)
     mapPinViewController *mpvc = [self.storyboard instantiateViewControllerWithIdentifier:@"mpvc"];
     mpvc.delegate = self;
     
-    if([manualLocationLatitude length] >0)
+    if(fabsf(manualLocationLatitude) >0)
     {
         NSLog(@"show location picker");
-        mpvc.priorLatitude = manualLocationLatitude;
-        mpvc.priorLongitude = manualLocationLongitude;
+        NSNumber *priorLatitudeNum = [NSNumber numberWithFloat:manualLocationLatitude];
+        
+        mpvc.priorLatitude = priorLatitudeNum;
+        NSNumber *priorLongitudeNum = [NSNumber numberWithFloat:manualLocationLongitude];
+        
+        mpvc.priorLongitude = priorLongitudeNum;
         mpvc.myRegion = self.setRegion;
         
         NSLog(@"%@",mpvc.priorLatitude);
@@ -3887,8 +3913,9 @@ if(tableViewTag ==8999)
 - (void)setUserLocation:(float) latitude withLongitude:(float)longitude andRegion:(MKCoordinateRegion)region
 {
     //set manual location variables which will take priority over automatic variables when present
-    manualLocationLatitude = [NSString stringWithFormat:@"%f",latitude];
-    manualLocationLongitude = [NSString stringWithFormat:@"%f", longitude];
+    manualLocationLatitude = latitude;
+    
+    manualLocationLongitude = longitude;
     self.setRegion = region;
     
     useManualLocation = YES;
@@ -3986,7 +4013,10 @@ if(tableViewTag ==8999)
     [xmlWriter writeStartElement:@"ANSWER"];
     
     [xmlWriter writeStartElement:@"CUSTOM"];
-    NSString *locationForUpdate = [[manualLocationLatitude stringByAppendingString:@"; "] stringByAppendingString:manualLocationLongitude];
+    NSString *latitudeString = [NSString stringWithFormat:@"%f",manualLocationLatitude];
+    NSString *longitudeString = [NSString stringWithFormat:@"%f",manualLocationLongitude];
+    
+    NSString *locationForUpdate = [[latitudeString stringByAppendingString:@"; "] stringByAppendingString:longitudeString];
     
     [xmlWriter writeCharacters:locationForUpdate];
     
@@ -4749,14 +4779,14 @@ if(tableViewTag ==8999)
                     
                 UILabel *sureMatchTitle = [[UILabel alloc] initWithFrame:CGRectMake(20,20,sureMatchView.frame.size.width-40,40)];
                 sureMatchTitle.text = @"You Have A SURE Match!";
-                sureMatchTitle.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:30];
+                sureMatchTitle.font = [UIFont fontWithName:@"Futura-Medium" size:30];
                 sureMatchTitle.textAlignment = NSTextAlignmentCenter;
                 
                 [sureMatchView addSubview:sureMatchTitle];
                 
                 
                 UILabel *sureMatchCaseNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,70,300,50)];
-                sureMatchCaseNameLabel.font =[UIFont fontWithName:@"Futura-CondensedMedium" size:25];
+                sureMatchCaseNameLabel.font =[UIFont fontWithName:@"Futura-Medium" size:25];
                 
                 UIImageView *sureMatchImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10,120,150,150)];
                 

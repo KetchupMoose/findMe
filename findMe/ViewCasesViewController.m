@@ -64,6 +64,8 @@ BOOL waitForSyncCompleted = FALSE;
     HUD.labelText = @"Retrieving Cases";
     [HUD show:NO];
     
+    self.navigationItem.title = @"View Cases";
+    
     caseListPruned = [[NSMutableArray alloc] init];
    // [self refreshTable];
     
@@ -328,11 +330,13 @@ BOOL waitForSyncCompleted = FALSE;
         if([caseID isEqualToString:caseProfileCaseID])
         {
             //display case information
-            caseShowNameLabel.text = [caseProfileObj objectForKey:@"externalCaseName"];
+            //caseShowNameLabel.text = [caseProfileObj objectForKey:@"externalCaseName"];
             PFFile *imgFile = [caseProfileObj objectForKey:@"caseImage"];
             caseimgURL = imgFile.url;
         }
     }
+    caseShowNameLabel.text = [caseObject objectForKey:@"caseName"];
+    
     
     UIActivityIndicatorViewStyle *activityStyle = UIActivityIndicatorViewStyleGray;
 

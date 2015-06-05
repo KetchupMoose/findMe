@@ -63,6 +63,11 @@
 		EC0822FF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0822EF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m */; };
 		EC0823011A18689C000B6684 /* cityLightsBG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC0823001A18689C000B6684 /* cityLightsBG.jpg */; };
 		EC0823041A186B13000B6684 /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0823031A186B13000B6684 /* HomePageViewController.m */; };
+		EC291D471B1E38BE0003992C /* findMeCursive3.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D461B1E38BE0003992C /* findMeCursive3.png */; };
+		EC291D491B1E41530003992C /* globeicon.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D481B1E41530003992C /* globeicon.png */; };
+		EC291D4B1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D4A1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png */; };
+		EC291D4D1B1E46470003992C /* Gender-symbols-262x300.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D4C1B1E46470003992C /* Gender-symbols-262x300.png */; };
+		EC291D4F1B1E47AB0003992C /* 535106-user_512x512.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D4E1B1E47AB0003992C /* 535106-user_512x512.png */; };
 		EC4173181AFFDCCE00DC79FE /* lostdog.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC4173151AFFDCCE00DC79FE /* lostdog.jpg */; };
 		EC4173191AFFDCCE00DC79FE /* officerelationship.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC4173161AFFDCCE00DC79FE /* officerelationship.jpg */; };
 		EC41731A1AFFDCCE00DC79FE /* missedConnection.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC4173171AFFDCCE00DC79FE /* missedConnection.jpg */; };
@@ -84,6 +89,10 @@
 		EC6595101A8E8BCA00678E6C /* MEDynamicTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = EC65950D1A8E8BCA00678E6C /* MEDynamicTransition.m */; };
 		EC6595131A8EAF4600678E6C /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC6595121A8EAF4600678E6C /* MenuTableViewController.m */; };
 		EC6595161A8EB43700678E6C /* BaseCaseDetailsSlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC6595151A8EB43700678E6C /* BaseCaseDetailsSlidingViewController.m */; };
+		EC886A621B20DC9E00531FEA /* blurtrainBackground.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC886A611B20DC9E00531FEA /* blurtrainBackground.jpg */; };
+		EC886A641B20DDE400531FEA /* blurPhotoBG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC886A631B20DDE400531FEA /* blurPhotoBG.jpg */; };
+		EC886A661B20DEC400531FEA /* blurPhotoBG2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC886A651B20DEC400531FEA /* blurPhotoBG2.jpg */; };
+		EC886A681B20E75300531FEA /* fishblur.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC886A671B20E75300531FEA /* fishblur.jpg */; };
 		EC8B3C081B0D0C6D00DE04A9 /* facebook-login-blue.png in Resources */ = {isa = PBXBuildFile; fileRef = EC8B3C071B0D0C6D00DE04A9 /* facebook-login-blue.png */; };
 		EC8B3C181B0D1B0C00DE04A9 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C151B0D1B0C00DE04A9 /* FBSDKCoreKit.framework */; };
 		EC8B3C191B0D1B0C00DE04A9 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C161B0D1B0C00DE04A9 /* FBSDKLoginKit.framework */; };
@@ -95,6 +104,7 @@
 		EC8B3C301B0D250100DE04A9 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C2F1B0D250100DE04A9 /* Parse.framework */; };
 		EC8B3C321B0D299500DE04A9 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C311B0D299500DE04A9 /* libstdc++.6.dylib */; };
 		EC8B3C391B14C44700DE04A9 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8B3C381B14C44700DE04A9 /* Bolts.framework */; };
+		EC8B3C401B1E36DF00DE04A9 /* FindMeCursive.png in Resources */ = {isa = PBXBuildFile; fileRef = EC8B3C3F1B1E36DF00DE04A9 /* FindMeCursive.png */; };
 		EC93C6A21AFFE1D200D3DE2A /* MySignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC93C6A11AFFE1D200D3DE2A /* MySignUpViewController.m */; };
 		EC93C6A41AFFE79800D3DE2A /* newsignup-button.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6A31AFFE79800D3DE2A /* newsignup-button.png */; };
 		EC93C6A61AFFE7B300D3DE2A /* background-login.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6A51AFFE7B300D3DE2A /* background-login.png */; };
@@ -410,6 +420,11 @@
 		EC0823001A18689C000B6684 /* cityLightsBG.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cityLightsBG.jpg; sourceTree = "<group>"; };
 		EC0823021A186B13000B6684 /* HomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomePageViewController.h; path = ../HomePageViewController.h; sourceTree = "<group>"; };
 		EC0823031A186B13000B6684 /* HomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomePageViewController.m; path = ../HomePageViewController.m; sourceTree = "<group>"; };
+		EC291D461B1E38BE0003992C /* findMeCursive3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = findMeCursive3.png; sourceTree = "<group>"; };
+		EC291D481B1E41530003992C /* globeicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = globeicon.png; sourceTree = "<group>"; };
+		EC291D4A1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "086266-rounded-glossy-black-icon-business-envelope1.png"; sourceTree = "<group>"; };
+		EC291D4C1B1E46470003992C /* Gender-symbols-262x300.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Gender-symbols-262x300.png"; sourceTree = "<group>"; };
+		EC291D4E1B1E47AB0003992C /* 535106-user_512x512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "535106-user_512x512.png"; sourceTree = "<group>"; };
 		EC4173151AFFDCCE00DC79FE /* lostdog.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lostdog.jpg; sourceTree = "<group>"; };
 		EC4173161AFFDCCE00DC79FE /* officerelationship.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = officerelationship.jpg; sourceTree = "<group>"; };
 		EC4173171AFFDCCE00DC79FE /* missedConnection.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = missedConnection.jpg; sourceTree = "<group>"; };
@@ -443,6 +458,10 @@
 		EC6595121A8EAF4600678E6C /* MenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewController.m; sourceTree = "<group>"; };
 		EC6595141A8EB43700678E6C /* BaseCaseDetailsSlidingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseCaseDetailsSlidingViewController.h; sourceTree = "<group>"; };
 		EC6595151A8EB43700678E6C /* BaseCaseDetailsSlidingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseCaseDetailsSlidingViewController.m; sourceTree = "<group>"; };
+		EC886A611B20DC9E00531FEA /* blurtrainBackground.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = blurtrainBackground.jpg; sourceTree = "<group>"; };
+		EC886A631B20DDE400531FEA /* blurPhotoBG.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = blurPhotoBG.jpg; sourceTree = "<group>"; };
+		EC886A651B20DEC400531FEA /* blurPhotoBG2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = blurPhotoBG2.jpg; sourceTree = "<group>"; };
+		EC886A671B20E75300531FEA /* fishblur.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = fishblur.jpg; sourceTree = "<group>"; };
 		EC8B3C071B0D0C6D00DE04A9 /* facebook-login-blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook-login-blue.png"; sourceTree = "<group>"; };
 		EC8B3C151B0D1B0C00DE04A9 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		EC8B3C161B0D1B0C00DE04A9 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
@@ -454,6 +473,7 @@
 		EC8B3C2F1B0D250100DE04A9 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "../../Downloads/parse-library-1.7.3/Parse.framework"; sourceTree = "<group>"; };
 		EC8B3C311B0D299500DE04A9 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
 		EC8B3C381B14C44700DE04A9 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../Downloads/parse-library-1.7.3/Bolts.framework"; sourceTree = "<group>"; };
+		EC8B3C3F1B1E36DF00DE04A9 /* FindMeCursive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FindMeCursive.png; sourceTree = "<group>"; };
 		EC93C6A01AFFE1D200D3DE2A /* MySignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MySignUpViewController.h; sourceTree = "<group>"; };
 		EC93C6A11AFFE1D200D3DE2A /* MySignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MySignUpViewController.m; sourceTree = "<group>"; };
 		EC93C6A31AFFE79800D3DE2A /* newsignup-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "newsignup-button.png"; sourceTree = "<group>"; };
@@ -1156,6 +1176,16 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				EC886A671B20E75300531FEA /* fishblur.jpg */,
+				EC886A651B20DEC400531FEA /* blurPhotoBG2.jpg */,
+				EC886A631B20DDE400531FEA /* blurPhotoBG.jpg */,
+				EC886A611B20DC9E00531FEA /* blurtrainBackground.jpg */,
+				EC291D4E1B1E47AB0003992C /* 535106-user_512x512.png */,
+				EC291D4C1B1E46470003992C /* Gender-symbols-262x300.png */,
+				EC291D4A1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png */,
+				EC291D481B1E41530003992C /* globeicon.png */,
+				EC291D461B1E38BE0003992C /* findMeCursive3.png */,
+				EC8B3C3F1B1E36DF00DE04A9 /* FindMeCursive.png */,
 				EC93C6A71B03A0C100D3DE2A /* imageselect.png */,
 				EC641EAB1AFFB0AF0005073C /* tutorialAssets */,
 				EC641E081AFF9BFE0005073C /* calm.png */,
@@ -2065,6 +2095,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3F4574319FD920A000EDF25 /* womanbutton.png in Resources */,
+				EC291D491B1E41530003992C /* globeicon.png in Resources */,
 				ECE6B16C1A069DAB007F4A19 /* stockphotowoman2.jpg in Resources */,
 				ECE6B16E1A06AD0E007F4A19 /* sawyousubway.jpg in Resources */,
 				ECA7A21D1AA7B77900F899D5 /* internetOfflineIcon.png in Resources */,
@@ -2073,8 +2104,10 @@
 				ECC9E5131AA153070099C46A /* Icon-Small.png in Resources */,
 				D3F4574219FD920A000EDF25 /* ManButton.png in Resources */,
 				ECA7A29A1AA8B86C00F899D5 /* JSQMessagesAssets.bundle in Resources */,
+				EC886A621B20DC9E00531FEA /* blurtrainBackground.jpg in Resources */,
 				ECC9E5141AA153070099C46A /* Icon-Small@2x.png in Resources */,
 				EC93C6C91B03B9CD00D3DE2A /* PLCameraSheetButton@2x.png in Resources */,
+				EC886A661B20DEC400531FEA /* blurPhotoBG2.jpg in Resources */,
 				EC4173181AFFDCCE00DC79FE /* lostdog.jpg in Resources */,
 				ECC9E5111AA153070099C46A /* Icon-76.png in Resources */,
 				EC641EB31AFFB1220005073C /* line.png in Resources */,
@@ -2085,6 +2118,7 @@
 				EC641EAD1AFFB0F30005073C /* login-button.png in Resources */,
 				D31DF31119CEFC0C00A37725 /* Images.xcassets in Resources */,
 				EC641E071AFD37170005073C /* pinRedHighRes.png in Resources */,
+				EC886A681B20E75300531FEA /* fishblur.jpg in Resources */,
 				ECC9E5151AA153070099C46A /* Icon-Small@3x.png in Resources */,
 				EC641EAF1AFFB1030005073C /* signup-button.png in Resources */,
 				EC93C6CF1B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed@2x.png in Resources */,
@@ -2092,15 +2126,18 @@
 				EC9F51DF1A2AC68B00CFED6E /* blurredlights.jpg in Resources */,
 				D3F457491A0031F0000EDF25 /* stockphotowoman1.jpg in Resources */,
 				ECA7A2A41AA8B86C00F899D5 /* JSQMessagesViewController.xib in Resources */,
+				EC291D471B1E38BE0003992C /* findMeCursive3.png in Resources */,
 				EC641EB11AFFB1160005073C /* new-background-for-login-screen.png in Resources */,
 				EC93C6CD1B03B9CD00D3DE2A /* PLCameraSheetDoneButton@2x.png in Resources */,
 				ECA7A2BA1AA8B86C00F899D5 /* JSQMessagesCollectionViewCellOutgoing.xib in Resources */,
 				EC8B3C081B0D0C6D00DE04A9 /* facebook-login-blue.png in Resources */,
 				D31DF30919CEFC0C00A37725 /* Main_iPhone.storyboard in Resources */,
+				EC291D4F1B1E47AB0003992C /* 535106-user_512x512.png in Resources */,
 				ECA7A2C41AA8B86C00F899D5 /* JSQMessagesTypingIndicatorFooterView.xib in Resources */,
 				ECE6B1721A06B8A9007F4A19 /* thinkingaboutyou.jpg in Resources */,
 				ECA7A29B1AA8B86C00F899D5 /* JSQMessages.strings in Resources */,
 				ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */,
+				EC291D4B1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png in Resources */,
 				EC4173191AFFDCCE00DC79FE /* officerelationship.jpg in Resources */,
 				EC93C6CA1B03B9CD00D3DE2A /* PLCameraSheetButtonPressed.png in Resources */,
 				ECFDAAF61AB38B5C00E42C33 /* PNLoggerSymbols.plist in Resources */,
@@ -2109,12 +2146,15 @@
 				EC9F51DD1A2AC63F00CFED6E /* gaussianblur.jpg in Resources */,
 				EC93C6A41AFFE79800D3DE2A /* newsignup-button.png in Resources */,
 				ECC9E5101AA153070099C46A /* Icon-60@2x.png in Resources */,
+				EC291D4D1B1E46470003992C /* Gender-symbols-262x300.png in Resources */,
 				ECE6B1711A06B8A9007F4A19 /* alwaysloveyou.png in Resources */,
 				ECA7A2C21AA8B86C00F899D5 /* JSQMessagesToolbarContentView.xib in Resources */,
+				EC8B3C401B1E36DF00DE04A9 /* FindMeCursive.png in Resources */,
 				EC93C6CE1B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed.png in Resources */,
 				EC0823011A18689C000B6684 /* cityLightsBG.jpg in Resources */,
 				EC41731A1AFFDCCE00DC79FE /* missedConnection.jpg in Resources */,
 				EC93C6A81B03A0C100D3DE2A /* imageselect.png in Resources */,
+				EC886A641B20DDE400531FEA /* blurPhotoBG.jpg in Resources */,
 				D3207B0419E9CF8B00085B7C /* green-checkmark.jpg in Resources */,
 				ECA7A2B81AA8B86C00F899D5 /* JSQMessagesCollectionViewCellIncoming.xib in Resources */,
 				ECC9E50F1AA153070099C46A /* Icon-40@2x.png in Resources */,

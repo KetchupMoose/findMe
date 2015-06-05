@@ -70,6 +70,7 @@ NSString *locationLongitude;
     CaseOptionsCollectionView.dataSource = self;
     CaseOptionsCollectionView.delegate = self;
     
+    self.navigationItem.title = @"New Case";
     
     [CaseOptionsCollectionView reloadData];
     
@@ -109,8 +110,6 @@ NSString *locationLongitude;
         NSLog(@"numberofKeys");
         NSLog(@"%i",templateObject.allKeys.count);
     
-        
-     
        PFObject *theParentObj = [templateObject objectForKey:@"parenttemplateid"];
         
         /*
@@ -165,7 +164,6 @@ NSString *locationLongitude;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *identifier = @"caseOptionCell";
     
-    
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
     UIImageView *caseImageView= (UIImageView *)[cell viewWithTag:100];
@@ -199,7 +197,7 @@ NSString *locationLongitude;
     
     descrLabel.text = [templateObject objectForKey:@"description"];
     
-    descrLabel.font = [UIFont systemFontOfSize:10];
+    descrLabel.font = [UIFont fontWithName:@"Futura-Medium" size:12];
     
     
     //caseImageView.image = [UIImage imageNamed:[recipeImages objectAtIndex:indexPath.row]];
@@ -253,12 +251,18 @@ NSString *locationLongitude;
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Choices Yet", nil) message:NSLocalizedString(@"There are no child templates for this parent template yet", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
     }
     
-   
-    TemplateSecondLevelTableView = [[UITableView alloc] initWithFrame:CGRectMake(0,150,320,400)];
+    int SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
+    int SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
+    TemplateSecondLevelTableView = [[UITableView alloc] initWithFrame:CGRectMake(0,0,SCREEN_WIDTH,SCREEN_HEIGHT-60)];
     TemplateSecondLevelTableView.dataSource = self;
     TemplateSecondLevelTableView.delegate = self;
     
     [TemplateSecondLevelTableView reloadData];
+    
+    TemplateSecondLevelTableView.layer.cornerRadius = 0;
+    TemplateSecondLevelTableView.layer.masksToBounds = YES;
+    TemplateSecondLevelTableView.alpha = 1;
+    TemplateSecondLevelTableView.backgroundColor = [UIColor clearColor];
     
     [self.view BounceAddTheView:TemplateSecondLevelTableView];
     
@@ -393,7 +397,7 @@ NSString *locationLongitude;
 }
 
 #pragma mark UITableViewDelegateMethods
--(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return templatePickerActiveChoices.count;
     
@@ -415,6 +419,8 @@ NSString *locationLongitude;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         
     }
+    cell.backgroundColor = [UIColor clearColor];
+    
     
     UILabel *templateDescLabel = (UILabel *)[cell viewWithTag:51];
     
@@ -443,8 +449,10 @@ NSString *locationLongitude;
         createCaseButton = [[UIButton alloc] init];
         createCaseButton.tag = 60+indexPath.row;
         [createCaseButton addTarget:self action:@selector(secondTemplatePicked:) forControlEvents:UIControlEventTouchUpInside];
+        createCaseButton.alpha = 0;
         
         [cell addSubview:createCaseButton];
+        
         
     }
     
@@ -453,14 +461,14 @@ NSString *locationLongitude;
     [createCaseButton setTitle:@"Create Case" forState:UIControlStateNormal];
     
     int startyMargin = 20;
-    int startxMargin = 20;
+    int startxMargin = 10;
     
     int imgWidth = 90;
     int imgHeight = 90;
     
     int textimgxmargin=10;
     
-    int textWidth = 90;
+    int textWidth = 200;
     int textHeight = 90;
     
     int textbuttonxmargin=10;
@@ -478,8 +486,20 @@ NSString *locationLongitude;
      int imgMidPoint = choice1ImageView.frame.origin.y+choice1ImageView.frame.size.height/2;
     
     templateDescLabel.frame = CGRectMake(textimgxmargin+choice1ImageView.frame.origin.x+choice1ImageView.frame.size.width,imgMidPoint-textHeight/2,textWidth,textHeight);
-    templateDescLabel.font = [UIFont systemFontOfSize:10];
+    
+    templateDescLabel.font = [UIFont fontWithName:@"Futura-Medium" size:15];
+    
+    NSShadow *shadow = [[NSShadow alloc] init];
+    shadow.shadowColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.8];
+    shadow.shadowOffset = CGSizeMake(0, 1);
+    
+    //[templateDescLabel setShadowColor:shadow.shadowColor];
+    //[templateDescLabel setShadowOffset:shadow.shadowOffset];
+    
+    templateDescLabel.textColor = [UIColor whiteColor];
+    
     templateDescLabel.numberOfLines = 5;
+    templateDescLabel.textAlignment = NSTextAlignmentCenter;
     
     PFObject *selectedTemplateObject = [templatePickerActiveChoices objectAtIndex:indexPath.row];
     templateDescLabel.text = (NSString *)[selectedTemplateObject objectForKey:@"description"];
@@ -490,7 +510,8 @@ NSString *locationLongitude;
     //createCaseButton.titleLabel.numberOfLines = 2;
     UILabel *buttonTitleLabel = createCaseButton.titleLabel;
     buttonTitleLabel.numberOfLines = 2;
-    buttonTitleLabel.font = [UIFont systemFontOfSize:12];
+    buttonTitleLabel.font = [UIFont fontWithName:@"Futura-Medium" size:15];
+    //June 4 font
     
     
     //set rounded corners on UIViews
@@ -631,8 +652,6 @@ NSString *locationLongitude;
     
     if([casesArray count] >0)
     {
-        
-    
     
         for (PFObject *eachReturnedCase in casesArray)
         {

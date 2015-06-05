@@ -57,6 +57,23 @@ NSString *homePageManualLocationPropertyNum;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    //UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,40,40)];
+    //titleImageView.image = [UIImage imageNamed:@"findMeCursive3.png"];
+    
+    
+   // self.navigationItem.titleView = titleImageView;
+    
+    //[self.navigationItem.titleView addSubview:titleImageView];
+    NSShadow *shadow = [[NSShadow alloc] init];
+    shadow.shadowColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.8];
+    shadow.shadowOffset = CGSizeMake(0, 1);
+    [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                           [UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:245.0/255.0 alpha:1.0], NSForegroundColorAttributeName,
+                                                           shadow, NSShadowAttributeName,
+                                                           [UIFont fontWithName:@"Futura-Medium" size:25.0], NSFontAttributeName, nil]];
+
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    
     //check to see if the parse connection is available.  If not, remove the HomePageViewController and show a ParseUnavailableViewController
     Reachability *singletonReach = [[reachabilitySingleton sharedReachability] reacher];
     
@@ -67,7 +84,6 @@ NSString *homePageManualLocationPropertyNum;
         NSLog(@"reached it!");
         [self LoadingHomePage];
 
-        
     }
     else
     {
@@ -141,7 +157,7 @@ NSString *homePageManualLocationPropertyNum;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:NO];
-    self.navigationController.navigationBarHidden = YES;
+    //self.navigationController.navigationBarHidden = YES;
     
     [self ReloadHomePageData];
     
