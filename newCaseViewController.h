@@ -11,6 +11,7 @@
 #import <Parse/Parse.h>
 #import <CoreLocation/CoreLocation.h>
 #import "findMeBaseViewController.h"
+#import <MediaPlayer/MediaPlayer.h>
 
 @interface newCaseViewController : findMeBaseViewController <UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate,MBProgressHUDDelegate,CLLocationManagerDelegate>
 
@@ -21,5 +22,8 @@
 @property (strong,nonatomic) NSString *manualLocationPropertyNum;
 
 @property (strong,nonatomic) PFObject *itsMTLObject;
+
+@property (strong,nonatomic) IBOutlet UIWebView *gifView;
+@property (strong,nonatomic) MPMoviePlayerController *moviePlayer;
 
 @end

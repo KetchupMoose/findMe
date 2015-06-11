@@ -76,8 +76,40 @@ NSString *locationLongitude;
     
     [self getLocation:self];
     
+    /*
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"womangif2" ofType:@"gif"];
+    NSData *gif = [NSData dataWithContentsOfFile:filePath];
     
+    [self.gifView loadData:gif MIMEType:@"image/gif" textEncodingName:nil baseURL:nil];
+    self.gifView.userInteractionEnabled = NO;
+     */
+    
+    
+    NSString *moviePath = [[NSBundle mainBundle] pathForResource:@"5815802" ofType:@"mp4"];
+    NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
+    
+    // load movie
+    self.moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
+    self.moviePlayer.controlStyle = MPMovieControlStyleNone;
+    self.moviePlayer.view.frame = self.view.frame;
+    self.moviePlayer.scalingMode = MPMovieScalingModeAspectFill;
+    [self.view addSubview:self.moviePlayer.view];
+    [self.view sendSubviewToBack:self.moviePlayer.view];
+    [self.moviePlayer play];
+    
+    // loop movie
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(replayMovie:)
+                                                 name: MPMoviePlayerPlaybackDidFinishNotification
+                                               object: self.moviePlayer];
 }
+
+-(void)replayMovie:(NSNotification *)notification
+{
+    [self.moviePlayer play];
+}
+
+
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -540,9 +572,97 @@ NSString *locationLongitude;
 {
     //PFObject *selectedTemplateObject = [templatePickerActiveChoices objectAtIndex:indexPath.row];
     
-    
+     [tableView deselectRowAtIndexPath:indexPath animated:NO];
    // selectedTemplate2=selectedTemplateObject.objectId;
     
+    //second level template
+    PFObject *secondTemplate = [templatePickerActiveChoices objectAtIndex:indexPath.row];
+    selectedTemplate2 = secondTemplate.objectId;
+    
+    /*
+     //create parse objects and create the new case for the template
+     PFUser *currentUser = [PFUser currentUser];
+     
+     //create new case with this user.
+     itsMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
+     [itsMTLObject setObject:currentUser forKey:@"ParseUser"];
+     [itsMTLObject setObject:@"newtemptest" forKey:@"showName"];
+     
+     // Set the access control list to current user for security purposes
+     PFACL *itsMTLACL = [PFACL ACLWithUser:[PFUser currentUser]];
+     [itsMTLACL setPublicReadAccess:YES];
+     [itsMTLACL setPublicWriteAccess:YES];
+     
+     itsMTLObject.ACL = itsMTLACL;
+     
+     [itsMTLObject save];
+     
+     //set user properties to parse true user account
+     [currentUser setObject:@"newtemptest" forKey:@"showName"];
+     [currentUser setObject:@"4" forKey:@"cellNumber"];
+     [currentUser setObject:@"F" forKey:@"gender"];
+     [currentUser save];
+     */
+    
+    //return the current itsMTLObject for the currentParseUser
+    
+    //get the ID and run the XML with the case info.
+    NSString *itsMTLObjectID = itsMTLObject.objectId;
+    
+    //add a progress HUD to show it is sending the XML with the case info
+    
+    NSString *hardcodedXMLString = @"<PAYLOAD><USEROBJECTID>4OvTmAzGE7</USEROBJECTID><LAISO>EN</LAISO><PREFERENCES><SHOWNAME>Rose</SHOWNAME><COUNTRY>CA</COUNTRY><GENDER>F</GENDER><TEMPLATEID1>01VURH6zGz</TEMPLATEID1><TEMPLATEID2>9XXwNvkFTI</TEMPLATEID2></PREFERENCES></PAYLOAD>";
+    
+    NSString *xmlGeneratedString = [self createTemplateXMLFunction:itsMTLObjectID];
+    
+    //show progress HUD
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Creating Parse Case";
+    [HUD show:YES];
+    
+    //use parse cloud code function to update with appropriate XML
+    [PFCloud callFunctionInBackground:@"submitXML"
+                       withParameters:@{@"payload": xmlGeneratedString}
+                                block:^(NSString *responseString, NSError *error) {
+                                    if (!error) {
+                                        
+                                        NSString *responseText = responseString;
+                                        NSString *responseTextWithoutHeader = [responseText
+                                                                               stringByReplacingOccurrencesOfString:@"[00] " withString:@""];
+                                        NSError *jsonError;
+                                        NSData *objectData = [responseTextWithoutHeader dataUsingEncoding:NSUTF8StringEncoding];
+                                        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
+                                                                                             options:NSJSONReadingMutableContainers
+                                                                                               error:&jsonError];
+                                        
+                                        NSMutableDictionary *jsonObjectChange = [json mutableCopy];
+                                        
+                                        [jsonObjectChange setObject:@"" forKey:@"caseId"];
+                                        
+                                        
+                                        NSLog(responseText);
+                                        [HUD hide:NO];
+                                        
+                                        //[self showCaseDetailsWithTemplateJSON:jsonObjectChange];
+                                        [self showCaseDetailsCarouselWithTemplateJSON:jsonObjectChange];
+                                        
+                                        
+                                        // NSLog(@"starting to poll for template maker update");
+                                        //[self pollForTemplateMaker];
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSLog(error.localizedDescription);
+                                        [HUD hide:NO];
+                                        
+                                    }
+                                }];
+
     
 }
 
@@ -810,7 +930,7 @@ NSString *locationLongitude;
 
 -(void) showCaseDetailsCarouselWithTemplateJSON:(NSMutableDictionary *)templateJSON
 {
-    caseDetailsCarouselViewController *cdcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdcvc"];
+    caseDetailsCarouselViewController *cdcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdcvc2"];
     
     cdcvc.jsonObject = templateJSON;
     cdcvc.jsonDisplayMode = @"template";

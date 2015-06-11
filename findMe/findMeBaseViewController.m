@@ -94,7 +94,6 @@ BOOL notifierLoaded;
     NSString *conversationObjID = [notification.userInfo objectForKey:@"pubChannel"];
     NSString *senderCaseID = [notification.userInfo objectForKey:@"pubMsgSender"];
     
-    
     NSLog( @"%@", [NSString stringWithFormat:@"received on find me base: %@", message] );
     
     //add a new JSQMessage to the local messages array

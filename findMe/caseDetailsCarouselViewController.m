@@ -176,6 +176,8 @@ BOOL LoadedBOOL = NO;
     manualLocationLongitude = 0;
     self.viewMatchesButton.alpha = 0;
     
+    
+    
     //location manager instance variable allocs
     locationManager = [[CLLocationManager alloc] init];
     geocoder = [[CLGeocoder alloc] init];
@@ -466,6 +468,12 @@ BOOL LoadedBOOL = NO;
      self.slidingViewController.underLeftViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"popupvc"];
      }
      */
+    
+    self.propertiesTableView.backgroundColor = [UIColor clearColor];
+    self.propertiesTableView.layer.borderColor = (__bridge CGColorRef)([UIColor whiteColor]);
+    self.propertiesTableView.layer.borderWidth = 3.0f;
+    self.propertiesTableView.layer.masksToBounds = YES;
+    
     self.navigationController.navigationBarHidden = NO;
     
     
@@ -626,7 +634,6 @@ BOOL LoadedBOOL = NO;
     //NSLog(@"making view for index");
     //NSLog(@"%ld",(long)index);
     
-    
     UILabel *carouselLabel = nil;
     UIView *borderView = nil;
     UIImageView *iconImgView = nil;
@@ -644,19 +651,18 @@ BOOL LoadedBOOL = NO;
         //view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200.0f, 200.0f)];
        
         // ((UIImageView *)view).image = [UIImage imageNamed:@"page.png"];
-        view = [[UIView alloc] initWithFrame:CGRectMake(0,0,200.0f,self.carousel.frame.size.height)];
+        view = [[UIView alloc] initWithFrame:CGRectMake(0,0,100.0f,self.carousel.frame.size.height)];
         
         view.layer.borderColor = (__bridge CGColorRef)([UIColor blueColor]);
         //view.layer.borderWidth = 25.0f;
         [view.layer setBorderWidth:20];
-        
         
         view.contentMode = UIViewContentModeCenter;
         
         //view.backgroundColor = [UIColor blueColor];
         
         UIView *borderView = [[UIView alloc] initWithFrame:view.bounds];
-        borderView.layer.borderColor =[UIColor blueColor].CGColor;
+        borderView.layer.borderColor =[UIColor whiteColor].CGColor;
         borderView.layer.borderWidth = 2.0f;
         borderView.layer.cornerRadius = 10.0f;
         borderView.tag = 77;
@@ -665,18 +671,19 @@ BOOL LoadedBOOL = NO;
         [view addSubview:borderView];
         
         
-        carouselLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,40,200,50)];
+        carouselLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,view.frame.size.height-55,view.frame.size.width,50)];
         carouselLabel.backgroundColor = [UIColor clearColor];
         carouselLabel.textAlignment = NSTextAlignmentCenter;
-        carouselLabel.font = [carouselLabel.font fontWithSize:16];
+        carouselLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:12];
+        carouselLabel.textColor = [UIColor whiteColor];
+        
         carouselLabel.tag = 1;
         carouselLabel.numberOfLines = 2;
         
         
-        iconImgView = [[UIImageView alloc] initWithFrame:CGRectMake(60,100,80,80)];
+        iconImgView = [[UIImageView alloc] initWithFrame:CGRectMake(25,10,50,50)];
         iconImgView.tag = 2;
         
-      
         propertyClassLabel = [[UILabel alloc] initWithFrame:CGRectMake(5,5,100,25)];
         propertyClassLabel.tag = 3;
         propertyClassLabel.text = @" Template Question ";
@@ -684,7 +691,6 @@ BOOL LoadedBOOL = NO;
         
         propertyClassLabel.textColor = [UIColor blackColor];
         UIColor *defaultLabelColor = [UIColor colorWithRed:255/255 green:255/255 blue:204.0f/255.0f alpha:1];
-        
         
         propertyClassLabel.backgroundColor = defaultLabelColor;
         propertyClassLabel.layer.cornerRadius = 5.0f;
@@ -819,11 +825,11 @@ BOOL LoadedBOOL = NO;
     carouselLabel.text = propertyDescr;
    // NSLog(@"writing carousel label ended");
     
-    NSString *imgURL = [propAtIndex objectForKey:@"iconImageURL"];
+    NSString *imgURL = [propAtIndex objectForKey:@"v2iconImageURL"];
     
     if([imgURL length]==0)
     {
-       imgURL = @"http://icons.iconarchive.com/icons/igh0zt/ios7-style-metro-ui/512/MetroUI-Google-Maps-icon.png";
+       imgURL = @"http://i.imgur.com/MnknKF8.png";
     }
     //set the iconImageView
     UIActivityIndicatorViewStyle activityStyle = UIActivityIndicatorViewStyleGray;
@@ -1559,15 +1565,15 @@ if(tableViewTag ==8999)
         {
             //change the label to gray color
             
-            optionLabel.textColor = [UIColor grayColor];
+            optionLabel.textColor = [UIColor whiteColor];
             optionLabel.text = @"Add More Answers After Submitting Case";
             
         }
     }
     else
     {
-        optionLabel.font = [UIFont systemFontOfSize:17];
-        optionLabel.textColor = [UIColor blackColor];
+        optionLabel.font = [UIFont fontWithName:@"Futura-Medium" size:14];
+        optionLabel.textColor = [UIColor whiteColor];
         optionLabel.text = [propertyTableOptionsArray objectAtIndex:indexPath.row];
         optionTxt =[propertyTableOptionsArray objectAtIndex:indexPath.row];
     }
@@ -1581,7 +1587,7 @@ if(tableViewTag ==8999)
     }
     else
     {
-        cell.backgroundColor = [UIColor whiteColor];
+        cell.backgroundColor = [UIColor clearColor];
         
     }
    
@@ -1943,7 +1949,7 @@ if(tableViewTag ==8999)
             //update the answers on the caseItem itself
             PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
             [selectedCaseItem setObject:selectedCaseItemAnswersArrayOfDictionaries forKey:@"answers"];
-            cell.backgroundColor = [UIColor whiteColor];
+            cell.backgroundColor = [UIColor clearColor];
         }
         
     }
@@ -1994,7 +2000,7 @@ if(tableViewTag ==8999)
                 for (id subview in view.subviews){
                     if ([subview isKindOfClass:[UITableViewCell class]]){
                         UITableViewCell *cell = subview;
-                        cell.backgroundColor = [UIColor whiteColor];
+                        cell.backgroundColor = [UIColor clearColor];
                         
                     }
                 }
@@ -2062,7 +2068,7 @@ if(tableViewTag ==8999)
             if(ansInt==indexPath.row+1)
             {
                 indexToRemove = i;
-                cell.backgroundColor = [UIColor whiteColor];
+                cell.backgroundColor = [UIColor clearColor];
                 
             }
             i = i+1;
@@ -2152,7 +2158,7 @@ if(tableViewTag ==8999)
             if(ansInt==indexPath.row+1)
             {
                 indexToRemove = i;
-                cell.backgroundColor = [UIColor whiteColor];
+                cell.backgroundColor = [UIColor clearColor];
                 
             }
             i = i+1;
@@ -2236,7 +2242,7 @@ if(tableViewTag ==8999)
             if(ansInt==indexPath.row+1)
             {
                 indexToRemove = i;
-                cell.backgroundColor = [UIColor whiteColor];
+                cell.backgroundColor = [UIColor clearColor];
                 
             }
             i = i+1;
@@ -3194,8 +3200,6 @@ if(tableViewTag ==8999)
         NSString *propNumString;
        
         propNumString = propertyNum;
-        
-        
     
         [xmlWriter writeStartElement:@"PROPERTYNUM"];
         [xmlWriter writeCharacters:propNumString];
@@ -5197,11 +5201,20 @@ if(tableViewTag ==8999)
 
 -(IBAction)customAnswerSet:(id)sender
 {
+   
+    
     //if template mode, just save it locally.
     //if not template mode, fire off the update in background
     [self.view endEditing:YES];
     if([self.customAnswerTextField.text length] >0)
     {
+        NSNumber *changedCaseItemIndexNum = [NSNumber numberWithInteger:selectedCarouselIndex];
+        
+        if(![changedCaseItemsIndex containsObject:changedCaseItemIndexNum])
+        {
+            [changedCaseItemsIndex addObject:changedCaseItemIndexNum];
+        }
+        
         self.customAnswerCheckmark.alpha = 1;
         self.submitAnswersButton.enabled = TRUE;
         self.submitAnswersButton.backgroundColor = [UIColor blueColor];

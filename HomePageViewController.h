@@ -13,10 +13,10 @@
 #import "internetOfflineViewController.h"
 #import "conversationModelData.h"
 #import "findMeBaseViewController.h"
-
+#import <MediaPlayer/MediaPlayer.h>
 
 @interface HomePageViewController : findMeBaseViewController <MBProgressHUDDelegate,SetProfileDelegate,UITextFieldDelegate,internetOfflineViewControllerDelegate>
-@property (weak, nonatomic) IBOutlet UIButton *CreateNewCaseButton;
+@property (strong, nonatomic) IBOutlet UIButton *CreateNewCaseButton;
 - (IBAction)CreateNewCase:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *ViewMyCasesButton;
 - (IBAction)ViewMyCases:(id)sender;
@@ -33,5 +33,8 @@
 @property (strong,nonatomic ) NSArray *homePageCases;
 @property (strong, atomic) conversationModelData *conversationData;
 @property (weak, nonatomic) IBOutlet UILabel *connectedMTLLabel;
+@property (strong,nonatomic) IBOutlet UIWebView *gifBG;
+@property (strong,nonatomic) MPMoviePlayerController *moviePlayer;
+
 
 @end

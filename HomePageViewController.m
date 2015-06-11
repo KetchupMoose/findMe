@@ -24,6 +24,7 @@
 #import "UIView+Animation.h"
 #import "sharedUserDataSingleton.h"
 #import "CarouselTestViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface HomePageViewController ()
 
@@ -71,6 +72,13 @@ NSString *homePageManualLocationPropertyNum;
                                                            [UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:245.0/255.0 alpha:1.0], NSForegroundColorAttributeName,
                                                            shadow, NSShadowAttributeName,
                                                            [UIFont fontWithName:@"Futura-Medium" size:25.0], NSFontAttributeName, nil]];
+    
+    
+    self.CreateNewCaseButton.layer.borderColor = (__bridge CGColorRef)([UIColor whiteColor]);
+    self.CreateNewCaseButton.layer.borderWidth = 12.0f;
+    self.CreateNewCaseButton.layer.cornerRadius = 8.0f;
+    self.CreateNewCaseButton.layer.masksToBounds = YES;
+    
 
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     
@@ -102,7 +110,38 @@ NSString *homePageManualLocationPropertyNum;
     
     self.testUserTextField.delegate = self;
 
+    /*
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"manOnPhone" ofType:@"mp4"];
+    NSData *gif = [NSData dataWithContentsOfFile:filePath];
     
+    [self.gifBG loadData:gif MIMEType:@"image/gif" textEncodingName:nil baseURL:nil];
+    self.gifBG.userInteractionEnabled = NO;
+    */
+    
+    NSString *moviePath = [[NSBundle mainBundle] pathForResource:@"2195521" ofType:@"mp4"];
+    NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
+    
+    // load movie
+    self.moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
+    self.moviePlayer.controlStyle = MPMovieControlStyleNone;
+    self.moviePlayer.view.frame = self.view.frame;
+    self.moviePlayer.scalingMode = MPMovieScalingModeAspectFill;
+    [self.view addSubview:self.moviePlayer.view];
+    [self.view sendSubviewToBack:self.moviePlayer.view];
+    [self.moviePlayer play];
+    
+    // loop movie
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(replayMovie:)
+                                                 name: MPMoviePlayerPlaybackDidFinishNotification
+                                               object: self.moviePlayer];
+     
+    
+}
+
+-(void)replayMovie:(NSNotification *)notification
+{
+    [self.moviePlayer play];
 }
 
 
