@@ -585,7 +585,7 @@ BOOL waitForSyncCompleted = FALSE;
     
     NSNumber *selectedIndex = [NSNumber numberWithInteger:buttonTag];
     
-    caseDetailsCarouselViewController *cdcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdcvc"];
+    caseDetailsCarouselViewController *cdcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdcvc2"];
     
     cdcvc.selectedCaseIndex=selectedIndex;
     

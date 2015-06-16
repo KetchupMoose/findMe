@@ -64,6 +64,7 @@
 		EC0823041A186B13000B6684 /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0823031A186B13000B6684 /* HomePageViewController.m */; };
 		EC10BD8B1B2F481B00F7ABDE /* Accept_circular_button_outline_256.png in Resources */ = {isa = PBXBuildFile; fileRef = EC10BD8A1B2F481B00F7ABDE /* Accept_circular_button_outline_256.png */; };
 		EC10BD8D1B2F8F5D00F7ABDE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC10BD8C1B2F8F5D00F7ABDE /* QuartzCore.framework */; };
+		EC10BD8F1B30D45800F7ABDE /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = EC10BD8E1B30D45800F7ABDE /* iCarousel.m */; };
 		EC291D471B1E38BE0003992C /* findMeCursive3.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D461B1E38BE0003992C /* findMeCursive3.png */; };
 		EC291D491B1E41530003992C /* globeicon.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D481B1E41530003992C /* globeicon.png */; };
 		EC291D4B1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D4A1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png */; };
@@ -73,7 +74,6 @@
 		EC4173191AFFDCCE00DC79FE /* officerelationship.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC4173161AFFDCCE00DC79FE /* officerelationship.jpg */; };
 		EC41731A1AFFDCCE00DC79FE /* missedConnection.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC4173171AFFDCCE00DC79FE /* missedConnection.jpg */; };
 		EC5B30B41AF40061002046E3 /* CarouselTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC5B30B31AF40061002046E3 /* CarouselTestViewController.m */; };
-		EC5B30B61AF4066D002046E3 /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = EC5B30B51AF4066D002046E3 /* iCarousel.m */; };
 		EC641E051AFD35270005073C /* pinRed.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641E041AFD35270005073C /* pinRed.png */; };
 		EC641E071AFD37170005073C /* pinRedHighRes.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641E061AFD37170005073C /* pinRedHighRes.png */; };
 		EC641E091AFF9BFE0005073C /* calm.png in Resources */ = {isa = PBXBuildFile; fileRef = EC641E081AFF9BFE0005073C /* calm.png */; };
@@ -449,6 +449,7 @@
 		EC0823031A186B13000B6684 /* HomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomePageViewController.m; path = ../HomePageViewController.m; sourceTree = "<group>"; };
 		EC10BD8A1B2F481B00F7ABDE /* Accept_circular_button_outline_256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Accept_circular_button_outline_256.png; sourceTree = "<group>"; };
 		EC10BD8C1B2F8F5D00F7ABDE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		EC10BD8E1B30D45800F7ABDE /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
 		EC291D461B1E38BE0003992C /* findMeCursive3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = findMeCursive3.png; sourceTree = "<group>"; };
 		EC291D481B1E41530003992C /* globeicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = globeicon.png; sourceTree = "<group>"; };
 		EC291D4A1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "086266-rounded-glossy-black-icon-business-envelope1.png"; sourceTree = "<group>"; };
@@ -460,7 +461,6 @@
 		EC5B30B11AF3FFAF002046E3 /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iCarousel.h; path = ../iCarousel.h; sourceTree = "<group>"; };
 		EC5B30B21AF40061002046E3 /* CarouselTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarouselTestViewController.h; sourceTree = "<group>"; };
 		EC5B30B31AF40061002046E3 /* CarouselTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarouselTestViewController.m; sourceTree = "<group>"; };
-		EC5B30B51AF4066D002046E3 /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
 		EC641E041AFD35270005073C /* pinRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinRed.png; sourceTree = "<group>"; };
 		EC641E061AFD37170005073C /* pinRedHighRes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinRedHighRes.png; sourceTree = "<group>"; };
 		EC641E081AFF9BFE0005073C /* calm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calm.png; sourceTree = "<group>"; };
@@ -1651,7 +1651,7 @@
 			isa = PBXGroup;
 			children = (
 				EC5B30B11AF3FFAF002046E3 /* iCarousel.h */,
-				EC5B30B51AF4066D002046E3 /* iCarousel.m */,
+				EC10BD8E1B30D45800F7ABDE /* iCarousel.m */,
 				ECEE00D11AC1B9E70070908C /* findMeBaseViewController.h */,
 				ECEE00D21AC1B9E70070908C /* findMeBaseViewController.m */,
 				ECEE00D71AC497FE0070908C /* messageIdentifierButton.h */,
@@ -2415,7 +2415,6 @@
 				ECCD47021ADC1F8700804B06 /* myLocation.m in Sources */,
 				EC0822FE1A0EE7F0000B6684 /* UIImageView+WebCache.m in Sources */,
 				ECFDAABA1AB38B5C00E42C33 /* PNChannelGroup.m in Sources */,
-				EC5B30B61AF4066D002046E3 /* iCarousel.m in Sources */,
 				ECA7A2B91AA8B86C00F899D5 /* JSQMessagesCollectionViewCellOutgoing.m in Sources */,
 				ECFDAAC31AB38B5C00E42C33 /* PNJSONSerialization.m in Sources */,
 				ECFDAAAA1AB38B5C00E42C33 /* PNClientStateResponseParser.m in Sources */,
@@ -2460,6 +2459,7 @@
 				EC0822F21A0EE7F0000B6684 /* SDImageCache.m in Sources */,
 				EC6595051A8E89E900678E6C /* METransitions.m in Sources */,
 				EC0822F61A0EE7F0000B6684 /* SDWebImageDownloaderOperation.m in Sources */,
+				EC10BD8F1B30D45800F7ABDE /* iCarousel.m in Sources */,
 				ECEF94481A832A4F0000A444 /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				ECFDAAC91AB38B5C00E42C33 /* PNTimer.m in Sources */,
 				ECFDAAD41AB38B5C00E42C33 /* NSObject+PNAdditions.m in Sources */,

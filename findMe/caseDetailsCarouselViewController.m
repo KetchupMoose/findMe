@@ -106,7 +106,7 @@ NSMutableArray *activeMatchesCaseTypesArray;
 NSMutableArray *activeMatchesCaseProfiles;
 NSMutableArray *changedCaseItemsIndex;
 
-
+UIColor *colorForButtons;
 
 UIView *deleteBGView;
 NSString *answerabilityFlag;
@@ -157,6 +157,8 @@ BOOL LoadedBOOL = NO;
 }
 -(void)viewDidLoad
 {
+    colorForButtons = [UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1];
+    
     items = [NSMutableArray array];
     for (int i = 0; i < 1000; i++)
     {
@@ -164,6 +166,9 @@ BOOL LoadedBOOL = NO;
     }
         
     self.carousel.type = iCarouselTypeCoverFlow2;
+    self.carousel.bounces = YES;
+    self.carousel.scrollToItemBoundary = YES;
+    self.carousel.stopAtItemBoundary = YES;
     
     //set up delegates
     self.carousel.delegate = self;
@@ -573,9 +578,9 @@ BOOL LoadedBOOL = NO;
     
     if([locationRetrieved length]>0)
     {
-        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
-        [xmlWriter writeCharacters:locationRetrieved];
-        [xmlWriter writeEndElement];
+        //[xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        //[xmlWriter writeCharacters:locationRetrieved];
+        //[xmlWriter writeEndElement];
     }
     
     if([locationLatitude length]>0)
@@ -655,7 +660,7 @@ BOOL LoadedBOOL = NO;
         //view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200.0f, 200.0f)];
        
         // ((UIImageView *)view).image = [UIImage imageNamed:@"page.png"];
-        view = [[UIView alloc] initWithFrame:CGRectMake(0,0,100.0f,self.carousel.frame.size.height)];
+        view = [[UIView alloc] initWithFrame:CGRectMake(0,0,120.0f,self.carousel.frame.size.height)];
         
         view.layer.borderColor = (__bridge CGColorRef)([UIColor blueColor]);
         //view.layer.borderWidth = 25.0f;
@@ -675,17 +680,19 @@ BOOL LoadedBOOL = NO;
         [view addSubview:borderView];
         
         
-        carouselLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,view.frame.size.height-55,view.frame.size.width,50)];
+        carouselLabel = [[UILabel alloc] initWithFrame:CGRectMake(5,2,view.frame.size.width-10,60)];
         carouselLabel.backgroundColor = [UIColor clearColor];
         carouselLabel.textAlignment = NSTextAlignmentCenter;
-        carouselLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:12];
+        carouselLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:18];
+        carouselLabel.numberOfLines = 2;
+        
         carouselLabel.textColor = [UIColor whiteColor];
         
         carouselLabel.tag = 1;
         carouselLabel.numberOfLines = 2;
         
         
-        iconImgView = [[UIImageView alloc] initWithFrame:CGRectMake(25,10,50,50)];
+        iconImgView = [[UIImageView alloc] initWithFrame:CGRectMake(35,view.frame.size.height-60,50,50)];
         iconImgView.tag = 2;
         
         propertyClassLabel = [[UILabel alloc] initWithFrame:CGRectMake(5,5,100,25)];
@@ -721,8 +728,8 @@ BOOL LoadedBOOL = NO;
         int createButtonHeight = 75;
         createACaseItem = [[UIButton alloc] initWithFrame:CGRectMake(view.frame.size.width/2-createButtonWidth/2,view.frame.size.height-createButtonHeight-10,createButtonWidth,createButtonHeight)];
         [createACaseItem setTitle:@"Create A Question!" forState:UIControlStateNormal];
-         UIColor *createCaseItemBGColor = [UIColor colorWithRed:0/255.0f green:204.0f/255.0f blue:102.0f/255.0f alpha:1];
-        [createACaseItem setBackgroundColor:createCaseItemBGColor];
+        
+        [createACaseItem setBackgroundColor:colorForButtons];
         [createACaseItem.titleLabel setTextColor:[UIColor whiteColor]];
         createACaseItem.titleLabel.font = [UIFont boldSystemFontOfSize:15];
         createACaseItem.layer.cornerRadius = 5.0f;
@@ -1120,6 +1127,7 @@ BOOL LoadedBOOL = NO;
             self.customAnswerLabel.alpha = 1;
             self.customAnswerButton.alpha = 1;
             self.customAnswerLabel.text = @"Enter Your Custom Answer";
+            self.customAnswerLabel.textColor = [UIColor whiteColor];
             
             //self.customAnswerLabel.text = customAns;
             
@@ -1560,8 +1568,11 @@ if(tableViewTag ==8999)
     if(indexPath.row == propertyTableOptionsArray.count)
     {
         //show a button
-        optionLabel.font = [UIFont systemFontOfSize:17];
-        optionLabel.textColor = [UIColor blueColor];
+        optionLabel.font = [UIFont fontWithName:@"Futura-Medium" size:18];
+        optionLabel.textColor = colorForButtons;
+        optionLabel.shadowColor = [UIColor whiteColor];
+        optionLabel.shadowOffset = CGSizeMake(0,1);
+        
         optionLabel.text = @"Add Another Answer";
         
         NSNumber *indexNum = [NSNumber numberWithInteger:selectedCarouselIndex];
@@ -1576,7 +1587,7 @@ if(tableViewTag ==8999)
     }
     else
     {
-        optionLabel.font = [UIFont fontWithName:@"Futura-Medium" size:14];
+        optionLabel.font = [UIFont fontWithName:@"Futura-Medium" size:18];
         optionLabel.textColor = [UIColor whiteColor];
         optionLabel.text = [propertyTableOptionsArray objectAtIndex:indexPath.row];
         optionTxt =[propertyTableOptionsArray objectAtIndex:indexPath.row];
@@ -1586,7 +1597,8 @@ if(tableViewTag ==8999)
     
     if([selectedCaseItemAnswersArray containsObject:rowNumber])
     {
-        cell.backgroundColor = [UIColor greenColor];
+        cell.backgroundColor = colorForButtons;
+        
         
     }
     else
@@ -1597,7 +1609,7 @@ if(tableViewTag ==8999)
    
     if ([selectedCaseItemAnswersArray  containsObject:optionTxt])
     {
-        cell.backgroundColor = [UIColor greenColor];
+        cell.backgroundColor = colorForButtons;
         
     }
     
@@ -1930,7 +1942,7 @@ if(tableViewTag ==8999)
     
     NSString *indexPathString = [NSString stringWithFormat:@"%ld",(long)indexPath.row+1];
      UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
-    if(cell.backgroundColor == [UIColor greenColor])
+    if(cell.backgroundColor == colorForButtons)
     {
         int i = 0;
         int indexToRemove = -1;
@@ -1963,7 +1975,7 @@ if(tableViewTag ==8999)
     {
         NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
         [selectedCaseItemAnswersArray addObject:newAns];
-        cell.backgroundColor = [UIColor greenColor];
+        cell.backgroundColor = colorForButtons;
         
         NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
         [AnsObj setValue:newAns forKey:@"a"];
@@ -1975,7 +1987,6 @@ if(tableViewTag ==8999)
         PFObject *selectedCaseItem = [sortedCaseItems objectAtIndex:selectedCarouselIndex];
         [selectedCaseItem setObject:selectedCaseItemAnswersArrayOfDictionaries forKey:@"answers"];
         
-         cell.backgroundColor = [UIColor greenColor];
     }
 }
 
@@ -1984,7 +1995,7 @@ if(tableViewTag ==8999)
     
     //01 Answer Updates,
     //Answer can have no custom values, must have either 0 answers or 1 answer
-    if(cell.backgroundColor==[UIColor greenColor])
+    if(cell.backgroundColor==colorForButtons)
     {
         
         //show an alert explaining this property must have at least one answer
@@ -2019,7 +2030,7 @@ if(tableViewTag ==8999)
         {
             NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
             [selectedCaseItemAnswersArray addObject:newAns];
-            cell.backgroundColor = [UIColor greenColor];
+            cell.backgroundColor = colorForButtons;
             
             NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
             [AnsObj setValue:newAns forKey:@"a"];
@@ -2032,7 +2043,7 @@ if(tableViewTag ==8999)
             UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
             NSString *newAns = optionLabel.text;
             [selectedCaseItemAnswersArray addObject:newAns];
-            cell.backgroundColor = [UIColor greenColor];
+            cell.backgroundColor = colorForButtons;
             
             NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
             [AnsObj setValue:newAns forKey:@"custom"];
@@ -2050,7 +2061,7 @@ if(tableViewTag ==8999)
     
     //01 Answer Updates,
     //Answer can have no custom values, must have either 0 answers or 1 answer
-    if(cell.backgroundColor==[UIColor greenColor])
+    if(cell.backgroundColor==colorForButtons)
     {
         //remove this answer from the list.
         int i = 0;
@@ -2108,7 +2119,7 @@ if(tableViewTag ==8999)
         {
             NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
             [selectedCaseItemAnswersArray addObject:newAns];
-            cell.backgroundColor = [UIColor greenColor];
+            cell.backgroundColor = colorForButtons;
             
             NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
             [AnsObj setValue:newAns forKey:@"a"];
@@ -2121,7 +2132,7 @@ if(tableViewTag ==8999)
             UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
             NSString *newAns = optionLabel.text;
             [selectedCaseItemAnswersArray addObject:newAns];
-            cell.backgroundColor = [UIColor greenColor];
+            cell.backgroundColor = colorForButtons;
             
             NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
             [AnsObj setValue:newAns forKey:@"custom"];
@@ -2140,7 +2151,7 @@ if(tableViewTag ==8999)
    
     //0NPLUS Answer Updates,
     //Answer can have custom values, multiple values or 0 values
-    if(cell.backgroundColor==[UIColor greenColor])
+    if(cell.backgroundColor==colorForButtons)
     {
         //remove this answer from the list.
         int i = 0;
@@ -2185,7 +2196,7 @@ if(tableViewTag ==8999)
         {
             NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
             [selectedCaseItemAnswersArray addObject:newAns];
-            cell.backgroundColor = [UIColor greenColor];
+            cell.backgroundColor = colorForButtons;
             
             NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
             [AnsObj setValue:newAns forKey:@"a"];
@@ -2198,7 +2209,7 @@ if(tableViewTag ==8999)
             UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
             NSString *newAns = optionLabel.text;
             [selectedCaseItemAnswersArray addObject:newAns];
-            cell.backgroundColor = [UIColor greenColor];
+            cell.backgroundColor = colorForButtons;
             
             NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
             [AnsObj setValue:newAns forKey:@"custom"];
@@ -2215,7 +2226,7 @@ if(tableViewTag ==8999)
     
     //0NPLUS Answer Updates,
     //Answer can have custom values, multiple values or 0 values
-    if(cell.backgroundColor==[UIColor greenColor])
+    if(cell.backgroundColor==colorForButtons)
     {
         //check to see if there is only one answer in selectedCaseItemAnswersArray, if so do not remove
         if([selectedCaseItemAnswersArray count] <=1)
@@ -2269,7 +2280,7 @@ if(tableViewTag ==8999)
         {
             NSString *newAns = [[NSNumber numberWithInteger:indexPath.row+1] stringValue];
             [selectedCaseItemAnswersArray addObject:newAns];
-            cell.backgroundColor = [UIColor greenColor];
+            cell.backgroundColor = colorForButtons;
             
             NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
             [AnsObj setValue:newAns forKey:@"a"];
@@ -2282,7 +2293,7 @@ if(tableViewTag ==8999)
             UILabel *optionLabel = (UILabel *)[cell viewWithTag:44];
             NSString *newAns = optionLabel.text;
             [selectedCaseItemAnswersArray addObject:newAns];
-            cell.backgroundColor = [UIColor greenColor];
+            cell.backgroundColor = colorForButtons;
             
             NSMutableDictionary *AnsObj = [[NSMutableDictionary alloc] init];
             [AnsObj setValue:newAns forKey:@"custom"];
@@ -2901,9 +2912,9 @@ if(tableViewTag ==8999)
     
     if([locationRetrieved length]>0)
     {
-        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
-        [xmlWriter writeCharacters:locationRetrieved];
-        [xmlWriter writeEndElement];
+        //[xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        //[xmlWriter writeCharacters:locationRetrieved];
+        //[xmlWriter writeEndElement];
     }
     
     if([locationLatitude length]>0)
@@ -3136,9 +3147,9 @@ if(tableViewTag ==8999)
     
     if([locationRetrieved length]>0)
     {
-        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
-        [xmlWriter writeCharacters:locationRetrieved];
-        [xmlWriter writeEndElement];
+        //[xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        //[xmlWriter writeCharacters:locationRetrieved];
+        //[xmlWriter writeEndElement];
     }
     
     if([locationLatitude length]>0)
@@ -3477,9 +3488,9 @@ if(tableViewTag ==8999)
     
     if([locationRetrieved length]>0)
     {
-        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
-        [xmlWriter writeCharacters:locationRetrieved];
-        [xmlWriter writeEndElement];
+        //[xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        //[xmlWriter writeCharacters:locationRetrieved];
+        //[xmlWriter writeEndElement];
     }
     
     if([locationLatitude length]>0)
@@ -4319,9 +4330,9 @@ if(tableViewTag ==8999)
     
     if([locationRetrieved length]>0)
     {
-        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
-        [xmlWriter writeCharacters:locationRetrieved];
-        [xmlWriter writeEndElement];
+        //[xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        //[xmlWriter writeCharacters:locationRetrieved];
+        //[xmlWriter writeEndElement];
     }
     
     if([locationLatitude length]>0)
@@ -5086,9 +5097,9 @@ if(tableViewTag ==8999)
     
     if([locationRetrieved length]>0)
     {
-        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
-        [xmlWriter writeCharacters:locationRetrieved];
-        [xmlWriter writeEndElement];
+        //[xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        //[xmlWriter writeCharacters:locationRetrieved];
+        //[xmlWriter writeEndElement];
     }
     
     if([locationLatitude length]>0)
@@ -5473,5 +5484,45 @@ if(tableViewTag ==8999)
 }
 
 
+- (void)carouselDidEndDragging:(iCarousel *)carousel willDecelerate:(BOOL)decelerate
+{
+    NSLog(@"carousel end dragging");
+    if(decelerate ==TRUE)
+    {
+        NSLog(@"carousel will decelerate");
+    }
+    
+    
+}
+
+-(void) carouselWillBeginDecelerating:(iCarousel *)carousel
+{
+    NSLog(@"carousel begin decelerating");
+    //[self.carousel setUserInteractionEnabled:FALSE];
+    
+}
+-(void) carouselWillBeginScrollingAnimation:(iCarousel *)carousel
+{
+    NSLog(@"carousel will begin scrolling animation");
+    
+    //[self.carousel setUserInteractionEnabled:FALSE];
+}
+-(void) carouselDidEndDecelerating:(iCarousel *)carousel
+{
+    //[self.carousel setUserInteractionEnabled:TRUE];
+    NSLog(@"carousel will begin scrolling animation");
+}
+
+- (void)carouselDidEndScrollingAnimation:(iCarousel *)carousel
+{
+    NSLog(@"Carousel did end scrolling");
+    [self.carousel setUserInteractionEnabled:TRUE];
+    
+}
+- (void) carouselDidScroll:(iCarousel *)carousel
+{
+    //[self.carousel setUserInteractionEnabled:TRUE];
+    
+}
 
 @end

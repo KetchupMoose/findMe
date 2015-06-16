@@ -199,6 +199,7 @@ NSString *homePageManualLocationPropertyNum;
 {
     [super viewWillAppear:NO];
     //self.navigationController.navigationBarHidden = YES;
+    [self.moviePlayer play];
     
     [self ReloadHomePageData];
     

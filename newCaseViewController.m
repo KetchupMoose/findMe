@@ -964,9 +964,9 @@ NSString *locationLongitude;
     
     if([locationRetrieved length]>0)
     {
-        [xmlWriter writeStartElement:@"LOCATIONTEXT"];
-        [xmlWriter writeCharacters:locationRetrieved];
-        [xmlWriter writeEndElement];
+        //[xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        //[xmlWriter writeCharacters:locationRetrieved];
+        //[xmlWriter writeEndElement];
     }
     
     if([locationLatitude length]>0)

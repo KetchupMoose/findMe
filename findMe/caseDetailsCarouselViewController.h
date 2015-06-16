@@ -50,7 +50,6 @@
 -(IBAction)addCaseItem:(id)sender;
 
 
-
 @property (strong,nonatomic) NSString *internalCaseName;
 @property (strong,nonatomic) NSString *externalCaseName;
 @property (strong,nonatomic) UIImage *caseImage;

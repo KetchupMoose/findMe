@@ -41,16 +41,28 @@ int selectedPic = 1;
     self.navigationController.navigationBarHidden = NO;
     
     //if it's being opened from the home screen, it should query for the latest profile information for this user.
+    
+    PFUser *currentUser = [PFUser currentUser];
     if([self.openingMode isEqualToString:@"HomeScreen"])
     {
-        PFUser *currentUser = [PFUser currentUser];
         
-       NSString *userShowName =  [currentUser objectForKey:@"showName"];
+       NSString *userShowName =  [currentUser objectForKey:@"username"];
        NSString *userPhoneNum = [currentUser objectForKey:@"cellNumber"];
        NSString *userGender = [currentUser objectForKey:@"gender"];
-        
+        NSString *userEmail = [currentUser objectForKey:@"email"];
+    
         self.usernameTextField.text = userShowName;
         self.phoneTextField.text = userPhoneNum;
+        self.emailTextField.text = userEmail;
+        [self.genderSelectBtn setTitle:userGender forState:UIControlStateNormal];
+        
+    }
+    else
+    {
+        NSString *userShowName = [currentUser objectForKey:@"username"];
+        self.usernameTextField.text = userShowName;
+         NSString *userEmail = [currentUser objectForKey:@"email"];
+        self.emailTextField.text = userEmail;
     }
     
 }
@@ -121,16 +133,21 @@ int selectedPic = 1;
     if(self.usernameTextField.text.length == 0)
     {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Name", nil) message:NSLocalizedString(@"Please enter a name before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        return;
+        
     }
     
     if(self.phoneTextField.text.length == 0)
     {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Phone Number", nil) message:NSLocalizedString(@"Please enter a valid phone number before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        return;
+        
     }
     
     if(self.gender.length==0)
     {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Gender", nil) message:NSLocalizedString(@"Please select a gender before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        return;
     }
 
     //passed validation, run xml to create new user
@@ -637,7 +654,7 @@ int selectedPic = 1;
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    textField.text = @"";
+   
     
     [self animateTextField:textField up:YES];
 }
