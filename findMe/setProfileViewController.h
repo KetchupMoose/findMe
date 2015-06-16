@@ -55,6 +55,7 @@
 
 @property (strong,nonatomic) UIPickerView *genderPicker;
 @property (strong,nonatomic) UIView *genderPickerBGView;
+@property (strong,nonatomic) UIButton *confirmGenderBTN;
 
 
 -(IBAction)selectedMale:(id)sender;

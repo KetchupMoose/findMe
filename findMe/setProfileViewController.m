@@ -18,9 +18,7 @@
 
 @implementation setProfileViewController
 
-NSString *gender;
-NSString *showName;
-NSString *phoneNum;
+
 MBProgressHUD *HUD;
 PFObject *itsMTLObject;
 int timerTicks =0;
@@ -73,6 +71,16 @@ int selectedPic = 1;
     NSArray *actionButtonItems = @[SaveItem];
     self.navigationItem.rightBarButtonItems = actionButtonItems;
     
+    if([self.openingMode isEqualToString:@"HomeScreen"])
+    {
+        
+    }
+    else
+    {
+        [self.navigationItem setHidesBackButton:YES];
+    }
+    
+    
     // Do any additional setup after loading the view.
     
     //brian feb 5
@@ -110,6 +118,105 @@ int selectedPic = 1;
 
 -(void)saveProfilePress:(id)sender
 {
+    if(self.usernameTextField.text.length == 0)
+    {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Name", nil) message:NSLocalizedString(@"Please enter a name before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+    }
+    
+    if(self.phoneTextField.text.length == 0)
+    {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Phone Number", nil) message:NSLocalizedString(@"Please enter a valid phone number before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+    }
+    
+    if(self.gender.length==0)
+    {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Gender", nil) message:NSLocalizedString(@"Please select a gender before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+    }
+
+    //passed validation, run xml to create new user
+    
+    self.username = self.usernameTextField.text;
+    self.phoneNumber = self.phoneTextField.text;
+    
+    PFUser *currentUser = [PFUser currentUser];
+    
+    //create new case with this user.
+    
+    itsMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
+    [itsMTLObject setObject:currentUser forKey:@"ParseUser"];
+    
+    // Set the access control list to current user for security purposes
+    PFACL *itsMTLACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [itsMTLACL setPublicReadAccess:YES];
+    [itsMTLACL setPublicWriteAccess:YES];
+    
+    itsMTLObject.ACL = itsMTLACL;
+    
+    [itsMTLObject save];
+    
+    //set user properties to parse true user account
+    [currentUser setObject:self.username forKey:@"showName"];
+    [currentUser setObject:self.phoneNumber forKey:@"cellNumber"];
+    [currentUser setObject:self.gender forKey:@"gender"];
+    [currentUser save];
+    
+    // Associate the device with a user
+    PFInstallation *installation = [PFInstallation currentInstallation];
+    installation[@"user"] = [PFUser currentUser];
+    installation[@"itsMTL"] = itsMTLObject.objectId;
+    [installation saveInBackground];
+    
+    //get the ID and run the XML with the case info.
+    NSString *itsMTLObjectID = itsMTLObject.objectId;
+    
+    
+    NSString *hardcodedXMLString = @"<PAYLOAD><USEROBJECTID>4OvTmAzGE7</USEROBJECTID><LAISO>EN</LAISO><PREFERENCES><SHOWNAME>Rose</SHOWNAME><COUNTRY>CA</COUNTRY><GENDER>F</GENDER><TEMPLATEID1>01VURH6zGz</TEMPLATEID1><TEMPLATEID2>9XXwNvkFTI</TEMPLATEID2></PREFERENCES></PAYLOAD>";
+    
+    NSString *xmlGeneratedString = [self createTemplateXMLFunction:itsMTLObjectID];
+    
+    //add a layer here to show pictures of beautiful people while the user is getting information
+    phoneSearchersView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.bounds.origin.x,self.view.bounds.origin.y+40,self.view.bounds.size.width, self.view.bounds.size.height-40)];
+    phoneSearchersView.image = [UIImage imageNamed:@"stockphotowoman1.jpg"];
+    
+    [self.view addSubviewWithFadeAnimation:phoneSearchersView duration:2 option:UIViewAnimationOptionCurveEaseIn];
+    
+    [NSTimer scheduledTimerWithTimeInterval:2.0
+                                     target:self
+                                   selector:@selector(changeSearchPicture:)
+                                   userInfo:nil
+                                    repeats:YES];
+    
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [phoneSearchersView addSubview:HUD];
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Sending XML to Generate New User";
+    [HUD show:YES];
+    
+    //use parse cloud code function to update with appropriate XML
+    [PFCloud callFunctionInBackground:@"submitXML"
+                       withParameters:@{@"payload": xmlGeneratedString}
+                                block:^(NSString *responseString, NSError *error) {
+                                    if (!error) {
+                                        
+                                        //NSString *responseText = responseString;
+                                        //NSLog(responseText);
+                                        [HUD hide:NO];
+                                        [self.delegate setNewProfile:itsMTLObject];
+                                        
+                                    }
+                                    
+                                    else
+                                    {
+                                        NSLog(error.localizedDescription);
+                                        [HUD hide:YES];
+                                        
+                                    }
+                                }];
+    
+
     
 }
 
@@ -141,6 +248,7 @@ int selectedPic = 1;
 }
 -(IBAction)submitProfile:(id)sender
 {
+    
     //check if info is complete, if not, show an alert.
     
       if(self.usernameTextField.text.length == 0)
@@ -153,7 +261,7 @@ int selectedPic = 1;
          [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Phone Number", nil) message:NSLocalizedString(@"Please enter a valid phone number before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
     }
     
-    if(gender.length==0)
+    if(self.gender.length==0)
     {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Gender", nil) message:NSLocalizedString(@"Please select a gender before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
     }
@@ -190,9 +298,9 @@ int selectedPic = 1;
     [itsMTLObject save];
     
     //set user properties to parse true user account
-    [currentUser setObject:showName forKey:@"showName"];
-    [currentUser setObject:phoneNum forKey:@"cellNumber"];
-    [currentUser setObject:gender forKey:@"gender"];
+    [currentUser setObject:self.username forKey:@"showName"];
+    [currentUser setObject:self.phoneNumber forKey:@"cellNumber"];
+    [currentUser setObject:self.gender forKey:@"gender"];
     [currentUser save];
     
     // Associate the device with a user
@@ -501,15 +609,15 @@ int selectedPic = 1;
     [xmlWriter writeEndElement];
     
     [xmlWriter writeStartElement:@"GENDER"];
-    [xmlWriter writeCharacters:gender];
+    [xmlWriter writeCharacters:self.gender];
     [xmlWriter writeEndElement];
     
     [xmlWriter writeStartElement:@"SHOWNAME"];
-    [xmlWriter writeCharacters:showName];
+    [xmlWriter writeCharacters:self.username];
     [xmlWriter writeEndElement];
     
     [xmlWriter writeStartElement:@"CELLNUMBER"];
-    [xmlWriter writeCharacters:phoneNum];
+    [xmlWriter writeCharacters:self.phoneNumber];
     [xmlWriter writeEndElement];
     
     //close preferences element
@@ -616,23 +724,38 @@ int selectedPic = 1;
 {
     if(self.genderPicker ==nil)
     {
-      self.genderPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(10,250,300,200)];
-      
+      self.genderPicker = [[UIPickerView alloc] initWithFrame:CGRectMake(10,270,300,200)];
+        self.genderPicker.alpha = 1;
+        
     }
     if(self.genderPickerBGView ==nil)
     {
         self.genderPickerBGView = [[UIView alloc] initWithFrame:CGRectMake(0,230,320,500)];
         self.genderPickerBGView.backgroundColor = [UIColor blackColor];
-        self.genderPickerBGView.alpha = 0.7;
+        self.genderPickerBGView.alpha = 1;
+        [self.view addSubview:self.genderPickerBGView];
+        
+        self.confirmGenderBTN = [[UIButton alloc] initWithFrame:CGRectMake(250,240,50,50)];
+        //[self.confirmGenderBTN setTitle:@"Confirm" forState:UIControlStateNormal];
+        [self.confirmGenderBTN setBackgroundColor:[UIColor clearColor]];
+        [self.confirmGenderBTN addTarget:self action:@selector(confirmGender:) forControlEvents:UIControlEventTouchUpInside];
+        UIImage *acceptBtnImage = [UIImage imageNamed:@"Accept_circular_button_outline_256"];
+        [self.confirmGenderBTN setBackgroundImage:acceptBtnImage forState:UIControlStateNormal];
+        
+        
+    }
+    else
+    {
         [self.view addSubview:self.genderPickerBGView];
         
     }
+    
     
     self.genderPicker.delegate = self;
     self.genderPicker.dataSource = self;
     
     [self.view addSubview:self.genderPicker];
-    
+    [self.view addSubview:self.confirmGenderBTN];
 }
 
 #pragma mark -
@@ -661,6 +784,16 @@ numberOfRowsInComponent:(NSInteger)component
  return stringToReturn;
  }
  */
+
+-(void)confirmGender:(id)sender
+{
+    //confirm the gender selected
+    
+    [self.genderPicker removeFromSuperview];
+    [self.genderPickerBGView removeFromSuperview];
+    [self.confirmGenderBTN removeFromSuperview];
+    
+}
 
 #pragma mark -
 #pragma mark PickerView Delegate
@@ -693,10 +826,11 @@ numberOfRowsInComponent:(NSInteger)component
         
     }
     
-    [self.genderPicker removeFromSuperview];
-    [self.genderPickerBGView removeFromSuperview];
+    
     
 }
+
+
 
 
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view{
@@ -712,7 +846,6 @@ numberOfRowsInComponent:(NSInteger)component
         
         tView.font = [UIFont systemFontOfSize:12];
         
-        tView.backgroundColor = [UIColor whiteColor];
         tView.alpha =1;
         
         //tView.alpha = 0.95;

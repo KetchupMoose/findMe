@@ -177,7 +177,6 @@ BOOL LoadedBOOL = NO;
     self.viewMatchesButton.alpha = 0;
     
     
-    
     //location manager instance variable allocs
     locationManager = [[CLLocationManager alloc] init];
     geocoder = [[CLGeocoder alloc] init];
@@ -476,6 +475,11 @@ BOOL LoadedBOOL = NO;
     
     self.navigationController.navigationBarHidden = NO;
     
+   
+    [self.addCaseItemButton.layer setCornerRadius:self.addCaseItemButton.bounds.size.width / 2.0];
+    [self.addCaseItemButton.layer setMasksToBounds:YES];
+    [self.addCaseItemButton setTitleEdgeInsets:UIEdgeInsetsMake(-10, 0, 0, 0)];
+   
     
     [self getLocation:self];
 }
@@ -731,9 +735,9 @@ BOOL LoadedBOOL = NO;
         //[view addGestureRecognizer:panRecognizer];
         [view addSubview:carouselLabel];
         [view addSubview:iconImgView];
-        [view addSubview:propertyClassLabel];
+        //[view addSubview:propertyClassLabel];
         [view addSubview:deleteButton];
-        [view addSubview:createACaseItem];
+        //[view addSubview:createACaseItem];
         
     }
     else
@@ -1862,7 +1866,9 @@ if(tableViewTag ==8999)
     [self updateCaseItem:caseItemObjectID AcceptableAnswersList:selectedCaseItemAnswersArrayOfDictionaries ForNewAnswer:NO];
     
     self.submitAnswersButton.enabled = 1;
-    [self.submitAnswersButton.titleLabel setBackgroundColor:[UIColor blueColor]];
+    UIColor *submitAnswersColor = [UIColor colorWithRed:41/255.0f green:188/255.0f blue:243/255.0f alpha:1];
+    
+    [self.submitAnswersButton.titleLabel setBackgroundColor:submitAnswersColor];
     
   
     
@@ -2321,7 +2327,8 @@ if(tableViewTag ==8999)
     //Do something with data here
     NSLog(@"this fired");
     self.submitAnswersButton.enabled = 1;
-    self.submitAnswersButton.backgroundColor = [UIColor blueColor];
+     UIColor *submitAnswersColor = [UIColor colorWithRed:41/255.0f green:188/255.0f blue:243/255.0f alpha:1];
+    self.submitAnswersButton.backgroundColor = submitAnswersColor;
     
     //reload data
     if(templateMode==0)
@@ -3727,7 +3734,8 @@ if(tableViewTag ==8999)
     if([Answers count]==0)
     {
         self.submitAnswersButton.enabled = 1;
-        self.submitAnswersButton.backgroundColor = [UIColor blueColor];
+         UIColor *submitAnswersColor = [UIColor colorWithRed:41/255.0f green:188/255.0f blue:243/255.0f alpha:1];
+        self.submitAnswersButton.backgroundColor = submitAnswersColor;
       
         
         [self.propertiesTableView reloadData];
@@ -3776,7 +3784,8 @@ if(tableViewTag ==8999)
         
     }
     self.submitAnswersButton.enabled = 1;
-    self.submitAnswersButton.backgroundColor = [UIColor blueColor];
+     UIColor *submitAnswersColor = [UIColor colorWithRed:41/255.0f green:188/255.0f blue:243/255.0f alpha:1];
+    self.submitAnswersButton.backgroundColor = submitAnswersColor;
     
     if(NewAns ==TRUE)
     {
@@ -4848,7 +4857,9 @@ if(tableViewTag ==8999)
                 
                     UIButton *startConversationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
                     
-                    startConversationButton.backgroundColor = [UIColor blueColor];
+                     UIColor *submitAnswersColor = [UIColor colorWithRed:41/255.0f green:188/255.0f blue:243/255.0f alpha:1];
+                    startConversationButton.backgroundColor = submitAnswersColor;
+                    
                     startConversationButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
                     startConversationButton.titleLabel.textColor = [UIColor whiteColor];
                        startConversationButton.titleLabel.text = @"Start Conversation";
@@ -5217,7 +5228,8 @@ if(tableViewTag ==8999)
         
         self.customAnswerCheckmark.alpha = 1;
         self.submitAnswersButton.enabled = TRUE;
-        self.submitAnswersButton.backgroundColor = [UIColor blueColor];
+         UIColor *submitAnswersColor = [UIColor colorWithRed:41/255.0f green:188/255.0f blue:243/255.0f alpha:1];
+        self.submitAnswersButton.backgroundColor = submitAnswersColor;
       
         self.submitAnswersButton.titleLabel.textColor = [UIColor whiteColor];
         
@@ -5450,6 +5462,15 @@ if(tableViewTag ==8999)
     
 }
 
+-(IBAction)addCaseItem:(id)sender
+{
+    NSLog(@"create a new case");
+    NewPropertyViewController *npvc = [self.storyboard instantiateViewControllerWithIdentifier:@"npvc"];
+    npvc.userName = self.userName;
+    npvc.delegate = self;
+    
+    [self.navigationController pushViewController:npvc animated:YES];
+}
 
 
 

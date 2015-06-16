@@ -46,6 +46,9 @@
 @property (strong,nonatomic) IBOutlet UIImageView *customAnswerCheckmark;
 @property MKCoordinateRegion setRegion;
 
+@property (strong,nonatomic) IBOutlet UIButton *addCaseItemButton;
+-(IBAction)addCaseItem:(id)sender;
+
 
 
 @property (strong,nonatomic) NSString *internalCaseName;

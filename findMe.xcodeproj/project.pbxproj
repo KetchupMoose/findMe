@@ -39,7 +39,6 @@
 		D3FBD12E19CF03D6008240F5 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD12D19CF03D6008240F5 /* libsqlite3.dylib */; };
 		D3FBD13019CF03E2008240F5 /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD12F19CF03E2008240F5 /* libz.1.1.3.dylib */; };
 		D3FBD13219CF03EC008240F5 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD13119CF03EC008240F5 /* MobileCoreServices.framework */; };
-		D3FBD13419CF0411008240F5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD13319CF0411008240F5 /* QuartzCore.framework */; };
 		D3FBD13619CF0419008240F5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD13519CF0419008240F5 /* Security.framework */; };
 		D3FBD13819CF0424008240F5 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD13719CF0423008240F5 /* StoreKit.framework */; };
 		D3FBD13A19CF042F008240F5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FBD13919CF042E008240F5 /* SystemConfiguration.framework */; };
@@ -63,6 +62,8 @@
 		EC0822FF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0822EF1A0EE7F0000B6684 /* UIView+WebCacheOperation.m */; };
 		EC0823011A18689C000B6684 /* cityLightsBG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC0823001A18689C000B6684 /* cityLightsBG.jpg */; };
 		EC0823041A186B13000B6684 /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC0823031A186B13000B6684 /* HomePageViewController.m */; };
+		EC10BD8B1B2F481B00F7ABDE /* Accept_circular_button_outline_256.png in Resources */ = {isa = PBXBuildFile; fileRef = EC10BD8A1B2F481B00F7ABDE /* Accept_circular_button_outline_256.png */; };
+		EC10BD8D1B2F8F5D00F7ABDE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC10BD8C1B2F8F5D00F7ABDE /* QuartzCore.framework */; };
 		EC291D471B1E38BE0003992C /* findMeCursive3.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D461B1E38BE0003992C /* findMeCursive3.png */; };
 		EC291D491B1E41530003992C /* globeicon.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D481B1E41530003992C /* globeicon.png */; };
 		EC291D4B1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D4A1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png */; };
@@ -404,7 +405,6 @@
 		D3FBD12D19CF03D6008240F5 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		D3FBD12F19CF03E2008240F5 /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
 		D3FBD13119CF03EC008240F5 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		D3FBD13319CF0411008240F5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D3FBD13519CF0419008240F5 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		D3FBD13719CF0423008240F5 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		D3FBD13919CF042E008240F5 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -447,6 +447,8 @@
 		EC0823001A18689C000B6684 /* cityLightsBG.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cityLightsBG.jpg; sourceTree = "<group>"; };
 		EC0823021A186B13000B6684 /* HomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomePageViewController.h; path = ../HomePageViewController.h; sourceTree = "<group>"; };
 		EC0823031A186B13000B6684 /* HomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomePageViewController.m; path = ../HomePageViewController.m; sourceTree = "<group>"; };
+		EC10BD8A1B2F481B00F7ABDE /* Accept_circular_button_outline_256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Accept_circular_button_outline_256.png; sourceTree = "<group>"; };
+		EC10BD8C1B2F8F5D00F7ABDE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		EC291D461B1E38BE0003992C /* findMeCursive3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = findMeCursive3.png; sourceTree = "<group>"; };
 		EC291D481B1E41530003992C /* globeicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = globeicon.png; sourceTree = "<group>"; };
 		EC291D4A1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "086266-rounded-glossy-black-icon-business-envelope1.png"; sourceTree = "<group>"; };
@@ -1028,6 +1030,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC10BD8D1B2F8F5D00F7ABDE /* QuartzCore.framework in Frameworks */,
 				EC7A74BB1B263A3700D3A53F /* MediaPlayer.framework in Frameworks */,
 				EC8B3C391B14C44700DE04A9 /* Bolts.framework in Frameworks */,
 				EC8B3C321B0D299500DE04A9 /* libstdc++.6.dylib in Frameworks */,
@@ -1045,7 +1048,6 @@
 				D3FBD13A19CF042F008240F5 /* SystemConfiguration.framework in Frameworks */,
 				D3FBD13819CF0424008240F5 /* StoreKit.framework in Frameworks */,
 				D3FBD13619CF0419008240F5 /* Security.framework in Frameworks */,
-				D3FBD13419CF0411008240F5 /* QuartzCore.framework in Frameworks */,
 				D3FBD13219CF03EC008240F5 /* MobileCoreServices.framework in Frameworks */,
 				D3FBD13019CF03E2008240F5 /* libz.1.1.3.dylib in Frameworks */,
 				D3FBD12E19CF03D6008240F5 /* libsqlite3.dylib in Frameworks */,
@@ -1088,6 +1090,7 @@
 		D31DF2F419CEFC0C00A37725 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EC10BD8C1B2F8F5D00F7ABDE /* QuartzCore.framework */,
 				EC7A74BA1B263A3700D3A53F /* MediaPlayer.framework */,
 				EC8B3C381B14C44700DE04A9 /* Bolts.framework */,
 				EC8B3C311B0D299500DE04A9 /* libstdc++.6.dylib */,
@@ -1105,7 +1108,6 @@
 				D3FBD13919CF042E008240F5 /* SystemConfiguration.framework */,
 				D3FBD13719CF0423008240F5 /* StoreKit.framework */,
 				D3FBD13519CF0419008240F5 /* Security.framework */,
-				D3FBD13319CF0411008240F5 /* QuartzCore.framework */,
 				D3FBD13119CF03EC008240F5 /* MobileCoreServices.framework */,
 				D3FBD12F19CF03E2008240F5 /* libz.1.1.3.dylib */,
 				D3FBD12D19CF03D6008240F5 /* libsqlite3.dylib */,
@@ -1233,6 +1235,7 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				EC10BD8A1B2F481B00F7ABDE /* Accept_circular_button_outline_256.png */,
 				EC7A74F61B2A25B900D3A53F /* heart_64white.png */,
 				EC7A74F71B2A25B900D3A53F /* magnifier_64white.png */,
 				EC7A74E61B2A169900D3A53F /* 36fce23b893ee95bad9d8f54b916a446.jpg */,
@@ -2261,6 +2264,7 @@
 				EC41731A1AFFDCCE00DC79FE /* missedConnection.jpg in Resources */,
 				EC7A74E31B2A0EE300D3A53F /* 2195521.mp4 in Resources */,
 				EC93C6A81B03A0C100D3DE2A /* imageselect.png in Resources */,
+				EC10BD8B1B2F481B00F7ABDE /* Accept_circular_button_outline_256.png in Resources */,
 				EC886A641B20DDE400531FEA /* blurPhotoBG.jpg in Resources */,
 				D3207B0419E9CF8B00085B7C /* green-checkmark.jpg in Resources */,
 				ECA7A2B81AA8B86C00F899D5 /* JSQMessagesCollectionViewCellIncoming.xib in Resources */,
@@ -2669,6 +2673,7 @@
 				INFOPLIST_FILE = findMe/findmeInfo.plist;
 				PRODUCT_NAME = findme;
 				PROVISIONING_PROFILE = "ddfa3f5c-5b53-4491-aa18-fe4a0a647ee1";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2693,6 +2698,7 @@
 				INFOPLIST_FILE = findMe/findmeInfo.plist;
 				PRODUCT_NAME = findme;
 				PROVISIONING_PROFILE = "ddfa3f5c-5b53-4491-aa18-fe4a0a647ee1";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
