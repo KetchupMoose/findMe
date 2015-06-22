@@ -25,6 +25,7 @@
 #import "sharedUserDataSingleton.h"
 #import "CarouselTestViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "privatelyViewController.h"
 
 @interface HomePageViewController ()
 
@@ -714,7 +715,6 @@ NSString *homePageManualLocationPropertyNum;
     [self LoadingHomePage];
     
     
-    
 }
 
 //test cloud code function call
@@ -727,6 +727,16 @@ NSString *homePageManualLocationPropertyNum;
          
      }
      ];
+    
+}
+
+-(IBAction)showPrivatelyView:(id)sender
+{
+    privatelyViewController *mypvc = [[privatelyViewController alloc] init];
+    
+    [self.navigationController pushViewController:mypvc animated:YES];
+    
+    
     
 }
 

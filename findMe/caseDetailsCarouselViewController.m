@@ -660,7 +660,7 @@ BOOL LoadedBOOL = NO;
         //view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200.0f, 200.0f)];
        
         // ((UIImageView *)view).image = [UIImage imageNamed:@"page.png"];
-        view = [[UIView alloc] initWithFrame:CGRectMake(0,0,120.0f,self.carousel.frame.size.height)];
+        view = [[UIView alloc] initWithFrame:CGRectMake(0,0,170.0f,self.carousel.frame.size.height)];
         
         view.layer.borderColor = (__bridge CGColorRef)([UIColor blueColor]);
         //view.layer.borderWidth = 25.0f;
@@ -680,10 +680,10 @@ BOOL LoadedBOOL = NO;
         [view addSubview:borderView];
         
         
-        carouselLabel = [[UILabel alloc] initWithFrame:CGRectMake(5,2,view.frame.size.width-10,60)];
+        carouselLabel = [[UILabel alloc] initWithFrame:CGRectMake(5,2,view.frame.size.width-10,view.frame.size.height)];
         carouselLabel.backgroundColor = [UIColor clearColor];
         carouselLabel.textAlignment = NSTextAlignmentCenter;
-        carouselLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:18];
+        carouselLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:30];
         carouselLabel.numberOfLines = 2;
         
         carouselLabel.textColor = [UIColor whiteColor];
@@ -741,7 +741,7 @@ BOOL LoadedBOOL = NO;
        
         //[view addGestureRecognizer:panRecognizer];
         [view addSubview:carouselLabel];
-        [view addSubview:iconImgView];
+        //[view addSubview:iconImgView];
         //[view addSubview:propertyClassLabel];
         [view addSubview:deleteButton];
         //[view addSubview:createACaseItem];

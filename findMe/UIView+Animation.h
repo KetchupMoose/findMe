@@ -37,7 +37,7 @@
 -(void) GrowAView:(UIView *) view WithNewOrigin:(CGPoint ) newpoint;
 -(void)fadeAView:(UIView *) view WithNewImage:(UIImage *) newImage;
 -(void) SlideOffRight:(UIView *) view duration:(float) secs;
-
+-(void) SlideOffLeft:(UIView *) view duration:(float) secs;
 -(void)BounceSmallVertical:(UIView *)view duration:(float)secs;
 -(void)BounceSmallerVertical:(UIView *)view duration:(float)secs;
 

@@ -382,7 +382,7 @@
 -(void) BounceAddTheView:(UIView *) view
 {
     
-  view.transform =  view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.001, 0.001);
+  view.transform =  view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.7, 0.7);
     
     //[UIView setAnimationDuration:0.3/1.5];
     [UIView setAnimationDelegate:self];
@@ -390,7 +390,9 @@
     [self addSubview:view];
     
     [UIView animateWithDuration:0.4 animations:^{
-        view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2.1, 2.1);
+        view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+        view.alpha = 1;
+        
     }
                      completion:^(BOOL finished) {
                          [self bounce1addtheviewAnimationStopped:view];
@@ -556,6 +558,18 @@
                           [view removeFromSuperview];
                           
                       }];
+}
+
+-(void) SlideOffLeft:(UIView *) view duration:(float) secs
+{
+    [UIView animateWithDuration:secs delay:0.0 options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         view.frame = CGRectMake(view.frame.origin.x-400,view.frame.origin.y, view.frame.size.width, view.frame.size.height);
+                     }
+                     completion:^(BOOL finished) {
+                         [view removeFromSuperview];
+                         
+                     }];
 }
 
 -(void)BounceSmallVertical:(UIView *)view duration:(float)secs

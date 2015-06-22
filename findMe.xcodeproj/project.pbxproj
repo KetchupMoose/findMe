@@ -65,6 +65,11 @@
 		EC10BD8B1B2F481B00F7ABDE /* Accept_circular_button_outline_256.png in Resources */ = {isa = PBXBuildFile; fileRef = EC10BD8A1B2F481B00F7ABDE /* Accept_circular_button_outline_256.png */; };
 		EC10BD8D1B2F8F5D00F7ABDE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC10BD8C1B2F8F5D00F7ABDE /* QuartzCore.framework */; };
 		EC10BD8F1B30D45800F7ABDE /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = EC10BD8E1B30D45800F7ABDE /* iCarousel.m */; };
+		EC10BD921B31D0EE00F7ABDE /* privatelyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC10BD911B31D0EE00F7ABDE /* privatelyViewController.m */; };
+		EC10BD941B32494000F7ABDE /* cancel-circled-outline-512-000000.png in Resources */ = {isa = PBXBuildFile; fileRef = EC10BD931B32494000F7ABDE /* cancel-circled-outline-512-000000.png */; };
+		EC10BD961B324C5900F7ABDE /* shhh.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC10BD951B324C5900F7ABDE /* shhh.jpg */; };
+		EC10BD991B324F4500F7ABDE /* shhhblurrcrop.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC10BD971B324F4500F7ABDE /* shhhblurrcrop.jpg */; };
+		EC10BD9A1B324F4500F7ABDE /* shhhcropped.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC10BD981B324F4500F7ABDE /* shhhcropped.jpg */; };
 		EC291D471B1E38BE0003992C /* findMeCursive3.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D461B1E38BE0003992C /* findMeCursive3.png */; };
 		EC291D491B1E41530003992C /* globeicon.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D481B1E41530003992C /* globeicon.png */; };
 		EC291D4B1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png in Resources */ = {isa = PBXBuildFile; fileRef = EC291D4A1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png */; };
@@ -450,6 +455,12 @@
 		EC10BD8A1B2F481B00F7ABDE /* Accept_circular_button_outline_256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Accept_circular_button_outline_256.png; sourceTree = "<group>"; };
 		EC10BD8C1B2F8F5D00F7ABDE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		EC10BD8E1B30D45800F7ABDE /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
+		EC10BD901B31D0EE00F7ABDE /* privatelyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = privatelyViewController.h; sourceTree = "<group>"; };
+		EC10BD911B31D0EE00F7ABDE /* privatelyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = privatelyViewController.m; sourceTree = "<group>"; };
+		EC10BD931B32494000F7ABDE /* cancel-circled-outline-512-000000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel-circled-outline-512-000000.png"; sourceTree = "<group>"; };
+		EC10BD951B324C5900F7ABDE /* shhh.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = shhh.jpg; sourceTree = "<group>"; };
+		EC10BD971B324F4500F7ABDE /* shhhblurrcrop.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = shhhblurrcrop.jpg; sourceTree = "<group>"; };
+		EC10BD981B324F4500F7ABDE /* shhhcropped.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = shhhcropped.jpg; sourceTree = "<group>"; };
 		EC291D461B1E38BE0003992C /* findMeCursive3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = findMeCursive3.png; sourceTree = "<group>"; };
 		EC291D481B1E41530003992C /* globeicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = globeicon.png; sourceTree = "<group>"; };
 		EC291D4A1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "086266-rounded-glossy-black-icon-business-envelope1.png"; sourceTree = "<group>"; };
@@ -1161,6 +1172,8 @@
 				D31DF30E19CEFC0C00A37725 /* ViewCasesViewController.m */,
 				EC0823021A186B13000B6684 /* HomePageViewController.h */,
 				EC0823031A186B13000B6684 /* HomePageViewController.m */,
+				EC10BD901B31D0EE00F7ABDE /* privatelyViewController.h */,
+				EC10BD911B31D0EE00F7ABDE /* privatelyViewController.m */,
 				ECE6B1741A0D8AE5007F4A19 /* newCaseViewController.h */,
 				ECE6B1751A0D8AE5007F4A19 /* newCaseViewController.m */,
 				D318324E19D1828B003D51A3 /* CaseDetailsViewController.h */,
@@ -1235,6 +1248,10 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				EC10BD971B324F4500F7ABDE /* shhhblurrcrop.jpg */,
+				EC10BD981B324F4500F7ABDE /* shhhcropped.jpg */,
+				EC10BD951B324C5900F7ABDE /* shhh.jpg */,
+				EC10BD931B32494000F7ABDE /* cancel-circled-outline-512-000000.png */,
 				EC10BD8A1B2F481B00F7ABDE /* Accept_circular_button_outline_256.png */,
 				EC7A74F61B2A25B900D3A53F /* heart_64white.png */,
 				EC7A74F71B2A25B900D3A53F /* magnifier_64white.png */,
@@ -2236,8 +2253,10 @@
 				ECA7A2C41AA8B86C00F899D5 /* JSQMessagesTypingIndicatorFooterView.xib in Resources */,
 				ECE6B1721A06B8A9007F4A19 /* thinkingaboutyou.jpg in Resources */,
 				ECA7A29B1AA8B86C00F899D5 /* JSQMessages.strings in Resources */,
+				EC10BD991B324F4500F7ABDE /* shhhblurrcrop.jpg in Resources */,
 				ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */,
 				ECBEE5861B25EDAE00D131E7 /* tropicaloceanblur.jpg in Resources */,
+				EC10BD9A1B324F4500F7ABDE /* shhhcropped.jpg in Resources */,
 				EC291D4B1B1E44480003992C /* 086266-rounded-glossy-black-icon-business-envelope1.png in Resources */,
 				EC4173191AFFDCCE00DC79FE /* officerelationship.jpg in Resources */,
 				ECBEE5961B25FC8400D131E7 /* citybiggergif.gif in Resources */,
@@ -2259,7 +2278,9 @@
 				EC8B3C401B1E36DF00DE04A9 /* FindMeCursive.png in Resources */,
 				EC93C6CE1B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed.png in Resources */,
 				ECBEE58A1B25F04F00D131E7 /* beachblur.jpg in Resources */,
+				EC10BD941B32494000F7ABDE /* cancel-circled-outline-512-000000.png in Resources */,
 				EC0823011A18689C000B6684 /* cityLightsBG.jpg in Resources */,
+				EC10BD961B324C5900F7ABDE /* shhh.jpg in Resources */,
 				EC7A74B51B26342900D3A53F /* peoplewalking.gif in Resources */,
 				EC41731A1AFFDCCE00DC79FE /* missedConnection.jpg in Resources */,
 				EC7A74E31B2A0EE300D3A53F /* 2195521.mp4 in Resources */,
@@ -2402,6 +2423,7 @@
 				ECFDAAAE1AB38B5C00E42C33 /* PNHereNowResponseParser.m in Sources */,
 				ECFDAAAF1AB38B5C00E42C33 /* PNOperationStatusResponseParser.m in Sources */,
 				ECFDAAB61AB38B5C00E42C33 /* PNAccessRightsCollection.m in Sources */,
+				EC10BD921B31D0EE00F7ABDE /* privatelyViewController.m in Sources */,
 				EC0822F91A0EE7F0000B6684 /* UIButton+WebCache.m in Sources */,
 				ECFDAAD01AB38B5C00E42C33 /* NSInvocation+PNAdditions.m in Sources */,
 				EC0822F71A0EE7F0000B6684 /* SDWebImageManager.m in Sources */,
