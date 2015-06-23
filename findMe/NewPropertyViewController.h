@@ -14,11 +14,12 @@
 
 @end
 
-@interface NewPropertyViewController : findMeBaseViewController <UITextFieldDelegate,UITableViewDataSource, UITableViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate>
+@interface NewPropertyViewController : findMeBaseViewController <UITextFieldDelegate,UITableViewDataSource, UITableViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UITextViewDelegate>
 
 -(IBAction)addAnswerToList:(id)sender;
 -(IBAction)addNewProperty:(id)sender;
 @property (weak,nonatomic) IBOutlet UIButton *addNewPropertyButton;
+@property (strong,nonatomic) UITextView *questionTextView;
 
 
 @property (weak,nonatomic) IBOutlet UITableView *answersListTableView;

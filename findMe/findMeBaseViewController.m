@@ -56,8 +56,6 @@ BOOL notifierLoaded;
     
 }
 
-
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -152,7 +150,6 @@ BOOL notifierLoaded;
         messageReceivedView.layer.cornerRadius = 5.0f;
         
         UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(70,2,100,75)];
-        
         
         messageLabel.text = message;
         messageLabel.numberOfLines = 5;

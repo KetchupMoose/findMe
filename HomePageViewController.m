@@ -297,7 +297,15 @@ NSString *homePageManualLocationPropertyNum;
     [newQuery whereKey:@"ParseUser" equalTo:currentUser];
     
     NSArray *returnedMTLObjects = [newQuery findObjects];
-    
+    if(returnedMTLObjects.count >1)
+    {
+        UIAlertView *errorAlert = [[UIAlertView alloc]
+                                   initWithTitle:@"Multiple MTL Objects for this User" message:currentUser.objectId delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [errorAlert show];
+        
+        return;
+        
+    }
     if(returnedMTLObjects.count >=1)
     {
         NSLog(@"already have an itsMTL user");
@@ -500,8 +508,7 @@ NSString *homePageManualLocationPropertyNum;
     setProfileViewController *spvc = [self.storyboard instantiateViewControllerWithIdentifier:@"spvc"];
     spvc.delegate = self;
    spvc.openingMode = @"HomeScreen";
-    
-    
+    spvc.homeScreenMTLObjectID = self.HomePageITSMTLObject.objectId;
     [self.navigationController pushViewController:spvc animated:YES];
     
 }
@@ -605,18 +612,19 @@ NSString *homePageManualLocationPropertyNum;
         [self subscribeToConversationChannels];
         
     }];
-
-    
     
 }
 
 - (void)setNewProfile:(PFObject *)newITSMTLObject
 {
-    self.HomePageuserName = newITSMTLObject.objectId;
-    sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
-    [sharedUData setUserName:HomePageuserName];
-      self.connectedMTLLabel.text = [@"Current MTL User: " stringByAppendingString:HomePageuserName];
-    self.HomePageITSMTLObject = newITSMTLObject;
+    if([newITSMTLObject.objectId length] >0)
+    {
+        self.HomePageuserName = newITSMTLObject.objectId;
+        sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
+        [sharedUData setUserName:HomePageuserName];
+        self.connectedMTLLabel.text = [@"Current MTL User: " stringByAppendingString:HomePageuserName];
+        self.HomePageITSMTLObject = newITSMTLObject;
+    }
     
     //[self ReloadHomePageData];
     [self.navigationController popViewControllerAnimated:YES];

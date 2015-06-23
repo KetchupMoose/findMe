@@ -40,5 +40,7 @@
 -(void) SlideOffLeft:(UIView *) view duration:(float) secs;
 -(void)BounceSmallVertical:(UIView *)view duration:(float)secs;
 -(void)BounceSmallerVertical:(UIView *)view duration:(float)secs;
+-(void)SlideOffLeft:(UIView *)view thenGrowNewView:(UIView *)secondView duration:(float)secs;
+-(void)slideUpView:(UIView *)view duration:(float)secs pixels:(int)pixels;
 
 @end

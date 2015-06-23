@@ -825,8 +825,9 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" tag="44" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="what did we talk about?" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="OYK-78-J0W">
-                                <rect key="frame" x="16" y="122" width="241" height="30"/>
+                            <textField opaque="NO" clipsSubviews="YES" tag="44" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="OYK-78-J0W">
+                                <rect key="frame" x="10" y="165" width="241" height="60"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
@@ -835,8 +836,9 @@
                                 <fontDescription key="fontDescription" name="Futura-CondensedMedium" family="Futura" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" tag="45" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="How much we love dancing" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="P6z-oe-OdA">
-                                <rect key="frame" x="40" y="182" width="241" height="30"/>
+                            <textField opaque="NO" clipsSubviews="YES" tag="45" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="How much we love dancing" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="P6z-oe-OdA">
+                                <rect key="frame" x="10" y="165" width="241" height="60"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
@@ -928,7 +930,7 @@
                                 </cells>
                             </collectionView>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xb3-O5-dx9">
-                                <rect key="frame" x="265" y="109" width="49" height="50.5"/>
+                                <rect key="frame" x="265" y="170" width="49" height="50.5"/>
                                 <state key="normal" backgroundImage="Accept_circular_button_outline_256.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>

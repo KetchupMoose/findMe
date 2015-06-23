@@ -5375,6 +5375,84 @@ if(tableViewTag ==8999)
         
     }];
     
+    //need to submit the update to the XML here also.
+    
+    [self updateCaseNameXML:caseID];
+    
+    
+}
+
+-(void)updateCaseNameXML:(NSString *)caseID
+{
+    
+    // allocate serializer
+    XMLWriter *xmlWriter = [[XMLWriter alloc] init];
+    
+    // add root element
+    [xmlWriter writeStartElement:@"PAYLOAD"];
+    
+    // add element with an attribute and some some text
+    [xmlWriter writeStartElement:@"USEROBJECTID"];
+    [xmlWriter writeCharacters:self.userName];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"LAISO"];
+    [xmlWriter writeCharacters:@"EN"];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"CASEOBJECTID"];
+    [xmlWriter writeCharacters:caseID];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"CASENAME"];
+    [xmlWriter writeCharacters:self.externalCaseName];
+    [xmlWriter writeEndElement];
+    
+    if([locationRetrieved length]>0)
+    {
+        //[xmlWriter writeStartElement:@"LOCATIONTEXT"];
+        //[xmlWriter writeCharacters:locationRetrieved];
+        //[xmlWriter writeEndElement];
+    }
+    
+    if([locationLatitude length]>0)
+    {
+        [xmlWriter writeStartElement:@"LATITUDE"];
+        [xmlWriter writeCharacters:locationLatitude];
+        [xmlWriter writeEndElement];
+        
+        [xmlWriter writeStartElement:@"LONGITUDE"];
+        [xmlWriter writeCharacters:locationLongitude];
+        [xmlWriter writeEndElement];
+    }
+    
+    // close payload element
+    [xmlWriter writeEndElement];
+    
+    // end document
+    [xmlWriter writeEndDocument];
+    
+    NSString* xml = [xmlWriter toString];
+    
+    //send xml request in background
+    
+    //use parse cloud code function
+    [PFCloud callFunctionInBackground:@"submitXML"
+                       withParameters:@{@"payload": xml}
+                                block:^(NSString *responseString, NSError *error) {
+                                    
+                                    if (!error)
+                                    {
+                                        NSLog(responseString);
+                                        
+                                        
+                                    }
+                                    else
+                                    {
+                                        NSLog(error.localizedDescription);
+                                        
+                                    }
+                                }];
 }
 
 #pragma mark swipableTableViewCellsDelegateMethods

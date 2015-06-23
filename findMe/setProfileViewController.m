@@ -54,6 +54,9 @@ int selectedPic = 1;
         self.usernameTextField.text = userShowName;
         self.phoneTextField.text = userPhoneNum;
         self.emailTextField.text = userEmail;
+        self.gender = userGender;
+        self.emailAddress = userEmail;
+        
         [self.genderSelectBtn setTitle:userGender forState:UIControlStateNormal];
         
     }
@@ -155,37 +158,61 @@ int selectedPic = 1;
     self.username = self.usernameTextField.text;
     self.phoneNumber = self.phoneTextField.text;
     
+    if(self.emailTextField.text.length !=0)
+    {
+        self.emailAddress = self.emailTextField.text;
+        
+    }
+    
     PFUser *currentUser = [PFUser currentUser];
     
-    //create new case with this user.
-    
-    itsMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
-    [itsMTLObject setObject:currentUser forKey:@"ParseUser"];
-    
-    // Set the access control list to current user for security purposes
-    PFACL *itsMTLACL = [PFACL ACLWithUser:[PFUser currentUser]];
-    [itsMTLACL setPublicReadAccess:YES];
-    [itsMTLACL setPublicWriteAccess:YES];
-    
-    itsMTLObject.ACL = itsMTLACL;
-    
-    [itsMTLObject save];
+    /*
+    NSString *userShowName =  [currentUser objectForKey:@"username"];
+    NSString *userPhoneNum = [currentUser objectForKey:@"cellNumber"];
+    NSString *userGender = [currentUser objectForKey:@"gender"];
+    NSString *userEmail = [currentUser objectForKey:@"email"];
+    */
     
     //set user properties to parse true user account
-    [currentUser setObject:self.username forKey:@"showName"];
+    [currentUser setObject:self.username forKey:@"username"];
     [currentUser setObject:self.phoneNumber forKey:@"cellNumber"];
     [currentUser setObject:self.gender forKey:@"gender"];
+    [currentUser setObject:self.emailAddress forKey:@"email"];
     [currentUser save];
     
-    // Associate the device with a user
-    PFInstallation *installation = [PFInstallation currentInstallation];
-    installation[@"user"] = [PFUser currentUser];
-    installation[@"itsMTL"] = itsMTLObject.objectId;
-    [installation saveInBackground];
+    //create new case with this user.
+    if(![self.openingMode isEqualToString:@"HomeScreen"])
+    {
+        
+        
+        itsMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
+        [itsMTLObject setObject:currentUser forKey:@"ParseUser"];
+        
+        // Set the access control list to current user for security purposes
+        PFACL *itsMTLACL = [PFACL ACLWithUser:[PFUser currentUser]];
+        [itsMTLACL setPublicReadAccess:YES];
+        [itsMTLACL setPublicWriteAccess:YES];
+        
+        itsMTLObject.ACL = itsMTLACL;
+        
+        [itsMTLObject save];
+        
+        // Associate the device with a user
+        PFInstallation *installation = [PFInstallation currentInstallation];
+        installation[@"user"] = [PFUser currentUser];
+        installation[@"itsMTL"] = itsMTLObject.objectId;
+        [installation saveInBackground];
+    }
+
+   
     
     //get the ID and run the XML with the case info.
     NSString *itsMTLObjectID = itsMTLObject.objectId;
     
+    if([itsMTLObjectID length] ==0)
+    {
+        itsMTLObjectID = self.homeScreenMTLObjectID;
+    }
     
     NSString *hardcodedXMLString = @"<PAYLOAD><USEROBJECTID>4OvTmAzGE7</USEROBJECTID><LAISO>EN</LAISO><PREFERENCES><SHOWNAME>Rose</SHOWNAME><COUNTRY>CA</COUNTRY><GENDER>F</GENDER><TEMPLATEID1>01VURH6zGz</TEMPLATEID1><TEMPLATEID2>9XXwNvkFTI</TEMPLATEID2></PREFERENCES></PAYLOAD>";
     
@@ -221,6 +248,13 @@ int selectedPic = 1;
                                         //NSString *responseText = responseString;
                                         //NSLog(responseText);
                                         [HUD hide:NO];
+                                        
+                                        NSString *itsMTLObjectID = itsMTLObject.objectId;
+                                        
+                                        if([itsMTLObjectID length] ==0)
+                                        {
+                                            itsMTLObjectID = self.homeScreenMTLObjectID;
+                                        }
                                         [self.delegate setNewProfile:itsMTLObject];
                                         
                                     }
@@ -266,117 +300,6 @@ int selectedPic = 1;
 -(IBAction)submitProfile:(id)sender
 {
     
-    //check if info is complete, if not, show an alert.
-    
-      if(self.usernameTextField.text.length == 0)
-      {
-          [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Name", nil) message:NSLocalizedString(@"Please enter a name before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
-      }
-    
-    if(self.phoneTextField.text.length == 0)
-    {
-         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Phone Number", nil) message:NSLocalizedString(@"Please enter a valid phone number before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
-    }
-    
-    if(self.gender.length==0)
-    {
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Gender", nil) message:NSLocalizedString(@"Please select a gender before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
-    }
-    /*
-    if(selectedTemplate1.length==0)
-    {
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Parent Template", nil) message:NSLocalizedString(@"Please select a parent template before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
-    }
-    
-    if(selectedTemplate2.length==0)
-    {
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Second Template", nil) message:NSLocalizedString(@"Please select a second template before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
-    }
-    */
-    //passed validation, run xml to create new user
-    
-    self.username = self.usernameTextField.text;
-    self.phoneNumber = self.phoneTextField.text;
-    
-    PFUser *currentUser = [PFUser currentUser];
-    
-    //create new case with this user.
-    
-    itsMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
-    [itsMTLObject setObject:currentUser forKey:@"ParseUser"];
-    
-    // Set the access control list to current user for security purposes
-    PFACL *itsMTLACL = [PFACL ACLWithUser:[PFUser currentUser]];
-    [itsMTLACL setPublicReadAccess:YES];
-    [itsMTLACL setPublicWriteAccess:YES];
-    
-    itsMTLObject.ACL = itsMTLACL;
-    
-    [itsMTLObject save];
-    
-    //set user properties to parse true user account
-    [currentUser setObject:self.username forKey:@"showName"];
-    [currentUser setObject:self.phoneNumber forKey:@"cellNumber"];
-    [currentUser setObject:self.gender forKey:@"gender"];
-    [currentUser save];
-    
-    // Associate the device with a user
-    PFInstallation *installation = [PFInstallation currentInstallation];
-    installation[@"user"] = [PFUser currentUser];
-    installation[@"itsMTL"] = itsMTLObject.objectId;
-    [installation saveInBackground];
-
-    //get the ID and run the XML with the case info.
-    NSString *itsMTLObjectID = itsMTLObject.objectId;
-    
-    //add a progress HUD to show it is sending the XML with the case info
-    
-    NSString *hardcodedXMLString = @"<PAYLOAD><USEROBJECTID>4OvTmAzGE7</USEROBJECTID><LAISO>EN</LAISO><PREFERENCES><SHOWNAME>Rose</SHOWNAME><COUNTRY>CA</COUNTRY><GENDER>F</GENDER><TEMPLATEID1>01VURH6zGz</TEMPLATEID1><TEMPLATEID2>9XXwNvkFTI</TEMPLATEID2></PREFERENCES></PAYLOAD>";
-    
-    NSString *xmlGeneratedString = [self createTemplateXMLFunction:itsMTLObjectID];
-    
-    //add a layer here to show pictures of beautiful people while the user is getting information
-    phoneSearchersView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.bounds.origin.x,self.view.bounds.origin.y+40,self.view.bounds.size.width, self.view.bounds.size.height-40)];
-    phoneSearchersView.image = [UIImage imageNamed:@"stockphotowoman1.jpg"];
-    
-    [self.view addSubviewWithFadeAnimation:phoneSearchersView duration:2 option:UIViewAnimationOptionCurveEaseIn];
-    
-    [NSTimer scheduledTimerWithTimeInterval:2.0
-                                     target:self
-                                   selector:@selector(changeSearchPicture:)
-                                   userInfo:nil
-                                    repeats:YES];
-    
-    HUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [phoneSearchersView addSubview:HUD];
-    
-    // Set determinate mode
-    HUD.mode = MBProgressHUDModeDeterminate;
-    HUD.delegate = self;
-    HUD.labelText = @"Sending XML to Generate New User";
-    [HUD show:YES];
-    
-    //use parse cloud code function to update with appropriate XML
-    [PFCloud callFunctionInBackground:@"submitXML"
-                       withParameters:@{@"payload": xmlGeneratedString}
-                                block:^(NSString *responseString, NSError *error) {
-                                    if (!error) {
-                                        
-                                    //NSString *responseText = responseString;
-                                    //NSLog(responseText);
-                                    [HUD hide:NO];
-                                    [self.delegate setNewProfile:itsMTLObject];
-
-                                    }
-                                    
-                                    else
-                                    {
-                                        NSLog(error.localizedDescription);
-                                        [HUD hide:YES];
-                                        
-                                    }
-                                }];
-
 }
 
 -(void)pollForTemplateMaker
@@ -846,9 +769,6 @@ numberOfRowsInComponent:(NSInteger)component
     
     
 }
-
-
-
 
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view{
     UILabel* tView = (UILabel*)view;

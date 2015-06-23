@@ -616,5 +616,46 @@
                      completion:nil];
 }
 
+-(void)SlideOffLeft:(UIView *)view thenGrowNewView:(UIView *)secondView duration:(float)secs
+{
+    [UIView animateWithDuration:secs delay:0.0 options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         view.frame = CGRectMake(view.frame.origin.x-400,view.frame.origin.y, view.frame.size.width, view.frame.size.height);
+                     }
+                     completion:^(BOOL finished) {
+                         [view removeFromSuperview];
+                         secondView.transform =  secondView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.7, 0.7);
+                         
+                         //[UIView setAnimationDuration:0.3/1.5];
+                         [UIView setAnimationDelegate:self];
+                         
+                         [self addSubview:secondView];
+                         
+                         [UIView animateWithDuration:0.4 animations:^{
+                             secondView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+                             secondView.alpha = 1;
+                             
+                         }
+                                          completion:^(BOOL finished) {
+                                              [self bounce1addtheviewAnimationStopped:secondView];
+                                          }
+                          ];
+
+                     }];
+
+}
+
+-(void)slideUpView:(UIView *)view duration:(float)secs pixels:(int)pixels
+{
+    [UIView animateWithDuration:secs delay:0.0 options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         view.frame = CGRectMake(view.frame.origin.x,view.frame.origin.y-pixels, view.frame.size.width, view.frame.size.height);
+                     }
+                     completion:^(BOOL finished) {
+                         
+                     }];
+
+}
+
 
 @end

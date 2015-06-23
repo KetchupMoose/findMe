@@ -69,6 +69,7 @@
 @property (strong,nonatomic) NSString *lastName;
 @property (strong,nonatomic) NSString *gender;
 
+@property (strong,nonatomic) NSString *homeScreenMTLObjectID;
 
 
 @end

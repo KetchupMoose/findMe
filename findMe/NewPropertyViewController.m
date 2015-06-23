@@ -40,6 +40,18 @@ MBProgressHUD *HUD;
     self.answersListTableView.delegate = self;
     self.answersListTableView.dataSource = self;
     
+    self.answersListTableView.backgroundColor = [UIColor clearColor];
+    
+    self.questionTextView = [[UITextView alloc] initWithFrame:self.questionTextField.frame];
+    self.questionTextView.delegate = self;
+    self.questionTextView.tag = 45;
+    
+    [self.view addSubview:self.questionTextView];
+    self.questionTextView.backgroundColor = [UIColor whiteColor];
+    self.questionTextView.font =[UIFont fontWithName:@"Futura-Medium" size:15];
+    self.questionTextField.font = [UIFont fontWithName:@"Futura-Medium" size:15];
+    self.questionTextField.alpha = 0;
+    
     answersListArray = [[NSMutableArray alloc] init];
     acceptableAnswers = [[NSMutableArray alloc] init];
     
@@ -64,7 +76,7 @@ MBProgressHUD *HUD;
     self.firstStepLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
     self.firstStepLabel.font = [UIFont fontWithName:@"Futura-Medium" size:40];
     self.firstStepLabel.text = @"1";
-    self.firstStepLabel.alpha = 0;
+    self.firstStepLabel.alpha = 1;
     
     [self.view addSubview:self.firstStepLabel];
     
@@ -135,7 +147,7 @@ MBProgressHUD *HUD;
     
     self.createQuestionLabel = [[UILabel alloc] initWithFrame:CGRectMake(95,20,200,70)];
     self.createQuestionLabel.textColor = [UIColor whiteColor];
-    self.createQuestionLabel.alpha = 0;
+    self.createQuestionLabel.alpha = 1;
     
     self.createQuestionLabel.text = @"Create A New Question";
     self.createQuestionLabel.numberOfLines = 2;
@@ -518,7 +530,7 @@ MBProgressHUD *HUD;
     
     if(self.checkMark2.alpha==0)
     {
-        self.checkMark2.alpha =1;
+        //self.checkMark2.alpha =1;
         
     }
     
@@ -584,7 +596,8 @@ MBProgressHUD *HUD;
     
     UILabel *answerLabel = (UILabel *)[cell viewWithTag:1];
     answerLabel.text = [answersListArray objectAtIndex:indexPath.row];
-    
+    answerLabel.textColor = [UIColor whiteColor];
+    answerLabel.font = [UIFont fontWithName:@"Futura-Medium" size:30];
     //check to see if the answer should be highlighted
     cell.backgroundColor = [UIColor clearColor];
     
@@ -630,7 +643,7 @@ MBProgressHUD *HUD;
             {
                 ansToRemove = eachAns;
             
-                cell.backgroundColor = [UIColor whiteColor];
+                cell.backgroundColor = [UIColor clearColor];
             }
         }
         [acceptableAnswers removeObject:ansToRemove];
@@ -673,6 +686,23 @@ MBProgressHUD *HUD;
         
     }
     
+}
+
+-(void)textViewDidBeginEditing:(UITextView *)textView
+{
+    if(textView.tag ==45)
+    {
+        self.confirmQuestionButton.alpha = 1;
+        
+    }
+}
+-(void)textViewDidEndEditing:(UITextView *)textView
+{
+    if(textView.tag ==45)
+    {
+        questionText = textView.text;
+        
+    }
 }
 
 
@@ -786,22 +816,39 @@ MBProgressHUD *HUD;
     self.step1SideLabel.textColor = [UIColor greenColor];
     
     //animate these labels left and grow/add a new view for step2
-    [self.firstStepLabel SlideOffLeft:self.firstStepLabel duration:1.0f];
-    [self.createQuestionLabel SlideOffLeft:self.createQuestionLabel duration:1.0f];
-    [self.recentQuestionsTitle SlideOffLeft:self.recentQuestionsTitle duration:1.0f];
+    //[self.firstStepLabel SlideOffLeft:self.firstStepLabel duration:1.0f];
+    //[self.createQuestionLabel SlideOffLeft:self.createQuestionLabel duration:1.0f];
+    //[self.recentQuestionsTitle SlideOffLeft:self.recentQuestionsTitle duration:1.0f];
     
     for(UIButton *hashBtn in self.hashtagButtons)
     {
-        [hashBtn SlideOffLeft:hashBtn duration:1.0f];
+        [hashBtn SlideOffLeft:hashBtn duration:0.5f];
         
     }
     
-    [self.view BounceAddTheView:self.secondStepLabel];
-    [self.view BounceAddTheView:self.addAnswersLabel];
+    [self.view SlideOffLeft:self.firstStepLabel thenGrowNewView:self.secondStepLabel duration:0.5f];
+    [self.view SlideOffLeft:self.createQuestionLabel thenGrowNewView:self.addAnswersLabel duration:0.5f];
+    [self.view SlideOffLeft:self.recentQuestionsTitle thenGrowNewView:self.answersListTableView duration:0.5f];
+  
+    //slide up the questiontextView, disable it, and change the color of the text/background to show it's not editable
+    
+      self.questionTextField.enabled = FALSE;
+    self.questionTextField.backgroundColor = [UIColor clearColor];
+    self.questionTextField.textColor = [UIColor whiteColor];
+    
+    self.questionTextView.text = [@"Question: " stringByAppendingString:self.questionTextView.text];
+    
+    self.questionTextView.editable = NO;
+    self.questionTextView.backgroundColor = [UIColor clearColor];
+    self.questionTextView.textColor = [UIColor whiteColor];
+    
+    [self.view slideUpView:self.questionTextView duration:0.5f pixels:70];
+     
+    [self.view BounceAddTheView:self.answerTextField];
+    
+    //[self.view BounceAddTheView:self.secondStepLabel];
+    //[self.view BounceAddTheView:self.addAnswersLabel];
     [self.view BounceAddTheView:self.addNewAnswerButton];
-    
-    self.answersListTableView.alpha = 1;
-    
     
 }
 
