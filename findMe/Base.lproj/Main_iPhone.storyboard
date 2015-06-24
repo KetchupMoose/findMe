@@ -580,10 +580,10 @@
                         <viewControllerLayoutGuide type="bottom" id="VbP-Zq-3G2"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8qj-Wl-pd9">
-                        <rect key="frame" x="0.0" y="64" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="8mt-AK-Uxl">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="8mt-AK-Uxl">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="404"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -637,7 +637,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BJ5-SN-vv1">
-                                <rect key="frame" x="73" y="518" width="175" height="30"/>
+                                <rect key="frame" x="73" y="454" width="175" height="30"/>
                                 <color key="backgroundColor" red="0.1578580433" green="0.54924624909999997" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="Update Answers">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -836,14 +836,14 @@
                                 <fontDescription key="fontDescription" name="Futura-CondensedMedium" family="Futura" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" tag="45" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="How much we love dancing" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="P6z-oe-OdA">
+                            <textField opaque="NO" clipsSubviews="YES" tag="45" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="How much we love dancing" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="P6z-oe-OdA">
                                 <rect key="frame" x="10" y="165" width="241" height="60"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="6Wg-eT-jqK">
-                                <rect key="frame" x="10" y="326" width="299" height="184"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="6Wg-eT-jqK">
+                                <rect key="frame" x="0.0" y="239" width="320" height="271"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="answerCell" id="JaM-Fn-7WT">
@@ -854,7 +854,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Answers Go Here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7AD-Zr-hq8">
-                                                    <rect key="frame" x="7" y="11" width="183" height="21"/>
+                                                    <rect key="frame" x="7" y="5" width="306" height="31"/>
                                                     <fontDescription key="fontDescription" name="Futura-CondensedMedium" family="Futura" pointSize="12"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -873,8 +873,12 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DtI-zB-auz">
-                                <rect key="frame" x="71" y="518" width="178" height="30"/>
-                                <state key="normal" title="Done: Add New Question!">
+                                <rect key="frame" x="40" y="518" width="240" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="nYm-uK-hBw"/>
+                                </constraints>
+                                <state key="normal" title="Confirm &amp; Submit Question">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -903,7 +907,7 @@
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="70O-sY-oEh">
-                                <rect key="frame" x="265" y="114" width="50" height="43"/>
+                                <rect key="frame" x="265" y="173" width="49" height="43"/>
                                 <state key="normal" title="Add">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -912,23 +916,16 @@
                                     <action selector="addAnswerToList:" destination="BMf-He-2WB" eventType="touchUpInside" id="RSc-RZ-ffv"/>
                                 </connections>
                             </button>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Qva-VR-DaH">
-                                <rect key="frame" x="10" y="174" width="283" height="144"/>
-                                <collectionViewLayout key="collectionViewLayout" id="DBM-aj-vOq"/>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.0" contentMode="center" reuseIdentifier="cvCell" id="8AR-TY-dvj">
-                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="125" height="60"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <size key="customSize" width="125" height="60"/>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hlu-BX-SbM">
+                                <rect key="frame" x="265" y="173" width="49" height="43"/>
+                                <state key="normal" title="Edit">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="editButton:" destination="BMf-He-2WB" eventType="touchUpInside" id="8JF-5Y-AJy"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xb3-O5-dx9">
                                 <rect key="frame" x="265" y="170" width="49" height="50.5"/>
                                 <state key="normal" backgroundImage="Accept_circular_button_outline_256.png">
@@ -938,6 +935,19 @@
                                     <action selector="confirmQuestion" destination="BMf-He-2WB" eventType="touchUpInside" id="mNr-51-eTW"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XBM-Eu-Fkg">
+                                <rect key="frame" x="80" y="511" width="160" height="43"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="160" id="Lx8-U1-5bO"/>
+                                </constraints>
+                                <state key="normal" title="Confirm Answers">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="confirmAnswers:" destination="BMf-He-2WB" eventType="touchUpInside" id="Eqi-fE-15K"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -945,15 +955,18 @@
                             <constraint firstItem="png-bF-InI" firstAttribute="leading" secondItem="umS-NA-ewm" secondAttribute="leading" constant="16" id="4z8-rU-Bh0"/>
                             <constraint firstAttribute="centerX" secondItem="DtI-zB-auz" secondAttribute="centerX" id="5OD-LZ-FOP"/>
                             <constraint firstItem="xCs-Sb-b89" firstAttribute="top" secondItem="umS-NA-ewm" secondAttribute="top" constant="199" id="5jJ-5Q-lk0"/>
-                            <constraint firstItem="6Wg-eT-jqK" firstAttribute="leading" secondItem="umS-NA-ewm" secondAttribute="leading" constant="10" id="J2i-VI-7Qf"/>
+                            <constraint firstAttribute="centerX" secondItem="XBM-Eu-Fkg" secondAttribute="centerX" id="HqC-tT-faz"/>
                             <constraint firstAttribute="centerX" secondItem="6Wg-eT-jqK" secondAttribute="centerX" id="JQC-KJ-ViE"/>
                             <constraint firstItem="DtI-zB-auz" firstAttribute="top" secondItem="6Wg-eT-jqK" secondAttribute="bottom" constant="8" id="Qt2-XJ-JJf"/>
                             <constraint firstItem="Sb6-M3-gtn" firstAttribute="top" secondItem="umS-NA-ewm" secondAttribute="top" constant="109" id="Upl-UU-49c"/>
                             <constraint firstAttribute="trailing" secondItem="Sb6-M3-gtn" secondAttribute="trailing" constant="11" id="bND-jW-HHa"/>
-                            <constraint firstItem="6Wg-eT-jqK" firstAttribute="top" secondItem="umS-NA-ewm" secondAttribute="top" constant="326" id="mYk-t5-ooe"/>
+                            <constraint firstItem="6Wg-eT-jqK" firstAttribute="top" secondItem="P6z-oe-OdA" secondAttribute="bottom" constant="14" id="iKE-OD-kE0"/>
+                            <constraint firstAttribute="bottom" secondItem="XBM-Eu-Fkg" secondAttribute="bottom" constant="14" id="n5o-M3-FWo"/>
                             <constraint firstAttribute="bottom" secondItem="DtI-zB-auz" secondAttribute="bottom" constant="20" id="p8A-2a-LqI"/>
+                            <constraint firstAttribute="centerX" secondItem="DtI-zB-auz" secondAttribute="centerX" id="ttd-3t-5m5"/>
                             <constraint firstAttribute="trailing" secondItem="i5Z-Ev-cmm" secondAttribute="trailing" constant="11" id="ul5-kt-Rbx"/>
                             <constraint firstAttribute="trailing" secondItem="xCs-Sb-b89" secondAttribute="trailing" constant="11" id="vjw-WV-Bj1"/>
+                            <constraint firstAttribute="centerX" secondItem="XBM-Eu-Fkg" secondAttribute="centerX" id="wOJ-HY-Z2S"/>
                             <constraint firstItem="i5Z-Ev-cmm" firstAttribute="top" secondItem="umS-NA-ewm" secondAttribute="top" constant="276" id="xQL-zy-CP0"/>
                         </constraints>
                     </view>
@@ -967,9 +980,10 @@
                         <outlet property="checkMark1" destination="Sb6-M3-gtn" id="KFZ-Fw-Kqu"/>
                         <outlet property="checkMark2" destination="xCs-Sb-b89" id="3PX-6j-Ykd"/>
                         <outlet property="checkMark3" destination="i5Z-Ev-cmm" id="L3s-Y1-hlD"/>
+                        <outlet property="confirmAnswersButton" destination="XBM-Eu-Fkg" id="4Ic-Ia-NHJ"/>
                         <outlet property="confirmQuestionButton" destination="Xb3-O5-dx9" id="fFr-pQ-ask"/>
+                        <outlet property="editButton" destination="hlu-BX-SbM" id="5qD-4R-c9U"/>
                         <outlet property="questionTextField" destination="OYK-78-J0W" id="0Cm-Ws-XOK"/>
-                        <outlet property="recentQuestionsCollectionView" destination="Qva-VR-DaH" id="BYV-NB-vzZ"/>
                         <outlet property="step1Label" destination="WAM-6E-Hql" id="Ey0-Cd-IGY"/>
                         <outlet property="step2Label" destination="XrU-7t-rVx" id="H5r-I6-8fj"/>
                         <outlet property="step3Label" destination="png-bF-InI" id="NPP-Bf-fmo"/>
@@ -2287,7 +2301,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="uUO-Il-KEk"/>
-        <segue reference="bxr-lz-QZV"/>
+        <segue reference="EW0-y8-lYK"/>
+        <segue reference="E0J-rW-9nj"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -181,6 +181,9 @@ BOOL LoadedBOOL = NO;
     manualLocationLongitude = 0;
     self.viewMatchesButton.alpha = 0;
     
+    UIPanGestureRecognizer *checkForPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panHappened:)];
+    [self.view addGestureRecognizer:checkForPan];
+    
     
     //location manager instance variable allocs
     locationManager = [[CLLocationManager alloc] init];
@@ -5601,6 +5604,28 @@ if(tableViewTag ==8999)
 {
     //[self.carousel setUserInteractionEnabled:TRUE];
     
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        NSLog(@"panGesture");
+        //[self.carousel solvePinchGesture: gestureRecognizer];
+        [self.carousel gestureRecognizerShouldBegin:gestureRecognizer];
+        
+    }
+    //etc
+    return YES;
+}
+
+-(void)panHappened:(UIPanGestureRecognizer *)sendingPan
+{
+    if ([sendingPan isKindOfClass:[UIPanGestureRecognizer class]]) {
+        NSLog(@"panGesture");
+        //[self.carousel solvePinchGesture: gestureRecognizer];
+        //- (void)didPan:(UIPanGestureRecognizer *)panGesture
+        [self.carousel didPan:sendingPan];
+        
+    }
 }
 
 @end

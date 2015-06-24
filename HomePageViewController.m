@@ -58,7 +58,6 @@ NSString *homePageManualLocationPropertyNum;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-   
     // Do any additional setup after loading the view.
     
     //UIImageView *titleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,40,40)];

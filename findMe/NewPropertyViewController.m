@@ -22,7 +22,7 @@ NSMutableArray *answersListArray;
 NSMutableArray *acceptableAnswers;
 NSString *questionText;
 MBProgressHUD *HUD;
-
+UIColor *colorForHighlights;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,6 +45,8 @@ MBProgressHUD *HUD;
     self.questionTextView = [[UITextView alloc] initWithFrame:self.questionTextField.frame];
     self.questionTextView.delegate = self;
     self.questionTextView.tag = 45;
+    
+    colorForHighlights = [UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1];
     
     [self.view addSubview:self.questionTextView];
     self.questionTextView.backgroundColor = [UIColor whiteColor];
@@ -162,6 +164,12 @@ MBProgressHUD *HUD;
     self.addAnswersLabel.numberOfLines = 2;
     self.addAnswersLabel.font = [UIFont fontWithName:@"Futura-Medium" size:25];
     
+    self.confirmAnswersLabel = [[UILabel alloc] initWithFrame:CGRectMake(95,20,200,70)];
+    self.confirmAnswersLabel.textColor = [UIColor whiteColor];
+    self.confirmAnswersLabel.text = @"Select Responses You'll Accept";
+    self.confirmAnswersLabel.numberOfLines = 2;
+    self.confirmAnswersLabel.font = [UIFont fontWithName:@"Futura-Medium" size:25];
+    
     //self.addAnswerButton = [[UIButton alloc] initWithFrame:CGRectMake(295,20,30,30)];
     //[self.addAnswerButton setTitle:@"Add" forState:UIControlStateNormal];
     //self.addAnswerButt
@@ -169,6 +177,20 @@ MBProgressHUD *HUD;
     self.addNewAnswerButton.layer.cornerRadius = 5.0f;
     self.addNewAnswerButton.layer.borderWidth = 2.0f;
     
+    self.confirmAnswersButton.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.confirmAnswersButton.layer.cornerRadius = 5.0f;
+    self.confirmAnswersButton.layer.borderWidth = 2.0f;
+    self.confirmAnswersButton.alpha = 0;
+    
+    self.addNewPropertyButton.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.addNewPropertyButton.layer.cornerRadius = 5.0f;
+    self.addNewPropertyButton.layer.borderWidth = 2.0f;
+    self.addNewPropertyButton.alpha = 0;
+    
+    self.editButton.layer.borderColor =[ UIColor whiteColor].CGColor;
+    self.editButton.layer.cornerRadius = 5.0f;
+    self.editButton.layer.borderWidth = 2.0f;
+    self.editButton.alpha = 0;
     
     self.answerTextField.alpha = 0;
     self.answersListTableView.alpha = 0;
@@ -210,7 +232,7 @@ MBProgressHUD *HUD;
     
     [self layouthashtags:self.recentQuestions];
     
-    
+    self.addNewPropertyButton.enabled = 1;
     
 }
 
@@ -424,7 +446,9 @@ MBProgressHUD *HUD;
     NSInteger selectedTag = hashButton.tag;
     
     NSString *selectedQuestion = [self.recentQuestions objectAtIndex:selectedTag];
-    self.questionTextField.text = selectedQuestion;
+    self.questionTextView.text = selectedQuestion;
+    questionText = selectedQuestion;
+    
     self.confirmQuestionButton.alpha = 1;
     
 }
@@ -544,6 +568,12 @@ MBProgressHUD *HUD;
     //add 1 to the value of each acceptableAnswerIndex to match the backend which starts from index 1.
     NSMutableArray *acceptableAnswersKeyPairValues = [[NSMutableArray alloc] init];
     
+    if(acceptableAnswers.count ==0)
+    {
+         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Select an Answer", nil) message:@"Must Select At Least 1 Acceptable Answer" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        return;
+    }
+    
     for (NSNumber *ans in acceptableAnswers)
     {
         
@@ -597,7 +627,7 @@ MBProgressHUD *HUD;
     UILabel *answerLabel = (UILabel *)[cell viewWithTag:1];
     answerLabel.text = [answersListArray objectAtIndex:indexPath.row];
     answerLabel.textColor = [UIColor whiteColor];
-    answerLabel.font = [UIFont fontWithName:@"Futura-Medium" size:30];
+    answerLabel.font = [UIFont fontWithName:@"Futura-Medium" size:20];
     //check to see if the answer should be highlighted
     cell.backgroundColor = [UIColor clearColor];
     
@@ -607,7 +637,7 @@ MBProgressHUD *HUD;
         if(ansInt==indexPath.row)
         {
             //highlight this cell in the table as one of the selected answers
-            cell.backgroundColor = [UIColor greenColor];
+            cell.backgroundColor = colorForHighlights;
             
         }
         
@@ -630,9 +660,49 @@ MBProgressHUD *HUD;
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
+    if([self.editingMode isEqualToString:@"Add"] || [self.editingMode isEqualToString:@"Edit"])
+    {
+        //loop through all cells and change BGcolor to clear color
+        
+        NSMutableArray *cells = [[NSMutableArray alloc] init];
+        for (NSInteger j = 0; j < [tableView numberOfSections]; ++j)
+        {
+            for (NSInteger i = 0; i < [tableView numberOfRowsInSection:j]; ++i)
+            {
+                [cells addObject:[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:j]]];
+            }
+        }
+        
+        for (UITableViewCell *cell in cells)
+        {
+            cell.backgroundColor = [UIColor clearColor];
+            
+        }
+        
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        
+        cell.backgroundColor = colorForHighlights;
+        
+        //user should be editing this field.
+        self.editingCellNumber = [NSNumber numberWithInteger:indexPath.row];
+   
+        UILabel *answerLabel = (UILabel *)[cell viewWithTag:1];
+        
+        self.answerTextField.text = answerLabel.text;
+        
+        self.addNewAnswerButton.alpha = 0;
+        self.editButton.alpha = 1;
+        
+        self.editingMode = @"Edit";
+        
+        
+        return;
+        
+    }
+    
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     
-    if(cell.backgroundColor==[UIColor greenColor])
+    if(cell.backgroundColor==colorForHighlights)
     {
         //remove this answer from the list.
         NSNumber *ansToRemove;
@@ -653,12 +723,11 @@ MBProgressHUD *HUD;
     {
         NSNumber *newAns = [NSNumber numberWithInteger:indexPath.row];
         [acceptableAnswers addObject:newAns];
-        cell.backgroundColor = [UIColor greenColor];
-        
+        cell.backgroundColor = colorForHighlights;
         
         if(self.checkMark3.alpha==0)
         {
-            self.checkMark3.alpha =1;
+            //self.checkMark3.alpha =1;
             self.addNewPropertyButton.enabled = 1;
             
         }
@@ -669,7 +738,9 @@ MBProgressHUD *HUD;
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-     self.confirmQuestionButton.alpha = 1;
+    
+    
+    //self.confirmQuestionButton.alpha = 1;
     
     [self animateTextField:textField up:YES];
 }
@@ -695,6 +766,8 @@ MBProgressHUD *HUD;
         self.confirmQuestionButton.alpha = 1;
         
     }
+    
+    [self animateTextView:textView up:YES];
 }
 -(void)textViewDidEndEditing:(UITextView *)textView
 {
@@ -703,8 +776,9 @@ MBProgressHUD *HUD;
         questionText = textView.text;
         
     }
+    [self animateTextView:textView up:NO];
+    
 }
-
 
 - (void) animateTextField: (UITextField*) textField up: (BOOL) up
 {
@@ -716,7 +790,7 @@ MBProgressHUD *HUD;
         orientation == UIInterfaceOrientationPortraitUpsideDown)
     {
         
-        animatedDistance = 216-(460-moveUpValue-5);
+        animatedDistance = 270-(460-moveUpValue-5);
     }
     else
     {
@@ -735,6 +809,37 @@ MBProgressHUD *HUD;
         [UIView commitAnimations];
     }
 }
+
+- (void) animateTextView: (UITextView*) textView up: (BOOL) up
+{
+    int animatedDistance;
+    int moveUpValue = textView.frame.origin.y+ textView.frame.size.height;
+    UIInterfaceOrientation orientation =
+    [[UIApplication sharedApplication] statusBarOrientation];
+    if (orientation == UIInterfaceOrientationPortrait ||
+        orientation == UIInterfaceOrientationPortraitUpsideDown)
+    {
+        
+        animatedDistance = 270-(460-moveUpValue-5);
+    }
+    else
+    {
+        animatedDistance = 162-(320-moveUpValue-5);
+    }
+    
+    if(animatedDistance>0)
+    {
+        const int movementDistance = animatedDistance;
+        const float movementDuration = 0.3f;
+        int movement = (up ? -movementDistance : movementDistance);
+        [UIView beginAnimations: nil context: nil];
+        [UIView setAnimationBeginsFromCurrentState: YES];
+        [UIView setAnimationDuration: movementDuration];
+        self.view.frame = CGRectOffset(self.view.frame, 0, movement);
+        [UIView commitAnimations];
+    }
+}
+
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
     
@@ -757,6 +862,18 @@ MBProgressHUD *HUD;
     
     return YES;
 }
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    
+    if([text isEqualToString:@"\n"]) {
+        [textView resignFirstResponder];
+        return NO;
+    }
+    
+    return YES;
+}
+
+
 
 -(void)dismissKeyboard {
     
@@ -811,6 +928,7 @@ MBProgressHUD *HUD;
     //animate step1 up
     
     self.confirmQuestionButton.alpha = 0;
+    self.confirmAnswersButton.alpha = 1;
     
     self.step1SideLabel.layer.borderColor = [UIColor greenColor].CGColor;
     self.step1SideLabel.textColor = [UIColor greenColor];
@@ -836,6 +954,9 @@ MBProgressHUD *HUD;
     self.questionTextField.backgroundColor = [UIColor clearColor];
     self.questionTextField.textColor = [UIColor whiteColor];
     
+    questionText = self.questionTextView.text;
+    
+    
     self.questionTextView.text = [@"Question: " stringByAppendingString:self.questionTextView.text];
     
     self.questionTextView.editable = NO;
@@ -850,9 +971,62 @@ MBProgressHUD *HUD;
     //[self.view BounceAddTheView:self.addAnswersLabel];
     [self.view BounceAddTheView:self.addNewAnswerButton];
     
+    self.editingMode = @"Add";
+    
+    
 }
 
+-(IBAction)confirmAnswers:(id)sender
+{
+    //if edit button is visible, tell user to finish editing before submitting
+    if([self.editingMode isEqualToString:@"Edit"])
+    {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Finish Editing", nil) message:@"Must Finish Editing Before Confirming Answers" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        return;
+        
+    }
+    
+    if(answersListArray.count ==0)
+    {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Need At Least 1 Answer", nil) message:@"Need To Enter At Least 1 Answer" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        return;
+    }
+    
+    self.editingMode = @"Select";
+    
+    //loop through and deselect all the answers
+    
+    self.step2SideLabel.layer.borderColor = [UIColor greenColor].CGColor;
+    self.step2SideLabel.textColor = [UIColor greenColor];
+    
+    [self.view SlideOffLeft:self.secondStepLabel thenGrowNewView:self.thirdStepLabel duration:0.5f];
+    [self.view SlideOffLeft:self.addAnswersLabel thenGrowNewView:self.confirmAnswersLabel duration:0.5f];
+    [self.view SlideOffLeft:self.confirmAnswersButton thenGrowNewView:self.addNewPropertyButton duration:0.5f];
+    
+    
+}
 
+-(IBAction) editButton:(id)sender
+{
+    //select the tableview cell being edited and replace it with the new text.
+    NSInteger rowIndex = [self.editingCellNumber integerValue];
+    
+    NSIndexPath *editingCellIndexPath = [NSIndexPath indexPathForRow:rowIndex inSection:0];
+    UITableViewCell *cell = [self.answersListTableView cellForRowAtIndexPath:editingCellIndexPath];
+    UILabel *answerLabel = (UILabel *)[cell viewWithTag:1];
+    answerLabel.text = self.answerTextField.text;
+    
+    //decolor the cell
+    cell.backgroundColor = [UIColor clearColor];
+    
+    self.addNewAnswerButton.alpha = 1;
+    self.editButton.alpha = 0;
+    
+    [answersListArray replaceObjectAtIndex:rowIndex withObject:self.answerTextField.text];
+    
+    self.editingMode = @"Add";
+    
+}
 
 
 @end

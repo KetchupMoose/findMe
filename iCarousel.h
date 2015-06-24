@@ -157,6 +157,7 @@ typedef NS_ENUM(NSInteger, iCarouselOption)
 - (void)reloadItemAtIndex:(NSInteger)index animated:(BOOL)animated;
 
 - (void)reloadData;
+- (void)didPan:(UIPanGestureRecognizer *)panGesture;
 
 @end
 

@@ -18,7 +18,7 @@
 
 -(IBAction)addAnswerToList:(id)sender;
 -(IBAction)addNewProperty:(id)sender;
-@property (weak,nonatomic) IBOutlet UIButton *addNewPropertyButton;
+
 @property (strong,nonatomic) UITextView *questionTextView;
 
 
@@ -54,6 +54,13 @@
 @property (strong,nonatomic) UILabel *addAnswersLabel;
 @property (strong,nonatomic) UIButton *addAnswerButton;
 @property (weak,nonatomic) IBOutlet UIButton *addNewAnswerButton;
+@property (strong,nonatomic) IBOutlet UIButton *confirmAnswersButton;
+-(IBAction)confirmAnswers:(id)sender;
+
+//label controls for third step
+@property (strong,nonatomic) UILabel *confirmAnswersLabel;
+@property (weak,nonatomic) IBOutlet UIButton *addNewPropertyButton;
+
 
 @property (strong,nonatomic) UILabel *firstStepLabel;
 @property (strong,nonatomic) UILabel *secondStepLabel;
@@ -62,6 +69,12 @@
 @property (strong,nonatomic) UILabel *step1SideLabel;
 @property (strong,nonatomic) UILabel *step2SideLabel;
 @property (strong,nonatomic) UILabel *step3SideLabel;
+
+@property (strong,nonatomic) NSString *editingMode;
+@property (strong,nonatomic) NSNumber *editingCellNumber;
+@property (strong,nonatomic) IBOutlet UIButton *editButton;
+-(IBAction) editButton:(id)sender;
+
 
 
 @end
