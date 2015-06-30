@@ -211,6 +211,8 @@
 		ECBEE5921B25F90D00D131E7 /* womanphone.gif in Resources */ = {isa = PBXBuildFile; fileRef = ECBEE5911B25F90D00D131E7 /* womanphone.gif */; };
 		ECBEE5961B25FC8400D131E7 /* citybiggergif.gif in Resources */ = {isa = PBXBuildFile; fileRef = ECBEE5951B25FC8400D131E7 /* citybiggergif.gif */; };
 		ECBEE5981B26039D00D131E7 /* womangif2.gif in Resources */ = {isa = PBXBuildFile; fileRef = ECBEE5971B26039D00D131E7 /* womangif2.gif */; };
+		ECC163F21B3B5BEB00BBC12D /* Businessman-with-question-mark-on-face.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECC163F11B3B5BEB00BBC12D /* Businessman-with-question-mark-on-face.jpg */; };
+		ECC164101B3E07F800BBC12D /* maleAvatarHeartBlueEdit.png in Resources */ = {isa = PBXBuildFile; fileRef = ECC1640F1B3E07F800BBC12D /* maleAvatarHeartBlueEdit.png */; };
 		ECC9E5041AA1126F0099C46A /* conversationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECC9E5031AA1126F0099C46A /* conversationsViewController.m */; };
 		ECC9E50E1AA153070099C46A /* Icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = ECC9E5061AA153070099C46A /* Icon-40.png */; };
 		ECC9E50F1AA153070099C46A /* Icon-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECC9E5071AA153070099C46A /* Icon-40@2x.png */; };
@@ -226,6 +228,7 @@
 		ECCD47041ADC211200804B06 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECCD47031ADC211200804B06 /* AddressBook.framework */; };
 		ECCD47071AE1984300804B06 /* verticalPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD47061AE1984300804B06 /* verticalPanGestureRecognizer.m */; };
 		ECD591BC1ABC930700D32D5D /* carselfie1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECD591BB1ABC930700D32D5D /* carselfie1.jpg */; };
+		ECE1BD8C1B41EEEC00512C5C /* newCaseViewControllerv2.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE1BD8B1B41EEEC00512C5C /* newCaseViewControllerv2.m */; };
 		ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B1691A069C1D007F4A19 /* findmeInfo.plist */; };
 		ECE6B16C1A069DAB007F4A19 /* stockphotowoman2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B16B1A069DAB007F4A19 /* stockphotowoman2.jpg */; };
 		ECE6B16E1A06AD0E007F4A19 /* sawyousubway.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B16D1A06AD0E007F4A19 /* sawyousubway.jpg */; };
@@ -686,6 +689,8 @@
 		ECBEE5911B25F90D00D131E7 /* womanphone.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = womanphone.gif; sourceTree = "<group>"; };
 		ECBEE5951B25FC8400D131E7 /* citybiggergif.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = citybiggergif.gif; sourceTree = "<group>"; };
 		ECBEE5971B26039D00D131E7 /* womangif2.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = womangif2.gif; sourceTree = "<group>"; };
+		ECC163F11B3B5BEB00BBC12D /* Businessman-with-question-mark-on-face.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Businessman-with-question-mark-on-face.jpg"; sourceTree = "<group>"; };
+		ECC1640F1B3E07F800BBC12D /* maleAvatarHeartBlueEdit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = maleAvatarHeartBlueEdit.png; sourceTree = "<group>"; };
 		ECC9E5021AA1126F0099C46A /* conversationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = conversationsViewController.h; sourceTree = "<group>"; };
 		ECC9E5031AA1126F0099C46A /* conversationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = conversationsViewController.m; sourceTree = "<group>"; };
 		ECC9E5061AA153070099C46A /* Icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40.png"; sourceTree = "<group>"; };
@@ -706,6 +711,8 @@
 		ECCD47051AE1984300804B06 /* verticalPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = verticalPanGestureRecognizer.h; sourceTree = "<group>"; };
 		ECCD47061AE1984300804B06 /* verticalPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = verticalPanGestureRecognizer.m; sourceTree = "<group>"; };
 		ECD591BB1ABC930700D32D5D /* carselfie1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = carselfie1.jpg; sourceTree = "<group>"; };
+		ECE1BD8A1B41EEEC00512C5C /* newCaseViewControllerv2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = newCaseViewControllerv2.h; sourceTree = "<group>"; };
+		ECE1BD8B1B41EEEC00512C5C /* newCaseViewControllerv2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = newCaseViewControllerv2.m; sourceTree = "<group>"; };
 		ECE6B1681A069C1D007F4A19 /* findme-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "findme-Prefix.pch"; sourceTree = "<group>"; };
 		ECE6B1691A069C1D007F4A19 /* findmeInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = findmeInfo.plist; sourceTree = "<group>"; };
 		ECE6B16B1A069DAB007F4A19 /* stockphotowoman2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = stockphotowoman2.jpg; sourceTree = "<group>"; };
@@ -1176,6 +1183,8 @@
 				EC10BD911B31D0EE00F7ABDE /* privatelyViewController.m */,
 				ECE6B1741A0D8AE5007F4A19 /* newCaseViewController.h */,
 				ECE6B1751A0D8AE5007F4A19 /* newCaseViewController.m */,
+				ECE1BD8A1B41EEEC00512C5C /* newCaseViewControllerv2.h */,
+				ECE1BD8B1B41EEEC00512C5C /* newCaseViewControllerv2.m */,
 				D318324E19D1828B003D51A3 /* CaseDetailsViewController.h */,
 				D318324F19D1828B003D51A3 /* CaseDetailsViewController.m */,
 				ECCD46F71AD30FD200804B06 /* caseDetailsCarouselViewController.h */,
@@ -1248,6 +1257,7 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				ECC163F11B3B5BEB00BBC12D /* Businessman-with-question-mark-on-face.jpg */,
 				EC10BD971B324F4500F7ABDE /* shhhblurrcrop.jpg */,
 				EC10BD981B324F4500F7ABDE /* shhhcropped.jpg */,
 				EC10BD951B324C5900F7ABDE /* shhh.jpg */,
@@ -1667,6 +1677,7 @@
 		ECE6B17B1A0D9FAB007F4A19 /* commonControls */ = {
 			isa = PBXGroup;
 			children = (
+				ECC1640F1B3E07F800BBC12D /* maleAvatarHeartBlueEdit.png */,
 				EC5B30B11AF3FFAF002046E3 /* iCarousel.h */,
 				EC10BD8E1B30D45800F7ABDE /* iCarousel.m */,
 				ECEE00D11AC1B9E70070908C /* findMeBaseViewController.h */,
@@ -2216,6 +2227,7 @@
 				EC886A621B20DC9E00531FEA /* blurtrainBackground.jpg in Resources */,
 				ECBEE5981B26039D00D131E7 /* womangif2.gif in Resources */,
 				ECC9E5141AA153070099C46A /* Icon-Small@2x.png in Resources */,
+				ECC164101B3E07F800BBC12D /* maleAvatarHeartBlueEdit.png in Resources */,
 				EC93C6C91B03B9CD00D3DE2A /* PLCameraSheetButton@2x.png in Resources */,
 				EC886A661B20DEC400531FEA /* blurPhotoBG2.jpg in Resources */,
 				EC7A74C01B263DE800D3A53F /* 5815802.mp4 in Resources */,
@@ -2228,6 +2240,7 @@
 				EC0403F71A9CFE3400151796 /* femalesilhouette.jpeg in Resources */,
 				EC7A74ED1B2A169900D3A53F /* d7f90d83ca7bda55d77b1a40f0b51537.jpg in Resources */,
 				EC7A74E51B2A12F300D3A53F /* torontobg.jpg in Resources */,
+				ECC163F21B3B5BEB00BBC12D /* Businessman-with-question-mark-on-face.jpg in Resources */,
 				D3F4574B1A003772000EDF25 /* stockphotoguy1.jpg in Resources */,
 				EC641EAD1AFFB0F30005073C /* login-button.png in Resources */,
 				D31DF31119CEFC0C00A37725 /* Images.xcassets in Resources */,
@@ -2362,6 +2375,7 @@
 				ECFDAADB1AB38B5C00E42C33 /* PNChangeAccessRightsRequest.m in Sources */,
 				ECFDAAA71AB38B5C00E42C33 /* PNChannelGroupsResponseParser.m in Sources */,
 				ECFDAAB91AB38B5C00E42C33 /* PNChannelEvents.m in Sources */,
+				ECE1BD8C1B41EEEC00512C5C /* newCaseViewControllerv2.m in Sources */,
 				D318324919D06173003D51A3 /* CaseItem.m in Sources */,
 				ECFDAAE21AB38B5C00E42C33 /* PNClientStateRequest.m in Sources */,
 				ECEF94671A8D1F200000A444 /* originalViewController.m in Sources */,

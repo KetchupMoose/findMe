@@ -9,6 +9,7 @@
 
 #import "HomePageViewController.h"
 #import "newCaseViewController.h"
+#import "newCaseViewControllerv2.h"
 #import "MBProgressHUD.h"
 #import <Parse/Parse.h>
 #import "ViewCasesViewController.h"
@@ -379,6 +380,17 @@ NSString *homePageManualLocationPropertyNum;
     // Pass the selected object to the new view controller.
 }
 */
+-(IBAction)GabcoTest:(id)sender
+{
+    newCaseViewControllerv2 *ncvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ncvcv2"];
+    
+    ncvc.itsMTLObject = HomePageITSMTLObject;
+    ncvc.manualLocationPropertyNum = homePageManualLocationPropertyNum;
+    //UINavigationController *uinc = self.navigationController;
+    
+    [self.navigationController pushViewController:ncvc animated:YES];
+}
+
 
 - (IBAction)CreateNewCase:(id)sender {
     
@@ -591,7 +603,7 @@ NSString *homePageManualLocationPropertyNum;
         
         [bubbleIndicatorCases setFrame:CGRectMake(ViewMyCasesButton.frame.origin.x+ViewMyCasesButton.frame.size.width-bubbleWidth/2,ViewMyCasesButton.frame.origin.y-bubbleHeight/2,bubbleWidth,bubbleHeight)];
         
-        bubbleIndicatorCases.backgroundColor = [UIColor redColor];
+        bubbleIndicatorCases.backgroundColor = [UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1];
         
         UILabel *bubbleNumber = [[UILabel alloc] initWithFrame:bubbleIndicatorCases.bounds];
         
@@ -628,8 +640,6 @@ NSString *homePageManualLocationPropertyNum;
     //[self ReloadHomePageData];
     [self.navigationController popViewControllerAnimated:YES];
     
-    
-    
 }
 
 -(IBAction)TestSlidingView:(id)sender
@@ -648,8 +658,6 @@ NSString *homePageManualLocationPropertyNum;
     
     CarouselTestViewController *ctvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ctest"];
     [self.navigationController pushViewController:ctvc animated:YES];
-    
-    
     
 }
 

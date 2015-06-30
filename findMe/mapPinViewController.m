@@ -145,7 +145,7 @@ didChangeDragState:(MKAnnotationViewDragState)newState
     
     float priorLat = [self.priorLatitude floatValue];
     
-    if(fabsf(priorLat) >0)
+    if ([self.regionSet isEqualToString:@"YES"])
         {
             
             self.mapView.showsUserLocation = YES;
@@ -157,8 +157,9 @@ didChangeDragState:(MKAnnotationViewDragState)newState
             priorCoordinate.longitude = priorLongitudeFloat;
             
             MKCoordinateSpan span;
-             span.latitudeDelta  = self.myRegion.span.latitudeDelta; // Change these values to change the zoom
+            span.latitudeDelta  = self.myRegion.span.latitudeDelta; // Change these values to change the zoom
             span.longitudeDelta = self.myRegion.span.longitudeDelta;
+            
             
             //MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(priorCoordinate, span.latitudeDelta, span.longitudeDelta);
             
@@ -177,6 +178,23 @@ didChangeDragState:(MKAnnotationViewDragState)newState
              */
             
         }
+    else
+    {
+        if(fabs([self.priorLatitude floatValue])>0)
+        {
+            self.mapView.showsUserLocation = YES;
+            CLLocationCoordinate2D priorCoordinate;
+            float priorLatitudeFloat = [self.priorLatitude floatValue];
+            float priorLongitudeFloat = [self.priorLongitude floatValue];
+            
+            priorCoordinate.latitude = priorLatitudeFloat;
+            priorCoordinate.longitude = priorLongitudeFloat;
+            
+            MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(priorCoordinate, 800, 800);
+            
+            [self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
+        }
+    }
     
 }
 

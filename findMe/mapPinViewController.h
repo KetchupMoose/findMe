@@ -24,6 +24,7 @@
 @property (strong,nonatomic) NSNumber *priorLatitude;
 @property (strong,nonatomic) NSNumber *priorLongitude;
 @property MKCoordinateRegion myRegion;
+@property (strong,nonatomic) NSString *regionSet;
 
 @property (strong,nonatomic) UIImageView *pinImageView;
 @end

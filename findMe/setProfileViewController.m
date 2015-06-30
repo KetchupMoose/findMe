@@ -178,13 +178,18 @@ int selectedPic = 1;
     [currentUser setObject:self.phoneNumber forKey:@"cellNumber"];
     [currentUser setObject:self.gender forKey:@"gender"];
     [currentUser setObject:self.emailAddress forKey:@"email"];
+    
+    //save profile picture for current user
+    NSData *data = UIImageJPEGRepresentation(self.profileImage1.image, 0.8f);
+    
+    PFFile *imageFile = [PFFile fileWithName:@"caseImage.jpg" data:data];
+    [currentUser setObject:imageFile forKey:@"profileImage"];
+    
     [currentUser save];
     
     //create new case with this user.
     if(![self.openingMode isEqualToString:@"HomeScreen"])
     {
-        
-        
         itsMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
         [itsMTLObject setObject:currentUser forKey:@"ParseUser"];
         
@@ -204,8 +209,6 @@ int selectedPic = 1;
         [installation saveInBackground];
     }
 
-   
-    
     //get the ID and run the XML with the case info.
     NSString *itsMTLObjectID = itsMTLObject.objectId;
     
@@ -268,6 +271,7 @@ int selectedPic = 1;
                                 }];
     
 
+   
     
 }
 

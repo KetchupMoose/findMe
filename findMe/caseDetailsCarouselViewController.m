@@ -130,11 +130,32 @@ BOOL LoadedBOOL = NO;
                 NSString *longitudeLatitudeString = [customAns objectForKey:@"custom"];
                 
                 NSArray *longitudeLatitudeArray = [longitudeLatitudeString componentsSeparatedByString:@"; "];
+                
+                if(longitudeLatitudeArray.count <2)
+                {
+                    longitudeLatitudeArray = [longitudeLatitudeString componentsSeparatedByString:@";"];
+                    
+                }
                 NSNumber *latitudeNum = [longitudeLatitudeArray objectAtIndex:0];
                 
                 manualLocationLatitude = [latitudeNum floatValue];
                 NSNumber *longitudeNum = [longitudeLatitudeArray objectAtIndex:1];
                 
+                if(longitudeLatitudeArray.count ==4)
+                {
+                    float latitude = [latitudeNum floatValue];
+                    float longitude = [longitudeNum floatValue];
+                    NSNumber *latSpanNum = [longitudeLatitudeArray objectAtIndex:2];
+                    NSNumber *longSpanNum = [longitudeLatitudeArray objectAtIndex:3];
+                    float latitudeSpan = [latSpanNum floatValue];
+                    float longitudeSpan = [longSpanNum floatValue];
+                    
+                    //can set an entire region
+                    CLLocationCoordinate2D priorCenter = CLLocationCoordinate2DMake(latitude, longitude);
+                    
+                    self.setRegion = MKCoordinateRegionMakeWithDistance(priorCenter, latitudeSpan, longitudeSpan);
+                    
+                }
                 manualLocationLongitude = [longitudeNum floatValue];
                 
                 manualLocationCaseItemID = [caseItemObject objectForKey:@"caseItem"];
@@ -285,7 +306,6 @@ BOOL LoadedBOOL = NO;
     //get all the property information for the list of properties to consider
     PFQuery *propertsQuery = [PFQuery queryWithClassName:@"Properts"];
     [propertsQuery whereKey:@"objectId" containedIn:propertyIDSArray];
-    
     
     propsArray = [[propertsQuery findObjects] mutableCopy];
     
@@ -771,7 +791,6 @@ BOOL LoadedBOOL = NO;
     deleteButton.tag = 100+index;
     //createACaseItem.tag = 5;
     
-       
     if(index ==[sortedCaseItems count])
     {
         //display UI to create your own case item
@@ -934,7 +953,7 @@ BOOL LoadedBOOL = NO;
 {
     NSInteger index = self.carousel.currentItemIndex;
     NSLog(@"carousel index fired");
-    NSLog(@"%ld",index);
+    NSLog(@"%ld",(long)index);
     
     selectedCarouselIndex = self.carousel.currentItemIndex;
     NSInteger carouselNumOfItems = self.carousel.numberOfItems;
@@ -3927,7 +3946,20 @@ if(tableViewTag ==8999)
         NSNumber *priorLongitudeNum = [NSNumber numberWithFloat:manualLocationLongitude];
         
         mpvc.priorLongitude = priorLongitudeNum;
-        mpvc.myRegion = self.setRegion;
+        
+        if(fabs(self.setRegion.center.latitude)>0)
+        {
+            mpvc.myRegion = self.setRegion;
+            mpvc.regionSet = @"YES";
+            
+        }
+        else
+        {
+            mpvc.regionSet = @"NO";
+            mpvc.priorLatitude = [NSNumber numberWithFloat:manualLocationLatitude];
+            mpvc.priorLongitude = [NSNumber numberWithFloat:manualLocationLongitude];
+            
+        }
         
         NSLog(@"%@",mpvc.priorLatitude);
         NSLog(@"%@",mpvc.priorLongitude);
@@ -3978,7 +4010,6 @@ if(tableViewTag ==8999)
     int selectedCaseInt = (int)[selectedCaseIndex integerValue];
     
     NSArray *allCases = [self.itsMTLObject objectForKey:@"cases"];
-    
     
     PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
     
@@ -4042,8 +4073,12 @@ if(tableViewTag ==8999)
     [xmlWriter writeStartElement:@"CUSTOM"];
     NSString *latitudeString = [NSString stringWithFormat:@"%f",manualLocationLatitude];
     NSString *longitudeString = [NSString stringWithFormat:@"%f",manualLocationLongitude];
+    NSString *latitudeSpan = [NSString stringWithFormat:@"%f",self.setRegion.span.latitudeDelta];
+    NSString *longitudeSpan = [NSString stringWithFormat:@"%f",self.setRegion.span.longitudeDelta];
     
-    NSString *locationForUpdate = [[latitudeString stringByAppendingString:@"; "] stringByAppendingString:longitudeString];
+    NSString *locationForUpdatePt1 = [[[latitudeString stringByAppendingString:@"; "] stringByAppendingString:longitudeString] stringByAppendingString:@"; "];
+    NSString *locationForUpdatePt2 = [[latitudeSpan stringByAppendingString:@"; "]stringByAppendingString:longitudeSpan];
+    NSString *locationForUpdate = [locationForUpdatePt1 stringByAppendingString:locationForUpdatePt2];
     
     [xmlWriter writeCharacters:locationForUpdate];
     
@@ -5226,8 +5261,6 @@ if(tableViewTag ==8999)
 
 -(IBAction)customAnswerSet:(id)sender
 {
-   
-    
     //if template mode, just save it locally.
     //if not template mode, fire off the update in background
     [self.view endEditing:YES];
@@ -5447,7 +5480,6 @@ if(tableViewTag ==8999)
                                     if (!error)
                                     {
                                         NSLog(responseString);
-                                        
                                         
                                     }
                                     else

@@ -1097,6 +1097,4 @@ NSString *locationLongitude;
 }
 
 
-
-
 @end

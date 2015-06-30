@@ -66,6 +66,8 @@ BOOL waitForSyncCompleted = FALSE;
     
     self.navigationItem.title = @"View Cases";
     
+    self.casesTableView.backgroundColor = [UIColor clearColor];
+     [self.casesTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     caseListPruned = [[NSMutableArray alloc] init];
    // [self refreshTable];
     
@@ -153,6 +155,9 @@ BOOL waitForSyncCompleted = FALSE;
         
     }];
     */
+    
+    
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -220,6 +225,7 @@ BOOL waitForSyncCompleted = FALSE;
         caseProfileObjects = [caseProfileQuery findObjects];
     
         
+        
         [refreshControl endRefreshing];
         [casesTableView reloadData];
         
@@ -286,6 +292,106 @@ BOOL waitForSyncCompleted = FALSE;
 
 
 #pragma mark UITableViewDelegateMethods
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //check to see if the case has a match
+    PFObject *caseObject = [caseListPruned objectAtIndex:indexPath.row];
+    //check number of matches in case
+    NSArray *caseItems = [caseObject objectForKey:@"caseItems"];
+    
+    //loop through the itsMTLObject and gather all the user's matches
+    NSMutableArray *allMatchesArray = [[NSMutableArray alloc] init];
+    NSMutableArray *allMatchCaseObjectsArray = [[NSMutableArray alloc] init];
+    NSMutableArray *allMatchCaseItemObjectsArray = [[NSMutableArray alloc] init];
+    NSMutableArray *allMatchesCaseTypes = [[NSMutableArray alloc] init];
+    
+    //get the properties
+    
+    for(PFObject *caseItemObject in caseItems)
+    {
+        NSString *origin = [caseItemObject objectForKey:@"origin"];
+        if([origin isEqualToString:@"B"])
+        {
+            NSString *matchesString = [caseItemObject objectForKey:@"browse"];
+            
+            NSString *matchesYesString = [caseItemObject objectForKey:@"yeses"];
+            
+            NSString *matchesRejectedYesString = [caseItemObject objectForKey:@"rejectedYeses"];
+            
+            NSArray *matchesArray = [matchesString componentsSeparatedByString:@";"];
+            NSArray *matchesYesArray = [matchesYesString componentsSeparatedByString:@";"];
+            NSArray *matchesRejectedYesArray= [matchesRejectedYesString componentsSeparatedByString:@";"];
+            
+            
+            if([matchesRejectedYesArray count] >0)
+            {
+                for(NSString *caseMatchID in matchesRejectedYesArray)
+                {
+                    [allMatchesArray addObject:caseMatchID];
+                    [allMatchCaseObjectsArray addObject:caseObject];
+                    NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                    
+                    [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                    [allMatchesCaseTypes addObject:@"rejected"];
+                    
+                }
+                
+            }
+            
+            if([matchesYesArray count] >0)
+            {
+                for(NSString *caseMatchID in matchesYesArray)
+                {
+                    
+                    //if(![allMatchesArray containsObject:caseMatchID])
+                    // {
+                    [allMatchesArray addObject:caseMatchID];
+                    [allMatchCaseObjectsArray addObject:caseObject];
+                    NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                    
+                    [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                    [allMatchesCaseTypes addObject:@"yes"];
+                    //  }
+                    
+                }
+                
+            }
+            if([matchesArray count] >0)
+            {
+                for(NSString *caseMatchID in matchesArray)
+                {
+                    // if(![allMatchesArray containsObject:caseMatchID])
+                    //{
+                    [allMatchesArray addObject:caseMatchID];
+                    [allMatchCaseObjectsArray addObject:caseObject];
+                    NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                    
+                    [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                    [allMatchesCaseTypes addObject:@"match"];
+                    // }
+                }
+                
+            }
+        }
+    }
+    NSInteger numOfMatches = [allMatchesArray count];
+    NSString *numOfMatchesString = [[NSString stringWithFormat:@"%ld",(long)numOfMatches] stringByAppendingString:@" Matches"];
+    
+    if(numOfMatches>0)
+    {
+        return 140;
+        
+    }
+    else
+    {
+        return 102;
+    }
+   
+    
+
+    
+}
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return (NSInteger)[caseListPruned count];
@@ -308,6 +414,55 @@ BOOL waitForSyncCompleted = FALSE;
     UIImageView *caseImgView = (UIImageView *)[cell viewWithTag:6];
     UIButton *viewMatchButton = (UIButton *)[cell viewWithTag:7];
     PFObject *caseObject = [caseListPruned objectAtIndex:indexPath.row];
+    UILabel *bubbleCountLabel = (UILabel *)[cell viewWithTag:44];
+    UILabel *lastUpdateTimeLabel = (UILabel *)[cell viewWithTag:21];
+    UILabel *updateCountLabel = (UILabel *)[cell viewWithTag:22];
+    
+    
+    updateCountLabel.backgroundColor = [UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1];
+    updateCountLabel.textColor = [UIColor whiteColor];
+    updateCountLabel.layer.cornerRadius = 10.0f;
+    updateCountLabel.layer.masksToBounds = YES;
+    [updateCountLabel setTextAlignment:NSTextAlignmentCenter];
+    
+    bubbleCountLabel.layer.cornerRadius = 5.0f;
+    bubbleCountLabel.layer.masksToBounds = YES;
+    bubbleCountLabel.layer.borderColor = [UIColor whiteColor].CGColor;
+    bubbleCountLabel.layer.borderWidth = 2.0f;
+    [bubbleCountLabel setFont:[UIFont fontWithName:@"Futura-Medium" size:14]];
+    
+    UIView *cellCardBGView = [cell viewWithTag:9];
+    cellCardBGView.layer.cornerRadius = 5.0f;
+    cellCardBGView.layer.masksToBounds = YES;
+    
+    UIView *cellCardBGViewAtBack = [cellCardBGView viewWithTag:72];
+    if(cellCardBGViewAtBack.backgroundColor != [UIColor blackColor])
+    {
+        cellCardBGViewAtBack =  [[UIView alloc] initWithFrame:cellCardBGView.frame];
+        cellCardBGViewAtBack.tag = 72;
+        cellCardBGViewAtBack.backgroundColor = [UIColor blackColor];
+        cellCardBGViewAtBack.alpha = 0.8;
+        
+        [cellCardBGView addSubview:cellCardBGViewAtBack];
+        [cellCardBGView sendSubviewToBack:cellCardBGViewAtBack];
+        
+    }
+    
+   
+    
+    
+    matchesCountLabel.layer.cornerRadius = 5.0f;
+    matchesCountLabel.layer.masksToBounds = YES;
+    
+    caseImgView.layer.cornerRadius = 5.0f;
+    caseImgView.layer.masksToBounds = YES;
+    
+    [caseShowNameLabel setFont:[UIFont fontWithName:@"Futura-Medium" size:18]];
+    caseShowNameLabel.numberOfLines = 2;
+    
+    caseImgView.layer.cornerRadius = 5.0f;
+   // caseImgView.layer.borderColor = [UIColor whiteColor].CGColor;
+    //caseImgView.layer.borderWidth = 2.0f;
     
    /* NSString *caseShowName = [caseShowNames objectAtIndex:indexPath.row];
     
@@ -335,17 +490,54 @@ BOOL waitForSyncCompleted = FALSE;
             caseimgURL = imgFile.url;
         }
     }
-    caseShowNameLabel.text = [caseObject objectForKey:@"caseName"];
     
+    caseShowNameLabel.text = [caseObject objectForKey:@"caseName"];
     
     UIActivityIndicatorViewStyle *activityStyle = UIActivityIndicatorViewStyleGray;
 
     //NSString *caseImgURL = [caseImages objectAtIndex:indexPath.row];
     if([caseimgURL length] ==0)
     {
-        caseimgURL = @"http://www.carascravings.com/wp-content/uploads/2012/07/profile-photo-220x183.jpg";
+        //check to see if there is a user profile set
+        PFUser *user = [PFUser currentUser];
+        PFFile *profileImg = [user objectForKey:@"profileImage"];
+        if(profileImg !=nil)
+        {
+            caseimgURL = profileImg.url;
+        }
+        else
+        {
+           caseimgURL = @"default";
+        }
+       
     }
-    [caseImgView setImageWithURL:[NSURL URLWithString:caseimgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
+    
+    if([caseimgURL isEqualToString:@"default"])
+    {
+        [caseImgView setImage:[UIImage imageNamed:@"Businessman-with-question-mark-on-face"]];
+    }
+    else
+    {
+          [caseImgView setImageWithURL:[NSURL URLWithString:caseimgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
+    }
+    
+    NSString *timestampString = [caseObj objectForKey:@"timestamp"];
+    NSNumber *bubbleCount = [caseObj objectForKey:@"bubbleCount"];
+    //NSInteger timestampInt = [timestampNumber integerValue];
+    //timestampInt = timestampInt/1000;
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.timeStyle = NSDateFormatterNoStyle;
+    formatter.timeZone = [NSTimeZone timeZoneWithName:@"EST"];
+    
+    [formatter setDateFormat:@"yyyyMMddHHmmss"];
+    NSDate *date = [formatter dateFromString:timestampString];
+    
+    //convert time from now
+    NSString *timeSinceUpdateString = [self calculateStringForTimeSinceLastUpdate:date];
+    
+    lastUpdateTimeLabel.text = timeSinceUpdateString;
+    lastUpdateTimeLabel.font = [UIFont fontWithName:@"Futura-Medium" size:12];
     
     //check number of matches in case
     NSArray *caseItems = [caseObj objectForKey:@"caseItems"];
@@ -429,7 +621,101 @@ BOOL waitForSyncCompleted = FALSE;
     NSString *numOfMatchesString = [[NSString stringWithFormat:@"%ld",(long)numOfMatches] stringByAppendingString:@" Matches"];
     matchesCountLabel.text = numOfMatchesString;
    
+    UIView *matchViewBGBorder;
+    matchViewBGBorder = (UIView *)[cell viewWithTag:89];
+    
+    UILabel *matchCountLabel = (UILabel *)[cell viewWithTag:90];
+    
+    
+    
+    if(matchViewBGBorder==nil)
+    {
+        matchViewBGBorder = [[UIView alloc] initWithFrame:CGRectMake(cellCardBGView.frame.size.width-33-25,5,65,40)];
+        matchViewBGBorder.tag = 89;
+        matchViewBGBorder.layer.borderColor =  [UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1].CGColor;
+        matchViewBGBorder.layer.borderWidth = 2.0f;
+        matchViewBGBorder.layer.cornerRadius = 5.0f;
+        matchViewBGBorder.backgroundColor = [UIColor whiteColor];
+        [cell addSubview:matchViewBGBorder];
+        
+    }
+    
+    if(matchCountLabel ==nil)
+    {
+        matchCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(7,0,20,matchViewBGBorder.frame.size.height)];
+        matchCountLabel.font = [UIFont fontWithName:@"Futura-Medium" size:25];
+        matchCountLabel.tag = 90;
+        matchCountLabel.text = [NSString stringWithFormat:@"%ld",(long)numOfMatches];
+        [matchViewBGBorder addSubview:matchCountLabel];
+        
+    }
+    
+    UIImageView *matchIconImgView;
+    matchIconImgView = (UIImageView *)[cell viewWithTag:88];
+    if(matchIconImgView.image ==nil)
+    {
+          matchIconImgView = [[UIImageView alloc] init];
+        matchIconImgView.tag = 88;
+        [matchIconImgView setImage:[UIImage imageNamed:@"maleAvatarHeartBlueEdit"]];
+        
+        //set frame above the cellbgView
+        //height 30px width 30px
+        int height = 40;
+        int width = 40;
+        int xmargin = 10;
+        
+        [matchIconImgView setFrame:CGRectMake(cellCardBGView.frame.size.width-width+5,5,width,height)];
+        matchIconImgView.tag = 88;
+        [matchIconImgView setImage:[UIImage imageNamed:@"maleAvatarHeartBlueEdit"]];
+        [cell addSubview:matchIconImgView];
+        
+    }
+   
+
+    if(numOfMatches >0)
+    {
+        //add a view above the tableview BG
+        matchIconImgView.alpha = 1;
+        matchViewBGBorder.alpha = 1;
+        matchCountLabel.alpha = 1;
+        
+    }
+    else
+    {
+        matchIconImgView.alpha = 0;
+        matchViewBGBorder.alpha = 0;
+        matchCountLabel.alpha = 0;
+        
+    }
+    
     return cell;
+}
+
+-(NSString *)calculateStringForTimeSinceLastUpdate:(NSDate *) date
+{
+    NSDate *currentDate = [[NSDate alloc] initWithTimeIntervalSinceNow:0];
+    
+    NSTimeInterval distanceBetweenDates = [currentDate timeIntervalSinceDate:date];
+    double secondsInAnHour = 3600;
+    NSInteger hoursBetweenDates = distanceBetweenDates / secondsInAnHour;
+    
+    //june29 convert hours between dates into string
+    NSInteger daysRemaining = hoursBetweenDates/24;
+    NSInteger leftoverHoursRemaining = hoursBetweenDates-(daysRemaining*24);
+    
+    NSNumber *daysRemainingNum = [NSNumber numberWithInteger:daysRemaining];
+    NSNumber *leftoverHoursNum = [NSNumber numberWithInteger:leftoverHoursRemaining];
+    
+    NSString *daysRemainingString = [daysRemainingNum stringValue];
+    NSString *leftoverHoursString = [leftoverHoursNum stringValue];
+    
+    NSString *part1 = [daysRemainingString stringByAppendingString:@"d "];
+    NSString *part2 = [leftoverHoursString stringByAppendingString:@"h"];
+    
+    NSString *timeSinceLastUpdateString = [part1 stringByAppendingString:part2];
+    
+    return timeSinceLastUpdateString;
+    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -713,6 +999,7 @@ BOOL waitForSyncCompleted = FALSE;
     return hardcodedXML;
     
 }
+
 
 
 @end
