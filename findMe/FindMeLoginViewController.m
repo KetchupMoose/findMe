@@ -227,7 +227,7 @@ UIView *starscontainer;
     
     
     
-    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:[NSBundle mainBundle]];
+    //UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:[NSBundle mainBundle]];
     
     
     FrontSplashViewController *initialViewController = [self viewControllerAtIndex:0];

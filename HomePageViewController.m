@@ -89,7 +89,7 @@ NSString *homePageManualLocationPropertyNum;
     //check to see if the parse connection is available.  If not, remove the HomePageViewController and show a ParseUnavailableViewController
     Reachability *singletonReach = [[reachabilitySingleton sharedReachability] reacher];
     
-    NetworkStatus *status = [singletonReach currentReachabilityStatus];
+    NetworkStatus status = [singletonReach currentReachabilityStatus];
     
    if (status !=NotReachable)
     {
@@ -180,7 +180,7 @@ NSString *homePageManualLocationPropertyNum;
         NSLog(@"success flagged here brian");
         
     } errorBlock:^(PNError *error) {
-        NSLog(error.localizedDescription);
+       NSLog(@"%@",[error localizedDescription]);
     }];
     
     [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:appDelegate withCallbackBlock:^(NSString *origin, BOOL connected, PNError *connectionError){
@@ -741,7 +741,7 @@ NSString *homePageManualLocationPropertyNum;
                        withParameters:@{@"userMTLID": self.HomePageuserName, @"messageStr":@"testing push notification!"}
                                 block:^(NSString *responseString, NSError *error)
      {
-         NSLog(responseString);
+         //NSLog(responseString);
          
      }
      ];

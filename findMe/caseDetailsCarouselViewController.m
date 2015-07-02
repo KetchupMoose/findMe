@@ -151,8 +151,6 @@ BOOL LoadedBOOL = NO;
                     float longitudeSpan = [longSpanNum floatValue];
                     
                     //can set an entire region
-                    CLLocationCoordinate2D priorCenter = CLLocationCoordinate2DMake(latitude, longitude);
-                    
                     self.setRegion = MKCoordinateRegionMake(CLLocationCoordinate2DMake(latitude, longitude), MKCoordinateSpanMake(latitudeSpan,longitudeSpan));
                     
                     
@@ -393,7 +391,6 @@ BOOL LoadedBOOL = NO;
     self.submitAnswersButton.backgroundColor = [UIColor lightGrayColor];
     
     //set the last timestamp value for cases where it's not the first template
-    NSArray *casesArray = [self.itsMTLObject objectForKey:@"cases"];
     
     if(templateMode==0)
     {
@@ -2428,7 +2425,7 @@ if(tableViewTag ==8999)
                                     {
                                         
                                         NSString *responseText = responseString;
-                                        NSLog(responseText);
+                                        //NSLog(responseText);
                                         
                                         //commenting out as it was needed for polling
                                         /*
@@ -2463,7 +2460,7 @@ if(tableViewTag ==8999)
                                     }
                                     else
                                     {
-                                        NSLog(error.localizedDescription);
+                                         NSLog(@"%@",[error localizedDescription]);
                                         [HUD hide:YES];
                                     }
                                 }];
@@ -2673,7 +2670,6 @@ if(tableViewTag ==8999)
     
     //check the propsArray and re-query if one of them doesn't have a property description filled in yet
     
-    BOOL queryGood = 0;
     /*
      while (queryGood==0)
      {
@@ -3223,7 +3219,7 @@ if(tableViewTag ==8999)
         NSString *myCaseItem = [eachCaseItem objectForKey:@"caseItem"];
         NSString *caseItemNumber;
         
-        int caseNum = 12000+h;
+        int caseNum = 12000+(int)h;
         
         if(myCaseItem==nil)
         {
@@ -3415,7 +3411,6 @@ if(tableViewTag ==8999)
                                     if (!error)
                                     {
                                         NSString *responseText = responseString;
-                                        NSLog(responseText);
                                         
                                         [HUD hide:NO];
                                         
@@ -3986,7 +3981,7 @@ if(tableViewTag ==8999)
     manualLocationLatitude = latitude;
     
     manualLocationLongitude = longitude;
-    MKCoordinateRegion testRegion = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(latitude,longitude), latSpan, longSpan);
+   
     
     MKCoordinateRegion testRegion2 = MKCoordinateRegionMake(CLLocationCoordinate2DMake(latitude,longitude), MKCoordinateSpanMake(latSpan, longSpan));
                                                             
@@ -4243,7 +4238,6 @@ if(tableViewTag ==8999)
                     [selectedCaseItemObject setObject:selectedCaseItemAnswersArrayOfDictionaries forKey:@"answers"];
                     
                     //update XML
-                    NSDictionary *propObjectForUpdate = (NSDictionary *)propObject;
                     NSDictionary *selectedCaseObjectDict = (NSDictionary *)selectedCaseItemObject;
                     
                     NSString *xmlForUpdate = [self createXMLFunctionSingleCaseItem:nil CaseItemObject:selectedCaseObjectDict];
@@ -4507,13 +4501,10 @@ if(tableViewTag ==8999)
     self.carousel.userInteractionEnabled = FALSE;
     
     //code for old refresh/poll mode where the entire itsMTLobject is returned on the refresh
-    NSArray *casesArray;
-    int indexOfCase = 0;
-    
     PFObject *caseItemObject;
             caseItemObject = jsonChange;
     self.jsonDisplayMode = @"singleCase";
-    self.jsonObject = (PFObject *)caseItemObject;
+    self.jsonObject = (NSMutableDictionary *)caseItemObject;
     caseObjectBeingUpdated = caseItemObject;
     templateMode =0;
     
@@ -4573,7 +4564,6 @@ if(tableViewTag ==8999)
     
     //check the propsArray and re-query if one of them doesn't have a property description filled in yet
     
-    BOOL queryGood = 0;
     /*
      while (queryGood==0)
      {
@@ -4750,9 +4740,7 @@ if(tableViewTag ==8999)
         {
             //get the caseObject for this property and check if it is flagged NEW
             PFObject *caseItemObject = [sortedCaseItems objectAtIndex:indexIterator];
-            NSString *stringVal = [caseItemObject objectForKey:@"new"];
-            
-            
+                        
                 //found one
                
                 //get the image from the caseProfileObject matching this
@@ -4949,9 +4937,7 @@ if(tableViewTag ==8999)
         
         
     }
-    
-
-    
+   
     
 }
 
@@ -5028,7 +5014,7 @@ if(tableViewTag ==8999)
                                     }
                                     else
                                     {
-                                        NSLog(error.localizedDescription);
+                                        NSLog(@"%@",[error localizedDescription]);
                                         [HUD hide:YES];
                                         
                                        
@@ -5494,13 +5480,12 @@ if(tableViewTag ==8999)
                                     
                                     if (!error)
                                     {
-                                        NSLog(responseString);
+                                        //NSLog(responseString);
                                         
                                     }
                                     else
                                     {
-                                        NSLog(error.localizedDescription);
-                                        
+                                         NSLog(@"%@",[error localizedDescription]);
                                     }
                                 }];
 }

@@ -2069,8 +2069,8 @@ CGPoint startLocation;
                                     }
                                     else
                                     {
-                                        NSString *errorString = error.localizedDescription;
-                                        NSLog(errorString);
+                                        //NSString *errorString = error.localizedDescription;
+                                         NSLog(@"%@",[error localizedDescription]);
                                         [HUD hide:NO];
                                       
                                     }
@@ -2336,7 +2336,7 @@ CGPoint startLocation;
                                     {
                                         
                                         NSString *responseText = responseString;
-                                        NSLog(responseText);
+                                        //NSLog(responseText);
                                         
                                     
                                         

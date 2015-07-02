@@ -71,7 +71,6 @@ BOOL waitForSyncCompleted = FALSE;
     caseListPruned = [[NSMutableArray alloc] init];
    // [self refreshTable];
     
-    
     /*
     //MAR27 experimentation failed
     
@@ -156,8 +155,6 @@ BOOL waitForSyncCompleted = FALSE;
     }];
     */
     
-    
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -183,8 +180,6 @@ BOOL waitForSyncCompleted = FALSE;
    // NSArray *queryArray = [NSArray arrayWithObjects:messageQuery,pokeQuery,commentsQuery,nil];
     //PFQuery *allQueries = [PFQuery orQueryWithSubqueries:queryArray];
     
-    
-        
         PFObject *object = [query getObjectWithId:userName];
     
         /*
@@ -231,10 +226,6 @@ BOOL waitForSyncCompleted = FALSE;
         
         [HUD hide:NO];
         
- 
-
-    
-  
 }
 -(void) viewDidAppear:(BOOL)animated
 {
@@ -262,7 +253,7 @@ BOOL waitForSyncCompleted = FALSE;
     [PFCloud callFunctionInBackground:@"waitForSync"
                        withParameters:@{@"payload": userName}
                                 block:^(NSString *responseString, NSError *error) {
-                                    NSLog(responseString);
+                                    
                                     
                                 if([responseString containsString:@"ERROR"])
                                 {
@@ -375,7 +366,7 @@ BOOL waitForSyncCompleted = FALSE;
         }
     }
     NSInteger numOfMatches = [allMatchesArray count];
-    NSString *numOfMatchesString = [[NSString stringWithFormat:@"%ld",(long)numOfMatches] stringByAppendingString:@" Matches"];
+    //NSString *numOfMatchesString = [[NSString stringWithFormat:@"%ld",(long)numOfMatches] stringByAppendingString:@" Matches"];
     
     if(numOfMatches>0)
     {
@@ -386,10 +377,7 @@ BOOL waitForSyncCompleted = FALSE;
     {
         return 102;
     }
-   
-    
-
-    
+  
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -409,15 +397,14 @@ BOOL waitForSyncCompleted = FALSE;
     UILabel *caseShowNameLabel = (UILabel *)[cell viewWithTag:1];
     UILabel *matchesCountLabel = (UILabel *)[cell viewWithTag:2];
     UILabel *caseDetail1 = (UILabel *)[cell viewWithTag:3];
-    UILabel *caseDetail2 = (UILabel *)[cell viewWithTag:4];
-    UILabel *caseDetail3 = (UILabel *)[cell viewWithTag:5];
+    //UILabel *caseDetail2 = (UILabel *)[cell viewWithTag:4];
+    //UILabel *caseDetail3 = (UILabel *)[cell viewWithTag:5];
     UIImageView *caseImgView = (UIImageView *)[cell viewWithTag:6];
-    UIButton *viewMatchButton = (UIButton *)[cell viewWithTag:7];
+    //UIButton *viewMatchButton = (UIButton *)[cell viewWithTag:7];
     PFObject *caseObject = [caseListPruned objectAtIndex:indexPath.row];
     UILabel *bubbleCountLabel = (UILabel *)[cell viewWithTag:44];
     UILabel *lastUpdateTimeLabel = (UILabel *)[cell viewWithTag:21];
     UILabel *updateCountLabel = (UILabel *)[cell viewWithTag:22];
-    
     
     updateCountLabel.backgroundColor = [UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1];
     updateCountLabel.textColor = [UIColor whiteColor];
@@ -490,7 +477,7 @@ BOOL waitForSyncCompleted = FALSE;
     
     caseShowNameLabel.text = [caseObject objectForKey:@"caseName"];
     
-    UIActivityIndicatorViewStyle *activityStyle = UIActivityIndicatorViewStyleGray;
+    UIActivityIndicatorViewStyle activityStyle = UIActivityIndicatorViewStyleGray;
 
     //NSString *caseImgURL = [caseImages objectAtIndex:indexPath.row];
     if([caseimgURL length] ==0)
@@ -675,7 +662,7 @@ BOOL waitForSyncCompleted = FALSE;
         //height 30px width 30px
         int height = 40;
         int width = 40;
-        int xmargin = 10;
+        //int xmargin = 10;
         
         [matchIconImgView setFrame:CGRectMake(cellCardBGView.frame.size.width-width+5,5,width,height)];
         matchIconImgView.tag = 88;
@@ -922,9 +909,6 @@ BOOL waitForSyncCompleted = FALSE;
                                     if (!error) {
                                         
                                         [HUD hide:YES];
-                                                                                
-                                        NSString *responseText = responseString;
-                                        NSLog(responseText);
                                         
                                          [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Case Uploaded Successfully!", nil) message:NSLocalizedString(@"Case Uploaded Correctly.  Pull Down To Refresh And View", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
                                         
@@ -932,7 +916,7 @@ BOOL waitForSyncCompleted = FALSE;
                                     else
                                     {
                                           [HUD hide:YES];
-                                        NSLog(error.localizedDescription);
+                                       NSLog(@"%@",[error localizedDescription]);
                                         
                                     }
                                 }];
@@ -1005,7 +989,7 @@ BOOL waitForSyncCompleted = FALSE;
     // end document
     [xmlWriter writeEndDocument];
     
-    NSString* xml = [xmlWriter toString];
+    //NSString* xml = [xmlWriter toString];
     
    // return xml;
     

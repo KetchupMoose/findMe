@@ -413,11 +413,11 @@ int panningEnabled = 1;
     
     //add gesture recognizer for the suggestedQuestionBox
    
-    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panDetected:)];
+   // UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panDetected:)];
   
     UISwipeGestureRecognizer * swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft:)];
     
-     UISwipeGestureRecognizer * swipeRight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight:)];
+    // UISwipeGestureRecognizer * swipeRight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight:)];
     swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
     //[self.suggestedQuestion addGestureRecognizer:swipeLeft];
    // [self.suggestedQuestion addGestureRecognizer:swipeRight];
@@ -840,15 +840,12 @@ int panningEnabled = 1;
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {
                                         
-                                        NSString *responseText = responseString;
-                                        NSLog(responseText);
-                                        
                                         [HUD hide:YES];
                                         
                                     }
                                     else
                                     {
-                                        NSLog(error.localizedDescription);
+                                         NSLog(@"%@",[error localizedDescription]);
                                         [HUD hide:YES];
                                         
                                     }
@@ -1244,8 +1241,8 @@ int panningEnabled = 1;
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {
                                         
-                                        NSString *responseText = responseString;
-                                        NSLog(responseText);
+                                        //NSString *responseText = responseString;
+                                        //NSLog(responseText);
                                         
                                         [HUD hide:NO];
                                         
@@ -1259,7 +1256,7 @@ int panningEnabled = 1;
                                     }
                                     else
                                     {
-                                        NSLog(error.localizedDescription);
+                                         NSLog(@"%@",[error localizedDescription]);
                                         [HUD hide:YES];
                                         
                                     }
@@ -1575,7 +1572,7 @@ numberOfRowsInComponent:(NSInteger)component
             for (i=1;i<paramsArray.count+1;i++)
             {
             NSString *numString = [NSString stringWithFormat:@"%i",i];
-            NSLog(numString);
+           // NSLog(numString);
             NSString *stringToReplace = [@"&" stringByAppendingString:numString];
             
             [infoMsg stringByReplacingOccurrencesOfString:stringToReplace withString:[paramsArray objectAtIndex:i-1]];
@@ -1854,11 +1851,13 @@ clickedButtonAtIndex:(NSInteger)buttonIndex{
                                  placemark.postalCode, placemark.locality,
                                  placemark.administrativeArea,
                                  placemark.country];
+            /*
             NSString *locationText =[NSString stringWithFormat:@"%@ %@\n%@ %@\n%@\n%@",
                                      placemark.subThoroughfare, placemark.thoroughfare,
                                      placemark.postalCode, placemark.locality,
                                      placemark.administrativeArea,
                                      placemark.country];
+             */
             UIAlertView *successAlert = [[UIAlertView alloc]
                                        initWithTitle:@"Success" message:@"Retrieved Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [successAlert show];

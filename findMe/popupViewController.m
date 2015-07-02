@@ -101,13 +101,13 @@ UIView *bgDarkenView;
     //load the answers array
     if([self.popupjsonDisplayMode isEqualToString:@"template"])
     {
-        selectedCaseObject = self.popupjsonObject;
+        selectedCaseObject = (PFObject *)self.popupjsonObject;
         self.updateButton.titleLabel.text = @"Select These Answers";
         templateMode = 1;
     }
     else if([self.popupjsonDisplayMode isEqualToString:@"singleCase"])
     {
-        selectedCaseObject = self.popupjsonObject;
+        selectedCaseObject = (PFObject *)self.popupjsonObject;
         templateMode = 0;
     }
     else
@@ -787,11 +787,9 @@ UIView *bgDarkenView;
         [xmlWriter writeEndElement];
     }
     
-    int h = 0;
-    
     
     NSString *propertyNum = [caseItemObject objectForKey:@"propertyNum"];
-    NSString *propertyDescr = [self.selectedPropertyObject objectForKey:@"propertyDescr"];
+   // NSString *propertyDescr = [self.selectedPropertyObject objectForKey:@"propertyDescr"];
     
     //write logic for updating the caseItem
     //build strings for building item
@@ -985,10 +983,9 @@ UIView *bgDarkenView;
         [xmlWriter writeCharacters:locationLongitude];
         [xmlWriter writeEndElement];
     }
-    int h = 0;
     
     NSString *propertyNum = [caseItemObject objectForKey:@"propertyNum"];
-    NSString *propertyDescr = [self.selectedPropertyObject objectForKey:@"propertyDescr"];
+    //NSString *propertyDescr = [self.selectedPropertyObject objectForKey:@"propertyDescr"];
     
     //write logic for updating the caseItem
     //build strings for building item

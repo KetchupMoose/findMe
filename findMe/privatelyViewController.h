@@ -11,8 +11,8 @@
 
 @interface privatelyViewController : UIViewController<MKMapViewDelegate,CLLocationManagerDelegate>
 
-
 @property (strong,nonatomic)  MKMapView *mapView;
 @property MKCoordinateRegion myRegion;
+@property UIView *privatelyDescriptionView;
 
 @end

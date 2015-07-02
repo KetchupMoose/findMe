@@ -545,12 +545,6 @@ NSString *locationLongitude;
     int buttonWidth = 80;
     int buttonHeight = 80;
     
-    int verticalMargin = 0;
-    
-    int bgVertMargin = 10;
-    int bgHorizMargin = 10;
-    
-    
     choice1ImageView.frame = CGRectMake(startxMargin,startyMargin,imgWidth,imgHeight);
     int imgMidPoint = choice1ImageView.frame.origin.y+choice1ImageView.frame.size.height/2;
     

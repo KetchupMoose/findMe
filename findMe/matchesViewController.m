@@ -31,6 +31,13 @@ MBProgressHUD *HUD;
     // Do any additional setup after loading the view.
     self.matchesTableView.delegate = self;
     self.matchesTableView.dataSource = self;
+    
+     [self.matchesTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    self.matchesTableView.backgroundColor = [UIColor clearColor];
+    
+    self.matchesTableView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin;
+    
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -79,27 +86,53 @@ MBProgressHUD *HUD;
 {
    SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"matchCell" forIndexPath:indexPath];
     
+    cell.backgroundColor = [UIColor clearColor];
+    
+    
     cell.leftUtilityButtons = [self leftButtons];
     cell.rightUtilityButtons = [self rightButtons];
     cell.delegate = self;
     
-    UILabel *matchNameLabel = (UILabel *)[cell viewWithTag:2];
+    
     UIImageView *matchImage = (UIImageView *)[cell viewWithTag:1];
-    UIView *bgLabelView = [cell viewWithTag:6];
-    UILabel *caseNameLabel = (UILabel *)[cell viewWithTag:7];
+    UILabel *caseNameLabel = (UILabel *)[cell viewWithTag:2];
+     UILabel *matchPctLabel = (UILabel *)[cell viewWithTag:3];
+    UIView *bgView = [cell viewWithTag:4];
+    
+    caseNameLabel.textColor = [UIColor whiteColor];
+    matchPctLabel.textColor = [UIColor whiteColor];
+    
+   bgView.layer.cornerRadius = 5.0f;
+   bgView.layer.masksToBounds = YES;
+    bgView.backgroundColor = [UIColor clearColor];
+    
+    matchImage.layer.cornerRadius = 2.0f;
+    matchImage.layer.masksToBounds = YES;
+    
+    UIView *topBGView = [bgView viewWithTag:72];
+    
+    if(topBGView.backgroundColor != [UIColor blackColor])
+    {
+    topBGView = [[UIView alloc] initWithFrame:bgView.frame];
+    topBGView.backgroundColor = [UIColor blackColor];
+    topBGView.alpha = 0.8;
+    topBGView.tag = 72;
+    [bgView addSubview:topBGView];
+    [bgView sendSubviewToBack:topBGView];
+    }
     
     if([self.matchViewControllerMode isEqualToString:@"allMatches"])
     {
         PFObject *caseObj = [self.matchesCaseObjectArrays objectAtIndex:indexPath.row];
         NSString *caseName = [caseObj objectForKey:@"caseName"];
         caseNameLabel.text = caseName;
-        bgLabelView.alpha = 1;
+        bgView.alpha = 1;
         caseNameLabel.alpha = 1;
         
     }
     else
     {
-        bgLabelView.alpha = 0;
+        bgView.alpha = 0;
         caseNameLabel.alpha = 0;
         
     }
@@ -116,11 +149,13 @@ MBProgressHUD *HUD;
         if([matchCaseID isEqualToString:caseProfileCaseID])
         {
             //display case information
-            matchNameLabel.text = [caseProfileObj objectForKey:@"externalCaseName"];
+            caseNameLabel.text = [caseProfileObj objectForKey:@"externalCaseName"];
             PFFile *imgFile = [caseProfileObj objectForKey:@"caseImage"];
             caseimgURL = imgFile.url;
         }
     }
+    
+    
     UIActivityIndicatorViewStyle *activityStyle = UIActivityIndicatorViewStyleGray;
     
     if([caseimgURL length] ==0)
@@ -134,18 +169,15 @@ MBProgressHUD *HUD;
         [matchImage setImageWithURL:[NSURL URLWithString:caseimgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
     }
     
-    
-    
-    
     NSString *matchType = [self.matchTypeArray objectAtIndex:indexPath.row];
     if([matchType isEqualToString:@"yes"])
     {
-        matchNameLabel.textColor = [UIColor greenColor];
+        caseNameLabel.textColor = [UIColor greenColor];
         
     }
     else if([matchType isEqualToString:@"rejected"])
     {
-        matchNameLabel.textColor = [UIColor grayColor];
+        caseNameLabel.textColor = [UIColor grayColor];
         
     }
     
@@ -305,8 +337,8 @@ MBProgressHUD *HUD;
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {
                                         
-                                        NSString *responseText = responseString;
-                                        NSLog(responseText);
+                                       // NSString *responseText = responseString;
+                                        //NSLog(responseText);
                                         
                                         [HUD hide:NO];
                                         
@@ -315,8 +347,8 @@ MBProgressHUD *HUD;
                                     }
                                     else
                                     {
-                                        NSString *errorString = error.localizedDescription;
-                                        NSLog(errorString);
+                                        //NSString *errorString = error.localizedDescription;
+                                         NSLog(@"%@",[error localizedDescription]);
                                         [HUD hide:NO];
                                         
                                     }

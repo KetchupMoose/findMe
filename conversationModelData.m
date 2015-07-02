@@ -54,7 +54,7 @@ NSArray *conversationMembersArray;
 -(conversationModelData*)initWithConversationObject:(PFObject*)conversationObj userName:(NSString*)convoUserName
 {
     NSLog(@"doing init");
-    NSLog(convoUserName);
+    //NSLog(convoUserName);
     
     self = [super init];
     self.conversationObject = conversationObj;
@@ -102,8 +102,8 @@ NSArray *conversationMembersArray;
             PFObject *mtlObj = [caseObj objectForKey:@"ownerObjectid"];
             PFUser *parentUser = [mtlObj objectForKey:@"ParseUser"];
             PFUser *ownUser = [PFUser currentUser];
-            NSLog(parentUser.objectId);
-            NSLog(ownUser.objectId);
+            //NSLog(parentUser.objectId);
+           // NSLog(ownUser.objectId);
             
              if([parentUser.objectId isEqualToString:ownUser.objectId])
              {
@@ -286,7 +286,7 @@ NSArray *conversationMembersArray;
                                        NSString *msgSenderID = [msgObject objectForKey:@"messageCaseUserID"];
                                        NSLog(@"checking sender id");
                                        
-                                       NSLog(msgSenderID);
+                                       //NSLog(msgSenderID);
                                        
                                        NSString *msgText = [msgObject objectForKey:@"MessageString"];
                                        NSDate *msgDate = msgObject.updatedAt;

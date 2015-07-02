@@ -120,7 +120,7 @@
     //[self.signUpView.additionalField setPlaceholder:@"Phone number"];
     
     
-    AppDelegate *myad = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    //AppDelegate *myad = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     /*
     if(myad.internet==NO)
     {

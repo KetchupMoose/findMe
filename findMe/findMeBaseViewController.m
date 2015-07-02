@@ -117,8 +117,8 @@ BOOL notifierLoaded;
 -(void) displayMessageReceivedUIView:(NSNotification *) notification
 {
     NSString *message = [notification.userInfo objectForKey:@"pubMsgString"];
-    PNDate *msgDate = [notification.userInfo objectForKey:@"pubMsgDate"];
-    NSString *conversationObjID = [notification.userInfo objectForKey:@"pubChannel"];
+    //PNDate *msgDate = [notification.userInfo objectForKey:@"pubMsgDate"];
+   // NSString *conversationObjID = [notification.userInfo objectForKey:@"pubChannel"];
     NSString *senderCaseID = [notification.userInfo objectForKey:@"pubMsgSender"];
     
     //query for the user profile image and display name in background, then display the view information
@@ -198,14 +198,16 @@ BOOL notifierLoaded;
 -(void)popMessageReceivedView:(id)sender
 {
     messageIdentifierButton *messageReceivedView = (messageIdentifierButton *) sender;
+    /*
     UIView *parentView = messageReceivedView.superview;
     
     //get the conversation object from the notification and bring up that conversation object
     NSString *message = [messageReceivedView.msgNotification.userInfo objectForKey:@"pubMsgString"];
     PNDate *msgDate = [messageReceivedView.msgNotification.userInfo objectForKey:@"pubMsgDate"];
-    NSString *conversationObjID = [messageReceivedView.msgNotification.userInfo objectForKey:@"pubChannel"];
-    NSString *senderCaseID = [messageReceivedView.msgNotification.userInfo objectForKey:@"pubMsgSender"];
     
+    NSString *senderCaseID = [messageReceivedView.msgNotification.userInfo objectForKey:@"pubMsgSender"];
+    */
+    NSString *conversationObjID = [messageReceivedView.msgNotification.userInfo objectForKey:@"pubChannel"];
     //fetch the conversation object
    
     PFQuery *getSingleConversationObjQuery = [PFQuery queryWithClassName:@"Conversations"];

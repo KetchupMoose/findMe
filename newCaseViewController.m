@@ -507,12 +507,6 @@ NSString *locationLongitude;
     int buttonWidth = 80;
     int buttonHeight = 80;
     
-    int verticalMargin = 0;
-    
-    int bgVertMargin = 10;
-    int bgHorizMargin = 10;
-    
-    
     choice1ImageView.frame = CGRectMake(startxMargin,startyMargin,imgWidth,imgHeight);
      int imgMidPoint = choice1ImageView.frame.origin.y+choice1ImageView.frame.size.height/2;
     
@@ -610,7 +604,7 @@ NSString *locationLongitude;
     
     //add a progress HUD to show it is sending the XML with the case info
     
-    NSString *hardcodedXMLString = @"<PAYLOAD><USEROBJECTID>4OvTmAzGE7</USEROBJECTID><LAISO>EN</LAISO><PREFERENCES><SHOWNAME>Rose</SHOWNAME><COUNTRY>CA</COUNTRY><GENDER>F</GENDER><TEMPLATEID1>01VURH6zGz</TEMPLATEID1><TEMPLATEID2>9XXwNvkFTI</TEMPLATEID2></PREFERENCES></PAYLOAD>";
+    //NSString *hardcodedXMLString = @"<PAYLOAD><USEROBJECTID>4OvTmAzGE7</USEROBJECTID><LAISO>EN</LAISO><PREFERENCES><SHOWNAME>Rose</SHOWNAME><COUNTRY>CA</COUNTRY><GENDER>F</GENDER><TEMPLATEID1>01VURH6zGz</TEMPLATEID1><TEMPLATEID2>9XXwNvkFTI</TEMPLATEID2></PREFERENCES></PAYLOAD>";
     
     NSString *xmlGeneratedString = [self createTemplateXMLFunction:itsMTLObjectID];
     
@@ -643,7 +637,6 @@ NSString *locationLongitude;
                                         [jsonObjectChange setObject:@"" forKey:@"caseId"];
                                         
                                         
-                                        NSLog(responseText);
                                         [HUD hide:NO];
                                         
                                         //[self showCaseDetailsWithTemplateJSON:jsonObjectChange];
@@ -656,7 +649,7 @@ NSString *locationLongitude;
                                     }
                                     else
                                     {
-                                        NSLog(error.localizedDescription);
+                                         NSLog(@"%@",[error localizedDescription]);
                                         [HUD hide:NO];
                                         
                                     }
@@ -669,7 +662,7 @@ NSString *locationLongitude;
 {
     //create a new case with the two templates.
     
-    int indexOfButton = sendingButton.tag-60;
+    int indexOfButton = (int)sendingButton.tag-60;
     
     //second level template
     PFObject *secondTemplate = [templatePickerActiveChoices objectAtIndex:indexOfButton];
@@ -707,7 +700,7 @@ NSString *locationLongitude;
     
     //add a progress HUD to show it is sending the XML with the case info
     
-    NSString *hardcodedXMLString = @"<PAYLOAD><USEROBJECTID>4OvTmAzGE7</USEROBJECTID><LAISO>EN</LAISO><PREFERENCES><SHOWNAME>Rose</SHOWNAME><COUNTRY>CA</COUNTRY><GENDER>F</GENDER><TEMPLATEID1>01VURH6zGz</TEMPLATEID1><TEMPLATEID2>9XXwNvkFTI</TEMPLATEID2></PREFERENCES></PAYLOAD>";
+    //NSString *hardcodedXMLString = @"<PAYLOAD><USEROBJECTID>4OvTmAzGE7</USEROBJECTID><LAISO>EN</LAISO><PREFERENCES><SHOWNAME>Rose</SHOWNAME><COUNTRY>CA</COUNTRY><GENDER>F</GENDER><TEMPLATEID1>01VURH6zGz</TEMPLATEID1><TEMPLATEID2>9XXwNvkFTI</TEMPLATEID2></PREFERENCES></PAYLOAD>";
     
     NSString *xmlGeneratedString = [self createTemplateXMLFunction:itsMTLObjectID];
     
@@ -740,7 +733,7 @@ NSString *locationLongitude;
                                         [jsonObjectChange setObject:@"" forKey:@"caseId"];
                                         
                                         
-                                        NSLog(responseText);
+                                       
                                         [HUD hide:NO];
                                         
                                         //[self showCaseDetailsWithTemplateJSON:jsonObjectChange];
@@ -753,7 +746,7 @@ NSString *locationLongitude;
                                     }
                                     else
                                     {
-                                        NSLog(error.localizedDescription);
+                                         NSLog(@"%@",[error localizedDescription]);
                                          [HUD hide:NO];
                                         
                                     }

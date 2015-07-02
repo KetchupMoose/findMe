@@ -272,7 +272,7 @@ UIColor *colorForHighlights;
     int tag = 0;
     
     float heightsofar;
-    float heightadaptor;
+    float heightadaptor = 0.0;
     
     
     
@@ -295,7 +295,7 @@ UIColor *colorForHighlights;
         
         if(hshint>=maxhashcount)
         {
-            maxhashcount = hshint;
+            maxhashcount = (int)hshint;
         }
     }
     
@@ -320,7 +320,7 @@ UIColor *colorForHighlights;
         
         UIButton *hashbutton = [[UIButton alloc] initWithFrame:btnframe];
         
-        NSString *btnTitle = hash;
+        //NSString *btnTitle = hash;
         //NSString *hshnumtext = [hshnum stringValue];
         //NSString *paren = @" (";
         //NSString *parenend = @")";
@@ -613,9 +613,9 @@ UIColor *colorForHighlights;
 }
 
 #pragma mark UITableViewDelegateMethods
--(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return (int)[answersListArray count];
+    return (NSInteger)[answersListArray count];
     
     
 }

@@ -264,7 +264,7 @@ int selectedPic = 1;
                                     
                                     else
                                     {
-                                        NSLog(error.localizedDescription);
+                                        NSLog(@"%@",[error localizedDescription]);
                                         [HUD hide:YES];
                                         
                                     }
