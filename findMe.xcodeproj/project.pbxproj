@@ -229,6 +229,7 @@
 		ECCD47071AE1984300804B06 /* verticalPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD47061AE1984300804B06 /* verticalPanGestureRecognizer.m */; };
 		ECD591BC1ABC930700D32D5D /* carselfie1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECD591BB1ABC930700D32D5D /* carselfie1.jpg */; };
 		ECE1BD8C1B41EEEC00512C5C /* newCaseViewControllerv2.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE1BD8B1B41EEEC00512C5C /* newCaseViewControllerv2.m */; };
+		ECE1BD8F1B430C7400512C5C /* newCaseViewControllerv3.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE1BD8E1B430C7400512C5C /* newCaseViewControllerv3.m */; };
 		ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B1691A069C1D007F4A19 /* findmeInfo.plist */; };
 		ECE6B16C1A069DAB007F4A19 /* stockphotowoman2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B16B1A069DAB007F4A19 /* stockphotowoman2.jpg */; };
 		ECE6B16E1A06AD0E007F4A19 /* sawyousubway.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B16D1A06AD0E007F4A19 /* sawyousubway.jpg */; };
@@ -713,6 +714,8 @@
 		ECD591BB1ABC930700D32D5D /* carselfie1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = carselfie1.jpg; sourceTree = "<group>"; };
 		ECE1BD8A1B41EEEC00512C5C /* newCaseViewControllerv2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = newCaseViewControllerv2.h; sourceTree = "<group>"; };
 		ECE1BD8B1B41EEEC00512C5C /* newCaseViewControllerv2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = newCaseViewControllerv2.m; sourceTree = "<group>"; };
+		ECE1BD8D1B430C7400512C5C /* newCaseViewControllerv3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = newCaseViewControllerv3.h; sourceTree = "<group>"; };
+		ECE1BD8E1B430C7400512C5C /* newCaseViewControllerv3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = newCaseViewControllerv3.m; sourceTree = "<group>"; };
 		ECE6B1681A069C1D007F4A19 /* findme-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "findme-Prefix.pch"; sourceTree = "<group>"; };
 		ECE6B1691A069C1D007F4A19 /* findmeInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = findmeInfo.plist; sourceTree = "<group>"; };
 		ECE6B16B1A069DAB007F4A19 /* stockphotowoman2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = stockphotowoman2.jpg; sourceTree = "<group>"; };
@@ -1185,6 +1188,8 @@
 				ECE6B1751A0D8AE5007F4A19 /* newCaseViewController.m */,
 				ECE1BD8A1B41EEEC00512C5C /* newCaseViewControllerv2.h */,
 				ECE1BD8B1B41EEEC00512C5C /* newCaseViewControllerv2.m */,
+				ECE1BD8D1B430C7400512C5C /* newCaseViewControllerv3.h */,
+				ECE1BD8E1B430C7400512C5C /* newCaseViewControllerv3.m */,
 				D318324E19D1828B003D51A3 /* CaseDetailsViewController.h */,
 				D318324F19D1828B003D51A3 /* CaseDetailsViewController.m */,
 				ECCD46F71AD30FD200804B06 /* caseDetailsCarouselViewController.h */,
@@ -1257,6 +1262,7 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				ECC1640F1B3E07F800BBC12D /* maleAvatarHeartBlueEdit.png */,
 				ECC163F11B3B5BEB00BBC12D /* Businessman-with-question-mark-on-face.jpg */,
 				EC10BD971B324F4500F7ABDE /* shhhblurrcrop.jpg */,
 				EC10BD981B324F4500F7ABDE /* shhhcropped.jpg */,
@@ -1677,7 +1683,6 @@
 		ECE6B17B1A0D9FAB007F4A19 /* commonControls */ = {
 			isa = PBXGroup;
 			children = (
-				ECC1640F1B3E07F800BBC12D /* maleAvatarHeartBlueEdit.png */,
 				EC5B30B11AF3FFAF002046E3 /* iCarousel.h */,
 				EC10BD8E1B30D45800F7ABDE /* iCarousel.m */,
 				ECEE00D11AC1B9E70070908C /* findMeBaseViewController.h */,
@@ -2445,6 +2450,7 @@
 				ECFDAAB01AB38B5C00E42C33 /* PNPushNotificationsEnabledChannelsParser.m in Sources */,
 				ECA7A29E1AA8B86C00F899D5 /* UIColor+JSQMessages.m in Sources */,
 				ECEF94611A8D127F0000A444 /* ECSlidingInteractiveTransition.m in Sources */,
+				ECE1BD8F1B430C7400512C5C /* newCaseViewControllerv3.m in Sources */,
 				ECE6B1811A0D9FF3007F4A19 /* UIImageView+UIActivityIndicatorForSDWebImage.m in Sources */,
 				ECA7A2BD1AA8B86C00F899D5 /* JSQMessagesLabel.m in Sources */,
 				ECFDAADE1AB38B5C00E42C33 /* PNChannelGroupRemoveRequest.m in Sources */,

@@ -448,9 +448,6 @@ BOOL waitForSyncCompleted = FALSE;
         
     }
     
-   
-    
-    
     matchesCountLabel.layer.cornerRadius = 5.0f;
     matchesCountLabel.layer.masksToBounds = YES;
     
@@ -522,9 +519,25 @@ BOOL waitForSyncCompleted = FALSE;
     }
     
     NSString *timestampString = [caseObj objectForKey:@"timestamp"];
-    NSNumber *bubbleCount = [caseObj objectForKey:@"bubbleCount"];
+    NSString *bubbleCount = [caseObj objectForKey:@"bubbleCount"];
     //NSInteger timestampInt = [timestampNumber integerValue];
     //timestampInt = timestampInt/1000;
+    
+    if(bubbleCount ==nil)
+    {
+        bubbleCountLabel.text = @"0";
+        updateCountLabel.alpha = 0;
+    }
+    else
+    {
+        bubbleCountLabel.text = bubbleCount;
+        updateCountLabel.text = bubbleCount;
+        updateCountLabel.alpha = 1;
+        
+    }
+    //comment out bubbleCountLabel
+    bubbleCountLabel.alpha = 0;
+    
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.timeStyle = NSDateFormatterNoStyle;

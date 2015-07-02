@@ -25,7 +25,8 @@ MBProgressHUD *HUD;
     
     self.mapView.delegate = self;
     
-   
+    shouldUpdateLocation = YES;
+    
     
     // Create a gesture recognizer for long presses (for example in viewDidLoad)
     //UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
@@ -330,7 +331,8 @@ didChangeDragState:(MKAnnotationViewDragState)newState
     longitude = centerCoordinate.longitude;
     
     //send the longitude and latitude to the delegate
-    [self.delegate setUserLocation:latitude withLongitude:longitude andRegion:region];
+    [self.delegate setUserLocation:latitude withLongitude:longitude andLatitudeSpan:region.span.latitudeDelta andLongitudeSpan:region.span.longitudeDelta];
+    
     
 }
 

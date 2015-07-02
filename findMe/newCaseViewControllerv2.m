@@ -87,6 +87,8 @@ NSString *locationLongitude;
      self.gifView.userInteractionEnabled = NO;
      */
     
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {

@@ -153,7 +153,8 @@ BOOL LoadedBOOL = NO;
                     //can set an entire region
                     CLLocationCoordinate2D priorCenter = CLLocationCoordinate2DMake(latitude, longitude);
                     
-                    self.setRegion = MKCoordinateRegionMakeWithDistance(priorCenter, latitudeSpan, longitudeSpan);
+                    self.setRegion = MKCoordinateRegionMake(CLLocationCoordinate2DMake(latitude, longitude), MKCoordinateSpanMake(latitudeSpan,longitudeSpan));
+                    
                     
                 }
                 manualLocationLongitude = [longitudeNum floatValue];
@@ -1150,8 +1151,10 @@ BOOL LoadedBOOL = NO;
             self.customAnswerButton.alpha = 1;
             self.customAnswerLabel.text = @"Enter Your Custom Answer";
             self.customAnswerLabel.textColor = [UIColor whiteColor];
-            
+            self.customAnswerLabel.font = [UIFont fontWithName:@"Futura-Medium" size:20];
             //self.customAnswerLabel.text = customAns;
+            
+            self.customAnswerButton.layer.cornerRadius = 5.0f;
             
             
         }
@@ -3383,8 +3386,16 @@ if(tableViewTag ==8999)
     
     //store a local value of the property (or last property for template mode) being updated based on the current carousel index and sortedCaseItems
     
-    PFObject *caseItemBeingUpdated = sortedCaseItems[selectedCarouselIndex];
-    propertyBeingUpdated = [caseItemBeingUpdated objectForKey:@"propertyNum"];
+    if(selectedCarouselIndex == sortedCaseItems.count)
+    {
+        propertyBeingUpdated = @"";
+    }
+    else
+    {
+        PFObject *caseItemBeingUpdated = sortedCaseItems[selectedCarouselIndex];
+        propertyBeingUpdated = [caseItemBeingUpdated objectForKey:@"propertyNum"];
+    }
+   
     
     //add a progress HUD to show it is retrieving list of properts
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -3969,13 +3980,17 @@ if(tableViewTag ==8999)
     
 }
 
-- (void)setUserLocation:(float) latitude withLongitude:(float)longitude andRegion:(MKCoordinateRegion)region
+- (void)setUserLocation:(float) latitude withLongitude:(float)longitude andLatitudeSpan:(float)latSpan andLongitudeSpan:(float)longSpan
 {
     //set manual location variables which will take priority over automatic variables when present
     manualLocationLatitude = latitude;
     
     manualLocationLongitude = longitude;
-    self.setRegion = region;
+    MKCoordinateRegion testRegion = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(latitude,longitude), latSpan, longSpan);
+    
+    MKCoordinateRegion testRegion2 = MKCoordinateRegionMake(CLLocationCoordinate2DMake(latitude,longitude), MKCoordinateSpanMake(latSpan, longSpan));
+                                                            
+    self.setRegion = testRegion2;
     
     useManualLocation = YES;
     
@@ -4073,8 +4088,8 @@ if(tableViewTag ==8999)
     [xmlWriter writeStartElement:@"CUSTOM"];
     NSString *latitudeString = [NSString stringWithFormat:@"%f",manualLocationLatitude];
     NSString *longitudeString = [NSString stringWithFormat:@"%f",manualLocationLongitude];
-    NSString *latitudeSpan = [NSString stringWithFormat:@"%f",self.setRegion.span.latitudeDelta];
-    NSString *longitudeSpan = [NSString stringWithFormat:@"%f",self.setRegion.span.longitudeDelta];
+    NSString *latitudeSpan = [NSString stringWithFormat:@"%.20g",self.setRegion.span.latitudeDelta];
+    NSString *longitudeSpan = [NSString stringWithFormat:@"%.20g",self.setRegion.span.longitudeDelta];
     
     NSString *locationForUpdatePt1 = [[[latitudeString stringByAppendingString:@"; "] stringByAppendingString:longitudeString] stringByAppendingString:@"; "];
     NSString *locationForUpdatePt2 = [[latitudeSpan stringByAppendingString:@"; "]stringByAppendingString:longitudeSpan];

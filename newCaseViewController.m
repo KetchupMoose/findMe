@@ -43,7 +43,6 @@ int timerTickCheck =0;
 MBProgressHUD *HUD;
 
 //location manager variables
-
 CLGeocoder *geocoder;
 CLPlacemark *placemark;
 NSString *locationRetrieved;

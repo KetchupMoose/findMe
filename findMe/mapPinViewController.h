@@ -11,7 +11,7 @@
 
 @protocol mapPinViewControllerDelegate
 
-- (void)setUserLocation:(float) latitude withLongitude:(float)longitude andRegion:(MKCoordinateRegion) region;
+- (void)setUserLocation:(float) latitude withLongitude:(float)longitude andLatitudeSpan:(float) latSpan andLongitudeSpan:(float) longSpan;
 
 @end
 

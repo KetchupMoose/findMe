@@ -10,6 +10,7 @@
 #import "HomePageViewController.h"
 #import "newCaseViewController.h"
 #import "newCaseViewControllerv2.h"
+#import "newCaseViewControllerv3.h"
 #import "MBProgressHUD.h"
 #import <Parse/Parse.h>
 #import "ViewCasesViewController.h"
@@ -382,10 +383,12 @@ NSString *homePageManualLocationPropertyNum;
 */
 -(IBAction)GabcoTest:(id)sender
 {
-    newCaseViewControllerv2 *ncvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ncvcv2"];
+    newCaseViewControllerv3 *ncvc = [[newCaseViewControllerv3 alloc] init];
+    
     
     ncvc.itsMTLObject = HomePageITSMTLObject;
     ncvc.manualLocationPropertyNum = homePageManualLocationPropertyNum;
+   
     //UINavigationController *uinc = self.navigationController;
     
     [self.navigationController pushViewController:ncvc animated:YES];

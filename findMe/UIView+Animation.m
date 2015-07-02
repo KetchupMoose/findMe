@@ -657,5 +657,22 @@
 
 }
 
+-(void)growViewAfterDelayAndDuration:(UIView *)view duration:(float)secs delay:(float)delaysecs
+{
+   // view.transform =  view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.7, 0.7);
+    
+    //[UIView setAnimationDuration:0.3/1.5];
+    [UIView setAnimationDelegate:self];
+    
+    [self addSubview:view];
+    
+    [UIView animateWithDuration:secs delay:delaysecs options:UIViewAnimationOptionCurveLinear animations:^{
+        view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+        view.alpha = 1;
+    } completion:^(BOOL finished) {
+        [self bounce1addtheviewAnimationStopped:view];
+    }];
+
+}
 
 @end

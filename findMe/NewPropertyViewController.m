@@ -168,7 +168,7 @@ UIColor *colorForHighlights;
     self.confirmAnswersLabel.textColor = [UIColor whiteColor];
     self.confirmAnswersLabel.text = @"Select Responses You'll Accept";
     self.confirmAnswersLabel.numberOfLines = 2;
-    self.confirmAnswersLabel.font = [UIFont fontWithName:@"Futura-Medium" size:25];
+    self.confirmAnswersLabel.font = [UIFont fontWithName:@"Futura-Medium" size:23];
     
     //self.addAnswerButton = [[UIButton alloc] initWithFrame:CGRectMake(295,20,30,30)];
     //[self.addAnswerButton setTitle:@"Add" forState:UIControlStateNormal];
@@ -548,6 +548,12 @@ UIColor *colorForHighlights;
 
 -(IBAction)addAnswerToList:(id)sender
 {
+    if([self.answerTextField.text isEqualToString:@""])
+    {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Answer Error", nil) message:@"Answer Must Not Be Blank" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        return;
+        
+    }
     NSString *newAnswer = self.answerTextField.text;
     
     [answersListArray addObject:newAnswer];
@@ -923,7 +929,12 @@ UIColor *colorForHighlights;
 
 -(IBAction)confirmQuestion
 {
-    questionText = self.questionTextField.text;
+    if([self.questionTextView.text isEqualToString:@""])
+    {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Question Error", nil) message:@"Question Must Not Be Blank" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        return;
+        
+    }
     
     //animate step1 up
     
@@ -1002,6 +1013,23 @@ UIColor *colorForHighlights;
     [self.view SlideOffLeft:self.secondStepLabel thenGrowNewView:self.thirdStepLabel duration:0.5f];
     [self.view SlideOffLeft:self.addAnswersLabel thenGrowNewView:self.confirmAnswersLabel duration:0.5f];
     [self.view SlideOffLeft:self.confirmAnswersButton thenGrowNewView:self.addNewPropertyButton duration:0.5f];
+    
+    //slide off AnswerTextField and slide off edit/add button
+    //add Select answers label
+    UILabel *TapToSelect = [[UILabel alloc] initWithFrame:self.answerTextField.frame];
+    CGRect origFrame = TapToSelect.frame;
+    origFrame.size.width = 320;
+    [TapToSelect setFrame:origFrame];
+    
+    
+    TapToSelect.text = @"Tap Below To Confirm Answers";
+    TapToSelect.font = [UIFont fontWithName:@"Futura-Medium" size:15];
+    TapToSelect.textColor = [UIColor whiteColor];
+    
+    
+    [self.view SlideOffLeft:self.answerTextField thenGrowNewView:TapToSelect duration:0.5f];
+    [self.view SlideOffLeft:self.editButton duration:0.5f];
+    [self.view SlideOffLeft:self.addNewAnswerButton duration:0.5f];
     
     
 }
