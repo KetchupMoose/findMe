@@ -675,4 +675,22 @@
 
 }
 
+-(void)bounceUpAndDown:(UIView *)view duration:(float)secs bounce:(int)bounceHeight
+{
+    [UIView animateWithDuration:secs delay:0.0 options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         view.frame = CGRectMake(view.frame.origin.x,view.frame.origin.y-bounceHeight, view.frame.size.width, view.frame.size.height);
+                     }
+                     completion:^(BOOL finished)
+     {
+         [UIView animateWithDuration:secs delay:0.0 options:UIViewAnimationOptionCurveLinear
+                          animations:^{
+                              view.frame = CGRectMake(view.frame.origin.x,view.frame.origin.y+bounceHeight, view.frame.size.width, view.frame.size.height);
+                          }
+                          completion:nil];
+     }
+     ];
+    
+}
+
 @end

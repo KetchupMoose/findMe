@@ -43,5 +43,5 @@
 -(void)SlideOffLeft:(UIView *)view thenGrowNewView:(UIView *)secondView duration:(float)secs;
 -(void)slideUpView:(UIView *)view duration:(float)secs pixels:(int)pixels;
 -(void)growViewAfterDelayAndDuration:(UIView *)view duration:(float)secs delay:(float)delaysecs;
-
+-(void)bounceUpAndDown:(UIView *)view duration:(float)secs bounce:(int)bounceHeight;
 @end

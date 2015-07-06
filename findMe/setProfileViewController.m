@@ -140,12 +140,14 @@ int selectedPic = 1;
         
     }
     
+    /*
     if(self.phoneTextField.text.length == 0)
     {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Phone Number", nil) message:NSLocalizedString(@"Please enter a valid phone number before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
         return;
         
     }
+     */
     
     if(self.gender.length==0)
     {
@@ -156,6 +158,11 @@ int selectedPic = 1;
     //passed validation, run xml to create new user
     
     self.username = self.usernameTextField.text;
+    if([self.phoneTextField.text isEqualToString:@""])
+    {
+        self.phoneNumber = @"None Entered";
+        
+    }
     self.phoneNumber = self.phoneTextField.text;
     
     if(self.emailTextField.text.length !=0)

@@ -158,7 +158,7 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
     //add pan gesture recogniser
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didPan:)];
     panGesture.delegate = (id <UIGestureRecognizerDelegate>)self;
-    [_contentView addGestureRecognizer:panGesture];
+    //[_contentView addGestureRecognizer:panGesture];
     
     //add tap gesture recogniser
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTap:)];
@@ -821,6 +821,7 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
     
     //enable/disable interaction
     view.superview.userInteractionEnabled = (!_centerItemWhenSelected || index == self.currentItemIndex);
+    
   
     //account for retina
     view.superview.layer.rasterizationScale = [UIScreen mainScreen].scale;

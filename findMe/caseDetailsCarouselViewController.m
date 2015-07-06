@@ -17,7 +17,7 @@
 #import "CaseTitleSetViewController.h"
 #import "conversationJSQViewController.h"
 #import "conversationModelData.h"
-
+#import "UIView+Animation.h"
 
 @implementation caseDetailsCarouselViewController
 
@@ -58,7 +58,7 @@ PFObject *returnedITSMTLObject;
 //this variable stores the case being updated so it's clear which one to show when the json returns.  Used for a case where we're not in "template mode".
 PFObject *caseObjectBeingUpdated;
 BOOL templateMode;
-
+BOOL deleteAlertShown;
 int suggestedCaseDisplayedIndex;
 int carouselCaseUpdateTicker = 0;
 NSArray *selectedCaseItemAnswersList;
@@ -203,6 +203,8 @@ BOOL LoadedBOOL = NO;
     
     UIPanGestureRecognizer *checkForPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panHappened:)];
     [self.view addGestureRecognizer:checkForPan];
+    
+    
     
     
     //location manager instance variable allocs
@@ -1278,7 +1280,10 @@ BOOL LoadedBOOL = NO;
     {
         return;
     }
-    deleteBGView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,400)];
+    
+    
+    
+    deleteBGView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,self.view.bounds.size.height)];
     
     deleteBGView.backgroundColor = [UIColor blackColor];
     
@@ -1336,21 +1341,32 @@ BOOL LoadedBOOL = NO;
 
 -(void)showDeleteChoiceView:(NSInteger) index
 {
+   
+    
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Delete Case Item"
                                                         message:@"Are You Sure You Want To Delete This Case Item?"
                                                        delegate:self
                                               cancelButtonTitle:@"Cancel"
                                               otherButtonTitles:@"Delete", nil];
     alertView.tag = index;
-    [alertView show];
+    
+    if(deleteAlertShown == FALSE)
+    {
+        deleteAlertShown = TRUE;
+        
+        [alertView show];
+    }
+   
 }
 
 #pragma mark UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+ 
     if(buttonIndex == 0)//Cancel button pressed
     {
         //start delete process
+        deleteAlertShown = FALSE;
         
         
     }
@@ -1359,8 +1375,21 @@ BOOL LoadedBOOL = NO;
          //start delete process
         [self showDeleteBGView];
         
+         deleteAlertShown = FALSE;
+        
         NSLog(@"deleting for this index");
         NSLog(@"%ld",alertView.tag);
+        
+        if(alertView.tag == sortedCaseItems.count)
+        {
+           [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot Delete This Item", nil) message:@"Cannot Delete This Item" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+            
+            [self popDeleteBGView];
+            
+            
+            return;
+            
+        }
         
         //start the XML for processing the delete
         PFObject *caseItemObjectAtIndex = [sortedCaseItems objectAtIndex:alertView.tag];
@@ -4333,9 +4362,42 @@ if(tableViewTag ==8999)
      </PAYLOAD>
      */
     
-   
     //NSUInteger *selectedCase = (NSUInteger *)selectedCaseInt;
     
+    if(templateMode ==YES)
+    {
+        
+        //check the answerability.
+        PFObject *propertyObject = [propsArray objectAtIndex:index];
+        NSString *answerability = [propertyObject objectForKey:@"answerability"];
+        
+        if([answerability isEqualToString:@"1"])
+        {
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot Delete", nil) message:@"Must Answer This Case Item" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+            
+            [self popDeleteBGView];
+            
+            return;
+            
+        }
+        [sortedCaseItems removeObjectAtIndex:index];
+        [propsArray removeObjectAtIndex:index];
+        
+        [self.carousel reloadData];
+        [self carouselCurrentItemIndexDidChange:self.carousel];
+        
+        if(index<sortedCaseItems.count)
+        {
+              [self.propertiesTableView reloadData];
+        }
+        
+      
+        
+        [self popDeleteBGView];
+        
+        return;
+        
+    }
     
     
     //PFObject *caseObject = [allCases objectAtIndex:selectedCaseInt];
@@ -4350,7 +4412,6 @@ if(tableViewTag ==8999)
     NSString *caseItem = [itemObject objectForKey:@"caseItem"];
     NSString *propertyNum = [itemObject objectForKey:@"propertyNum"];
    
-    
     //get the selected property from the chooser element.
     // allocate serializer
     XMLWriter *xmlWriter = [[XMLWriter alloc] init];
@@ -4696,18 +4757,6 @@ if(tableViewTag ==8999)
     f.numberStyle = NSNumberFormatterDecimalStyle;
     lastTimestamp = [f numberFromString:timeStampReturn];
     
-    
-    if([self.popupVC.popupOrSlideout isEqualToString:@"slideout"])
-    {
-        //[self.slidingViewController resetTopViewAnimated:YES];
-    }
-    else
-    {
-        [self dismissViewControllerAnimated:NO completion:nil];
-    }
-    
-    [self.submitAnswersButton setTitle:@"Update Answers" forState:UIControlStateNormal];
-    
     NSLog(@"deletion processed");
     
 }
@@ -4757,7 +4806,6 @@ if(tableViewTag ==8999)
                 //selectedCaseItem defined above as caseItemObject based on index in sortedCaseItems
                 
                 //class level variable caseObjectBeingUpdated;
-                
                 
                 NSString *origin = [caseItemObject objectForKey:@"origin"];
                 if([origin isEqualToString:@"B"])
@@ -4821,7 +4869,6 @@ if(tableViewTag ==8999)
                         }
                         
                     }
-                
                 
                 //should be only one match, take the first index in "activeMatchesArray"
                 NSString *theMatch = [activeMatchesArray objectAtIndex:0];
@@ -5640,7 +5687,8 @@ if(tableViewTag ==8999)
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
     if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-        NSLog(@"panGesture");
+   
+        
         //[self.carousel solvePinchGesture: gestureRecognizer];
         [self.carousel gestureRecognizerShouldBegin:gestureRecognizer];
         
@@ -5655,7 +5703,72 @@ if(tableViewTag ==8999)
         NSLog(@"panGesture");
         //[self.carousel solvePinchGesture: gestureRecognizer];
         //- (void)didPan:(UIPanGestureRecognizer *)panGesture
-        [self.carousel didPan:sendingPan];
+        
+        //check to see if it's vertical, if vertical then handle it differently
+        int translationDifferenceY = [sendingPan translationInView:self.view].y;
+        int translationDifferenceX = [sendingPan translationInView:self.view].x;
+        
+        NSLog(@"translationY:@%d",translationDifferenceY);
+        NSLog(@"translationX:@%d",translationDifferenceX);
+        
+        CGPoint locationOfPan = [sendingPan locationInView:self.carousel];
+        
+        //get selected index and move it up a bit then bounce back down
+        UIView *pannedCarouselSubview =  [self.carousel itemViewAtPoint:locationOfPan];
+        
+        NSInteger viewIndex =[self.carousel indexOfItemView:pannedCarouselSubview];
+        
+        
+        if(translationDifferenceY < -15 && viewIndex <2000)
+        {
+            
+            //check to see if the absolute value of the translation is more vertical than horizontal
+            
+            int absY = abs(translationDifferenceY);
+            int absX = abs(translationDifferenceX);
+            
+            if(absY > (2*absX))
+            {
+                NSLog(@"translationY:@%d",translationDifferenceY);
+                NSLog(@"translationX:@%d",translationDifferenceX);
+                
+                CGPoint locationOfPan = [sendingPan locationInView:self.carousel];
+                
+                //get selected index and move it up a bit then bounce back down
+               UIView *pannedCarouselSubview =  [self.carousel itemViewAtPoint:locationOfPan];
+                
+               //bounce up and down, don't allow another animation to trigger during this time period.
+                [pannedCarouselSubview bounceUpAndDown:pannedCarouselSubview duration:0.2f bounce:7];
+                
+                //get index of view
+                NSInteger viewIndex =[self.carousel indexOfItemView:pannedCarouselSubview];
+                
+                //show a popup asking if we should remove the view at this index.
+                
+                [self showDeleteChoiceView:viewIndex];
+                
+                
+            }
+           
+        }
+        else
+        {
+            int absY = abs(translationDifferenceY);
+            int absX = abs(translationDifferenceX);
+            
+            if(absY > (2*absX))
+            {
+                //do nothing
+            }
+            else
+            {
+                  [self.carousel didPan:sendingPan];
+            }
+            
+         
+        }
+        
+        
         
     }
 }
