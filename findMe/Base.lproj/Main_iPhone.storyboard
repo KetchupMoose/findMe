@@ -1016,7 +1016,7 @@
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="455-Oz-fCY">
                                 <rect key="frame" x="0.0" y="259" width="325" height="40"/>
                                 <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="123-456-7890" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xn2-6g-cpi">
+                                    <textField opaque="NO" clipsSubviews="YES" alpha="0.0" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="123-456-7890" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xn2-6g-cpi">
                                         <rect key="frame" x="43" y="5" width="117" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
@@ -1026,6 +1026,16 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="34"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qma-Ny-JgY">
+                                        <rect key="frame" x="43" y="5" width="182" height="30"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Confirm Phone Number">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="confirmPhone:" destination="nWt-1O-Kqo" eventType="touchUpInside" id="xeo-8n-y3K"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.162618032" green="0.73871958230000001" blue="0.95385495580000002" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
@@ -1145,6 +1155,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="C7J-mX-WPD"/>
                     <connections>
+                        <outlet property="confirmPhoneNumberButton" destination="Qma-Ny-JgY" id="AzZ-Ak-CmJ"/>
                         <outlet property="emailTextField" destination="hWF-q8-u10" id="Na8-19-R6r"/>
                         <outlet property="firstNameTextField" destination="hal-us-W4r" id="KPw-Ur-zPj"/>
                         <outlet property="genderSelectBtn" destination="TnZ-ob-9Nd" id="BRY-bH-XDb"/>

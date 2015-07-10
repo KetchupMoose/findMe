@@ -419,9 +419,16 @@ NSString *homePageManualLocationPropertyNum;
     matchesViewController *mvc = [self.storyboard instantiateViewControllerWithIdentifier:@"mvc"];
     
     //loop through the itsMTLObject and gather all the user's matches
+    
+    //stores the caseID's of the other users you are matching with
     NSMutableArray *allMatchesArray = [[NSMutableArray alloc] init];
+    //stores the caseObjects of this user that led to the matches
     NSMutableArray *allMatchCaseObjectsArray = [[NSMutableArray alloc] init];
+    
+    //stores a string of the caseItemObject that contains the matches
     NSMutableArray *allMatchCaseItemObjectsArray = [[NSMutableArray alloc] init];
+    //stores a string of whether the match is a yes, rejected yes, or normal match.
+    
     NSMutableArray *allMatchesCaseTypes = [[NSMutableArray alloc] init];
     NSArray *cases = [HomePageITSMTLObject objectForKey:@"cases"];
     for(PFObject *caseObj in cases)
@@ -450,6 +457,7 @@ NSString *homePageManualLocationPropertyNum;
                     for(NSString *caseMatchID in matchesRejectedYesArray)
                     {
                         [allMatchesArray addObject:caseMatchID];
+                        
                         [allMatchCaseObjectsArray addObject:caseObj];
                         NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
                         
@@ -509,6 +517,8 @@ NSString *homePageManualLocationPropertyNum;
     [caseProfileQuery whereKey:@"caseID" containedIn:allMatchesArray];
     NSArray *returnedCaseProfiles = [caseProfileQuery findObjects];
     mvc.matchesCaseProfileArrays = returnedCaseProfiles;
+    
+    //query for UserProfiles of these caseUsers
     
     
     mvc.matchesUserName = HomePageuserName;

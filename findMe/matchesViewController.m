@@ -22,21 +22,78 @@
 
 @implementation matchesViewController
 
-
+ NSMutableSet* _collapsedSections;
 MBProgressHUD *HUD;
+BOOL firstMatchViewLoad = TRUE;
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    _collapsedSections = [NSMutableSet new];
     // Do any additional setup after loading the view.
     self.matchesTableView.delegate = self;
     self.matchesTableView.dataSource = self;
+    
+    self.matchesPerCaseArray = [[NSMutableArray alloc] init];
+    self.sectionHeaderCaseObjectArray = [[NSMutableArray alloc] init];
+    
+    //loop through the incoming array of data on matches and create two arrays to separate them into separate sections
+    NSString *previousCaseIDLooped;
+    int matchCountInCase = 1;
+    int startLoop = 0;
+    for(PFObject *caseObject in self.matchesCaseObjectArrays)
+    {
+        NSString *caseObjID = [caseObject objectForKey:@"caseId"];
+       
+    if(startLoop == 0)
+    {
+            previousCaseIDLooped = caseObjID;
+            startLoop = startLoop+1;
+            
+    }
+    else
+    {
+        
+        if([caseObjID isEqualToString:previousCaseIDLooped])
+        {
+            matchCountInCase = matchCountInCase+1;
+            //add a new item to the array keeping track of item count in each array
+            if(startLoop+1 == self.matchesCaseObjectArrays.count)
+            {
+                NSNumber *matchCountPerCaseNum = [NSNumber numberWithInt:matchCountInCase];
+                
+                [self.matchesPerCaseArray addObject:matchCountPerCaseNum];
+                [self.sectionHeaderCaseObjectArray addObject:caseObject];
+                
+            }
+        }
+        else
+        {
+            NSNumber *matchCountPerCaseNum = [NSNumber numberWithInt:matchCountInCase];
+            
+            [self.matchesPerCaseArray addObject:matchCountPerCaseNum];
+            [self.sectionHeaderCaseObjectArray addObject:caseObject];
+            
+            matchCountInCase=1;
+            previousCaseIDLooped = caseObjID;
+
+        }
+        startLoop = startLoop +1;
+        
+       
+    }
+    }
+    
+    [self.matchesTableView reloadData];
     
      [self.matchesTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.matchesTableView.backgroundColor = [UIColor clearColor];
     
     self.matchesTableView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin;
     
+    firstMatchViewLoad = FALSE;
+
     
 }
 
@@ -75,11 +132,102 @@ MBProgressHUD *HUD;
 #pragma mark UITableViewDelegateMethods
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return (NSInteger)[self.matchesArray count];
+   //if first load, start them all as 0 and add them to the array
+    
+  
+    //check the number of rows which should be included in this part of the tableview
+    NSNumber *objCountNumber = [self.matchesPerCaseArray objectAtIndex:section];
+    NSInteger rowCount = [objCountNumber integerValue];
+    
+    if(firstMatchViewLoad==TRUE)
+    {
+        rowCount =0;
+        [_collapsedSections addObject:@(section)];
+        
+    }
+    
+    NSInteger valueToReturn = [_collapsedSections containsObject:@(section)] ? 0 : rowCount;
+
+ 
+    return valueToReturn;
+    
+}
+-(NSArray*) indexPathsForSection:(int)section withNumberOfRows:(int)numberOfRows {
+    NSMutableArray* indexPaths = [NSMutableArray new];
+    for (int i = 0; i < numberOfRows; i++) {
+        NSIndexPath* indexPath = [NSIndexPath indexPathForRow:i inSection:section];
+        [indexPaths addObject:indexPath];
+    }
+    return indexPaths;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+-(void)sectionButtonTouchUpInside:(UIButton*)sender {
+    sender.backgroundColor = [UIColor greenColor];
+    [self.matchesTableView beginUpdates];
+    int section = sender.tag;
+    bool shouldCollapse = ![_collapsedSections containsObject:@(section)];
+    if (shouldCollapse) {
+        int numOfRows = [self.matchesTableView numberOfRowsInSection:section];
+        NSArray* indexPaths = [self indexPathsForSection:section withNumberOfRows:numOfRows];
+        [self.matchesTableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+        [_collapsedSections addObject:@(section)];
+    }
+    else {
+        NSNumber *objCountNumber = [self.matchesPerCaseArray objectAtIndex:section];
+        NSInteger numOfRows = [objCountNumber integerValue];
+        NSArray* indexPaths = [self indexPathsForSection:section withNumberOfRows:numOfRows];
+        [self.matchesTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+        [_collapsedSections removeObject:@(section)];
+    }
+    [self.matchesTableView endUpdates];
+    //[_tableView reloadData];
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 50.0;
+}
+
+
+- (UIView *)tableView:(UITableView *)tableView
+viewForHeaderInSection:(NSInteger)section
+{
+    UIView *sectionView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.matchesTableView.frame.size.width,50)];
+    
+    //get count of matches for this particular section
+    NSNumber *objCountNumber = [self.matchesPerCaseArray objectAtIndex:section];
+    NSInteger matchCount = [objCountNumber integerValue];
+    
+    UILabel *updateCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.matchesTableView.frame.size.width-20,0,20,20)];
+    
+    updateCountLabel.backgroundColor = [UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1];
+    updateCountLabel.textColor = [UIColor whiteColor];
+    updateCountLabel.layer.cornerRadius = 10.0f;
+    updateCountLabel.layer.masksToBounds = YES;
+    updateCountLabel.text = [objCountNumber stringValue];
+    
+    [updateCountLabel setTextAlignment:NSTextAlignmentCenter];
+    
+    UIButton* result = [UIButton buttonWithType:UIButtonTypeCustom];
+    result.frame = CGRectMake(0,0,self.matchesTableView.frame.size.width,50);
+    
+    [result addTarget:self action:@selector(sectionButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
+    result.backgroundColor = [UIColor clearColor];
+    [result setTitle:[NSString stringWithFormat:@"Section %ld", (long)section] forState:UIControlStateNormal];
+    result.tag = section;
+    return result;
+    
+    [sectionView addSubview:result];
+    [sectionView addSubview:updateCountLabel];
+    //show some details about the case
+    
+}
+
+
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return self.matchesPerCaseArray.count;
 }
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -87,23 +235,20 @@ MBProgressHUD *HUD;
    SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"matchCell" forIndexPath:indexPath];
     
     cell.backgroundColor = [UIColor clearColor];
-    
-    
     cell.leftUtilityButtons = [self leftButtons];
     cell.rightUtilityButtons = [self rightButtons];
     cell.delegate = self;
     
-    
     UIImageView *matchImage = (UIImageView *)[cell viewWithTag:1];
-    UILabel *caseNameLabel = (UILabel *)[cell viewWithTag:2];
-     UILabel *matchPctLabel = (UILabel *)[cell viewWithTag:3];
+    UILabel *matchCaseNameLabel = (UILabel *)[cell viewWithTag:2];
+    UILabel *matchPctLabel = (UILabel *)[cell viewWithTag:3];
     UIView *bgView = [cell viewWithTag:4];
     
-    caseNameLabel.textColor = [UIColor whiteColor];
+    matchCaseNameLabel.textColor = [UIColor whiteColor];
     matchPctLabel.textColor = [UIColor whiteColor];
     
-   bgView.layer.cornerRadius = 5.0f;
-   bgView.layer.masksToBounds = YES;
+    bgView.layer.cornerRadius = 5.0f;
+    bgView.layer.masksToBounds = YES;
     bgView.backgroundColor = [UIColor clearColor];
     
     matchImage.layer.cornerRadius = 2.0f;
@@ -124,16 +269,17 @@ MBProgressHUD *HUD;
     if([self.matchViewControllerMode isEqualToString:@"allMatches"])
     {
         PFObject *caseObj = [self.matchesCaseObjectArrays objectAtIndex:indexPath.row];
-        NSString *caseName = [caseObj objectForKey:@"caseName"];
-        caseNameLabel.text = caseName;
+        NSString *caseName = [self.matchesArray objectAtIndex:indexPath.row];
+        
+        matchCaseNameLabel.text = caseName;
         bgView.alpha = 1;
-        caseNameLabel.alpha = 1;
+        matchCaseNameLabel.alpha = 1;
         
     }
     else
     {
         bgView.alpha = 0;
-        caseNameLabel.alpha = 0;
+        matchCaseNameLabel.alpha = 0;
         
     }
     
@@ -149,7 +295,7 @@ MBProgressHUD *HUD;
         if([matchCaseID isEqualToString:caseProfileCaseID])
         {
             //display case information
-            caseNameLabel.text = [caseProfileObj objectForKey:@"externalCaseName"];
+           matchCaseNameLabel.text = [caseProfileObj objectForKey:@"externalCaseName"];
             PFFile *imgFile = [caseProfileObj objectForKey:@"caseImage"];
             caseimgURL = imgFile.url;
         }
@@ -172,12 +318,12 @@ MBProgressHUD *HUD;
     NSString *matchType = [self.matchTypeArray objectAtIndex:indexPath.row];
     if([matchType isEqualToString:@"yes"])
     {
-        caseNameLabel.textColor = [UIColor greenColor];
+        matchCaseNameLabel.textColor = [UIColor greenColor];
         
     }
     else if([matchType isEqualToString:@"rejected"])
     {
-        caseNameLabel.textColor = [UIColor grayColor];
+       matchCaseNameLabel.textColor = [UIColor grayColor];
         
     }
     

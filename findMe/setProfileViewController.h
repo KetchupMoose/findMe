@@ -71,5 +71,8 @@
 
 @property (strong,nonatomic) NSString *homeScreenMTLObjectID;
 
+@property (strong,nonatomic) IBOutlet UIButton *confirmPhoneNumberButton;
+-(IBAction)confirmPhone:(id)sender;
+
 
 @end

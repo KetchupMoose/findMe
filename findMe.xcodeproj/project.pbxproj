@@ -199,6 +199,10 @@
 		ECA7A2C41AA8B86C00F899D5 /* JSQMessagesTypingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ECA7A2991AA8B86C00F899D5 /* JSQMessagesTypingIndicatorFooterView.xib */; };
 		ECA7A2C71AA8B8ED00F899D5 /* conversationJSQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECA7A2C61AA8B8ED00F899D5 /* conversationJSQViewController.m */; };
 		ECA7A2CA1AA8BD0D00F899D5 /* conversationModelData.m in Sources */ = {isa = PBXBuildFile; fileRef = ECA7A2C91AA8BD0D00F899D5 /* conversationModelData.m */; };
+		ECAB71C11B4DFF4B004D4E5C /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECAB71BD1B4DFF4B004D4E5C /* Fabric.framework */; };
+		ECAB71C21B4DFF4B004D4E5C /* DigitsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECAB71BE1B4DFF4B004D4E5C /* DigitsKit.framework */; };
+		ECAB71C31B4DFF4B004D4E5C /* DigitsKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = ECAB71BF1B4DFF4B004D4E5C /* DigitsKitResources.bundle */; };
+		ECAB71C41B4DFF4B004D4E5C /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECAB71C01B4DFF4B004D4E5C /* TwitterCore.framework */; };
 		ECB1D5111A7748B5008CC684 /* popupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECB1D5101A7748B5008CC684 /* popupViewController.m */; };
 		ECBEE5771B2216B700D131E7 /* Greecewallpaperblurred.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECBEE5761B2216B700D131E7 /* Greecewallpaperblurred.jpg */; };
 		ECBEE5841B25ECD000D131E7 /* greecelessblurred.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECBEE5831B25ECD000D131E7 /* greecelessblurred.jpg */; };
@@ -677,6 +681,10 @@
 		ECA7A2C61AA8B8ED00F899D5 /* conversationJSQViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = conversationJSQViewController.m; sourceTree = "<group>"; };
 		ECA7A2C81AA8BD0D00F899D5 /* conversationModelData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = conversationModelData.h; path = ../conversationModelData.h; sourceTree = "<group>"; };
 		ECA7A2C91AA8BD0D00F899D5 /* conversationModelData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = conversationModelData.m; path = ../conversationModelData.m; sourceTree = "<group>"; };
+		ECAB71BD1B4DFF4B004D4E5C /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
+		ECAB71BE1B4DFF4B004D4E5C /* DigitsKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DigitsKit.framework; sourceTree = SOURCE_ROOT; };
+		ECAB71BF1B4DFF4B004D4E5C /* DigitsKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = DigitsKitResources.bundle; path = DigitsKit.framework/Versions/A/Resources/DigitsKitResources.bundle; sourceTree = SOURCE_ROOT; };
+		ECAB71C01B4DFF4B004D4E5C /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterCore.framework; sourceTree = SOURCE_ROOT; };
 		ECB1D50F1A7748B5008CC684 /* popupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = popupViewController.h; sourceTree = "<group>"; };
 		ECB1D5101A7748B5008CC684 /* popupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = popupViewController.m; sourceTree = "<group>"; };
 		ECBEE5761B2216B700D131E7 /* Greecewallpaperblurred.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Greecewallpaperblurred.jpg; sourceTree = "<group>"; };
@@ -1067,6 +1075,7 @@
 				ECE6B18B1A0DAA54007F4A19 /* MapKit.framework in Frameworks */,
 				ECE6B1891A0DAA4E007F4A19 /* ImageIO.framework in Frameworks */,
 				D3FBD13A19CF042F008240F5 /* SystemConfiguration.framework in Frameworks */,
+				ECAB71C41B4DFF4B004D4E5C /* TwitterCore.framework in Frameworks */,
 				D3FBD13819CF0424008240F5 /* StoreKit.framework in Frameworks */,
 				D3FBD13619CF0419008240F5 /* Security.framework in Frameworks */,
 				D3FBD13219CF03EC008240F5 /* MobileCoreServices.framework in Frameworks */,
@@ -1078,9 +1087,11 @@
 				D3FBD12819CF03A2008240F5 /* AudioToolbox.framework in Frameworks */,
 				D3FBD12619CF0399008240F5 /* Accounts.framework in Frameworks */,
 				D3FBD12419CF0391008240F5 /* Social.framework in Frameworks */,
+				ECAB71C21B4DFF4B004D4E5C /* DigitsKit.framework in Frameworks */,
 				D3FBD12219CF0386008240F5 /* AdSupport.framework in Frameworks */,
 				D31DF2F819CEFC0C00A37725 /* CoreGraphics.framework in Frameworks */,
 				D31DF2FA19CEFC0C00A37725 /* UIKit.framework in Frameworks */,
+				ECAB71C11B4DFF4B004D4E5C /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1168,6 +1179,10 @@
 				ECC9E5031AA1126F0099C46A /* conversationsViewController.m */,
 				ECB1D50F1A7748B5008CC684 /* popupViewController.h */,
 				ECB1D5101A7748B5008CC684 /* popupViewController.m */,
+				ECAB71BD1B4DFF4B004D4E5C /* Fabric.framework */,
+				ECAB71BE1B4DFF4B004D4E5C /* DigitsKit.framework */,
+				ECAB71BF1B4DFF4B004D4E5C /* DigitsKitResources.bundle */,
+				ECAB71C01B4DFF4B004D4E5C /* TwitterCore.framework */,
 				D31DF30719CEFC0C00A37725 /* Main_iPhone.storyboard */,
 				D31DF30A19CEFC0C00A37725 /* Main_iPad.storyboard */,
 				EC93C6A91B03A26A00D3DE2A /* CaseTitleSetViewController.h */,
@@ -2149,6 +2164,7 @@
 				D31DF2EE19CEFC0C00A37725 /* Sources */,
 				D31DF2EF19CEFC0C00A37725 /* Frameworks */,
 				D31DF2F019CEFC0C00A37725 /* Resources */,
+				ECAB71BC1B4DFEE7004D4E5C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -2230,6 +2246,7 @@
 				ECA7A29A1AA8B86C00F899D5 /* JSQMessagesAssets.bundle in Resources */,
 				EC7A74C41B267A9500D3A53F /* Brian-frame.png in Resources */,
 				EC886A621B20DC9E00531FEA /* blurtrainBackground.jpg in Resources */,
+				ECAB71C31B4DFF4B004D4E5C /* DigitsKitResources.bundle in Resources */,
 				ECBEE5981B26039D00D131E7 /* womangif2.gif in Resources */,
 				ECC9E5141AA153070099C46A /* Icon-Small@2x.png in Resources */,
 				ECC164101B3E07F800BBC12D /* maleAvatarHeartBlueEdit.png in Resources */,
@@ -2320,6 +2337,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		ECAB71BC1B4DFEE7004D4E5C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 6092c1e7575b7f24de86af9d5815fd37501d70a6 29ca655e736ba3b50b511deb43fbabc8a0931c9f3f8ae0be9fc679f140725d7d";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D31DF2EE19CEFC0C00A37725 /* Sources */ = {
@@ -2709,6 +2742,7 @@
 					"$(PROJECT_DIR)/findMe",
 					"/Users/brianallen/Downloads/parse-library-1.7.3",
 					/Users/brianallen/Documents/FacebookSDK,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "findMe/findme-Prefix.pch";
@@ -2734,6 +2768,7 @@
 					"$(PROJECT_DIR)/findMe",
 					"/Users/brianallen/Downloads/parse-library-1.7.3",
 					/Users/brianallen/Documents/FacebookSDK,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "findMe/findme-Prefix.pch";

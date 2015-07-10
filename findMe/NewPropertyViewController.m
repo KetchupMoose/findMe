@@ -548,12 +548,15 @@ UIColor *colorForHighlights;
 
 -(IBAction)addAnswerToList:(id)sender
 {
-    if([self.answerTextField.text isEqualToString:@""])
-    {
+    NSString *rawString = [self.answerTextField text];
+    NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    NSString *trimmed = [rawString stringByTrimmingCharactersInSet:whitespace];
+    if ([trimmed length] == 0) {
+        // Text was empty or only whitespace.
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Answer Error", nil) message:@"Answer Must Not Be Blank" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
         return;
-        
     }
+    
     NSString *newAnswer = self.answerTextField.text;
     
     [answersListArray addObject:newAnswer];
@@ -928,12 +931,14 @@ UIColor *colorForHighlights;
 }
 
 -(IBAction)confirmQuestion
-{
-    if([self.questionTextView.text isEqualToString:@""])
-    {
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Question Error", nil) message:@"Question Must Not Be Blank" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+{    
+    NSString *rawString = [self.questionTextView text];
+    NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    NSString *trimmed = [rawString stringByTrimmingCharactersInSet:whitespace];
+    if ([trimmed length] == 0) {
+        // Text was empty or only whitespace.
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Answer Error", nil) message:@"Answer Must Not Be Blank" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
         return;
-        
     }
     
     //animate step1 up

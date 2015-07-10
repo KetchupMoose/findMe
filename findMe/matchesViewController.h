@@ -21,4 +21,8 @@
 @property (strong,nonatomic) NSString *matchViewControllerMode;
 @property (strong,nonatomic) NSArray *matchTypeArray;
 
+@property (strong,nonatomic) NSMutableArray *matchesPerCaseArray;
+@property (strong,nonatomic) NSMutableArray *sectionHeaderCaseObjectArray;
+
+
 @end

@@ -16,6 +16,9 @@
 #import "conversationJSQViewController.h"
 #import "HomePageViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <Fabric/Fabric.h>
+#import <DigitsKit/DigitsKit.h>
+
 
 //uncommented this "quick fix" someone had posted previously, seems the issue is resolved by making sure the project references the correct bolts SDK
 //NSString *const BFTaskMultipleExceptionsException = @"BFMultipleExceptionsException";
@@ -37,6 +40,9 @@
     [defaultACL setPublicReadAccess:YES];
     
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+    
+    [Fabric with:@[DigitsKit]];
+
     
     //PFUser *currentUser = [PFUser currentUser];
     //currentUser save];

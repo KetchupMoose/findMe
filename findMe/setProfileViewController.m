@@ -11,6 +11,7 @@
 #import "MBProgressHUD.h"
 #import "XMLWriter.h"
 #import "UIView+Animation.h"
+#import <DigitsKit/DigitsKit.h>
 
 @interface setProfileViewController ()
 
@@ -95,6 +96,8 @@ int selectedPic = 1;
         [self.navigationItem setHidesBackButton:YES];
     }
     
+    self.confirmPhoneNumberButton.layer.cornerRadius = 5.0f;
+    self.confirmPhoneNumberButton.layer.masksToBounds = YES;
     
     // Do any additional setup after loading the view.
     
@@ -985,6 +988,17 @@ numberOfRowsInComponent:(NSInteger)component
        
          self.locationPermissionLabel.text = @"Your location will be used to help find matches.";
     }
+}
+
+-(IBAction)confirmPhone:(id)sender
+{
+    [[Digits sharedInstance] authenticateWithCompletion:^
+     (DGTSession* session, NSError *error) {
+         if (session) {
+             // Inspect session/error objects
+             
+         }
+     }];
 }
 
 
