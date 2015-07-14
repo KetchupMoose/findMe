@@ -161,16 +161,22 @@ int selectedPic = 1;
     //passed validation, run xml to create new user
     
     self.username = self.usernameTextField.text;
-    if([self.phoneTextField.text isEqualToString:@""])
+    if([self.phoneNumber length] <=0)
     {
         self.phoneNumber = @"None Entered";
         
     }
-    self.phoneNumber = self.phoneTextField.text;
+    
+    
     
     if(self.emailTextField.text.length !=0)
     {
         self.emailAddress = self.emailTextField.text;
+        
+    }
+    else
+    {
+        self.emailAddress = @"None Entered";
         
     }
     
@@ -258,8 +264,10 @@ int selectedPic = 1;
                                 block:^(NSString *responseString, NSError *error) {
                                     if (!error) {
                                         
-                                        //NSString *responseText = responseString;
-                                        //NSLog(responseText);
+                                        NSString *responseText = responseString;
+                                        NSLog(@"brian check for response text");
+                                        
+                                        NSLog(responseText);
                                         [HUD hide:NO];
                                         
                                         NSString *itsMTLObjectID = itsMTLObject.objectId;
@@ -275,6 +283,7 @@ int selectedPic = 1;
                                     else
                                     {
                                         NSLog(@"%@",[error localizedDescription]);
+                                        
                                         [HUD hide:YES];
                                         
                                     }
@@ -996,6 +1005,7 @@ numberOfRowsInComponent:(NSInteger)component
      (DGTSession* session, NSError *error) {
          if (session) {
              // Inspect session/error objects
+             self.phoneNumber = session.phoneNumber;
              
          }
      }];

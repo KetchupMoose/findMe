@@ -27,7 +27,7 @@
                                     <action selector="newCase:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="tne-Aj-PkH"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="b42e5bea32cffb7dd0d94f583fde4dc6.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="E71-Dg-y2J">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="E71-Dg-y2J">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="102" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="4oD-GR-jbR">
@@ -777,7 +777,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="36fce23b893ee95bad9d8f54b916a446.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="B6O-ox-vCw">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="B6O-ox-vCw">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Create A New Question" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="233" translatesAutoresizingMaskIntoConstraints="NO" id="WAM-6E-Hql">
@@ -1173,7 +1173,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ofy-BQ-fdL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-238" y="-122"/>
+            <point key="canvasLocation" x="-254" y="-206"/>
         </scene>
         <!--Find Me-->
         <scene sceneID="au7-rL-zJ3">
@@ -1401,7 +1401,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yiw-hL-C0U" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-250" y="625"/>
+            <point key="canvasLocation" x="-254" y="703"/>
         </scene>
         <!--New Case-->
         <scene sceneID="vQY-S8-PK6">
@@ -1616,7 +1616,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="City-Traffic.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="uv9-dn-QQs">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="uv9-dn-QQs">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="100" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="B4c-FB-dOC">
@@ -1739,6 +1739,38 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wQv-Ff-wlK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1974" y="-817"/>
+        </scene>
+        <!--View Cases View Matches Merged View Controller-->
+        <scene sceneID="1kV-Ti-p9o">
+            <objects>
+                <viewController storyboardIdentifier="viewCasesMerged" id="UQ1-ar-F7w" customClass="ViewCasesViewMatchesMergedViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ede-DZ-w2I"/>
+                        <viewControllerLayoutGuide type="bottom" id="5cH-Ju-wG8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="0Sw-eJ-6Pv">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="98" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="483-dG-Sgg">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="98" id="kZr-Ut-9dh">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kZr-Ut-9dh" id="JTq-Gc-MpN">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7Q0-ch-e2E" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="584" y="1242"/>
         </scene>
         <!--Original View Controller-->
         <scene sceneID="wOY-7Z-azn">
@@ -2145,6 +2177,67 @@
             </objects>
             <point key="canvasLocation" x="-1269" y="1352"/>
         </scene>
+        <!--viewCasesMerge-->
+        <scene sceneID="xL9-wU-viV">
+            <objects>
+                <viewController storyboardIdentifier="viewCasesMerge" title="viewCasesMerge" id="nGn-Rk-ajb" customClass="ViewCasesViewMatchesMergedViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="oBS-BP-77W"/>
+                        <viewControllerLayoutGuide type="bottom" id="Cs1-Yp-hqP"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="OO1-G2-BVa">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="svc-bw-79N">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            </imageView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="100" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="UjX-qm-Z2g">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="matchCell" rowHeight="100" id="Jfl-qw-utV" customClass="SWTableViewCell">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Jfl-qw-utV" id="kgl-9j-eSk">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view tag="4" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="43M-pW-5ej">
+                                                    <rect key="frame" x="4" y="3" width="312" height="91.5"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pH8-j9-UPw">
+                                                            <rect key="frame" x="0.0" y="-1" width="94" height="94"/>
+                                                        </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Case Name" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qnG-1j-FnH">
+                                                            <rect key="frame" x="102" y="20" width="201" height="51"/>
+                                                            <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
+                                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="72%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aM2-ko-ZyQ">
+                                                            <rect key="frame" x="262" y="0.0" width="42" height="21"/>
+                                                            <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="15"/>
+                                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="casesTableView" destination="UjX-qm-Z2g" id="Prk-pw-023"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QUQ-OJ-WnT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-133" y="-945"/>
+        </scene>
         <!--Case Details Carousel View Controller-->
         <scene sceneID="1Ih-P7-biz">
             <objects>
@@ -2157,7 +2250,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="36fce23b893ee95bad9d8f54b916a446.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="tUp-QF-Seb">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="tUp-QF-Seb">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
                             <tableView clipsSubviews="YES" tag="8999" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="1NL-L2-5dk">
@@ -2351,14 +2444,11 @@
     </scenes>
     <resources>
         <image name="086266-rounded-glossy-black-icon-business-envelope1.png" width="256" height="256"/>
-        <image name="36fce23b893ee95bad9d8f54b916a446.jpg" width="474" height="718"/>
         <image name="535106-user_512x512.png" width="512" height="512"/>
         <image name="Accept_circular_button_outline_256.png" width="256" height="256"/>
         <image name="Brian-frame.png" width="839" height="339"/>
-        <image name="City-Traffic.jpg" width="640" height="1136"/>
         <image name="Gender-symbols-262x300.png" width="262" height="300"/>
         <image name="Greecewallpaperblurred.jpg" width="640" height="1136"/>
-        <image name="b42e5bea32cffb7dd0d94f583fde4dc6.jpg" width="500" height="750"/>
         <image name="blurPhotoBG2.jpg" width="2000" height="1500"/>
         <image name="blurredlights.jpg" width="640" height="1136"/>
         <image name="calm.png" width="600" height="800"/>
@@ -2371,6 +2461,7 @@
         <image name="lostdog.jpg" width="347" height="338"/>
         <image name="missedConnection.jpg" width="279" height="181"/>
         <image name="officerelationship.jpg" width="670" height="503"/>
+        <image name="papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg" width="750" height="1334"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

@@ -14,6 +14,7 @@
 #import "MBProgressHUD.h"
 #import <Parse/Parse.h>
 #import "ViewCasesViewController.h"
+#import "ViewCasesViewMatchesMergedViewController.h"
 #import "setProfileViewController.h"
 #import "matchesViewController.h"
 #import "UIViewController+ECSlidingViewController.h"
@@ -407,10 +408,130 @@ NSString *homePageManualLocationPropertyNum;
     
 }
 - (IBAction)ViewMyCases:(id)sender {
+    /*
     ViewCasesViewController *vcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"vcvc"];
+     
+     
     vcvc.userName = HomePageuserName;
     vcvc.itsMTLObject = HomePageITSMTLObject;
     vcvc.manualLocationPropertyNum = homePageManualLocationPropertyNum;
+    [self.navigationController pushViewController:vcvc animated:YES];
+    */
+    
+    //BrianJuly13 upgrade to showing viewCasesViewMatchesMergedViewController
+    //viewCasesMerge
+    ViewCasesViewMatchesMergedViewController *vcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"viewCasesMerge"];
+    //ViewCasesViewMatchesMergedViewController *vcvc = [[ViewCasesViewMatchesMergedViewController alloc] init];
+    vcvc.userName = HomePageuserName;
+    vcvc.itsMTLObject = HomePageITSMTLObject;
+    vcvc.manualLocationPropertyNum = homePageManualLocationPropertyNum;
+    
+    //set matches properties also
+    //loop through the itsMTLObject and gather all the user's matches
+    
+    //stores the caseID's of the other users you are matching with
+    NSMutableArray *allMatchesArray = [[NSMutableArray alloc] init];
+    //stores the caseObjects of this user that led to the matches
+    NSMutableArray *allMatchCaseObjectsArray = [[NSMutableArray alloc] init];
+    
+    //stores a string of the caseItemObject that contains the matches
+    NSMutableArray *allMatchCaseItemObjectsArray = [[NSMutableArray alloc] init];
+    //stores a string of whether the match is a yes, rejected yes, or normal match.
+    
+    NSMutableArray *allMatchesCaseTypes = [[NSMutableArray alloc] init];
+    NSArray *cases = [HomePageITSMTLObject objectForKey:@"cases"];
+    for(PFObject *caseObj in cases)
+    {
+        NSArray *caseItems = [caseObj objectForKey:@"caseItems"];
+        //get the properties
+        
+        for(PFObject *caseItemObject in caseItems)
+        {
+            NSString *origin = [caseItemObject objectForKey:@"origin"];
+            if([origin isEqualToString:@"B"])
+            {
+                NSString *matchesString = [caseItemObject objectForKey:@"browse"];
+                
+                NSString *matchesYesString = [caseItemObject objectForKey:@"yeses"];
+                
+                NSString *matchesRejectedYesString = [caseItemObject objectForKey:@"rejectedYeses"];
+                
+                NSArray *matchesArray = [matchesString componentsSeparatedByString:@";"];
+                NSArray *matchesYesArray = [matchesYesString componentsSeparatedByString:@";"];
+                NSArray *matchesRejectedYesArray= [matchesRejectedYesString componentsSeparatedByString:@";"];
+                
+                
+                if([matchesRejectedYesArray count] >0)
+                {
+                    for(NSString *caseMatchID in matchesRejectedYesArray)
+                    {
+                        [allMatchesArray addObject:caseMatchID];
+                        
+                        [allMatchCaseObjectsArray addObject:caseObj];
+                        NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                        
+                        [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                        [allMatchesCaseTypes addObject:@"rejected"];
+                        
+                    }
+                    
+                }
+                
+                if([matchesYesArray count] >0)
+                {
+                    for(NSString *caseMatchID in matchesYesArray)
+                    {
+                        
+                        //if(![allMatchesArray containsObject:caseMatchID])
+                        // {
+                        [allMatchesArray addObject:caseMatchID];
+                        [allMatchCaseObjectsArray addObject:caseObj];
+                        NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                        
+                        [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                        [allMatchesCaseTypes addObject:@"yes"];
+                        //  }
+                        
+                    }
+                    
+                }
+                
+                if([matchesArray count] >0)
+                {
+                    for(NSString *caseMatchID in matchesArray)
+                    {
+                        // if(![allMatchesArray containsObject:caseMatchID])
+                        //{
+                        [allMatchesArray addObject:caseMatchID];
+                        [allMatchCaseObjectsArray addObject:caseObj];
+                        NSString *caseItemObjectString = [caseItemObject objectForKey:@"caseItem"];
+                        
+                        [allMatchCaseItemObjectsArray addObject:caseItemObjectString];
+                        [allMatchesCaseTypes addObject:@"match"];
+                        // }
+                    }
+                    
+                }
+            }
+        }
+    }
+    
+    vcvc.matchesArray = [allMatchesArray copy];
+    vcvc.matchesCaseObjectArrays = [allMatchCaseObjectsArray copy];
+    vcvc.matchesCaseItemArrays = [allMatchCaseItemObjectsArray copy];
+    vcvc.matchTypeArray = [allMatchesCaseTypes copy];
+    
+    //query for caseProfiles
+    PFQuery *caseProfileQuery = [PFQuery queryWithClassName:@"CaseProfile"];
+    [caseProfileQuery whereKey:@"caseID" containedIn:allMatchesArray];
+    NSArray *returnedCaseProfiles = [caseProfileQuery findObjects];
+    vcvc.matchesCaseProfileArrays = returnedCaseProfiles;
+    
+    //query for UserProfiles of these caseUsers
+    
+    vcvc.matchesUserName = HomePageuserName;
+    vcvc.matchViewControllerMode = @"allMatches";
+    
     [self.navigationController pushViewController:vcvc animated:YES];
     
 }

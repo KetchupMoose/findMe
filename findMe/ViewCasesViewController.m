@@ -69,6 +69,8 @@ BOOL waitForSyncCompleted = FALSE;
     self.casesTableView.backgroundColor = [UIColor clearColor];
      [self.casesTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     caseListPruned = [[NSMutableArray alloc] init];
+    
+    
    // [self refreshTable];
     
     /*

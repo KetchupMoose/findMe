@@ -18,4 +18,5 @@
 @property (strong,nonatomic) PFObject *itsMTLObject;
 @property (strong,nonatomic) NSString *manualLocationPropertyNum;
 
+
 @end

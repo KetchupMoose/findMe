@@ -203,6 +203,10 @@
 		ECAB71C21B4DFF4B004D4E5C /* DigitsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECAB71BE1B4DFF4B004D4E5C /* DigitsKit.framework */; };
 		ECAB71C31B4DFF4B004D4E5C /* DigitsKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = ECAB71BF1B4DFF4B004D4E5C /* DigitsKitResources.bundle */; };
 		ECAB71C41B4DFF4B004D4E5C /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECAB71C01B4DFF4B004D4E5C /* TwitterCore.framework */; };
+		ECAB71DC1B505833004D4E5C /* papers.co-se68-blurry-background-sunrise-gradation-blur-33-iphone6-wallpaper.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECAB71DB1B505833004D4E5C /* papers.co-se68-blurry-background-sunrise-gradation-blur-33-iphone6-wallpaper.jpg */; };
+		ECAB71DE1B505AB3004D4E5C /* Dark-Night-Gradation-Blur-iPhone-6-plus-wallpaper-ilikewallpaper_com.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECAB71DD1B505AB3004D4E5C /* Dark-Night-Gradation-Blur-iPhone-6-plus-wallpaper-ilikewallpaper_com.jpg */; };
+		ECAB71E61B5060B3004D4E5C /* papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECAB71E51B5060B3004D4E5C /* papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg */; };
+		ECAB71E91B5065AE004D4E5C /* ViewCasesViewMatchesMergedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECAB71E81B5065AE004D4E5C /* ViewCasesViewMatchesMergedViewController.m */; };
 		ECB1D5111A7748B5008CC684 /* popupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECB1D5101A7748B5008CC684 /* popupViewController.m */; };
 		ECBEE5771B2216B700D131E7 /* Greecewallpaperblurred.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECBEE5761B2216B700D131E7 /* Greecewallpaperblurred.jpg */; };
 		ECBEE5841B25ECD000D131E7 /* greecelessblurred.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECBEE5831B25ECD000D131E7 /* greecelessblurred.jpg */; };
@@ -685,6 +689,11 @@
 		ECAB71BE1B4DFF4B004D4E5C /* DigitsKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DigitsKit.framework; sourceTree = SOURCE_ROOT; };
 		ECAB71BF1B4DFF4B004D4E5C /* DigitsKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = DigitsKitResources.bundle; path = DigitsKit.framework/Versions/A/Resources/DigitsKitResources.bundle; sourceTree = SOURCE_ROOT; };
 		ECAB71C01B4DFF4B004D4E5C /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterCore.framework; sourceTree = SOURCE_ROOT; };
+		ECAB71DB1B505833004D4E5C /* papers.co-se68-blurry-background-sunrise-gradation-blur-33-iphone6-wallpaper.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "papers.co-se68-blurry-background-sunrise-gradation-blur-33-iphone6-wallpaper.jpg"; sourceTree = "<group>"; };
+		ECAB71DD1B505AB3004D4E5C /* Dark-Night-Gradation-Blur-iPhone-6-plus-wallpaper-ilikewallpaper_com.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Dark-Night-Gradation-Blur-iPhone-6-plus-wallpaper-ilikewallpaper_com.jpg"; sourceTree = "<group>"; };
+		ECAB71E51B5060B3004D4E5C /* papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg"; sourceTree = "<group>"; };
+		ECAB71E71B5065AE004D4E5C /* ViewCasesViewMatchesMergedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewCasesViewMatchesMergedViewController.h; sourceTree = "<group>"; };
+		ECAB71E81B5065AE004D4E5C /* ViewCasesViewMatchesMergedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewCasesViewMatchesMergedViewController.m; sourceTree = "<group>"; };
 		ECB1D50F1A7748B5008CC684 /* popupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = popupViewController.h; sourceTree = "<group>"; };
 		ECB1D5101A7748B5008CC684 /* popupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = popupViewController.m; sourceTree = "<group>"; };
 		ECBEE5761B2216B700D131E7 /* Greecewallpaperblurred.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Greecewallpaperblurred.jpg; sourceTree = "<group>"; };
@@ -1173,8 +1182,6 @@
 				D3FBD13E19D05062008240F5 /* JSON Parsing */,
 				D31DF30419CEFC0C00A37725 /* AppDelegate.h */,
 				D31DF30519CEFC0C00A37725 /* AppDelegate.m */,
-				ECEF944E1A8C29DF0000A444 /* matchesViewController.h */,
-				ECEF944F1A8C29DF0000A444 /* matchesViewController.m */,
 				ECC9E5021AA1126F0099C46A /* conversationsViewController.h */,
 				ECC9E5031AA1126F0099C46A /* conversationsViewController.m */,
 				ECB1D50F1A7748B5008CC684 /* popupViewController.h */,
@@ -1193,8 +1200,12 @@
 				ECCD46FE1ADB31D900804B06 /* mapPinViewController.m */,
 				ECCD47001ADC1F8700804B06 /* myLocation.h */,
 				ECCD47011ADC1F8700804B06 /* myLocation.m */,
+				ECEF944E1A8C29DF0000A444 /* matchesViewController.h */,
+				ECEF944F1A8C29DF0000A444 /* matchesViewController.m */,
 				D31DF30D19CEFC0C00A37725 /* ViewCasesViewController.h */,
 				D31DF30E19CEFC0C00A37725 /* ViewCasesViewController.m */,
+				ECAB71E71B5065AE004D4E5C /* ViewCasesViewMatchesMergedViewController.h */,
+				ECAB71E81B5065AE004D4E5C /* ViewCasesViewMatchesMergedViewController.m */,
 				EC0823021A186B13000B6684 /* HomePageViewController.h */,
 				EC0823031A186B13000B6684 /* HomePageViewController.m */,
 				EC10BD901B31D0EE00F7ABDE /* privatelyViewController.h */,
@@ -1277,6 +1288,9 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				ECAB71E51B5060B3004D4E5C /* papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg */,
+				ECAB71DD1B505AB3004D4E5C /* Dark-Night-Gradation-Blur-iPhone-6-plus-wallpaper-ilikewallpaper_com.jpg */,
+				ECAB71DB1B505833004D4E5C /* papers.co-se68-blurry-background-sunrise-gradation-blur-33-iphone6-wallpaper.jpg */,
 				ECC1640F1B3E07F800BBC12D /* maleAvatarHeartBlueEdit.png */,
 				ECC163F11B3B5BEB00BBC12D /* Businessman-with-question-mark-on-face.jpg */,
 				EC10BD971B324F4500F7ABDE /* shhhblurrcrop.jpg */,
@@ -2260,7 +2274,9 @@
 				ECC9E50E1AA153070099C46A /* Icon-40.png in Resources */,
 				D31DF30C19CEFC0C00A37725 /* Main_iPad.storyboard in Resources */,
 				EC0403F71A9CFE3400151796 /* femalesilhouette.jpeg in Resources */,
+				ECAB71DE1B505AB3004D4E5C /* Dark-Night-Gradation-Blur-iPhone-6-plus-wallpaper-ilikewallpaper_com.jpg in Resources */,
 				EC7A74ED1B2A169900D3A53F /* d7f90d83ca7bda55d77b1a40f0b51537.jpg in Resources */,
+				ECAB71E61B5060B3004D4E5C /* papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg in Resources */,
 				EC7A74E51B2A12F300D3A53F /* torontobg.jpg in Resources */,
 				ECC163F21B3B5BEB00BBC12D /* Businessman-with-question-mark-on-face.jpg in Resources */,
 				D3F4574B1A003772000EDF25 /* stockphotoguy1.jpg in Resources */,
@@ -2284,6 +2300,7 @@
 				ECA7A2BA1AA8B86C00F899D5 /* JSQMessagesCollectionViewCellOutgoing.xib in Resources */,
 				EC8B3C081B0D0C6D00DE04A9 /* facebook-login-blue.png in Resources */,
 				D31DF30919CEFC0C00A37725 /* Main_iPhone.storyboard in Resources */,
+				ECAB71DC1B505833004D4E5C /* papers.co-se68-blurry-background-sunrise-gradation-blur-33-iphone6-wallpaper.jpg in Resources */,
 				EC291D4F1B1E47AB0003992C /* 535106-user_512x512.png in Resources */,
 				ECA7A2C41AA8B86C00F899D5 /* JSQMessagesTypingIndicatorFooterView.xib in Resources */,
 				ECE6B1721A06B8A9007F4A19 /* thinkingaboutyou.jpg in Resources */,
@@ -2577,6 +2594,7 @@
 				ECFDAA901AB38B5C00E42C33 /* PubNub+APNS.m in Sources */,
 				ECEF94641A8D127F0000A444 /* UIViewController+ECSlidingViewController.m in Sources */,
 				ECA7A2A51AA8B86C00F899D5 /* JSQMessagesAvatarImageFactory.m in Sources */,
+				ECAB71E91B5065AE004D4E5C /* ViewCasesViewMatchesMergedViewController.m in Sources */,
 				ECEF945F1A8D127F0000A444 /* ECPercentDrivenInteractiveTransition.m in Sources */,
 				ECFDAA991AB38B5C00E42C33 /* PubNub+Subscription.m in Sources */,
 				ECA7A2B51AA8B86C00F899D5 /* JSQMessagesCollectionView.m in Sources */,

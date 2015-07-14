@@ -1808,12 +1808,12 @@ if(tableViewTag ==8999)
         bgDarkenView.alpha = 0.2;
         [self.view addSubview:bgDarkenView];
         
-        UIView *newOptionView = [[UIView alloc] initWithFrame:CGRectMake(27,150,266,210)];
+        UIView *newOptionView = [[UIView alloc] initWithFrame:CGRectMake(27,150,266,190)];
         newOptionView.backgroundColor = [UIColor whiteColor];
         newOptionView.layer.cornerRadius = 5.0f;
         [newOptionView.layer masksToBounds];
         
-        UITextField *newAnsTextField = [[UITextField alloc] initWithFrame:CGRectMake(25,60,200,50)];
+        UITextField *newAnsTextField = [[UITextField alloc] initWithFrame:CGRectMake(32,60,200,50)];
         [[newAnsTextField layer] setBorderColor:[[UIColor colorWithRed:171.0/255.0
                                                                  green:171.0/255.0
                                                                   blue:171.0/255.0
@@ -1823,7 +1823,7 @@ if(tableViewTag ==8999)
         newAnsTextField.layer.masksToBounds = YES;
         newAnsTextField.tag = 88;
         
-        UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(newOptionView.frame.size.width-60,4,55,40)];
+        UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(5,4,55,40)];
         [closeButton setTitle:@"Close" forState:UIControlStateNormal];
         [closeButton addTarget:self
                         action:@selector(closeNewAnswerView:)
@@ -1831,15 +1831,17 @@ if(tableViewTag ==8999)
         
         
         UILabel *btnLabel = closeButton.titleLabel;
-        btnLabel.font = [UIFont systemFontOfSize:12];
+        
+        btnLabel.font = [UIFont fontWithName:@"Futura-Medium" size:16];
         closeButton.backgroundColor = [UIColor redColor];
         
         
-        UIButton *addButton = [[UIButton alloc] initWithFrame:CGRectMake(110,125,50,50)];
-        [addButton setTitle:@"Add" forState:UIControlStateNormal];
+        UIButton *addButton = [[UIButton alloc] initWithFrame:CGRectMake(55,125,150,50)];
+        [addButton setTitle:@"Add Answer" forState:UIControlStateNormal];
         UILabel *addBtnLabel = addButton.titleLabel;
-        addBtnLabel.font = [UIFont systemFontOfSize:12];
-        addButton.backgroundColor = [UIColor blueColor];
+        addBtnLabel.font = [UIFont fontWithName:@"Futura-Medium" size:16];
+        addButton.backgroundColor = colorForButtons;
+        
         [addButton addTarget:self
                       action:@selector(addNewAnswerView:)
             forControlEvents:UIControlEventTouchUpInside];
@@ -4187,6 +4189,17 @@ if(tableViewTag ==8999)
         {
             UITextField *newAnsTextField = (UITextField *) theView;
             //add the answer from this text field.
+            //brianJuly10
+            NSString *rawString = [newAnsTextField text];
+            NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+            NSString *trimmed = [rawString stringByTrimmingCharactersInSet:whitespace];
+            if ([trimmed length] == 0) {
+                // Text was empty or only whitespace.
+                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Answer Error", nil) message:@"Answer Must Not Be Blank" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+                self.customAnswerTextField.text = @"";
+                return;
+            }
+
             
             if([newAnsTextField.text length] >0)
             {
@@ -4321,7 +4334,7 @@ if(tableViewTag ==8999)
             }
             else
             {
-                UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Empty Message"message:@"Must enter text for custom message" delegate:self
+                UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Empty Message"message:@"Must enter text for custom answer" delegate:self
                                                          cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alertView show];
                 
@@ -5312,6 +5325,18 @@ if(tableViewTag ==8999)
     //if template mode, just save it locally.
     //if not template mode, fire off the update in background
     [self.view endEditing:YES];
+    //brianJuly10
+    NSString *rawString = [self.customAnswerTextField text];
+    NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    NSString *trimmed = [rawString stringByTrimmingCharactersInSet:whitespace];
+    if ([trimmed length] == 0) {
+        // Text was empty or only whitespace.
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Answer Error", nil) message:@"Answer Must Not Be Blank" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        self.customAnswerTextField.text = @"";
+        return;
+    }
+
+    
     if([self.customAnswerTextField.text length] >0)
     {
         NSNumber *changedCaseItemIndexNum = [NSNumber numberWithInteger:selectedCarouselIndex];

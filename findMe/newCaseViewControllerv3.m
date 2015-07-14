@@ -43,6 +43,10 @@ NSString *locationLongitude;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+   
+    
+    
+    
     self.baseScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0,0,320,self.view.bounds.size.height)];
    self.baseScrollView.showsVerticalScrollIndicator=YES;
     self.baseScrollView.scrollEnabled=YES;
@@ -51,6 +55,13 @@ NSString *locationLongitude;
     
     [self.view addSubview:self.baseScrollView];
     self.baseScrollView.contentSize = CGSizeMake(320,1000);
+    
+    //bgview
+    UIImageView *backgroundView = [[UIImageView alloc] initWithFrame:self.baseScrollView.bounds];
+    backgroundView.image = [UIImage imageNamed:@"papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg"];
+    backgroundView.contentMode = UIViewContentModeScaleAspectFill;
+    
+    [self.baseScrollView addSubview:backgroundView];
     
     //calculate the number of categories required
     [self queryForTemplates];
