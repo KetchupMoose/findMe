@@ -15,6 +15,8 @@
 #import "conversationJSQViewController.h"
 #import "conversationModelData.h"
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
+#import "caseDetailsCarouselViewController.h"
+
 
 
 @interface ViewCasesViewMatchesMergedViewController ()
@@ -45,7 +47,6 @@ BOOL firstMatchViewLoadMerge = TRUE;
     refreshControl = [[UIRefreshControl alloc]init];
     [self.casesTableView addSubview:refreshControl];
     [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
-    
     
     [casesTableView setDataSource:self];
     [casesTableView setDelegate:self];
@@ -150,6 +151,8 @@ BOOL firstMatchViewLoadMerge = TRUE;
 {
     //if response case is ok, refresh the list of cases.
     // Set determinate mode
+    [self.matchesPerCaseArray removeAllObjects];
+    
     
     HUD.mode = MBProgressHUDModeDeterminate;
     HUD.delegate = self;
@@ -239,11 +242,15 @@ BOOL firstMatchViewLoadMerge = TRUE;
     }
     
     [refreshControl endRefreshing];
+    
+     firstMatchViewLoadMerge = TRUE;
+    
     [casesTableView reloadData];
     
     [HUD hide:NO];
     
     firstMatchViewLoadMerge = FALSE;
+    
     
 }
 
@@ -340,6 +347,7 @@ viewForHeaderInSection:(NSInteger)section
     updateCountLabel = (UILabel *)[sectionBGView viewWithTag:3];
     caseNameLabel = (UILabel *)[sectionBGView viewWithTag:4];
     dateUpdatedLabel = (UILabel *)[sectionBGView viewWithTag:5];
+    UIButton *editCaseButton = (UIButton *)[sectionBGView viewWithTag:section+100];
     
     if(caseImgView.tag !=2)
     {
@@ -360,13 +368,24 @@ viewForHeaderInSection:(NSInteger)section
         
         dateUpdatedLabel = [[UILabel alloc] initWithFrame:CGRectMake(sectionBGView.frame.size.width-40,0,40,20)];
         
+        editCaseButton = [[UIButton alloc] initWithFrame:CGRectMake(205,55,100,30)];
+        [editCaseButton setTitle:@"Edit Case" forState:UIControlStateNormal];
+        [editCaseButton setBackgroundColor:[UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1]];
+        [editCaseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        editCaseButton.layer.cornerRadius = 8.0f;
+        editCaseButton.tag = section+100;
         
         
+        [editCaseButton addTarget:self action:@selector(editCaseButtonPress:) forControlEvents:UIControlEventTouchUpInside];
+        
+    
         [sectionBGView addSubview:dateUpdatedLabel];
-        
         [sectionBGView addSubview:caseImgView];
         [sectionBGView addSubview:updateCountLabel];
         [sectionBGView addSubview:caseNameLabel];
+        [sectionBGView addSubview:result];
+        [sectionBGView addSubview:editCaseButton];
+        
         [sectionView addSubview:sectionBGView];
         
     }
@@ -417,7 +436,7 @@ viewForHeaderInSection:(NSInteger)section
     {
         [caseImgView setImageWithURL:[NSURL URLWithString:caseimgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
     }
-
+    
     updateCountLabel.backgroundColor = [UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1];
     updateCountLabel.textColor = [UIColor whiteColor];
     updateCountLabel.layer.cornerRadius = 10.0f;
@@ -434,7 +453,7 @@ viewForHeaderInSection:(NSInteger)section
     //get caseName from prunedCaseArray at this index
     caseNameLabel.text = [caseObj objectForKey:@"caseName"];
     
-    [sectionView addSubview:result];
+    
     
     return sectionView;
 }
@@ -609,7 +628,6 @@ viewForHeaderInSection:(NSInteger)section
         conversationObject = [PFObject objectWithClassName:@"Conversations"];
         [conversationObject setObject:conversationMembers forKey:@"Members"];
         [conversationObject save];
-        
         
     }
     else
@@ -820,7 +838,6 @@ viewForHeaderInSection:(NSInteger)section
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:HUD];
     
-    
     // Set determinate mode
     HUD.mode = MBProgressHUDModeDeterminate;
     HUD.delegate = self;
@@ -878,6 +895,49 @@ viewForHeaderInSection:(NSInteger)section
     }];
     
     
+}
+
+-(void)editCaseButtonPress:(id)sender
+{
+    UIButton *sendingButton = (UIButton *)sender;
+    
+    //case to edit is tag-100
+    NSInteger caseToEdit = sendingButton.tag-100;
+    
+    NSNumber *selectedIndex = [NSNumber numberWithInteger:caseToEdit];
+    
+    caseDetailsCarouselViewController *cdcvc = [self.storyboard instantiateViewControllerWithIdentifier:@"cdcvc2"];
+    
+    cdcvc.selectedCaseIndex=selectedIndex;
+    
+    cdcvc.userName = userName;
+    cdcvc.itsMTLObject = self.itsMTLObject;
+    cdcvc.manualLocationPropertyNum = self.manualLocationPropertyNum;
+    
+    PFObject *caseObj =  [caseListPruned objectAtIndex:[selectedIndex intValue]];
+    
+    NSString *caseID = [caseObj objectForKey:@"caseId"];
+    
+    NSString *caseimgURL;
+    for (PFObject *caseProfileObj in caseProfileObjects)
+    {
+        NSString *caseProfileCaseID = [caseProfileObj objectForKey:@"caseID"];
+        if([caseID isEqualToString:caseProfileCaseID])
+        {
+            //display case information
+            cdcvc.externalCaseName = [caseProfileObj objectForKey:@"externalCaseName"];
+            PFFile *imgFile = [caseProfileObj objectForKey:@"caseImage"];
+            caseimgURL = imgFile.url;
+            NSData *imgData = [imgFile getData];
+            
+            UIImage *myCaseImage = [UIImage imageWithData:imgData];
+            cdcvc.caseImage = myCaseImage;
+            
+        }
+    }
+    
+    
+    [self.navigationController pushViewController:cdcvc animated:NO];
 }
 
 

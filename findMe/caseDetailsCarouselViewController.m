@@ -179,6 +179,8 @@ BOOL LoadedBOOL = NO;
 {
     colorForButtons = [UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1];
     
+    manualLocationCaseItemID = @"";
+    
     items = [NSMutableArray array];
     for (int i = 0; i < 1000; i++)
     {

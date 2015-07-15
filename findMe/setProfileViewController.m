@@ -168,7 +168,6 @@ int selectedPic = 1;
     }
     
     
-    
     if(self.emailTextField.text.length !=0)
     {
         self.emailAddress = self.emailTextField.text;
@@ -207,7 +206,6 @@ int selectedPic = 1;
     if(![self.openingMode isEqualToString:@"HomeScreen"])
     {
         itsMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
-        [itsMTLObject setObject:currentUser forKey:@"ParseUser"];
         
         // Set the access control list to current user for security purposes
         PFACL *itsMTLACL = [PFACL ACLWithUser:[PFUser currentUser]];
@@ -265,32 +263,61 @@ int selectedPic = 1;
                                     if (!error) {
                                         
                                         NSString *responseText = responseString;
-                                        NSLog(@"brian check for response text");
-                                        
+                                        NSString *errorStr;
+                                        if([responseText length]>5)
+                                        {
+                                            NSLog(@"JulyStringReached");
+                                            
+                                            errorStr=[responseText substringToIndex:20];
+                                        }
+                                        if([errorStr containsString:@"[ERROR]"])
+                                        {
+                                            [phoneSearchersView removeFromSuperview];
+                                            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Profile Error", nil) message:@"There was an error submitting your profile, please double check all fields" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+                                            
+                                            //dismiss the progress HUD and keep the user on the profile screen
+                                            [HUD hide:NO];
+                                            
+                                            return;
+                                            
+                                        }
+                                      
                                         NSLog(responseText);
                                         [HUD hide:NO];
                                         
-                                        NSString *itsMTLObjectID = itsMTLObject.objectId;
+                                        [itsMTLObject setObject:currentUser forKey:@"ParseUser"];
+                                        [itsMTLObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                                         {
+                                             if(!error)
+                                             {
+                                                 NSString *itsMTLObjectID = itsMTLObject.objectId;
+                                                 
+                                                 if([itsMTLObjectID length] ==0)
+                                                 {
+                                                     itsMTLObjectID = self.homeScreenMTLObjectID;
+                                                 }
+                                                 [self.delegate setNewProfile:itsMTLObject];
+                                                
+                                             }
+                                             
+                                         }];
                                         
-                                        if([itsMTLObjectID length] ==0)
-                                        {
-                                            itsMTLObjectID = self.homeScreenMTLObjectID;
-                                        }
-                                        [self.delegate setNewProfile:itsMTLObject];
                                         
                                     }
                                     
                                     else
                                     {
                                         NSLog(@"%@",[error localizedDescription]);
+                                        NSLog(@"July");
                                         
-                                        [HUD hide:YES];
+                                        [HUD hide:NO];
+                                        [phoneSearchersView removeFromSuperview];
+                                        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Profile Error", nil) message:@"There was an error submitting your profile, please double check all fields" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+                                        
+                                        return;
                                         
                                     }
                                 }];
-    
-
-   
     
 }
 
@@ -600,8 +627,6 @@ int selectedPic = 1;
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-   
-    
     [self animateTextField:textField up:YES];
 }
 
