@@ -20,6 +20,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    [[UINavigationBar appearance] setAlpha:0];
+    
+    
     // Check if user is logged in
     if (![PFUser currentUser]) {
         

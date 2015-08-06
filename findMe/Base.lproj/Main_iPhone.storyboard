@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="zQX-A0-4m7">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="zQX-A0-4m7">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -888,7 +888,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xb3-O5-dx9">
-                                <rect key="frame" x="265" y="170" width="49" height="50.5"/>
+                                <rect key="frame" x="265" y="170" width="49" height="51"/>
                                 <state key="normal" backgroundImage="Accept_circular_button_outline_256.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -1836,9 +1836,9 @@
         <!--Navigation Controller-->
         <scene sceneID="vRa-6d-R3J">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="zQX-A0-4m7" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="zQX-A0-4m7" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" alpha="0.20000000000000001" contentMode="scaleToFill" translucent="NO" id="xEq-kl-s4b">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1864,8 +1864,11 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="calm.png" translatesAutoresizingMaskIntoConstraints="NO" id="7U0-GT-iHE">
-                                <rect key="frame" x="0.0" y="-8" width="320" height="576"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="background@3x.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="z4e-Pq-UJ0">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo@3x.png" translatesAutoresizingMaskIntoConstraints="NO" id="dVJ-hD-6PJ">
+                                <rect key="frame" x="15" y="224" width="290" height="120"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2457,15 +2460,16 @@
         <image name="Brian-frame.png" width="839" height="339"/>
         <image name="Gender-symbols-262x300.png" width="262" height="300"/>
         <image name="Greecewallpaperblurred.jpg" width="640" height="1136"/>
+        <image name="background@3x.jpg" width="1242" height="2208"/>
         <image name="blurPhotoBG2.jpg" width="2000" height="1500"/>
         <image name="blurredlights.jpg" width="640" height="1136"/>
-        <image name="calm.png" width="600" height="800"/>
         <image name="cityLightsBG.jpg" width="640" height="1136"/>
         <image name="globeicon.png" width="256" height="256"/>
         <image name="green-checkmark.jpg" width="425" height="425"/>
         <image name="imageselect.png" width="256" height="256"/>
         <image name="internetOfflineIcon.png" width="128" height="128"/>
         <image name="login-button.png" width="175" height="53"/>
+        <image name="logo@3x.png" width="580" height="241"/>
         <image name="lostdog.jpg" width="347" height="338"/>
         <image name="missedConnection.jpg" width="279" height="181"/>
         <image name="officerelationship.jpg" width="670" height="503"/>

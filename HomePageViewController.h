@@ -14,8 +14,9 @@
 #import "conversationModelData.h"
 #import "findMeBaseViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import "findMeBottomTab.h"
 
-@interface HomePageViewController : findMeBaseViewController <MBProgressHUDDelegate,SetProfileDelegate,UITextFieldDelegate,internetOfflineViewControllerDelegate>
+@interface HomePageViewController : findMeBaseViewController <MBProgressHUDDelegate,SetProfileDelegate,UITextFieldDelegate,internetOfflineViewControllerDelegate,findMeBottomTabDelegate>
 @property (strong, nonatomic) IBOutlet UIButton *CreateNewCaseButton;
 - (IBAction)CreateNewCase:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *ViewMyCasesButton;

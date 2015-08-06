@@ -29,6 +29,7 @@
 #import "CarouselTestViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "privatelyViewController.h"
+#import "findMeBottomTab.h"
 
 @interface HomePageViewController ()
 
@@ -73,10 +74,15 @@ NSString *homePageManualLocationPropertyNum;
     NSShadow *shadow = [[NSShadow alloc] init];
     shadow.shadowColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.8];
     shadow.shadowOffset = CGSizeMake(0, 1);
+    
     [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
                                                            [UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:245.0/255.0 alpha:1.0], NSForegroundColorAttributeName,
                                                            shadow, NSShadowAttributeName,
                                                            [UIFont fontWithName:@"Futura-Medium" size:25.0], NSFontAttributeName, nil]];
+    
+    
+    
+    //[[UINavigationBar appearance] setAlpha:0];
     
     
     self.CreateNewCaseButton.layer.borderColor = (__bridge CGColorRef)([UIColor whiteColor]);
@@ -84,7 +90,6 @@ NSString *homePageManualLocationPropertyNum;
     self.CreateNewCaseButton.layer.cornerRadius = 8.0f;
     self.CreateNewCaseButton.layer.masksToBounds = YES;
     
-
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     
     //check to see if the parse connection is available.  If not, remove the HomePageViewController and show a ParseUnavailableViewController
@@ -140,7 +145,15 @@ NSString *homePageManualLocationPropertyNum;
                                              selector: @selector(replayMovie:)
                                                  name: MPMoviePlayerPlaybackDidFinishNotification
                                                object: self.moviePlayer];
-     
+    
+    float SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
+    
+    findMeBottomTab *bottomTab = [[findMeBottomTab alloc] initWithFrame:CGRectMake(0,SCREEN_HEIGHT-114,320,50)];
+    bottomTab.delegate = self;
+    
+    [self.view addSubview:bottomTab];
+    
+    
     
 }
 
@@ -887,6 +900,30 @@ NSString *homePageManualLocationPropertyNum;
     
     
     
+}
+
+- (void)tabSelected:(NSInteger)selectedTab
+{
+    if(selectedTab==0)
+    {
+        //home screen selected, do nothing.
+    }
+    if(selectedTab==1)
+    {
+        //progress tab selected, show view progress controller
+        [self ViewMyCases:(self)];
+        
+    }
+    if(selectedTab==2)
+    {
+        [self MyMatches:(self)];
+        
+    }
+    if(selectedTab==3)
+    {
+        [self MyProfile:(self)];
+        
+    }
 }
 
 

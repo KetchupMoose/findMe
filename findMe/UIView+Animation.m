@@ -382,7 +382,7 @@
 -(void) BounceAddTheView:(UIView *) view
 {
     
-  view.transform =  view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.7, 0.7);
+    view.transform =  view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.7, 0.7);
     
     //[UIView setAnimationDuration:0.3/1.5];
     [UIView setAnimationDelegate:self];
@@ -437,7 +437,6 @@
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.3/2];
  
-    
     view.transform = CGAffineTransformIdentity;
    
     [UIView commitAnimations];
@@ -446,8 +445,6 @@
 
 -(void) BounceViewThenFadeAlpha:(UIView *) view shouldRemoveParentView:(NSString *) removeOrNot
 {
-    
-  
     
     //[UIView setAnimationDuration:0.3/1.5];
     [UIView setAnimationDelegate:self];
