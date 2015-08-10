@@ -66,83 +66,21 @@ NSString *locationLongitude;
     //calculate the number of categories required
     [self queryForTemplates];
 
-    int numberOfCategories = (int)self.totalSetsOfParentTemplates.count;
     
-    //collection view height: 180
-    //collection view cell: 145 width, 130 height
-    //collection view image: 31 width, 8 height,82 width, 82height
-    //collection view titleLabel 8 width, 95 height,129 width, 27 height
-    
-    int yMarginBetweenCollectionViews= 40;
-    int cViewHeight = 180;
-    for (int i = 0; i <= numberOfCategories-1; i++)
-    {
-        UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
-        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        UILabel *sectionTitleLabel;
-        
-        UICollectionView *categoryCollectionView;
-        if(i==0)
-        {
-             categoryCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,yMarginBetweenCollectionViews,320,cViewHeight) collectionViewLayout:layout];
-            
-            //add title label from category text
-            NSArray *firstTemplatesArray = [self.totalSetsOfParentTemplates objectAtIndex:0];
-            PFObject *templateObj = [firstTemplatesArray objectAtIndex:0];
-            NSString *categoryText = [templateObj objectForKey:@"category"];
-            
-            //add a label
-            sectionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,320,yMarginBetweenCollectionViews)];
-            sectionTitleLabel.text = categoryText;
-        }
-        else
-        {
-            categoryCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,(cViewHeight*i)+yMarginBetweenCollectionViews*i+yMarginBetweenCollectionViews,320,cViewHeight) collectionViewLayout:layout];
-            
-             sectionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,cViewHeight*i+yMarginBetweenCollectionViews,320,yMarginBetweenCollectionViews)];
-            
-            //add title label from category text
-            NSArray *firstTemplatesArray = [self.totalSetsOfParentTemplates objectAtIndex:i];
-            PFObject *templateObj = [firstTemplatesArray objectAtIndex:0];
-            NSString *categoryText = [templateObj objectForKey:@"category"];
-            if([categoryText isEqualToString:@""] || categoryText == nil)
-            {
-                categoryText = @"Null Category";
-            }
-            sectionTitleLabel.text = categoryText;
-            
-        }
-        
-        sectionTitleLabel.textAlignment = NSTextAlignmentCenter;
-        sectionTitleLabel.textColor = [UIColor whiteColor];
-        sectionTitleLabel.font = [UIFont fontWithName:@"Futura-Medium" size:16];
-        sectionTitleLabel.tag = i+1;
-        
-        [self.baseScrollView addSubview:sectionTitleLabel];
-        
-        categoryCollectionView.tag = i+1;
-        categoryCollectionView.dataSource = self;
-        categoryCollectionView.delegate = self;
-        categoryCollectionView.backgroundColor = [UIColor whiteColor];
-        
-        [categoryCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"templateCell"];
-        
-        [self.baseScrollView addSubview:categoryCollectionView];
-        
-        [categoryCollectionView reloadData];
-        
-    }
 }
 
 -(void) queryForTemplates
 {
-    //retrieve the five parent templatePickerChoices from Parse
-    //templatePickerChoices =
-    PFQuery *templateQuery = [PFQuery queryWithClassName:@"Templates"];
-    //[templateQuery selectKeys:@[@"parenttemplateid"]];
+    //show progress HUD
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
     
-    [templateQuery whereKey:@"laiso" equalTo:@"EN"];
-    [templateQuery orderByDescending:@"category"];
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Gathering Local Templates";
+    [HUD show:YES];
+    
+    self.allTemplates = [[NSArray alloc] init];
     
     NSMutableArray *templateParentChoices = [[NSMutableArray alloc] init];
     
@@ -150,101 +88,196 @@ NSString *locationLongitude;
     
     self.templatePickerActiveChoices = [[NSMutableArray alloc] init];
     self.parentTemplateCategories = [[NSMutableArray alloc] init];
-    
-    self.allTemplates = (NSMutableArray *)[templateQuery findObjects];
-    for(PFObject *templateObject in self.allTemplates)
+
+    //use parse cloud code function
+    NSString *mtlObjID = self.itsMTLObject.objectId;
+    NSString *payload = @"nottest";
+    BOOL payloadString;
+    if([mtlObjID isEqualToString:@"yh5YoZSXRW"])
     {
-        NSLog(@"numberofKeys");
-        NSLog(@"%lu",(unsigned long)templateObject.allKeys.count);
-        
-        PFObject *theParentObj = [templateObject objectForKey:@"parenttemplateid"];
-        
-        if([theParentObj isEqual:[NSNull null]])
-        {
-            //check the designation
-            [templateParentChoices addObject:templateObject];
-            [self.parentTemplateCategories addObject:templateObject];
-            
-        }
+        payloadString = TRUE;
+        payload = @"payload";
+    }
+    else
+    {
+        mtlObjID = @"nottest";
     }
     
-    //filter parent choices into different categories
-    NSString *previousCategory = @"";
-    NSMutableArray *templateArray;
-    int lastObject = (int)templateParentChoices.count;
-    int j = 1;
+    [PFCloud callFunctionInBackground:@"getStartMenu"
+                           withParameters:@{payload: mtlObjID}
+                                    block:^(NSArray *returnedObjects, NSError *error) {
+                                        
+                                        if (!error)
+                                        {
+                                            self.allTemplates = returnedObjects;
+                                            
+                                            //self.allTemplates = (NSMutableArray *)[templateQuery findObjects];
+                                            for(PFObject *templateObject in self.allTemplates)
+                                            {
+                                                NSLog(@"numberofKeys");
+                                                NSLog(@"%lu",(unsigned long)templateObject.allKeys.count);
+                                                
+                                                PFObject *theParentObj = [templateObject objectForKey:@"parenttemplateid"];
+                                                
+                                                if([theParentObj isEqual:[NSNull null]])
+                                                {
+                                                    //check the designation
+                                                    [templateParentChoices addObject:templateObject];
+                                                    [self.parentTemplateCategories addObject:templateObject];
+                                                    
+                                                }
+                                            }
+                                            
+                                            //filter parent choices into different categories
+                                            NSString *previousCategory = @"";
+                                            NSMutableArray *templateArray;
+                                            int lastObject = (int)templateParentChoices.count;
+                                            int j = 1;
+                                            
+                                            for (PFObject *parentTemplateObject in templateParentChoices)
+                                            {
+                                                NSString *category = [parentTemplateObject objectForKey:@"category"];
+                                                if(category ==nil)
+                                                {
+                                                    category = @"";
+                                                    
+                                                }
+                                                //handle very first case
+                                                if(j==1)
+                                                {
+                                                    //create a new templatearray and add it to total sets of templates
+                                                    templateArray = [[NSMutableArray alloc] init];
+                                                    [templateArray addObject:parentTemplateObject];
+                                                    previousCategory = category;
+                                                    
+                                                    if(j == lastObject)
+                                                    {
+                                                        [self.totalSetsOfParentTemplates addObject:[templateArray copy]];
+                                                        
+                                                    }
+                                                }
+                                                else if([previousCategory isEqualToString:category])
+                                                {
+                                                    [templateArray addObject:parentTemplateObject];
+                                                    if(j == lastObject)
+                                                    {
+                                                        [self.totalSetsOfParentTemplates addObject:[templateArray copy]];
+                                                        
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    //if there are already some objects, add this one and finish the array
+                                                    if(templateArray.count >=1)
+                                                    {
+                                                        [self.totalSetsOfParentTemplates addObject:[templateArray copy]];
+                                                        [templateArray removeAllObjects];
+                                                        templateArray = [[NSMutableArray alloc] init];
+                                                        [templateArray addObject:parentTemplateObject];
+                                                        previousCategory = category;
+                                                        if(previousCategory ==nil)
+                                                        {
+                                                            previousCategory = @"";
+                                                        }
+                                                        if(j == lastObject)
+                                                        {
+                                                            [self.totalSetsOfParentTemplates addObject:[templateArray copy]];
+                                                            
+                                                        }
+                                                    }
+                                                    else //if not already some objects, start a new templateArray
+                                                    {
+                                                        [templateArray removeAllObjects];
+                                                        templateArray = [[NSMutableArray alloc] init];
+                                                        [templateArray addObject:parentTemplateObject];
+                                                        previousCategory = category;
+                                                        if(previousCategory ==nil)
+                                                        {
+                                                            previousCategory = @"";
+                                                        }
+                                                        if(j == lastObject)
+                                                        {
+                                                            [self.totalSetsOfParentTemplates addObject:[templateArray copy]];
+                                                            
+                                                        }
+                                                    }
+                                                }
+                                                
+                                                j = j+1;
+                                            }
+
+                                        }
+                                        
+                                        int numberOfCategories = (int)self.totalSetsOfParentTemplates.count;
+                                        
+                                        //collection view height: 180
+                                        //collection view cell: 145 width, 130 height
+                                        //collection view image: 31 width, 8 height,82 width, 82height
+                                        //collection view titleLabel 8 width, 95 height,129 width, 27 height
+                                        
+                                        int yMarginBetweenCollectionViews= 40;
+                                        int cViewHeight = 180;
+                                        for (int i = 0; i <= numberOfCategories-1; i++)
+                                        {
+                                            UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
+                                            layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+                                            UILabel *sectionTitleLabel;
+                                            
+                                            UICollectionView *categoryCollectionView;
+                                            if(i==0)
+                                            {
+                                                categoryCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,yMarginBetweenCollectionViews,320,cViewHeight) collectionViewLayout:layout];
+                                                
+                                                //add title label from category text
+                                                NSArray *firstTemplatesArray = [self.totalSetsOfParentTemplates objectAtIndex:0];
+                                                PFObject *templateObj = [firstTemplatesArray objectAtIndex:0];
+                                                NSString *categoryText = [templateObj objectForKey:@"category"];
+                                                
+                                                //add a label
+                                                sectionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,320,yMarginBetweenCollectionViews)];
+                                                sectionTitleLabel.text = categoryText;
+                                            }
+                                            else
+                                            {
+                                                categoryCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,(cViewHeight*i)+yMarginBetweenCollectionViews*i+yMarginBetweenCollectionViews,320,cViewHeight) collectionViewLayout:layout];
+                                                
+                                                sectionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,cViewHeight*i+yMarginBetweenCollectionViews,320,yMarginBetweenCollectionViews)];
+                                                
+                                                //add title label from category text
+                                                NSArray *firstTemplatesArray = [self.totalSetsOfParentTemplates objectAtIndex:i];
+                                                PFObject *templateObj = [firstTemplatesArray objectAtIndex:0];
+                                                NSString *categoryText = [templateObj objectForKey:@"category"];
+                                                if([categoryText isEqualToString:@""] || categoryText == nil)
+                                                {
+                                                    categoryText = @"Null Category";
+                                                }
+                                                sectionTitleLabel.text = categoryText;
+                                                
+                                            }
+                                            
+                                            sectionTitleLabel.textAlignment = NSTextAlignmentCenter;
+                                            sectionTitleLabel.textColor = [UIColor whiteColor];
+                                            sectionTitleLabel.font = [UIFont fontWithName:@"Futura-Medium" size:16];
+                                            sectionTitleLabel.tag = i+1;
+                                            
+                                            [self.baseScrollView addSubview:sectionTitleLabel];
+                                            
+                                            categoryCollectionView.tag = i+1;
+                                            categoryCollectionView.dataSource = self;
+                                            categoryCollectionView.delegate = self;
+                                            categoryCollectionView.backgroundColor = [UIColor whiteColor];
+                                            
+                                            [categoryCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"templateCell"];
+                                            
+                                            [self.baseScrollView addSubview:categoryCollectionView];
+                                            
+                                            [categoryCollectionView reloadData];
+                                            [HUD hide:YES];   
+                                        }
+                                    }
+         ];
     
-    for (PFObject *parentTemplateObject in templateParentChoices)
-    {
-        NSString *category = [parentTemplateObject objectForKey:@"category"];
-        if(category ==nil)
-        {
-            category = @"";
-            
-        }
-        //handle very first case
-        if(j==1)
-        {
-            //create a new templatearray and add it to total sets of templates
-            templateArray = [[NSMutableArray alloc] init];
-            [templateArray addObject:parentTemplateObject];
-            previousCategory = category;
-            
-            if(j == lastObject)
-            {
-                [self.totalSetsOfParentTemplates addObject:[templateArray copy]];
-                
-            }
-        }
-        else if([previousCategory isEqualToString:category])
-        {
-            [templateArray addObject:parentTemplateObject];
-            if(j == lastObject)
-            {
-                [self.totalSetsOfParentTemplates addObject:[templateArray copy]];
-                
-            }
-        }
-        else
-        {
-            //if there are already some objects, add this one and finish the array
-            if(templateArray.count >=1)
-            {
-                [self.totalSetsOfParentTemplates addObject:[templateArray copy]];
-                [templateArray removeAllObjects];
-                templateArray = [[NSMutableArray alloc] init];
-                [templateArray addObject:parentTemplateObject];
-                previousCategory = category;
-                if(previousCategory ==nil)
-                {
-                    previousCategory = @"";
-                }
-                if(j == lastObject)
-                {
-                    [self.totalSetsOfParentTemplates addObject:[templateArray copy]];
-                    
-                }
-            }
-            else //if not already some objects, start a new templateArray
-            {
-                [templateArray removeAllObjects];
-                templateArray = [[NSMutableArray alloc] init];
-                [templateArray addObject:parentTemplateObject];
-                previousCategory = category;
-                if(previousCategory ==nil)
-                {
-                    previousCategory = @"";
-                }
-                if(j == lastObject)
-                {
-                    [self.totalSetsOfParentTemplates addObject:[templateArray copy]];
-                    
-                }
-            }
-        }
-        
-        j = j+1;
-    }
+    
     
 }
 
@@ -871,6 +904,7 @@ NSString *locationLongitude;
     cdcvc.userName = self.itsMTLObject.objectId;
     cdcvc.itsMTLObject = self.itsMTLObject;
     cdcvc.manualLocationPropertyNum = self.manualLocationPropertyNum;
+    cdcvc.designationProperties = self.designationProperties;
     
     [self.navigationController pushViewController:cdcvc animated:NO];
     //[self.navigationController pushViewController:ctsvc animated:NO];

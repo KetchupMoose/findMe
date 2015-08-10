@@ -20,6 +20,7 @@
 #import "caseDetailsCarouselViewController.h"
 #import "caseTitleSetViewController.h"
 
+
 @interface newCaseViewController ()
 
 @end
@@ -66,12 +67,8 @@ NSString *locationLongitude;
     //populate the URL's of images from parse.
     [self queryForTemplates];
     
-    CaseOptionsCollectionView.dataSource = self;
-    CaseOptionsCollectionView.delegate = self;
-    
     self.navigationItem.title = @"New Case";
-    
-    [CaseOptionsCollectionView reloadData];
+   
     
     [self getLocation:self];
     
@@ -123,48 +120,99 @@ NSString *locationLongitude;
 
 -(void) queryForTemplates
 {
-    //retrieve the five parent templatePickerChoices from Parse
-    //templatePickerChoices =
-    PFQuery *templateQuery = [PFQuery queryWithClassName:@"Templates"];
-    //[templateQuery selectKeys:@[@"parenttemplateid"]];
+    //show progress HUD
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
     
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Gathering Local Templates";
+    [HUD show:YES];
     
-    [templateQuery whereKey:@"laiso" equalTo:@"EN"];
-    
-    templatePickerChoices = [templateQuery findObjects];
+    //put in getStartMenu
+    //use parse cloud code function
+    templatePickerChoices = [[NSArray alloc] init];
     
     templatePickerParentChoices = [[NSMutableArray alloc] init];
     templatePickerActiveChoices = [[NSMutableArray alloc] init];
     
-    for(PFObject *templateObject in templatePickerChoices)
+    NSString *mtlObjID = self.itsMTLObject.objectId;
+    BOOL payloadString;
+    if([mtlObjID isEqualToString:@"yh5YoZSXRW"])
     {
-        NSLog(@"numberofKeys");
-        NSLog(@"%i",templateObject.allKeys.count);
-    
-       PFObject *theParentObj = [templateObject objectForKey:@"parenttemplateid"];
-        
-        /*
-        NSString *objID = [templateObject valueForKey:@"parentemplateid"];
-        
-       if(objID==Nil)
-       {
-          objID = @"no";
-           
-       }
-        else
-        {
-            objID = @"yes";
-            
-        }
-        */
-        
-        if([theParentObj isEqual:[NSNull null]])
-        {
-            [templatePickerParentChoices addObject:templateObject];
-            
-            
-        }
+        payloadString = YES;
     }
+    if(payloadString ==YES)
+    {
+        
+        [PFCloud callFunctionInBackground:@"getStartMenu"
+                           withParameters:@{@"payload": @"yh5YoZSXRW"}
+                                    block:^(NSArray *returnedObjects, NSError *error) {
+                                        
+                                        if (!error)
+                                        {
+                                            templatePickerChoices = returnedObjects;
+                                            
+                                            for(PFObject *templateObject in templatePickerChoices)
+                                            {
+                                                NSLog(@"numberofKeys");
+                                                NSLog(@"%i",templateObject.allKeys.count);
+                                                
+                                                PFObject *theParentObj = [templateObject objectForKey:@"parenttemplateid"];
+                                                
+                                                if([theParentObj isEqual:[NSNull null]])
+                                                {
+                                                    [templatePickerParentChoices addObject:templateObject];
+                                                    
+                                                }
+                                                
+                                            }
+                                            CaseOptionsCollectionView.dataSource = self;
+                                            CaseOptionsCollectionView.delegate = self;
+                                            
+                                            [CaseOptionsCollectionView reloadData];
+                                            
+                                            [HUD hide:YES];
+                                            
+                                        }
+                                    }
+         ];
+    }
+    else
+    {
+        [PFCloud callFunctionInBackground:@"getStartMenu"
+                           withParameters:@{}
+                                    block:^(NSArray *returnedObjects, NSError *error) {
+                                        
+                                        if (!error)
+                                        {
+                                            templatePickerChoices = returnedObjects;
+                                            
+                                            for(PFObject *templateObject in templatePickerChoices)
+                                            {
+                                                NSLog(@"numberofKeys");
+                                                NSLog(@"%i",templateObject.allKeys.count);
+                                                
+                                                PFObject *theParentObj = [templateObject objectForKey:@"parenttemplateid"];
+                                                
+                                                if([theParentObj isEqual:[NSNull null]])
+                                                {
+                                                    [templatePickerParentChoices addObject:templateObject];
+                                                    
+                                                }
+                                            }
+                                            CaseOptionsCollectionView.dataSource = self;
+                                            CaseOptionsCollectionView.delegate = self;
+                                            
+                                            [CaseOptionsCollectionView reloadData];
+                                            
+                                            [HUD hide:YES];
+                                        }
+                                    }
+         ];
+
+    }
+  
 
 }
 

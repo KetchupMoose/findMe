@@ -45,8 +45,9 @@ MBProgressHUD *HUD;
 @synthesize testUserTextField;
 @synthesize homePageCases;
 @synthesize connectedMTLLabel;
-NSString *homePageManualLocationPropertyNum;
 
+NSString *homePageManualLocationPropertyNum;
+NSString *homePageTheMatchPropertyNum;
 -(void)setManualLocationProperty
 {
     //query for the property number to use
@@ -57,6 +58,40 @@ NSString *homePageManualLocationPropertyNum;
         homePageManualLocationPropertyNum = object.objectId;
     }];
     
+}
+
+-(void)setDesignationProperties
+{
+    PFQuery *designationPropertiesQuery = [PFQuery queryWithClassName:@"Properts"];
+    [designationPropertiesQuery whereKey:@"designation" notEqualTo:@""];
+    [designationPropertiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        //filter through this array to get a smaller array
+        NSMutableArray *cleanPropsArray = [[NSMutableArray alloc] init];
+        for(PFObject *propObject in objects)
+        {
+            NSString *propDescr = [propObject objectForKey:@"propertyDescr"];
+            NSString *designation = [propObject objectForKey:@"designation"];
+            
+            if([propDescr length]>0 && [designation length] >0)
+            {
+                [cleanPropsArray addObject:propObject];
+            }
+        }
+        self.designationProperties = [cleanPropsArray copy];
+        
+    }];
+}
+
+-(void)setTheMatchProperty
+{
+    //query for the property number to use
+    PFQuery *locationPropertyQuery = [PFQuery queryWithClassName:@"Properts"];
+    [locationPropertyQuery whereKey:@"designation" equalTo:@"EN~TheMatch"];
+    
+    [locationPropertyQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        homePageTheMatchPropertyNum= object.objectId;
+    }];
 }
 
 - (void)viewDidLoad {
@@ -153,8 +188,6 @@ NSString *homePageManualLocationPropertyNum;
     
     [self.view addSubview:bottomTab];
     
-    
-    
 }
 
 -(void)replayMovie:(NSNotification *)notification
@@ -169,8 +202,9 @@ NSString *homePageManualLocationPropertyNum;
     
     //create an itsMTL Object if necessary
     [self createParseUser];
-    
-    [self setManualLocationProperty];
+    [self setDesignationProperties];
+    //[self setManualLocationProperty];
+    //[self setTheMatchProperty];
     
     //add a progress HUD to show it is retrieving list of cases
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -401,8 +435,8 @@ NSString *homePageManualLocationPropertyNum;
     
     
     ncvc.itsMTLObject = HomePageITSMTLObject;
-    ncvc.manualLocationPropertyNum = homePageManualLocationPropertyNum;
-   
+    //ncvc.manualLocationPropertyNum = homePageManualLocationPropertyNum;
+    ncvc.designationProperties = self.designationProperties;
     //UINavigationController *uinc = self.navigationController;
     
     [self.navigationController pushViewController:ncvc animated:YES];
@@ -415,6 +449,7 @@ NSString *homePageManualLocationPropertyNum;
     
     ncvc.itsMTLObject = HomePageITSMTLObject;
     ncvc.manualLocationPropertyNum = homePageManualLocationPropertyNum;
+    ncvc.designationProperties = self.designationProperties;
     //UINavigationController *uinc = self.navigationController;
     
     [self.navigationController pushViewController:ncvc animated:YES];
@@ -438,7 +473,7 @@ NSString *homePageManualLocationPropertyNum;
     vcvc.userName = HomePageuserName;
     vcvc.itsMTLObject = HomePageITSMTLObject;
     vcvc.manualLocationPropertyNum = homePageManualLocationPropertyNum;
-    
+    vcvc.designationProperties = self.designationProperties;
     //set matches properties also
     //loop through the itsMTLObject and gather all the user's matches
     

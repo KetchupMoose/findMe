@@ -29,6 +29,6 @@
 
 @property (strong,nonatomic) NSMutableArray *matchesPerCaseArray;
 @property (strong,nonatomic) NSMutableArray *sectionHeaderCaseObjectArray;
-
+@property (strong,nonatomic) NSArray *designationProperties;
 
 @end

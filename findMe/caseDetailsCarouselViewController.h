@@ -36,6 +36,7 @@
 @property (strong,nonatomic) IBOutlet UITableView *matchesTableView;
 
 @property (strong,nonatomic) NSString *manualLocationPropertyNum;
+@property (strong,nonatomic) NSArray *designationProperties;
 @property (weak,nonatomic) IBOutlet UIButton *viewMatchesButton;
 -(IBAction)viewMatches:(id)sender;
 @property (strong,nonatomic) IBOutlet UITextField *customAnswerTextField;

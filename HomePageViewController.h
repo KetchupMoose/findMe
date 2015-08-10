@@ -36,7 +36,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *connectedMTLLabel;
 @property (strong,nonatomic) IBOutlet UIWebView *gifBG;
 @property (strong,nonatomic) MPMoviePlayerController *moviePlayer;
-
+@property (strong,nonatomic) NSArray *designationProperties;
 -(IBAction)showPrivatelyView:(id)sender;
 
 

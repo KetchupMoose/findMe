@@ -18,10 +18,12 @@
 @property (strong,nonatomic) UIScrollView *baseScrollView;
 @property (strong,nonatomic) NSMutableArray *totalSetsOfParentTemplates;
 @property (strong,nonatomic) NSMutableArray *parentTemplateCategories;
-@property (strong,nonatomic) NSMutableArray *allTemplates;
+@property (strong,nonatomic) NSArray *allTemplates;
 @property (strong,nonatomic) NSMutableArray *templatePickerActiveChoices;
 @property (strong,nonatomic) PFObject *itsMTLObject;
 @property (strong,nonatomic) UITableView *TemplateSecondLevelTableView;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong,nonatomic) NSString *manualLocationPropertyNum;
+@property (strong,nonatomic) NSArray *designationProperties;
+
 @end

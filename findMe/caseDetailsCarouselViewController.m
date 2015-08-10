@@ -116,6 +116,16 @@ BOOL LoadedBOOL = NO;
 
 -(NSMutableArray *)filterOutLocationProperty:(NSMutableArray *)incomingCaseItems
 {
+    //set manualLocationPropertyNum from the array of designationProperties
+    
+    for(PFObject *designationProp in self.designationProperties)
+    {
+        NSString *designation = [designationProp objectForKey:@"designation"];
+        if([designation isEqualToString:@"EN~PinDrop"])
+        {
+            self.manualLocationPropertyNum = designationProp.objectId;
+        }
+    }
     int j = 0;
     int indexToRemove = -1;
     for(PFObject *caseItemObject in incomingCaseItems)
@@ -205,9 +215,6 @@ BOOL LoadedBOOL = NO;
     
     UIPanGestureRecognizer *checkForPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panHappened:)];
     [self.view addGestureRecognizer:checkForPan];
-    
-    
-    
     
     //location manager instance variable allocs
     locationManager = [[CLLocationManager alloc] init];
@@ -404,7 +411,6 @@ BOOL LoadedBOOL = NO;
     else
         //this view controller will control refreshing after all data is entered
     {
-        
         
         for (PFObject *eachReturnedCase in sortedCaseItems)
         {
@@ -767,7 +773,7 @@ BOOL LoadedBOOL = NO;
         //[view addGestureRecognizer:panRecognizer];
         [view addSubview:carouselLabel];
         //[view addSubview:iconImgView];
-        //[view addSubview:propertyClassLabel];
+        [view addSubview:propertyClassLabel];
         [view addSubview:deleteButton];
         //[view addSubview:createACaseItem];
         
@@ -875,7 +881,7 @@ BOOL LoadedBOOL = NO;
     //get property type and customize the label
     NSString *propType = [propAtIndex objectForKey:@"propertyType"];
    
-    /*
+    
     if([propType  isEqual:@"I"])
     {
         //property is an info message
@@ -899,7 +905,7 @@ BOOL LoadedBOOL = NO;
         propertyClassLabel.textColor = [UIColor whiteColor];
         propertyClassLabel.backgroundColor = [UIColor redColor];
     }
-    */
+    
     
     NSString *newVal = [caseItemPicked objectForKey:@"new"];
     if([newVal isEqualToString:@"X"])
@@ -4800,6 +4806,7 @@ if(tableViewTag ==8999)
             sureMatchFound =TRUE;
         }
         */
+        
         if(sureMatchFound==TRUE)
         {
             //get the caseObject for this property and check if it is flagged NEW

@@ -25,5 +25,5 @@
 
 @property (strong,nonatomic) IBOutlet UIWebView *gifView;
 @property (strong,nonatomic) MPMoviePlayerController *moviePlayer;
-
+@property (strong,nonatomic) NSArray *designationProperties;
 @end

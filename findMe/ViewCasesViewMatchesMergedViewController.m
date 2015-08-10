@@ -76,13 +76,10 @@ BOOL firstMatchViewLoadMerge = TRUE;
     self.matchesPerCaseArray = [[NSMutableArray alloc] init];
     self.sectionHeaderCaseObjectArray = [[NSMutableArray alloc] init];
     
-    
     [self.casesTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.casesTableView.backgroundColor = [UIColor clearColor];
     
     self.casesTableView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin;
-    
-  
     
 }
 
@@ -312,6 +309,38 @@ BOOL firstMatchViewLoadMerge = TRUE;
     return 100.0;
 }
 
+-(NSString *)checkMatchPropertyDesignation:(NSString *)propertyNum
+{
+    NSString *sureMatchPropNum;
+    NSString *theMatchPropNum;
+    for(PFObject *designationProp in self.designationProperties)
+    {
+        NSString *designation = [designationProp objectForKey:@"designation"];
+        if([designation isEqualToString:@"EN~TheMatch"])
+        {
+            theMatchPropNum = designationProp.objectId;
+        }
+        
+        if([designation isEqualToString:@"EN~SureMatches"])
+        {
+            sureMatchPropNum = designationProp.objectId;
+        }
+    }
+    
+    if([propertyNum isEqualToString:sureMatchPropNum])
+    {
+        return @"sureMatch";
+    }
+    if([propertyNum isEqualToString:theMatchPropNum])
+    {
+        return @"theMatch";
+    }
+    else
+    {
+        return @"other";
+    }
+}
+
 
 - (UIView *)tableView:(UITableView *)tableView
 viewForHeaderInSection:(NSInteger)section
@@ -338,15 +367,18 @@ viewForHeaderInSection:(NSInteger)section
     
     UIView *sectionBGView;
     UIImageView *caseImgView;
-    UILabel *updateCountLabel;
+    UILabel *matchCountLabel;
     UILabel *caseNameLabel;
     UILabel *dateUpdatedLabel;
+    UILabel *bubbleCountLabel;
     
     //add items to sectionBGView
     caseImgView = (UIImageView *)[sectionBGView viewWithTag:2];
-    updateCountLabel = (UILabel *)[sectionBGView viewWithTag:3];
+    matchCountLabel = (UILabel *)[sectionBGView viewWithTag:3];
     caseNameLabel = (UILabel *)[sectionBGView viewWithTag:4];
     dateUpdatedLabel = (UILabel *)[sectionBGView viewWithTag:5];
+    bubbleCountLabel = (UILabel *)[sectionBGView viewWithTag:6];
+    
     UIButton *editCaseButton = (UIButton *)[sectionBGView viewWithTag:section+100];
     
     if(caseImgView.tag !=2)
@@ -357,8 +389,8 @@ viewForHeaderInSection:(NSInteger)section
         sectionBGView.alpha = 1;
         sectionBGView.layer.cornerRadius = 5.0f;
         
-        updateCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(4,4,20,20)];
-        updateCountLabel.tag = 3;
+        matchCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(98,4,90,20)];
+        matchCountLabel.tag = 3;
         
         caseImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,94,90)];
         caseImgView.tag = 2;
@@ -366,8 +398,8 @@ viewForHeaderInSection:(NSInteger)section
         caseNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(100,0,200,100)];
         caseNameLabel.tag = 4;
         
-        dateUpdatedLabel = [[UILabel alloc] initWithFrame:CGRectMake(sectionBGView.frame.size.width-40,0,40,20)];
-        
+        dateUpdatedLabel = [[UILabel alloc] initWithFrame:CGRectMake(sectionBGView.frame.size.width-50,0,50,20)];
+        dateUpdatedLabel.textAlignment = NSTextAlignmentRight;
         editCaseButton = [[UIButton alloc] initWithFrame:CGRectMake(205,55,100,30)];
         [editCaseButton setTitle:@"Edit Case" forState:UIControlStateNormal];
         [editCaseButton setBackgroundColor:[UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1]];
@@ -378,25 +410,45 @@ viewForHeaderInSection:(NSInteger)section
         
         [editCaseButton addTarget:self action:@selector(editCaseButtonPress:) forControlEvents:UIControlEventTouchUpInside];
         
+        bubbleCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(4,4,20,20)];
+        bubbleCountLabel.tag = 5;
+
     
         [sectionBGView addSubview:dateUpdatedLabel];
         [sectionBGView addSubview:caseImgView];
-        [sectionBGView addSubview:updateCountLabel];
+        [sectionBGView addSubview:matchCountLabel];
         [sectionBGView addSubview:caseNameLabel];
         [sectionBGView addSubview:result];
         [sectionBGView addSubview:editCaseButton];
-        
+        [sectionBGView addSubview:bubbleCountLabel];
         [sectionView addSubview:sectionBGView];
         
     }
-    
-    dateUpdatedLabel.text =@"2h 4m";
+   
     dateUpdatedLabel.font = [UIFont fontWithName:@"Futura-Medium" size:12];
     dateUpdatedLabel.textColor = [UIColor whiteColor];
     
     PFObject *caseObj = [caseListPruned objectAtIndex:section];
     NSString *caseID = [caseObj objectForKey:@"caseId"];
     NSString *caseimgURL;
+    NSString *bubbleCount = [caseObj objectForKey:@"bubbleCount"];
+    
+    NSString *timestampString = [caseObj objectForKey:@"timestamp"];
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.timeStyle = NSDateFormatterNoStyle;
+    formatter.timeZone = [NSTimeZone timeZoneWithName:@"EST"];
+    
+    [formatter setDateFormat:@"yyyyMMddHHmmss"];
+    NSDate *date = [formatter dateFromString:timestampString];
+    
+    //convert time from now
+    NSString *timeSinceUpdateString = [self calculateStringForTimeSinceLastUpdate:date];
+    
+    dateUpdatedLabel.text = timeSinceUpdateString;
+    dateUpdatedLabel.font = [UIFont fontWithName:@"Futura-Medium" size:12];
+    
+    
     for (PFObject *caseProfileObj in caseProfileObjects)
     {
         NSString *caseProfileCaseID = [caseProfileObj objectForKey:@"caseID"];
@@ -436,24 +488,54 @@ viewForHeaderInSection:(NSInteger)section
     {
         [caseImgView setImageWithURL:[NSURL URLWithString:caseimgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
     }
+    //Brian August 7
+    /*
+    for(PFObject *propObject in propObjectsArray)
+    {
+        NSString *designation = [propObject objectForKey:@"designation"];
+        BOOL sureMatchFound = FALSE;
+        
+        if([designation containsString:@"TheMatch"])
+        {
+            sureMatchFound =TRUE;
+        }
+    }
+     */
+    matchCountLabel.backgroundColor = [UIColor redColor];
     
-    updateCountLabel.backgroundColor = [UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1];
-    updateCountLabel.textColor = [UIColor whiteColor];
-    updateCountLabel.layer.cornerRadius = 10.0f;
-    updateCountLabel.layer.masksToBounds = YES;
-    updateCountLabel.text = [objCountNumber stringValue];
+    matchCountLabel.textColor = [UIColor whiteColor];
+    matchCountLabel.layer.cornerRadius = 10.0f;
+    matchCountLabel.layer.masksToBounds = YES;
+    matchCountLabel.text = [[objCountNumber stringValue] stringByAppendingString:@" Matches"];
+    [matchCountLabel setTextAlignment:NSTextAlignmentCenter];
+    if([objCountNumber intValue] ==0)
+    {
+        matchCountLabel.alpha = 0;
+        
+    }
+    
+    bubbleCountLabel.backgroundColor =[UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1];
+    bubbleCountLabel.textColor = [UIColor whiteColor];
+    bubbleCountLabel.layer.cornerRadius = 10.0f;
+    bubbleCountLabel.layer.masksToBounds = YES;
+    [bubbleCountLabel setTextAlignment:NSTextAlignmentCenter];
+    if([bubbleCount length] >0)
+    {
+        bubbleCountLabel.text = bubbleCount;
+    }
+    else
+    {
+        bubbleCountLabel.alpha = 0;
+    }
 
-    [updateCountLabel setTextAlignment:NSTextAlignmentCenter];
     
     caseNameLabel.textColor = [UIColor whiteColor];
     caseNameLabel.numberOfLines = 2;
     caseNameLabel.font = [UIFont fontWithName:@"Futura-Medium" size:16];
-     caseImgView.layer.cornerRadius = 5.0f;
+    caseImgView.layer.cornerRadius = 5.0f;
     
     //get caseName from prunedCaseArray at this index
     caseNameLabel.text = [caseObj objectForKey:@"caseName"];
-    
-    
     
     return sectionView;
 }
@@ -913,7 +995,7 @@ viewForHeaderInSection:(NSInteger)section
     cdcvc.userName = userName;
     cdcvc.itsMTLObject = self.itsMTLObject;
     cdcvc.manualLocationPropertyNum = self.manualLocationPropertyNum;
-    
+    cdcvc.designationProperties = self.designationProperties;
     PFObject *caseObj =  [caseListPruned objectAtIndex:[selectedIndex intValue]];
     
     NSString *caseID = [caseObj objectForKey:@"caseId"];
@@ -940,6 +1022,41 @@ viewForHeaderInSection:(NSInteger)section
     [self.navigationController pushViewController:cdcvc animated:NO];
 }
 
+-(NSString *)calculateStringForTimeSinceLastUpdate:(NSDate *) date
+{
+    NSDate *currentDate = [[NSDate alloc] initWithTimeIntervalSinceNow:0];
+    
+    NSTimeInterval distanceBetweenDates = [currentDate timeIntervalSinceDate:date];
+    double secondsInAnHour = 3600;
+    NSInteger hoursBetweenDates = distanceBetweenDates / secondsInAnHour;
+    
+    //june29 convert hours between dates into string
+    NSInteger daysRemaining = hoursBetweenDates/24;
+    NSInteger leftoverHoursRemaining = hoursBetweenDates-(daysRemaining*24);
+    
+    NSNumber *daysRemainingNum = [NSNumber numberWithInteger:daysRemaining];
+    NSNumber *leftoverHoursNum = [NSNumber numberWithInteger:leftoverHoursRemaining];
+    
+    NSString *daysRemainingString = [daysRemainingNum stringValue];
+    NSString *leftoverHoursString = [leftoverHoursNum stringValue];
+    
+    NSString *part1;
+    if([daysRemainingNum intValue] ==0)
+    {
+        part1 = @"";
+    }
+    else
+    {
+        part1 = [daysRemainingString stringByAppendingString:@"d "];
+    }
+    
+    NSString *part2 = [leftoverHoursString stringByAppendingString:@"h"];
+    
+    NSString *timeSinceLastUpdateString = [part1 stringByAppendingString:part2];
+    
+    return timeSinceLastUpdateString;
+    
+}
 
 
 
