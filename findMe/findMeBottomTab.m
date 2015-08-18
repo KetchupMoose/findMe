@@ -79,7 +79,7 @@
         if(i==0)
         {
             //pixel dimensions 42x42
-            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,21,21)];
+            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,14,14)];
             btnImageView.image = [UIImage imageNamed:@"ico_home@3x.png"];
             btnImageView.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y-7);
             //change frame to go 5 pixels up
@@ -89,7 +89,7 @@
         if(i==1)
         {
             //pixel dimensions 48 × 48 pixels
-            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,24,24)];
+            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,24/1.5,24/1.5)];
             btnImageView.image = [UIImage imageNamed:@"ico_progress@3x.png"];
             btnImageView.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y-7);
             btnTextLabel.text = @"PROGRESS";
@@ -98,7 +98,7 @@
         if(i==2)
         {
             //pixel dimensions 48 × 48 pixels
-            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,24,24)];
+            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,24/1.5,24/1.5)];
             btnImageView.image = [UIImage imageNamed:@"ico_matches@3x.png"];
             btnImageView.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y-7);
             btnTextLabel.text = @"MATCHES";
@@ -106,7 +106,7 @@
         if(i==3)
         {
             //pixel dimensions 33 × 48 pixels
-            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,16.5,24)];
+            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,16.5/1.5,24/1.5)];
             btnImageView.image = [UIImage imageNamed:@"ico_profile@3x.png"];
             btnImageView.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y-7);
             btnTextLabel.text = @"PROFILE";

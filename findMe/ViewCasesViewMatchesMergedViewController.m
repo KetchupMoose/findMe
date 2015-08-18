@@ -389,7 +389,7 @@ viewForHeaderInSection:(NSInteger)section
         sectionBGView.alpha = 1;
         sectionBGView.layer.cornerRadius = 5.0f;
         
-        matchCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(98,4,90,20)];
+        matchCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(98,4,150,20)];
         matchCountLabel.tag = 3;
         
         caseImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,94,90)];
@@ -434,6 +434,30 @@ viewForHeaderInSection:(NSInteger)section
     NSString *bubbleCount = [caseObj objectForKey:@"bubbleCount"];
     
     NSString *timestampString = [caseObj objectForKey:@"timestamp"];
+    
+    BOOL sureMatch = FALSE;
+    BOOL theMatch = FALSE;
+    //check the caseObj for match type properties and check the matchtypes
+    NSArray *caseItems = [caseObj objectForKey:@"caseItems"];
+    for (PFObject *propObject in caseItems)
+    {
+        if([[propObject objectForKey:@"origin"] isEqualToString:@"B"])
+        {
+            //check this propertyNum against the known match types
+            NSString *matchPropNum = [propObject objectForKey:@"propertyNum"];
+            
+            NSString *checkMatchDesignation = [self checkMatchPropertyDesignation:matchPropNum];
+            if([checkMatchDesignation isEqualToString:@"sureMatch"])
+            {
+                sureMatch = TRUE;
+            }
+            else
+                if([checkMatchDesignation isEqualToString:@"theMatch"])
+                {
+                    theMatch = TRUE;
+                }
+        }
+    }
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.timeStyle = NSDateFormatterNoStyle;
@@ -506,8 +530,23 @@ viewForHeaderInSection:(NSInteger)section
     matchCountLabel.textColor = [UIColor whiteColor];
     matchCountLabel.layer.cornerRadius = 10.0f;
     matchCountLabel.layer.masksToBounds = YES;
-    matchCountLabel.text = [[objCountNumber stringValue] stringByAppendingString:@" Matches"];
-    [matchCountLabel setTextAlignment:NSTextAlignmentCenter];
+    if(sureMatch == TRUE)
+    {
+        matchCountLabel.text = [[objCountNumber stringValue] stringByAppendingString:@"SURE  Matches"];
+
+    }
+    else
+    {
+        if(theMatch == TRUE)
+        {
+            matchCountLabel.text = @"The Match has been found!";
+        }
+        else
+        {
+         matchCountLabel.text = [[objCountNumber stringValue] stringByAppendingString:@" Matches"];
+        }
+    }
+        [matchCountLabel setTextAlignment:NSTextAlignmentCenter];
     if([objCountNumber intValue] ==0)
     {
         matchCountLabel.alpha = 0;
@@ -528,7 +567,6 @@ viewForHeaderInSection:(NSInteger)section
         bubbleCountLabel.alpha = 0;
     }
 
-    
     caseNameLabel.textColor = [UIColor whiteColor];
     caseNameLabel.numberOfLines = 2;
     caseNameLabel.font = [UIFont fontWithName:@"Futura-Medium" size:16];

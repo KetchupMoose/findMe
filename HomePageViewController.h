@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
 #import <Parse/Parse.h>
-#import "setProfileViewController.h"
+#import "setProfileViewController2.h"
 #import "internetOfflineViewController.h"
 #import "conversationModelData.h"
 #import "findMeBaseViewController.h"

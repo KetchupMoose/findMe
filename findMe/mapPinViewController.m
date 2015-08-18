@@ -216,7 +216,6 @@ didChangeDragState:(MKAnnotationViewDragState)newState
        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 800, 800);
        [self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
        
-       
        // Add an annotation
        //MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
        //point.coordinate = userLocation.coordinate;

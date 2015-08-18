@@ -150,6 +150,14 @@
 		EC93C6CD1B03B9CD00D3DE2A /* PLCameraSheetDoneButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6BF1B03B9CD00D3DE2A /* PLCameraSheetDoneButton@2x.png */; };
 		EC93C6CE1B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6C01B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed.png */; };
 		EC93C6CF1B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6C11B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed@2x.png */; };
+		EC93EC551B793B6600E0772D /* butt_upload-photo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93EC501B793B6600E0772D /* butt_upload-photo@3x.png */; };
+		EC93EC561B793B6600E0772D /* ico_back@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93EC511B793B6600E0772D /* ico_back@3x.png */; };
+		EC93EC571B793B6600E0772D /* ico_female@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93EC521B793B6600E0772D /* ico_female@3x.png */; };
+		EC93EC581B793B6600E0772D /* ico_male@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93EC531B793B6600E0772D /* ico_male@3x.png */; };
+		EC93EC591B793B6600E0772D /* ico_more@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93EC541B793B6600E0772D /* ico_more@3x.png */; };
+		EC93EC5C1B793BE500E0772D /* ico_female-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93EC5A1B793BE500E0772D /* ico_female-selected@3x.png */; };
+		EC93EC5D1B793BE500E0772D /* ico_male-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93EC5B1B793BE500E0772D /* ico_male-selected@3x.png */; };
+		EC93EC601B7948E600E0772D /* setProfileViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = EC93EC5F1B7948E600E0772D /* setProfileViewController2.m */; };
 		EC9F51DB1A2AC53B00CFED6E /* longexposurestreetlights.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DA1A2AC53B00CFED6E /* longexposurestreetlights.jpeg */; };
 		EC9F51DD1A2AC63F00CFED6E /* gaussianblur.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DC1A2AC63F00CFED6E /* gaussianblur.jpg */; };
 		EC9F51DF1A2AC68B00CFED6E /* blurredlights.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC9F51DE1A2AC68B00CFED6E /* blurredlights.jpg */; };
@@ -592,6 +600,15 @@
 		EC93C6BF1B03B9CD00D3DE2A /* PLCameraSheetDoneButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PLCameraSheetDoneButton@2x.png"; sourceTree = "<group>"; };
 		EC93C6C01B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PLCameraSheetDoneButtonPressed.png; sourceTree = "<group>"; };
 		EC93C6C11B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PLCameraSheetDoneButtonPressed@2x.png"; sourceTree = "<group>"; };
+		EC93EC501B793B6600E0772D /* butt_upload-photo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "butt_upload-photo@3x.png"; sourceTree = "<group>"; };
+		EC93EC511B793B6600E0772D /* ico_back@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico_back@3x.png"; sourceTree = "<group>"; };
+		EC93EC521B793B6600E0772D /* ico_female@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico_female@3x.png"; sourceTree = "<group>"; };
+		EC93EC531B793B6600E0772D /* ico_male@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico_male@3x.png"; sourceTree = "<group>"; };
+		EC93EC541B793B6600E0772D /* ico_more@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico_more@3x.png"; sourceTree = "<group>"; };
+		EC93EC5A1B793BE500E0772D /* ico_female-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico_female-selected@3x.png"; sourceTree = "<group>"; };
+		EC93EC5B1B793BE500E0772D /* ico_male-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico_male-selected@3x.png"; sourceTree = "<group>"; };
+		EC93EC5E1B7948E600E0772D /* setProfileViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = setProfileViewController2.h; sourceTree = "<group>"; };
+		EC93EC5F1B7948E600E0772D /* setProfileViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = setProfileViewController2.m; sourceTree = "<group>"; };
 		EC9F51DA1A2AC53B00CFED6E /* longexposurestreetlights.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = longexposurestreetlights.jpeg; sourceTree = "<group>"; };
 		EC9F51DC1A2AC63F00CFED6E /* gaussianblur.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = gaussianblur.jpg; sourceTree = "<group>"; };
 		EC9F51DE1A2AC68B00CFED6E /* blurredlights.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = blurredlights.jpg; sourceTree = "<group>"; };
@@ -1267,6 +1284,8 @@
 				D3207B0119E9CBCE00085B7C /* NewPropertyViewController.m */,
 				D3F4573D19F88199000EDF25 /* setProfileViewController.h */,
 				D3F4573E19F88199000EDF25 /* setProfileViewController.m */,
+				EC93EC5E1B7948E600E0772D /* setProfileViewController2.h */,
+				EC93EC5F1B7948E600E0772D /* setProfileViewController2.m */,
 				ECA7A21E1AA7B84C00F899D5 /* internetOfflineViewController.h */,
 				ECA7A21F1AA7B84C00F899D5 /* internetOfflineViewController.m */,
 				D31DF31019CEFC0C00A37725 /* Images.xcassets */,
@@ -1325,6 +1344,7 @@
 		D3F4574419FD9215000EDF25 /* imageAssets */ = {
 			isa = PBXGroup;
 			children = (
+				EC93EC4F1B793B4500E0772D /* profileScreen */,
 				ECCBDCEC1B729EBE00CE26C9 /* bottomTabUI */,
 				EC1519E81B72562300AE1DD6 /* splashScreen */,
 				ECAB71E51B5060B3004D4E5C /* papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg */,
@@ -1556,6 +1576,20 @@
 				EC93C6C11B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed@2x.png */,
 			);
 			path = GKImages;
+			sourceTree = "<group>";
+		};
+		EC93EC4F1B793B4500E0772D /* profileScreen */ = {
+			isa = PBXGroup;
+			children = (
+				EC93EC5A1B793BE500E0772D /* ico_female-selected@3x.png */,
+				EC93EC5B1B793BE500E0772D /* ico_male-selected@3x.png */,
+				EC93EC501B793B6600E0772D /* butt_upload-photo@3x.png */,
+				EC93EC511B793B6600E0772D /* ico_back@3x.png */,
+				EC93EC521B793B6600E0772D /* ico_female@3x.png */,
+				EC93EC531B793B6600E0772D /* ico_male@3x.png */,
+				EC93EC541B793B6600E0772D /* ico_more@3x.png */,
+			);
+			name = profileScreen;
 			sourceTree = "<group>";
 		};
 		ECA7A2271AA8B81C00F899D5 /* chatControls */ = {
@@ -2329,6 +2363,7 @@
 				EC641E051AFD35270005073C /* pinRed.png in Resources */,
 				ECCBDD061B72CF0500CE26C9 /* ProximaNova-Regular.otf in Resources */,
 				ECCBDCF41B729ED700CE26C9 /* bg_menu@3x.png in Resources */,
+				EC93EC5D1B793BE500E0772D /* ico_male-selected@3x.png in Resources */,
 				ECCBDD041B72A1B000CE26C9 /* ico_progress.png in Resources */,
 				ECD591BC1ABC930700D32D5D /* carselfie1.jpg in Resources */,
 				ECC9E5131AA153070099C46A /* Icon-Small.png in Resources */,
@@ -2336,8 +2371,10 @@
 				EC7A74C21B263E0C00D3A53F /* 4925081.mp4 in Resources */,
 				ECBEE5921B25F90D00D131E7 /* womanphone.gif in Resources */,
 				ECA7A29A1AA8B86C00F899D5 /* JSQMessagesAssets.bundle in Resources */,
+				EC93EC551B793B6600E0772D /* butt_upload-photo@3x.png in Resources */,
 				EC7A74C41B267A9500D3A53F /* Brian-frame.png in Resources */,
 				EC886A621B20DC9E00531FEA /* blurtrainBackground.jpg in Resources */,
+				EC93EC571B793B6600E0772D /* ico_female@3x.png in Resources */,
 				ECAB71C31B4DFF4B004D4E5C /* DigitsKitResources.bundle in Resources */,
 				ECBEE5981B26039D00D131E7 /* womangif2.gif in Resources */,
 				ECC9E5141AA153070099C46A /* Icon-Small@2x.png in Resources */,
@@ -2356,6 +2393,7 @@
 				ECAB71DE1B505AB3004D4E5C /* Dark-Night-Gradation-Blur-iPhone-6-plus-wallpaper-ilikewallpaper_com.jpg in Resources */,
 				EC7A74ED1B2A169900D3A53F /* d7f90d83ca7bda55d77b1a40f0b51537.jpg in Resources */,
 				ECAB71E61B5060B3004D4E5C /* papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg in Resources */,
+				EC93EC581B793B6600E0772D /* ico_male@3x.png in Resources */,
 				EC7A74E51B2A12F300D3A53F /* torontobg.jpg in Resources */,
 				ECC163F21B3B5BEB00BBC12D /* Businessman-with-question-mark-on-face.jpg in Resources */,
 				D3F4574B1A003772000EDF25 /* stockphotoguy1.jpg in Resources */,
@@ -2371,11 +2409,13 @@
 				EC93C6CF1B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed@2x.png in Resources */,
 				ECA7A2BF1AA8B86C00F899D5 /* JSQMessagesLoadEarlierHeaderView.xib in Resources */,
 				EC9F51DF1A2AC68B00CFED6E /* blurredlights.jpg in Resources */,
+				EC93EC591B793B6600E0772D /* ico_more@3x.png in Resources */,
 				ECBEE5881B25EF9000D131E7 /* cityblur.jpg in Resources */,
 				EC1519F01B72563600AE1DD6 /* logo@3x.png in Resources */,
 				D3F457491A0031F0000EDF25 /* stockphotowoman1.jpg in Resources */,
 				ECA7A2A41AA8B86C00F899D5 /* JSQMessagesViewController.xib in Resources */,
 				EC291D471B1E38BE0003992C /* findMeCursive3.png in Resources */,
+				EC93EC561B793B6600E0772D /* ico_back@3x.png in Resources */,
 				EC641EB11AFFB1160005073C /* new-background-for-login-screen.png in Resources */,
 				EC1519ED1B72563600AE1DD6 /* background.jpg in Resources */,
 				ECBEE5771B2216B700D131E7 /* Greecewallpaperblurred.jpg in Resources */,
@@ -2410,6 +2450,7 @@
 				ECC9E5101AA153070099C46A /* Icon-60@2x.png in Resources */,
 				EC291D4D1B1E46470003992C /* Gender-symbols-262x300.png in Resources */,
 				ECCBDCF61B729ED700CE26C9 /* ico_matches@3x.png in Resources */,
+				EC93EC5C1B793BE500E0772D /* ico_female-selected@3x.png in Resources */,
 				ECBEE58C1B25F17500D131E7 /* hawaiiblur.jpg in Resources */,
 				ECCBDD031B72A1B000CE26C9 /* ico_profile.png in Resources */,
 				EC7A74B81B26384400D3A53F /* manOnPhone.gif in Resources */,
@@ -2567,6 +2608,7 @@
 				ECFDAAF51AB38B5C00E42C33 /* PNConnectionChannel.m in Sources */,
 				ECFDAAC01AB38B5C00E42C33 /* PNDate.m in Sources */,
 				ECA7A2B21AA8B86C00F899D5 /* JSQPhotoMediaItem.m in Sources */,
+				EC93EC601B7948E600E0772D /* setProfileViewController2.m in Sources */,
 				D3F4573F19F88199000EDF25 /* setProfileViewController.m in Sources */,
 				ECA7A29F1AA8B86C00F899D5 /* UIDevice+JSQMessages.m in Sources */,
 				ECFDAA9B1AB38B5C00E42C33 /* PubNub.m in Sources */,

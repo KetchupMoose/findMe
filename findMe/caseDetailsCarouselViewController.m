@@ -189,6 +189,11 @@ BOOL LoadedBOOL = NO;
 {
     colorForButtons = [UIColor colorWithRed:41/255.0f green:188.0f/255.0f blue:243.0f/255.0f alpha:1];
     
+    //iOS7 Customization, swipe to pop gesture
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
+    
     manualLocationCaseItemID = @"";
     
     items = [NSMutableArray array];
@@ -4109,7 +4114,7 @@ if(tableViewTag ==8999)
     }
     else
     {
-      [xmlWriter writeCharacters:@"900"];
+      [xmlWriter writeCharacters:@"9000"];
     }
     [xmlWriter writeEndElement];
     

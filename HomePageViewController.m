@@ -15,7 +15,7 @@
 #import <Parse/Parse.h>
 #import "ViewCasesViewController.h"
 #import "ViewCasesViewMatchesMergedViewController.h"
-#import "setProfileViewController.h"
+#import "setProfileViewController2.h"
 #import "matchesViewController.h"
 #import "UIViewController+ECSlidingViewController.h"
 #import "originalViewController.h"
@@ -406,11 +406,11 @@ NSString *homePageTheMatchPropertyNum;
          [currentUser save];
          
         */
-        setProfileViewController *spvc = [self.storyboard instantiateViewControllerWithIdentifier:@"spvc"];
-        spvc.delegate = self;
+        setProfileViewController2 *spvc2 = [self.storyboard instantiateViewControllerWithIdentifier:@"spvc2"];
+        spvc2.delegate = self;
         
         //[self presentViewController:spvc animated:NO completion:nil];
-        [self.navigationController pushViewController:spvc animated:YES];
+        [self.navigationController pushViewController:spvc2 animated:YES];
         
         //[self.navigationController pushViewController:spvc animated:YES];
         
@@ -698,11 +698,12 @@ NSString *homePageTheMatchPropertyNum;
         
 }
 - (IBAction)MyProfile:(id)sender {
-    setProfileViewController *spvc = [self.storyboard instantiateViewControllerWithIdentifier:@"spvc"];
-    spvc.delegate = self;
-   spvc.openingMode = @"HomeScreen";
-    spvc.homeScreenMTLObjectID = self.HomePageITSMTLObject.objectId;
-    [self.navigationController pushViewController:spvc animated:YES];
+    setProfileViewController2 *spvc2 = [self.storyboard instantiateViewControllerWithIdentifier:@"spvc2"];
+    spvc2.delegate = self;
+   spvc2.openingMode = @"HomeScreen";
+    spvc2.itsMTLObject = self.HomePageITSMTLObject;
+    spvc2.homeScreenMTLObjectID = self.HomePageITSMTLObject.objectId;
+    [self.navigationController pushViewController:spvc2 animated:YES];
     
 }
 
@@ -808,8 +809,10 @@ NSString *homePageTheMatchPropertyNum;
     
 }
 
-- (void)setNewProfile:(PFObject *)newITSMTLObject
+- (void)setNewProfile2:(PFObject *)newITSMTLObject
 {
+    NSLog(@"calling setProfileDelegateFunction");
+    
     if([newITSMTLObject.objectId length] >0)
     {
         self.HomePageuserName = newITSMTLObject.objectId;
