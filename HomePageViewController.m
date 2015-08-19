@@ -55,6 +55,14 @@ NSString *homePageTheMatchPropertyNum;
     [locationPropertyQuery whereKey:@"designation" equalTo:@"EN~PinDrop"];
     
     [locationPropertyQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        if(error)
+        {
+            UIAlertView *h1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location Property Retrieve Error Code H1", nil) message:@"Error Code H1" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            h1.tag = 101;
+            [h1 show];
+            
+            return;
+        }
         homePageManualLocationPropertyNum = object.objectId;
     }];
     
@@ -66,6 +74,13 @@ NSString *homePageTheMatchPropertyNum;
     [designationPropertiesQuery whereKey:@"designation" notEqualTo:@""];
     [designationPropertiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
+        if(error)
+        {
+            UIAlertView *h2 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"designation Property Retrieve Error Code H2", nil) message:@"Error Code H2" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            h2.tag = 101;
+            [h2 show];
+            return;
+        }
         //filter through this array to get a smaller array
         NSMutableArray *cleanPropsArray = [[NSMutableArray alloc] init];
         for(PFObject *propObject in objects)
@@ -90,6 +105,14 @@ NSString *homePageTheMatchPropertyNum;
     [locationPropertyQuery whereKey:@"designation" equalTo:@"EN~TheMatch"];
     
     [locationPropertyQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        if(error)
+        {
+            UIAlertView *h3 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"theMatch Property Retrieve Error Code H3", nil) message:@"Error Code H3" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            h3.tag = 101;
+            [h3 show];
+            
+            return;
+        }
         homePageTheMatchPropertyNum= object.objectId;
     }];
 }
@@ -229,6 +252,11 @@ NSString *homePageTheMatchPropertyNum;
         
     } errorBlock:^(PNError *error) {
        NSLog(@"%@",[error localizedDescription]);
+        UIAlertView *h4 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"pubnub Connect Error H4", nil) message:@"Error Code H4" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        h4.tag = 101;
+        [h4 show];
+        return;
+
     }];
     
     [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:appDelegate withCallbackBlock:^(NSString *origin, BOOL connected, PNError *connectionError){
@@ -239,6 +267,10 @@ NSString *homePageTheMatchPropertyNum;
         else if (!connected || connectionError)
         {
             NSLog(@"OBSERVER: Error %@, Connection Failed!", connectionError.localizedDescription);
+            UIAlertView *h5 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"pubnub addClientConnection Error H5", nil) message:@"Error Code H5" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            h5.tag = 101;
+            [h5 show];
+            return;
         }
     }];
     
@@ -285,6 +317,13 @@ NSString *homePageTheMatchPropertyNum;
     [newQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         //for each conversation object, subscribe to that channel on pubnub'
         
+        if(error)
+        {
+            UIAlertView *h6 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"find ConversationObjects Error H6", nil) message:@"Error Code H6" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            h6.tag = 101;
+            [h6 show];
+            return;
+        }
         NSLog(@"retrieved this many conversation objects");
         NSLog(@"%lu",(unsigned long)objects.count);
         
@@ -296,7 +335,9 @@ NSString *homePageTheMatchPropertyNum;
             
             if(error)
             {
-                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unsubscribe Error", nil) message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+                UIAlertView *h7 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unsubscribe Error H7", nil) message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                h7.tag = 101;
+                [h7 show];
                 return;
             }
             else
@@ -313,7 +354,10 @@ NSString *homePageTheMatchPropertyNum;
                         [PubNub subscribeOn:channelsArray withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
                             if(error)
                             {
-                                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Subscribe Error", nil) message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+                                UIAlertView *h8 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Subscribe Error H8", nil) message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                h8.tag = 101;
+                                [h8 show];
+                                return;
                             }
                             //subscribe successful.
                             NSLog(@"successfully subscribed on channels");
@@ -344,12 +388,20 @@ NSString *homePageTheMatchPropertyNum;
     PFQuery *newQuery = [PFQuery queryWithClassName:@"ItsMTL"];
     
     [newQuery whereKey:@"ParseUser" equalTo:currentUser];
-    
-    NSArray *returnedMTLObjects = [newQuery findObjects];
+    NSError *errorObj = nil;
+    NSArray *returnedMTLObjects = [newQuery findObjects:&errorObj];
+    if(errorObj)
+    {
+        UIAlertView *h9 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"MTL Query Error H9", nil) message:errorObj.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        h9.tag = 101;
+        [h9 show];
+        return;
+    }
     if(returnedMTLObjects.count >1)
     {
         UIAlertView *errorAlert = [[UIAlertView alloc]
-                                   initWithTitle:@"Multiple MTL Objects for this User" message:currentUser.objectId delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                   initWithTitle:@"Multiple MTL Objects for this User--Error H10" message:currentUser.objectId delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        errorAlert.tag = 101;
         [errorAlert show];
         
         return;
@@ -572,7 +624,16 @@ NSString *homePageTheMatchPropertyNum;
     //query for caseProfiles
     PFQuery *caseProfileQuery = [PFQuery queryWithClassName:@"CaseProfile"];
     [caseProfileQuery whereKey:@"caseID" containedIn:allMatchesArray];
-    NSArray *returnedCaseProfiles = [caseProfileQuery findObjects];
+    NSError *caseProfilesError = nil;
+    NSArray *returnedCaseProfiles = [caseProfileQuery findObjects:&caseProfilesError];
+    if(caseProfilesError)
+    {
+        UIAlertView *h11 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"getCaseProfiles Error H11", nil) message:caseProfilesError.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        h11.tag = 101;
+        [h11 show];
+        return;
+    }
+    
     vcvc.matchesCaseProfileArrays = returnedCaseProfiles;
     
     //query for UserProfiles of these caseUsers
@@ -684,7 +745,17 @@ NSString *homePageTheMatchPropertyNum;
     //query for caseProfiles
     PFQuery *caseProfileQuery = [PFQuery queryWithClassName:@"CaseProfile"];
     [caseProfileQuery whereKey:@"caseID" containedIn:allMatchesArray];
-    NSArray *returnedCaseProfiles = [caseProfileQuery findObjects];
+    NSError *caseProfileError = nil;
+    NSArray *returnedCaseProfiles = [caseProfileQuery findObjects:&caseProfileError];
+    if(caseProfileError)
+    {
+        UIAlertView *h12 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"getCaseProfiles Error H12", nil) message:caseProfileError.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        h12.tag = 101;
+        [h12 show];
+        
+        return;
+    }
+    
     mvc.matchesCaseProfileArrays = returnedCaseProfiles;
     
     //query for UserProfiles of these caseUsers
@@ -742,8 +813,17 @@ NSString *homePageTheMatchPropertyNum;
     
     PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
     [query includeKey:@"cases"];
-    
-    HomePageITSMTLObject = [query getObjectWithId:HomePageuserName];
+    NSError *mtlObjectQueryError = nil;
+   
+    HomePageITSMTLObject = [query getObjectWithId:HomePageuserName error:&mtlObjectQueryError];
+    if(mtlObjectQueryError)
+    {
+        UIAlertView *h13 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"TestButtonQuery Error H13", nil) message:@"Error H13" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        h13.tag = 101;
+        [h13 show];
+        
+        return;
+    }
     //query for data based on this itsMTLobject and reload data on the home page
     
     [self ReloadHomePageData];
@@ -772,7 +852,7 @@ NSString *homePageTheMatchPropertyNum;
         
         if(error)
         {
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invalid Test User or Parse Connection Failed", nil) message:NSLocalizedString([error localizedDescription], nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Reload Home Error 14", nil) message:NSLocalizedString([error localizedDescription], nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
             return;
             
         }
@@ -964,6 +1044,13 @@ NSString *homePageTheMatchPropertyNum;
     }
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(alertView.tag==101)
+    {
+        strcpy(0, "bla");
+    }
+}
 
 
 @end

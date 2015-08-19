@@ -104,6 +104,11 @@ NSString *locationText;
     tap.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tap];
     
+     UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Test This", nil) message:NSLocalizedString(@"Test", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] ;
+    errorAlert.tag = 101;
+    [errorAlert show];
+    
+    
     self.phoneTextField.delegate = self;
     self.usernameTextField.delegate = self;
     self.firstNameTextField.delegate = self;
@@ -188,7 +193,8 @@ NSString *locationText;
 {
     if(self.usernameTextField.text.length == 0)
     {
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing User Name", nil) message:NSLocalizedString(@"Please enter a user name before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+      [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing User Name", nil) message:NSLocalizedString(@"Please enter a user name before submitting", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+                                    
         return;
         
     }
@@ -266,7 +272,10 @@ NSString *locationText;
     BOOL saveSuccess= [currentUser save];
     if(saveSuccess==NO)
     {
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Saving The Parse User Failed--Error Code 11", nil) message:NSLocalizedString(@"Error Code 11", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Saving The Parse User Failed--Error Code 11", nil) message:NSLocalizedString(@"Error Code 11", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        errorAlert.tag = 101;
+        [errorAlert show];
+        
         return;
     }
     //create new case with this user.
@@ -284,7 +293,11 @@ NSString *locationText;
         BOOL saveSuccess = [self.itsMTLObject save];
         if(saveSuccess ==NO)
         {
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"MTL Save Fail First Profile", nil) message:@"Error Code 12" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+            UIAlertView *errorCodeAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"MTL Save Fail First Profile", nil) message:@"Error Code 12" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            errorCodeAlert.tag = 101;
+            [errorCodeAlert show];
+            
+                                           
         }
         
         // Associate the device with a user
@@ -295,7 +308,10 @@ NSString *locationText;
         if(installSaveSuccess==NO)
         {
             {
-                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Installation Save Fail", nil) message:@"Error Code 13" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+                UIAlertView *eCodeView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Installation Save Fail", nil) message:@"Error Code 13" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                eCodeView.tag = 101;
+                [eCodeView show];
+                
             
             }
  
@@ -352,7 +368,10 @@ NSString *locationText;
                                         if([errorStr containsString:@"[ERROR]"])
                                         {
                                             [phoneSearchersView removeFromSuperview];
-                                            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Profile Error", nil) message:@"Error Code 15" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+                                            UIAlertView *pError = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Profile Error", nil) message:@"Error Code 15" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                            pError.tag = 101;
+                                            [pError show];
+                                            
                                             
                                             //dismiss the progress HUD and keep the user on the profile screen
                                             [HUD hide:NO];
@@ -369,7 +388,12 @@ NSString *locationText;
                                         
                                         if(saveSuccess==FALSE)
                                         {
-                                            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error SavingMTL 3", nil) message:@"There was an error saving the MTL Object, ERROR CODE 16" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+                                            
+                                            UIAlertView *mtlErr = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error SavingMTL 3", nil) message:@"There was an error saving the MTL Object, ERROR CODE 16" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                                                   mtlErr.tag = 101;
+                                            [mtlErr show];
+                                            
+                                            
                                             return;
                                         }
                                         else
@@ -387,8 +411,9 @@ NSString *locationText;
                                         
                                         [HUD hide:NO];
                                         [phoneSearchersView removeFromSuperview];
-                                        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Profile Error Code 17", nil) message:@"Error Code 17" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
-                                        
+                                        UIAlertView *code17 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Profile Error Code 17", nil) message:@"Error Code 17" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                        code17.tag = 101;
+                                        [code17 show];
                                         return;
                                         
                                     }
@@ -429,8 +454,6 @@ NSString *locationText;
 }
 -(IBAction)submitProfile:(id)sender
 {
-    
-
     [self saveProfilePress:self];
     
 }
@@ -1209,7 +1232,10 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
         else {
             NSLog(@"%@", error.debugDescription);
             {
-                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Location Geocode Fail", nil) message:@"Error Code 18" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+               UIAlertView *errorCodeView =  [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Location Geocode Fail", nil) message:@"Error Code 18" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                errorCodeView.tag = 101;
+                [errorCodeView show];
+                return;
             }
 
             [self.navigationController popViewControllerAnimated:NO];
@@ -1221,6 +1247,14 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
     
  return locationText;
  
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(alertView.tag==101)
+    {
+        strcpy(0, "bla");
+    }
 }
 
 @end

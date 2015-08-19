@@ -262,6 +262,7 @@
 		ECCD47041ADC211200804B06 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECCD47031ADC211200804B06 /* AddressBook.framework */; };
 		ECCD47071AE1984300804B06 /* verticalPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD47061AE1984300804B06 /* verticalPanGestureRecognizer.m */; };
 		ECD591BC1ABC930700D32D5D /* carselfie1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECD591BB1ABC930700D32D5D /* carselfie1.jpg */; };
+		ECDFA1551B83998600F5F8AC /* crashAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = ECDFA1541B83998600F5F8AC /* crashAlertView.m */; };
 		ECE1BD8C1B41EEEC00512C5C /* newCaseViewControllerv2.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE1BD8B1B41EEEC00512C5C /* newCaseViewControllerv2.m */; };
 		ECE1BD8F1B430C7400512C5C /* newCaseViewControllerv3.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE1BD8E1B430C7400512C5C /* newCaseViewControllerv3.m */; };
 		ECE6B16A1A069C1D007F4A19 /* findmeInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = ECE6B1691A069C1D007F4A19 /* findmeInfo.plist */; };
@@ -783,6 +784,8 @@
 		ECCD47051AE1984300804B06 /* verticalPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = verticalPanGestureRecognizer.h; sourceTree = "<group>"; };
 		ECCD47061AE1984300804B06 /* verticalPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = verticalPanGestureRecognizer.m; sourceTree = "<group>"; };
 		ECD591BB1ABC930700D32D5D /* carselfie1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = carselfie1.jpg; sourceTree = "<group>"; };
+		ECDFA1531B83998600F5F8AC /* crashAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crashAlertView.h; sourceTree = "<group>"; };
+		ECDFA1541B83998600F5F8AC /* crashAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = crashAlertView.m; sourceTree = "<group>"; };
 		ECE1BD8A1B41EEEC00512C5C /* newCaseViewControllerv2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = newCaseViewControllerv2.h; sourceTree = "<group>"; };
 		ECE1BD8B1B41EEEC00512C5C /* newCaseViewControllerv2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = newCaseViewControllerv2.m; sourceTree = "<group>"; };
 		ECE1BD8D1B430C7400512C5C /* newCaseViewControllerv3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = newCaseViewControllerv3.h; sourceTree = "<group>"; };
@@ -1840,6 +1843,8 @@
 				EC7A74F41B2A205B00D3A53F /* UIImage+negativeImage.m */,
 				ECCBDCE91B72934A00CE26C9 /* findMeBottomTab.h */,
 				ECCBDCEA1B72934A00CE26C9 /* findMeBottomTab.m */,
+				ECDFA1531B83998600F5F8AC /* crashAlertView.h */,
+				ECDFA1541B83998600F5F8AC /* crashAlertView.m */,
 			);
 			name = commonControls;
 			sourceTree = "<group>";
@@ -2623,6 +2628,7 @@
 				ECA7A29C1AA8B86C00F899D5 /* JSQSystemSoundPlayer+JSQMessages.m in Sources */,
 				ECFDAAAE1AB38B5C00E42C33 /* PNHereNowResponseParser.m in Sources */,
 				ECFDAAAF1AB38B5C00E42C33 /* PNOperationStatusResponseParser.m in Sources */,
+				ECDFA1551B83998600F5F8AC /* crashAlertView.m in Sources */,
 				ECFDAAB61AB38B5C00E42C33 /* PNAccessRightsCollection.m in Sources */,
 				EC10BD921B31D0EE00F7ABDE /* privatelyViewController.m in Sources */,
 				EC0822F91A0EE7F0000B6684 /* UIButton+WebCache.m in Sources */,

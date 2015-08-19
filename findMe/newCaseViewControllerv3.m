@@ -43,10 +43,6 @@ NSString *locationLongitude;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-   
-    
-    
-    
     self.baseScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0,0,320,self.view.bounds.size.height)];
    self.baseScrollView.showsVerticalScrollIndicator=YES;
     self.baseScrollView.scrollEnabled=YES;
