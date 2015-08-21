@@ -429,6 +429,17 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     NSString *channelName = self.conversationData.conversationObject.objectId;
     sharedChannel = [PNChannel channelWithName:channelName];
     
+    [PubNub sendMessage:sendingMsgDict toChannel:sharedChannel withCompletionBlock:^(PNMessageState state, id data) {
+        if(state == PNMessageSendingError)
+        {
+            UIAlertView *p1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Send Message Error P1", nil) message:@"Error Code P1" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            p1.tag = 101;
+            [p1 show];
+            return;
+
+        }
+    }];
+    
     [PubNub sendMessage:sendingMsgDict toChannel:sharedChannel];
     
     [self finishSendingMessageAnimated:YES];
@@ -447,8 +458,10 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
         if(error)
         {
             NSLog(@"There was a parse upload error: @%@",error.localizedDescription);
-            UIAlertView *msgUploadError = [[UIAlertView alloc] initWithTitle:@"Message Error" message:@"The Message Failed to Upload To The Server, Your Recipient May Not Receive It" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [msgUploadError show];
+            UIAlertView *p2 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Msg Save Error P2", nil) message:@"Error Code P2" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            p2.tag = 101;
+            [p2 show];
+            return;
             
         }
     }
@@ -739,6 +752,15 @@ withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channel
     NSLog(@"convoscreen connected");
     
 }
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(alertView.tag==101)
+    {
+        strcpy(0, "bla");
+    }
+}
+
 
 
 @end

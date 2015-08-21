@@ -103,6 +103,14 @@ NSString *locationLongitude;
                            withParameters:@{payload: mtlObjID}
                                     block:^(NSArray *returnedObjects, NSError *error) {
                                         
+                                        if(error)
+                                        {
+                                            UIAlertView *n1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"getStartMenu Error N1", nil) message:@"Error Code N1" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                            n1.tag = 101;
+                                            [n1 show];
+                                            return;
+                                            
+                                        }
                                         if (!error)
                                         {
                                             self.allTemplates = returnedObjects;
@@ -730,6 +738,11 @@ NSString *locationLongitude;
                                         NSLog(error.localizedDescription);
                                         [HUD hide:NO];
                                         
+                                        UIAlertView *n2 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"submitXML Error N2", nil) message:@"Error Code N2" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                        n2.tag = 101;
+                                        [n2 show];
+                                        
+                                        return;
                                     }
                                 }];
     
@@ -842,8 +855,11 @@ NSString *locationLongitude;
 {
     NSLog(@"didFailWithError: %@", error);
     UIAlertView *errorAlert = [[UIAlertView alloc]
-                               initWithTitle:@"Error" message:@"Failed to Get Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                               initWithTitle:@"Error N3" message:@"Failed to Get Your Location--Error Code N3" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    errorAlert.tag = 101;
     [errorAlert show];
+    return;
+    
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
@@ -854,7 +870,6 @@ NSString *locationLongitude;
     if (currentLocation != nil) {
         //longitudeLabel.text = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude];
         //latitudeLabel.text = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude];
-        
         
         locationLongitude = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude];
         locationLatitude =[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude];
@@ -881,7 +896,10 @@ NSString *locationLongitude;
             //[HUD hide:YES];
         } else {
             NSLog(@"%@", error.debugDescription);
-            
+            UIAlertView *h4 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"geocode retrieve Error H4", nil) message:@"Error Code H4" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            h4.tag = 101;
+            [h4 show];
+            return;
             //[HUD hide:YES];
         }
     } ];
@@ -905,6 +923,14 @@ NSString *locationLongitude;
     [self.navigationController pushViewController:cdcvc animated:NO];
     //[self.navigationController pushViewController:ctsvc animated:NO];
     
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(alertView.tag==101)
+    {
+        strcpy(0, "bla");
+    }
 }
 
 

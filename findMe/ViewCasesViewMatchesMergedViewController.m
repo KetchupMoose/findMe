@@ -102,6 +102,14 @@ BOOL firstMatchViewLoadMerge = TRUE;
                        withParameters:@{@"payload": userName}
                                 block:^(NSString *responseString, NSError *error) {
                                     
+                                    if(error)
+                                    {
+                                        UIAlertView *v1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"waitForSync Error v1", nil) message:@"Error Code v1" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                        v1.tag = 101;
+                                        [v1 show];
+                                        return;
+
+                                    }
                                     
                                     if([responseString containsString:@"ERROR"])
                                     {
@@ -162,8 +170,17 @@ BOOL firstMatchViewLoadMerge = TRUE;
     //example structure for running two queries at once:
     // NSArray *queryArray = [NSArray arrayWithObjects:messageQuery,pokeQuery,commentsQuery,nil];
     //PFQuery *allQueries = [PFQuery orQueryWithSubqueries:queryArray];
+    NSError *refreshTableQueryError = nil;
+    PFObject *object = [query getObjectWithId:userName error:&refreshTableQueryError];
     
-    PFObject *object = [query getObjectWithId:userName];
+    if(refreshTableQueryError)
+    {
+        UIAlertView *v2 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"refreshTableQuery Error v2", nil) message:@"Error Code v2" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        v2.tag = 101;
+        [v2 show];
+        return;
+
+    }
     
     /*
      if(error)
@@ -196,12 +213,30 @@ BOOL firstMatchViewLoadMerge = TRUE;
     
     PFQuery *caseQuery = [PFQuery queryWithClassName:@"Cases"];
     [caseQuery whereKey:@"objectId" containedIn:caseIDSList];
-    caseObjects = [caseQuery findObjects];
+    NSError *caseQueryError = nil;
+    
+    caseObjects = [caseQuery findObjects:&caseQueryError];
+    if(caseQueryError)
+    {
+        UIAlertView *v3 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"cases Error v3", nil) message:@"Error Code v3" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        v3.tag = 101;
+        [v3 show];
+        return;
+
+    }
     
     PFQuery *caseProfileQuery = [PFQuery queryWithClassName:@"CaseProfile"];
     [caseProfileQuery whereKey:@"caseID" containedIn:caseIDSList];
-    caseProfileObjects = [caseProfileQuery findObjects];
-    
+    NSError *caseProfileObjsError = nil;
+    caseProfileObjects = [caseProfileQuery findObjects:&caseProfileObjsError];
+    if(caseProfileObjsError)
+    {
+        UIAlertView *v4 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"caseProfileObjsError Error v4", nil) message:@"Error Code v4" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        v4.tag = 101;
+        [v4 show];
+        return;
+
+    }
     //loop through the incoming array of caseListPruned and assign to a new array the number of matches contained in each of these cases, which will often be 0.
    
     for(PFObject *caseObject in caseListPruned)
@@ -737,8 +772,16 @@ viewForHeaderInSection:(NSInteger)section
     NSArray *conversationMembers = [twoMatches mutableCopy];
     
     [query whereKey:@"Members" containsAllObjectsInArray:conversationMembers];
-    
-    NSArray *returnedConversations = [query findObjects];
+    NSError *returnedConversationsError = nil;
+    NSArray *returnedConversations = [query findObjects:&returnedConversationsError];
+    if(returnedConversationsError)
+    {
+        UIAlertView *v5 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"conversationsQuery Error v5", nil) message:@"Error Code v5" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        v5.tag = 101;
+        [v5 show];
+        return;
+    }
+   
     
     PFObject *conversationObject;
     
@@ -747,7 +790,15 @@ viewForHeaderInSection:(NSInteger)section
         //create a conversation object
         conversationObject = [PFObject objectWithClassName:@"Conversations"];
         [conversationObject setObject:conversationMembers forKey:@"Members"];
-        [conversationObject save];
+        NSError *convoObjSaveError = nil;
+        [conversationObject save:&convoObjSaveError];
+        if(convoObjSaveError)
+        {
+            UIAlertView *v6 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"conversation Obj Save Error v6", nil) message:@"Error Code v6" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            v6.tag = 101;
+            [v6 show];
+            return;
+        }
         
     }
     else
@@ -851,6 +902,11 @@ viewForHeaderInSection:(NSInteger)section
                                         //NSString *errorString = error.localizedDescription;
                                         NSLog(@"%@",[error localizedDescription]);
                                         [HUD hide:NO];
+                                        
+                                        UIAlertView *v7 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"submitXML Error v7", nil) message:@"Error Code v7" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                        v7.tag = 101;
+                                        [v7 show];
+                                        return;
                                         
                                     }
                                 }];
@@ -968,6 +1024,15 @@ viewForHeaderInSection:(NSInteger)section
     PFQuery *query = [PFQuery queryWithClassName:@"ItsMTL"];
     
     [query getObjectInBackgroundWithId:self.matchesUserName block:^(PFObject *latestCaseList, NSError *error) {
+        
+        if(error)
+        {
+            UIAlertView *v8 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"mtlQuery Error v8", nil) message:@"Error Code v8" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            v8.tag = 101;
+            [v8 show];
+            return;
+        }
+        
         // Do something with the returned PFObject
         NSLog(@"%@", latestCaseList);
         
@@ -1094,6 +1159,14 @@ viewForHeaderInSection:(NSInteger)section
     
     return timeSinceLastUpdateString;
     
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(alertView.tag==101)
+    {
+        strcpy(0, "bla");
+    }
 }
 
 

@@ -94,8 +94,16 @@ NSArray *conversationMembersArray;
     PFQuery *query = [PFQuery queryWithClassName:@"Cases"];
     [query whereKey:@"objectId" containedIn:caseUserArray];
     [query includeKey:@"ownerObjectid.ParseUser"];
+    NSError *convMembersQuery = nil;
+    conversationMembersArray =  [query findObjects:&convMembersQuery];
+    if(convMembersQuery)
+    {
+        UIAlertView *d1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"convMembers Query Error D1", nil) message:@"Error Code D1" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        d1.tag = 101;
+        [d1 show];
+        
+    }
     
-    conversationMembersArray =  [query findObjects];
         NSLog(@"object count:@%lu",(unsigned long)conversationMembersArray.count);
         for(PFObject *caseObj in conversationMembersArray)
         {
@@ -148,8 +156,15 @@ NSArray *conversationMembersArray;
     PFQuery *query = [PFQuery queryWithClassName:@"conversationMessages"];
     [query whereKey:@"Conversation" equalTo:self.conversationObject];
     [query orderByDescending:@"updatedAt"];
-    
-    conversationMessagesArray = [query findObjects];
+    NSError *convQueryError = nil;
+    conversationMessagesArray = [query findObjects:&convQueryError];
+    if(convQueryError)
+    {
+        UIAlertView *d2 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"convMembers Query Error D2", nil) message:@"Error Code D2" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        d2.tag = 101;
+        [d2 show];
+        return;
+    }
     
 }
 
@@ -190,8 +205,16 @@ NSArray *conversationMembersArray;
     //query for the itsMTLObjects of these users to get their pictures
     PFQuery *query = [PFQuery queryWithClassName:@"Cases"];
     [query whereKey:@"objectId" containedIn:userNamesInConversation];
+    NSError *userNamesError = nil;
     
-    NSArray *objects =  [query findObjects];
+    NSArray *objects =  [query findObjects:&userNamesError];
+    if(userNamesError)
+    {
+        UIAlertView *d3 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cases Query Error D3", nil) message:@"Error Code D3" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        d3.tag = 101;
+        [d3 show];
+        return;
+    }
         //set the profile picture data
         
         NSMutableArray *avatarImages = [[NSMutableArray alloc] init];
