@@ -11,7 +11,8 @@
 #import <Parse/Parse.h>
 #import "SWTableViewCell.h"
 #import "findMeBaseViewController.h"
-@interface ViewCasesViewMatchesMergedViewController : findMeBaseViewController<UITableViewDataSource,UITableViewDelegate,MBProgressHUDDelegate,SWTableViewCellDelegate>
+#import "findMeBottomTab.h"
+@interface ViewCasesViewMatchesMergedViewController : findMeBaseViewController<UITableViewDataSource,UITableViewDelegate,MBProgressHUDDelegate,SWTableViewCellDelegate,findMeBottomTabDelegate>
 
 @property (weak,nonatomic) IBOutlet UITableView *casesTableView;
 @property (strong,nonatomic) NSString *userName;

@@ -104,10 +104,11 @@ NSString *locationText;
     tap.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tap];
     
+    /*
      UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Test This", nil) message:NSLocalizedString(@"Test", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] ;
     errorAlert.tag = 101;
     [errorAlert show];
-    
+    */
     
     self.phoneTextField.delegate = self;
     self.usernameTextField.delegate = self;

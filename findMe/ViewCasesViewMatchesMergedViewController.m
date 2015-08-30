@@ -16,7 +16,7 @@
 #import "conversationModelData.h"
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 #import "caseDetailsCarouselViewController.h"
-
+#import "newCaseViewControllerv3.h"
 
 
 @interface ViewCasesViewMatchesMergedViewController ()
@@ -80,6 +80,13 @@ BOOL firstMatchViewLoadMerge = TRUE;
     self.casesTableView.backgroundColor = [UIColor clearColor];
     
     self.casesTableView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin;
+    
+    float SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
+    
+    findMeBottomTab *bottomTab = [[findMeBottomTab alloc] initWithFrame:CGRectMake(0,SCREEN_HEIGHT-114,320,50)];
+    bottomTab.delegate = self;
+    
+    [self.view addSubview:bottomTab];
     
 }
 
@@ -406,6 +413,7 @@ viewForHeaderInSection:(NSInteger)section
     UILabel *caseNameLabel;
     UILabel *dateUpdatedLabel;
     UILabel *bubbleCountLabel;
+    UILabel *caseIDLabel;
     
     //add items to sectionBGView
     caseImgView = (UIImageView *)[sectionBGView viewWithTag:2];
@@ -413,6 +421,7 @@ viewForHeaderInSection:(NSInteger)section
     caseNameLabel = (UILabel *)[sectionBGView viewWithTag:4];
     dateUpdatedLabel = (UILabel *)[sectionBGView viewWithTag:5];
     bubbleCountLabel = (UILabel *)[sectionBGView viewWithTag:6];
+    caseIDLabel = (UILabel *)[sectionBGView viewWithTag:7];
     
     UIButton *editCaseButton = (UIButton *)[sectionBGView viewWithTag:section+100];
     
@@ -442,6 +451,8 @@ viewForHeaderInSection:(NSInteger)section
         editCaseButton.layer.cornerRadius = 8.0f;
         editCaseButton.tag = section+100;
         
+        caseIDLabel = [[UILabel alloc] initWithFrame:CGRectMake(100,0,200,50)];
+        caseIDLabel.tag = 7;
         
         [editCaseButton addTarget:self action:@selector(editCaseButtonPress:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -456,6 +467,7 @@ viewForHeaderInSection:(NSInteger)section
         [sectionBGView addSubview:result];
         [sectionBGView addSubview:editCaseButton];
         [sectionBGView addSubview:bubbleCountLabel];
+        [sectionBGView addSubview:caseIDLabel];
         [sectionView addSubview:sectionBGView];
         
     }
@@ -463,10 +475,17 @@ viewForHeaderInSection:(NSInteger)section
     dateUpdatedLabel.font = [UIFont fontWithName:@"Futura-Medium" size:12];
     dateUpdatedLabel.textColor = [UIColor whiteColor];
     
+    caseIDLabel.textColor = [UIColor whiteColor];
+    
+    
     PFObject *caseObj = [caseListPruned objectAtIndex:section];
     NSString *caseID = [caseObj objectForKey:@"caseId"];
     NSString *caseimgURL;
     NSString *bubbleCount = [caseObj objectForKey:@"bubbleCount"];
+    
+    
+    caseIDLabel.text = caseID;
+    
     
     NSString *timestampString = [caseObj objectForKey:@"timestamp"];
     
@@ -631,11 +650,16 @@ viewForHeaderInSection:(NSInteger)section
     
     UIImageView *matchImage = (UIImageView *)[cell viewWithTag:1];
     UILabel *matchCaseNameLabel = (UILabel *)[cell viewWithTag:2];
+    UILabel *matchIDLabel = (UILabel *)[cell viewWithTag:5];
     UILabel *matchPctLabel = (UILabel *)[cell viewWithTag:3];
     UIView *bgView = [cell viewWithTag:4];
+    UILabel *externalMatchName = (UILabel *)[cell viewWithTag:6];
+    
     
     matchCaseNameLabel.textColor = [UIColor whiteColor];
     matchPctLabel.textColor = [UIColor whiteColor];
+    matchIDLabel.textColor = [UIColor whiteColor];
+    externalMatchName.textColor = [UIColor whiteColor];
     
     bgView.layer.cornerRadius = 5.0f;
     bgView.layer.masksToBounds = YES;
@@ -664,6 +688,8 @@ viewForHeaderInSection:(NSInteger)section
         matchCaseNameLabel.text = caseName;
         bgView.alpha = 1;
         matchCaseNameLabel.alpha = 1;
+        NSString *caseObjID = [caseObj objectForKey:@"caseId"];
+        matchIDLabel.text = [@"MyCaseID: " stringByAppendingString:caseObjID];
         
     }
     else
@@ -685,7 +711,7 @@ viewForHeaderInSection:(NSInteger)section
         if([matchCaseID isEqualToString:caseProfileCaseID])
         {
             //display case information
-            matchCaseNameLabel.text = [caseProfileObj objectForKey:@"externalCaseName"];
+            externalMatchName.text = [caseProfileObj objectForKey:@"externalCaseName"];
             PFFile *imgFile = [caseProfileObj objectForKey:@"caseImage"];
             caseimgURL = imgFile.url;
         }
@@ -1168,6 +1194,53 @@ viewForHeaderInSection:(NSInteger)section
         strcpy(0, "bla");
     }
 }
+- (void)tabSelected:(NSInteger)selectedTab
+{
+    if(selectedTab==0)
+    {
+        //return the user to the homescreen
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    }
+    if(selectedTab==1)
+    {
+       //do nothing, this is selected
+        
+    }
+    if(selectedTab==2)
+    {
+        //start a new search
+        newCaseViewControllerv3 *ncvc = [[newCaseViewControllerv3 alloc] init];
+        
+        ncvc.itsMTLObject = self.itsMTLObject;
+        //ncvc.manualLocationPropertyNum = homePageManualLocationPropertyNum;
+        ncvc.designationProperties = self.designationProperties;
+        //UINavigationController *uinc = self.navigationController;
+        
+        [self.navigationController pushViewController:ncvc animated:YES];
+        
+        
+    }
+    if(selectedTab==3)
+    {
+       //show a new screen for tracking current conversations
+        
+    }
+    if(selectedTab==4)
+    {
+        //show profile screen
+        //BA Comment Aug 23, may want to revisit the delegate structure for setting profile since now it can be accessed from multiple screens
+        /*
+        setProfileViewController2 *spvc2 = [self.storyboard instantiateViewControllerWithIdentifier:@"spvc2"];
+        spvc2.delegate = self;
+        spvc2.openingMode = @"HomeScreen";
+        spvc2.itsMTLObject = self.HomePageITSMTLObject;
+        spvc2.homeScreenMTLObjectID = self.HomePageITSMTLObject.objectId;
+        [self.navigationController pushViewController:spvc2 animated:YES];
+         */
+    }
+}
+
 
 
 

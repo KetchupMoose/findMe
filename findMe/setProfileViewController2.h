@@ -12,6 +12,7 @@
 #import "GKImagePicker.h"
 #import "mapPinViewController.h"
 #import <CoreLocation/CoreLocation.h>
+#import "findMeBaseViewController.h"
 
 @protocol SetProfileDelegate
 
@@ -19,7 +20,7 @@
 
 @end
 
-@interface setProfileViewController2 : UIViewController<UITextFieldDelegate,MBProgressHUDDelegate,GKImagePickerDelegate,UIPickerViewDataSource,UIPickerViewDelegate,mapPinViewControllerDelegate,CLLocationManagerDelegate>
+@interface setProfileViewController2 : findMeBaseViewController<UITextFieldDelegate,MBProgressHUDDelegate,GKImagePickerDelegate,UIPickerViewDataSource,UIPickerViewDelegate,mapPinViewControllerDelegate,CLLocationManagerDelegate>
 
 //profileObject
 @property (strong,nonatomic) PFObject *itsMTLObject;

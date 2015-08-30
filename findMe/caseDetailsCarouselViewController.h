@@ -14,7 +14,7 @@
 #import "mapPinViewController.h"
 #import "CaseTitleSetViewController.h"
 #import "SWTableViewCell.h"
-@interface caseDetailsCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate,MyDataDelegate,CLLocationManagerDelegate,mapPinViewControllerDelegate,UIGestureRecognizerDelegate,UITextFieldDelegate,CaseTitleSetViewControllerDelegate,SWTableViewCellDelegate>
+@interface caseDetailsCarouselViewController : findMeBaseViewController <iCarouselDataSource, iCarouselDelegate,UITableViewDataSource, UITableViewDelegate,MyDataDelegate,CLLocationManagerDelegate,mapPinViewControllerDelegate,UIGestureRecognizerDelegate,UITextFieldDelegate,CaseTitleSetViewControllerDelegate,SWTableViewCellDelegate>
 
 -(IBAction)doUpdate:(id)sender;
 @property (weak,nonatomic) IBOutlet UIButton *submitAnswersButton;

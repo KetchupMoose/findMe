@@ -3625,6 +3625,49 @@ if(tableViewTag ==8999)
         [xmlWriter writeCharacters:locationLongitude];
         [xmlWriter writeEndElement];
     }
+    
+    if(manualLocationLatitude>0)
+    {
+        
+    [xmlWriter writeStartElement:@"ITEM"];
+    
+    [xmlWriter writeStartElement:@"CASEITEM"];
+    if([manualLocationCaseItemID length]>0)
+    {
+        [xmlWriter writeCharacters:manualLocationCaseItemID];
+    }
+    else
+    {
+        [xmlWriter writeCharacters:@"9000"];
+    }
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"PROPERTYNUM"];
+    [xmlWriter writeCharacters:manualLocationPropertyNum];
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeStartElement:@"ANSWER"];
+    
+    [xmlWriter writeStartElement:@"CUSTOM"];
+    NSString *latitudeString = [NSString stringWithFormat:@"%f",manualLocationLatitude];
+    NSString *longitudeString = [NSString stringWithFormat:@"%f",manualLocationLongitude];
+    NSString *latitudeSpan = [NSString stringWithFormat:@"%.20g",self.setRegion.span.latitudeDelta];
+    NSString *longitudeSpan = [NSString stringWithFormat:@"%.20g",self.setRegion.span.longitudeDelta];
+    
+    NSString *locationForUpdatePt1 = [[[latitudeString stringByAppendingString:@"; "] stringByAppendingString:longitudeString] stringByAppendingString:@"; "];
+    NSString *locationForUpdatePt2 = [[latitudeSpan stringByAppendingString:@"; "]stringByAppendingString:longitudeSpan];
+    NSString *locationForUpdate = [locationForUpdatePt1 stringByAppendingString:locationForUpdatePt2];
+    
+    [xmlWriter writeCharacters:locationForUpdate];
+    
+    [xmlWriter writeEndElement];
+    
+    [xmlWriter writeEndElement];
+    
+    //close item element
+    [xmlWriter writeEndElement];
+        
+    }
     //Jan 18
     //updating to put ALL NEW property tags first before caseItem tags
     int j = 0;
@@ -5564,10 +5607,20 @@ if(tableViewTag ==8999)
     PFObject *caseProfileObject = [queryForCaseProfile getFirstObject:&getCaseProfileError];
     if(getCaseProfileError)
     {
-        UIAlertView *c18 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"get case profile Error C18", nil) message:@"Error Code C18" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        c18.tag = 101;
-        [c18 show];
-        return;
+        NSInteger errorCode = getCaseProfileError.code;
+        
+        if(errorCode==101)
+        {
+            //do nothing, this just indicates no results
+        }
+        else
+        {
+            UIAlertView *c18 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"get case profile Error C18", nil) message:@"Error Code C18" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            c18.tag = 101;
+            [c18 show];
+            return;
+        }
+        
     }
     
     if(caseProfileObject ==nil)
@@ -5604,8 +5657,10 @@ if(tableViewTag ==8999)
     
     //need to submit the update to the XML here also.
     
-    [self updateCaseNameXML:caseID];
-    
+    if(templateMode==0)
+    {
+        [self updateCaseNameXML:caseID];
+    }
     
 }
 

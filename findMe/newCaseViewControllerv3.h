@@ -13,7 +13,7 @@
 #import "findMeBaseViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 
-@interface newCaseViewControllerv3 : UIViewController<UICollectionViewDataSource,UICollectionViewDelegate,MBProgressHUDDelegate,CLLocationManagerDelegate,UITableViewDataSource, UITableViewDelegate>
+@interface newCaseViewControllerv3 : findMeBaseViewController<UICollectionViewDataSource,UICollectionViewDelegate,MBProgressHUDDelegate,CLLocationManagerDelegate,UITableViewDataSource, UITableViewDelegate,UIAlertViewDelegate>
 
 @property (strong,nonatomic) UIScrollView *baseScrollView;
 @property (strong,nonatomic) NSMutableArray *totalSetsOfParentTemplates;
