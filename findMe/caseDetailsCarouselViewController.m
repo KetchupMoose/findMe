@@ -327,7 +327,7 @@ BOOL LoadedBOOL = NO;
     propsArray = [[propertsQuery findObjects:&propQueryError] mutableCopy];
     if(propQueryError)
     {
-        UIAlertView *c1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Properties Query Error C1", nil) message:@"Error Code C1" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        UIAlertView *c1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Properties Query Error C1", nil) message:@"Error Code C1" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
         c1.tag = 101;
         [c1 show];
         return;
@@ -664,7 +664,7 @@ BOOL LoadedBOOL = NO;
                                         
                                     {
                                         NSLog(@"error bursting bubble for case");
-                                        UIAlertView *c2 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"submitXML Error C2", nil) message:@"Error Code C2" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                        UIAlertView *c2 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"submitXML Error C2", nil) message:@"Error Code C2" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
                                         c2.tag = 101;
                                         [c2 show];
                                         return;
@@ -1100,7 +1100,7 @@ BOOL LoadedBOOL = NO;
              {
                 if(error)
                 {
-                    UIAlertView *c3 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Case Profile Query Error C3", nil) message:@"Error Code C3" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                    UIAlertView *c3 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Case Profile Query Error C3", nil) message:@"Error Code C3" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
                     c3.tag = 101;
                     [c3 show];
                     return;
@@ -1534,7 +1534,7 @@ BOOL LoadedBOOL = NO;
 {
     NSLog(@"didFailWithError: %@", error);
     UIAlertView *errorAlert = [[UIAlertView alloc]
-                               initWithTitle:@"Error C4" message:@"Failed to Get Your Location--Error Code C4" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                               initWithTitle:@"Error C4" message:@"Failed to Get Your Location--Error Code C4" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     
     [errorAlert show];
     errorAlert.tag = 101;
@@ -1583,7 +1583,7 @@ BOOL LoadedBOOL = NO;
         } else {
             NSLog(@"%@", error.debugDescription);
             [HUD hide:NO];
-            UIAlertView *c5 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Geocoding Location Error C5", nil) message:@"Error Code C5" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            UIAlertView *c5 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Geocoding Location Error C5", nil) message:@"Error Code C5" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
             c5.tag = 101;
             [c5 show];
             return;
@@ -2001,7 +2001,7 @@ if(tableViewTag ==8999)
     NSArray *returnedConversations = [query findObjects:&queryError];
     if(queryError)
     {
-        UIAlertView *c6 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Geocoding Location Error C6", nil) message:@"Error Code C6" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        UIAlertView *c6 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Geocoding Location Error C6", nil) message:@"Error Code C6" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
         c6.tag = 101;
         [c6 show];
         return;
@@ -2540,7 +2540,7 @@ if(tableViewTag ==8999)
                                          NSLog(@"%@",[error localizedDescription]);
                                         [HUD hide:YES];
                                         
-                                        UIAlertView *c7 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Submit XML Error C7", nil) message:@"Error Code C7" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                        UIAlertView *c7 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Submit XML Error C7", nil) message:@"Error Code C7" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
                                         c7.tag = 101;
                                         [c7 show];
                                         return;
@@ -2751,7 +2751,7 @@ if(tableViewTag ==8999)
     propsArray = [[propertsQuery findObjects:&propsQueryError] mutableCopy];
     if(propsQueryError)
     {
-        UIAlertView *c8 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Props Query Error C8", nil) message:@"Error Code C8" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        UIAlertView *c8 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Props Query Error C8", nil) message:@"Error Code C8" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
         c8.tag = 101;
         [c8 show];
         return;
@@ -3544,7 +3544,7 @@ if(tableViewTag ==8999)
                                         NSLog(error.localizedDescription);
                                         [HUD hide:YES];
                                         
-                                        UIAlertView *c9 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"submitXML Error C9", nil) message:@"Error Code C9" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                        UIAlertView *c9 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"submitXML Error C9", nil) message:@"Error Code C9" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
                                         c9.tag = 101;
                                         [c9 show];
                                         return;
@@ -4279,7 +4279,7 @@ if(tableViewTag ==8999)
                                         [self.navigationController popViewControllerAnimated:NO];
                                         
                                         
-                                        UIAlertView *c10 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Location Update submitXML Error C10", nil) message:@"Error Code C10" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                        UIAlertView *c10 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Location Update submitXML Error C10", nil) message:@"Error Code C10" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
                                         c10.tag = 101;
                                         [c10 show];
                                         return;
@@ -4439,7 +4439,7 @@ if(tableViewTag ==8999)
                        NSLog(error.localizedDescription);
                        [HUD hide:YES];
                             
-                            UIAlertView *c11 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"New Case Item submitXML Error C11", nil) message:@"Error Code C11" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                            UIAlertView *c11 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"New Case Item submitXML Error C11", nil) message:@"Error Code C11" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
                             c11.tag = 101;
                             [c11 show];
                             return;
@@ -4672,7 +4672,7 @@ if(tableViewTag ==8999)
                                       //  [HUD hide:NO];
                                         [self popDeleteBGView];
                                         
-                                        UIAlertView *c12 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"DeleteCase Item submitXML Error C12", nil) message:@"Error Code C12" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                        UIAlertView *c12 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"DeleteCase Item submitXML Error C12", nil) message:@"Error Code C12" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
                                         c12.tag = 101;
                                         [c12 show];
                                         return;
@@ -4754,7 +4754,7 @@ if(tableViewTag ==8999)
     propsArray = [[propertsQuery findObjects:&propsQueryError] mutableCopy];
     if(propsQueryError)
     {
-        UIAlertView *c13 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Props Query  Error C13", nil) message:@"Error Code C13" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        UIAlertView *c13 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Props Query  Error C13", nil) message:@"Error Code C13" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
         c13.tag = 101;
         [c13 show];
         return;
@@ -5020,7 +5020,7 @@ if(tableViewTag ==8999)
                     NSArray *returnedCaseProfiles = [caseProfileQuery findObjects:&caseProfilesQueryError];
                 if(caseProfilesQueryError)
                 {
-                    UIAlertView *c14 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Props Query  Error C14", nil) message:@"Error Code C14" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                    UIAlertView *c14 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Props Query  Error C14", nil) message:@"Error Code C14" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
                     c14.tag = 101;
                     [c14 show];
                     return;
@@ -5208,7 +5208,7 @@ if(tableViewTag ==8999)
                                     {
                                         NSLog(@"%@",[error localizedDescription]);
                                         [HUD hide:YES];
-                                        UIAlertView *c15 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"NotWhoIwanted C15", nil) message:@"Error Code C15" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                        UIAlertView *c15 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"NotWhoIwanted C15", nil) message:@"Error Code C15" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
                                         c15.tag = 101;
                                         [c15 show];
                                         return;
@@ -5242,7 +5242,7 @@ if(tableViewTag ==8999)
     NSArray *returnedConversations = [query findObjects:&conversationQueryError];
     if(conversationQueryError)
     {
-        UIAlertView *c16 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"conversation Query Error C16", nil) message:@"Error Code C16" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        UIAlertView *c16 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"conversation Query Error C16", nil) message:@"Error Code C16" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
         c16.tag = 101;
         [c16 show];
         return;
@@ -5261,7 +5261,7 @@ if(tableViewTag ==8999)
         [conversationObject save:&convoObjSaveErr];
         if(convoObjSaveErr)
         {
-            UIAlertView *c17 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"conversation Object Save Error C17", nil) message:@"Error Code C17" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            UIAlertView *c17 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"conversation Object Save Error C17", nil) message:@"Error Code C17" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
             c17.tag = 101;
             [c17 show];
             return;
@@ -5615,7 +5615,7 @@ if(tableViewTag ==8999)
         }
         else
         {
-            UIAlertView *c18 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"get case profile Error C18", nil) message:@"Error Code C18" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+            UIAlertView *c18 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"get case profile Error C18", nil) message:@"Error Code C18" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
             c18.tag = 101;
             [c18 show];
             return;
@@ -5731,7 +5731,7 @@ if(tableViewTag ==8999)
                                     else
                                     {
                                          NSLog(@"%@",[error localizedDescription]);
-                                        UIAlertView *c19 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"update case name error C19", nil) message:@"Error Code C19" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                        UIAlertView *c19 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"update case name error C19", nil) message:@"Error Code C19" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
                                         c19.tag = 101;
                                         [c19 show];
                                         return;
@@ -5804,7 +5804,7 @@ if(tableViewTag ==8999)
                                         NSLog(errorString);
                                         [HUD hide:NO];
                                         
-                                        UIAlertView *c20 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"swipe send Error C20", nil) message:@"Error Code C20" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+                                        UIAlertView *c20 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"swipe send Error C20", nil) message:@"Error Code C20" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
                                         c20.tag = 101;
                                         [c20 show];
                                         return;
