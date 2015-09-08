@@ -72,12 +72,14 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>The user's location is used to help others find them</string>
+	<string>The user&apos;s location is used to help others find them</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>The user chooses to update their location when submitting a questionnaire</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>ProximaNova-Regular.otf</string>
+		<string>ProximaNova-Light.otf</string>
+		<string>ProximaNova-Bold.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

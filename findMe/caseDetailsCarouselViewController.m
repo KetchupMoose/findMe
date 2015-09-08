@@ -327,9 +327,8 @@ BOOL LoadedBOOL = NO;
     propsArray = [[propertsQuery findObjects:&propQueryError] mutableCopy];
     if(propQueryError)
     {
-        UIAlertView *c1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Properties Query Error C1", nil) message:@"Error Code C1" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        c1.tag = 101;
-        [c1 show];
+        NSString *responseString = @"";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c1" returnedError:propQueryError];
         return;
     }
     //sort the propsArray based on the order in sortedCaseItems
@@ -655,19 +654,12 @@ BOOL LoadedBOOL = NO;
                        withParameters:@{@"payload": xml}
                                 block:^(NSString *responseString, NSError *error) {
                                     
-                                    if (!error)
+                                    BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c2" returnedError:error];
+                                    
+                                    if (errorCheck)
                                     {
                                         NSLog(@"bubble bursted successfully");
                                         
-                                    }
-                                    else
-                                        
-                                    {
-                                        NSLog(@"error bursting bubble for case");
-                                        UIAlertView *c2 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"submitXML Error C2", nil) message:@"Error Code C2" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                        c2.tag = 101;
-                                        [c2 show];
-                                        return;
                                     }
                                 }];
     
@@ -1098,12 +1090,11 @@ BOOL LoadedBOOL = NO;
             [caseProfileQuery whereKey:@"caseID" containedIn:activeMatchesArray];
             [caseProfileQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
              {
-                if(error)
+                 NSString *responseString = @"";
+                 BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c3" returnedError:error];
+                if(errorCheck)
                 {
-                    UIAlertView *c3 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Case Profile Query Error C3", nil) message:@"Error Code C3" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                    c3.tag = 101;
-                    [c3 show];
-                    return;
+                    
                 }
                  activeMatchesCaseProfiles = [objects mutableCopy];
                   [self.matchesTableView reloadData];
@@ -1532,12 +1523,9 @@ BOOL LoadedBOOL = NO;
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"didFailWithError: %@", error);
-    UIAlertView *errorAlert = [[UIAlertView alloc]
-                               initWithTitle:@"Error C4" message:@"Failed to Get Your Location--Error Code C4" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    NSString *responseString = @"";
+     BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c4" returnedError:error];
     
-    [errorAlert show];
-    errorAlert.tag = 101;
     return;
     
 }
@@ -1562,8 +1550,10 @@ BOOL LoadedBOOL = NO;
     // Reverse Geocoding
     NSLog(@"Resolving the Address");
     [geocoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+        NSString *responseString = @"";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c5" returnedError:error];
         //NSLog(@"Found placemarks: %@, error: %@", placemarks, error);
-        if (error == nil && [placemarks count] > 0) {
+        if (errorCheck == NO && [placemarks count] > 0) {
             placemark = [placemarks lastObject];
             
             
@@ -1580,14 +1570,6 @@ BOOL LoadedBOOL = NO;
              */
             
             [HUD hide:NO];
-        } else {
-            NSLog(@"%@", error.debugDescription);
-            [HUD hide:NO];
-            UIAlertView *c5 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Geocoding Location Error C5", nil) message:@"Error Code C5" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-            c5.tag = 101;
-            [c5 show];
-            return;
-            
         }
     } ];
     
@@ -2001,9 +1983,8 @@ if(tableViewTag ==8999)
     NSArray *returnedConversations = [query findObjects:&queryError];
     if(queryError)
     {
-        UIAlertView *c6 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Geocoding Location Error C6", nil) message:@"Error Code C6" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        c6.tag = 101;
-        [c6 show];
+        NSString *responseString = @"";
+      BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c6" returnedError:queryError];
         return;
     }
     
@@ -2498,10 +2479,17 @@ if(tableViewTag ==8999)
                        withParameters:@{@"payload": xmlForUpdate}
                                 block:^(NSString *responseString, NSError *error) {
                                     
-                                    if (!error)
+                                     BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c7" returnedError:error];
+                                    
+                                    if (errorCheck)
                                     {
                                         
+                                        
                                         NSString *responseText = responseString;
+                                        
+                                        //brian Sep5
+                                        //write custom function to see if the response includes the broadcast code, give a certain number if it does unique to this function.
+                                        
                                         //NSLog(responseText);
                                         
                                         //commenting out as it was needed for polling
@@ -2535,16 +2523,7 @@ if(tableViewTag ==8999)
                                         });
                                         
                                     }
-                                    else
-                                    {
-                                         NSLog(@"%@",[error localizedDescription]);
-                                        [HUD hide:YES];
-                                        
-                                        UIAlertView *c7 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Submit XML Error C7", nil) message:@"Error Code C7" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                        c7.tag = 101;
-                                        [c7 show];
-                                        return;
-                                    }
+                                    
                                 }];
 }
 
@@ -2751,9 +2730,8 @@ if(tableViewTag ==8999)
     propsArray = [[propertsQuery findObjects:&propsQueryError] mutableCopy];
     if(propsQueryError)
     {
-        UIAlertView *c8 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Props Query Error C8", nil) message:@"Error Code C8" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        c8.tag = 101;
-        [c8 show];
+        NSString *responseString = @"";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c8" returnedError:propsQueryError];
         return;
     }
     
@@ -3497,7 +3475,9 @@ if(tableViewTag ==8999)
                        withParameters:@{@"payload": xmlForUpdate}
                                 block:^(NSString *responseString, NSError *error) {
                                     
-                                    if (!error)
+                                     BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c9" returnedError:error];
+                                    
+                                    if (errorCheck)
                                     {
                                         NSString *responseText = responseString;
                                         
@@ -3539,16 +3519,7 @@ if(tableViewTag ==8999)
                                         //[self pollForCaseRefresh];
                                         
                                     }
-                                    else
-                                    {
-                                        NSLog(error.localizedDescription);
-                                        [HUD hide:YES];
-                                        
-                                        UIAlertView *c9 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"submitXML Error C9", nil) message:@"Error Code C9" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                        c9.tag = 101;
-                                        [c9 show];
-                                        return;
-                                    }
+                                   
                                 }];
 }
 
@@ -4249,7 +4220,10 @@ if(tableViewTag ==8999)
     [PFCloud callFunctionInBackground:@"submitXML"
                        withParameters:@{@"payload": xml}
                                 block:^(NSString *responseString, NSError *error) {
-                                    if (!error) {
+                                    
+                                     BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c10" returnedError:error];
+                                    
+                                    if (errorCheck) {
                                         
                                         //load data from synchronous data return
                                         NSString *responseTextWithoutHeader = [responseString
@@ -4272,18 +4246,11 @@ if(tableViewTag ==8999)
                                     }
                                     else
                                     {
-                                        NSString *errorString = error.localizedDescription;
-                                        NSLog(errorString);
                                         
                                         //pop the mapViewController
                                         [self.navigationController popViewControllerAnimated:NO];
                                         
-                                        
-                                        UIAlertView *c10 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Location Update submitXML Error C10", nil) message:@"Error Code C10" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                        c10.tag = 101;
-                                        [c10 show];
-                                        return;
-                                    }
+                                                                }
                                 }];
 
     
@@ -4412,8 +4379,10 @@ if(tableViewTag ==8999)
                     [PFCloud callFunctionInBackground:@"submitXML"
                                        withParameters:@{@"payload": xmlForUpdate}
                                                 block:^(NSString *responseString, NSError *error) {
+                                     
+                    BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c11" returnedError:error];
                                                     
-                        if (!error)
+                        if (errorCheck)
                         {
                                                         
                         NSString *responseText = responseString;
@@ -4434,17 +4403,7 @@ if(tableViewTag ==8999)
                                                         });
                                                         
                         }
-                    else
-                        {
-                       NSLog(error.localizedDescription);
-                       [HUD hide:YES];
-                            
-                            UIAlertView *c11 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"New Case Item submitXML Error C11", nil) message:@"Error Code C11" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                            c11.tag = 101;
-                            [c11 show];
-                            return;
-
-                       }
+                    
                      }];
 
                 }
@@ -4626,7 +4585,11 @@ if(tableViewTag ==8999)
     [PFCloud callFunctionInBackground:@"submitXML"
                        withParameters:@{@"payload": xml}
                                 block:^(NSString *responseString, NSError *error) {
-                                    if (!error) {
+                                    
+                                    BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c12" returnedError:error];
+                                    
+                                    
+                                    if (errorCheck) {
                                         
                                         
                                         //commented out as no longer polling
@@ -4667,15 +4630,9 @@ if(tableViewTag ==8999)
                                     }
                                     else
                                     {
-                                        NSString *errorString = error.localizedDescription;
-                                        NSLog(errorString);
-                                      //  [HUD hide:NO];
+                                       
                                         [self popDeleteBGView];
                                         
-                                        UIAlertView *c12 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"DeleteCase Item submitXML Error C12", nil) message:@"Error Code C12" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                        c12.tag = 101;
-                                        [c12 show];
-                                        return;
                                     }
                                 }];
     
@@ -4754,9 +4711,8 @@ if(tableViewTag ==8999)
     propsArray = [[propertsQuery findObjects:&propsQueryError] mutableCopy];
     if(propsQueryError)
     {
-        UIAlertView *c13 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Props Query  Error C13", nil) message:@"Error Code C13" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        c13.tag = 101;
-        [c13 show];
+        NSString *responseString = @"blank";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c13" returnedError:propsQueryError];
         return;
     }
     
@@ -5017,12 +4973,11 @@ if(tableViewTag ==8999)
                 [caseProfileQuery whereKey:@"caseID" equalTo:theMatch];
                 NSError *caseProfilesQueryError = nil;
                     
-                    NSArray *returnedCaseProfiles = [caseProfileQuery findObjects:&caseProfilesQueryError];
+                NSArray *returnedCaseProfiles = [caseProfileQuery findObjects:&caseProfilesQueryError];
                 if(caseProfilesQueryError)
                 {
-                    UIAlertView *c14 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Props Query  Error C14", nil) message:@"Error Code C14" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                    c14.tag = 101;
-                    [c14 show];
+                    NSString *responseString = @"blank";
+                 BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c14" returnedError:caseProfilesQueryError];
                     return;
                 }
                 activeMatchesCaseProfiles = [returnedCaseProfiles mutableCopy];
@@ -5161,7 +5116,9 @@ if(tableViewTag ==8999)
                                     [bgDarkenView removeFromSuperview];
                                     [btnHolderView removeFromSuperview];
                                     
-                                    if (!error)
+                                    BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c15" returnedError:error];
+                                    
+                                    if (errorCheck)
                                     {
                                         NSString *responseText = responseString;
                                         NSLog(responseText);
@@ -5204,16 +5161,7 @@ if(tableViewTag ==8999)
                                         //[self pollForCaseRefresh];
                                         
                                     }
-                                    else
-                                    {
-                                        NSLog(@"%@",[error localizedDescription]);
-                                        [HUD hide:YES];
-                                        UIAlertView *c15 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"NotWhoIwanted C15", nil) message:@"Error Code C15" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                        c15.tag = 101;
-                                        [c15 show];
-                                        return;
-                                       
-                                    }
+                                   
                                 }];
 
     
@@ -5242,9 +5190,7 @@ if(tableViewTag ==8999)
     NSArray *returnedConversations = [query findObjects:&conversationQueryError];
     if(conversationQueryError)
     {
-        UIAlertView *c16 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"conversation Query Error C16", nil) message:@"Error Code C16" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        c16.tag = 101;
-        [c16 show];
+       BOOL errorCheck = [self checkForErrors:@"" errorCode:@"c16" returnedError:conversationQueryError];
         return;
     }
     
@@ -5261,9 +5207,7 @@ if(tableViewTag ==8999)
         [conversationObject save:&convoObjSaveErr];
         if(convoObjSaveErr)
         {
-            UIAlertView *c17 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"conversation Object Save Error C17", nil) message:@"Error Code C17" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-            c17.tag = 101;
-            [c17 show];
+            BOOL errorCheck = [self checkForErrors:@"" errorCode:@"c17" returnedError:convoObjSaveErr];
             return;
         }
         
@@ -5615,9 +5559,8 @@ if(tableViewTag ==8999)
         }
         else
         {
-            UIAlertView *c18 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"get case profile Error C18", nil) message:@"Error Code C18" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-            c18.tag = 101;
-            [c18 show];
+            NSString *responseString = @"";
+            BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c18" returnedError:getCaseProfileError];
             return;
         }
         
@@ -5723,19 +5666,8 @@ if(tableViewTag ==8999)
                        withParameters:@{@"payload": xml}
                                 block:^(NSString *responseString, NSError *error) {
                                     
-                                    if (!error)
-                                    {
-                                        //NSLog(responseString);
-                                        
-                                    }
-                                    else
-                                    {
-                                         NSLog(@"%@",[error localizedDescription]);
-                                        UIAlertView *c19 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"update case name error C19", nil) message:@"Error Code C19" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                        c19.tag = 101;
-                                        [c19 show];
-                                        return;
-                                    }
+                                  BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c19" returnedError:error];
+                                    
                                 }];
 }
 
@@ -5775,7 +5707,11 @@ if(tableViewTag ==8999)
     [PFCloud callFunctionInBackground:@"submitXML"
                        withParameters:@{@"payload": xmlToSwipe}
                                 block:^(NSString *responseString, NSError *error) {
-                                    if (!error) {
+                                
+                                    
+                                    BOOL errorCheck = [self checkForErrors:responseString errorCode:@"c20" returnedError:error];
+                                    
+                                    if (errorCheck) {
                                         
                                         NSString *responseText = responseString;
                                         NSLog(responseText);
@@ -5800,13 +5736,7 @@ if(tableViewTag ==8999)
                                     }
                                     else
                                     {
-                                        NSString *errorString = error.localizedDescription;
-                                        NSLog(errorString);
-                                        [HUD hide:NO];
-                                        
-                                        UIAlertView *c20 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"swipe send Error C20", nil) message:@"Error Code C20" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                        c20.tag = 101;
-                                        [c20 show];
+                                        //error check failed, showed error already
                                         return;
                                         
                                     }
@@ -5977,6 +5907,53 @@ if(tableViewTag ==8999)
         
         
     }
+}
+
+//brian Sep5
+-(BOOL) checkForErrors:(NSString *) returnedString errorCode:(NSString *)customErrorCode returnedError:(NSError *)error;
+{
+    [HUD hide:NO];
+    
+    if(error)
+    {
+        NSString *errorString = error.localizedDescription;
+        NSLog(errorString);
+       
+        NSString *customErrorString = [@"Parse Error,Error Code: " stringByAppendingString:customErrorCode];
+        
+        UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Error", nil) message:customErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        errorView.tag = 101;
+        [errorView show];
+        
+        return NO;
+    }
+    if([returnedString containsString:@"BROADCAST"])
+        {
+            //show a ui alertview with the response text
+            NSString *specificErrorString = [[returnedString stringByAppendingString:@"Backend Error, Error Source: "] stringByAppendingString:customErrorCode];
+            
+            UIAlertView *b1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Broadcast Error", nil) message:specificErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+          
+            [b1 show];
+            return NO;
+        }
+    
+    if([returnedString containsString:@"ERROR"])
+    {
+        NSString *specificErrorString = [[returnedString stringByAppendingString:@"Backend Error, Error Source: "] stringByAppendingString:customErrorCode];
+        
+        UIAlertView *b1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Wait for Sync Error", nil) message:specificErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        
+        [b1 show];
+        return NO;
+
+        
+    }
+    else
+    {
+       return YES;
+    }
+    
 }
 
 

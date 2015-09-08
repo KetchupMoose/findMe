@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="zQX-A0-4m7">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="zQX-A0-4m7">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -7,6 +7,8 @@
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="ProximaNova-Regular.otf">
+            <string>ProximaNova-Regular</string>
+            <string>ProximaNova-Regular</string>
             <string>ProximaNova-Regular</string>
         </mutableArray>
     </customFonts>
@@ -2185,6 +2187,112 @@
             </objects>
             <point key="canvasLocation" x="-1269" y="1352"/>
         </scene>
+        <!--Add Phone View Controller-->
+        <scene sceneID="u3N-DM-tiT">
+            <objects>
+                <viewController storyboardIdentifier="apvc" id="9My-uR-QhN" customClass="addPhoneViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="pSe-O8-Edo"/>
+                        <viewControllerLayoutGuide type="bottom" id="Mus-BZ-6K5"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ur6-L2-WI4">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qfF-J8-TEJ">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5cZ-sB-UQq">
+                                        <rect key="frame" x="187" y="108" width="81" height="30"/>
+                                        <state key="normal" title="READ THIS">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="readThisButton:" destination="9My-uR-QhN" eventType="touchUpInside" id="R5r-0J-Wbc"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="For More Information" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BQI-Rm-Flw">
+                                        <rect key="frame" x="56" y="111" width="164" height="27"/>
+                                        <fontDescription key="fontDescription" name="ProximaNova-Regular" family="Proxima Nova" pointSize="14"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="We Need Your Phone Number For Privacy" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rdg-68-1bs">
+                                        <rect key="frame" x="29" y="35" width="263" height="80"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="263" id="Rlx-sN-PxY"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="ProximaNova-Regular" family="Proxima Nova" pointSize="28"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.12941176470588234" green="0.090196078431372548" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="rdg-68-1bs" firstAttribute="top" secondItem="qfF-J8-TEJ" secondAttribute="top" constant="35" id="TVd-Wf-5y8"/>
+                                    <constraint firstItem="rdg-68-1bs" firstAttribute="leading" secondItem="qfF-J8-TEJ" secondAttribute="leading" constant="29" id="Xwi-dq-2kf"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UVt-BE-ook">
+                                <rect key="frame" x="0.0" y="518" width="95" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="hC1-5v-BSX"/>
+                                    <constraint firstAttribute="width" constant="95" id="zXW-8j-cfD"/>
+                                </constraints>
+                                <state key="normal" title="SKIP" backgroundImage="butt_skip@3x.png">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="skipButton:" destination="9My-uR-QhN" eventType="touchUpInside" id="cTq-gH-Ha7"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rcb-vR-Ran">
+                                <rect key="frame" x="95" y="518" width="225" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="MvS-Hk-xNs"/>
+                                    <constraint firstAttribute="width" constant="225" id="WWG-WA-l3v"/>
+                                </constraints>
+                                <state key="normal" title="ADD PHONE NUMBER" backgroundImage="butt_active@3x.png">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="addPhone:" destination="9My-uR-QhN" eventType="touchUpInside" id="2YK-YU-TDq"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="illustration@3x.png" translatesAutoresizingMaskIntoConstraints="NO" id="PRY-hp-jsH">
+                                <rect key="frame" x="38" y="155" width="244" height="363"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Rcb-vR-Ran" firstAttribute="leading" secondItem="Ur6-L2-WI4" secondAttribute="leading" constant="95" id="4ji-VV-Mlh"/>
+                            <constraint firstItem="UVt-BE-ook" firstAttribute="leading" secondItem="Ur6-L2-WI4" secondAttribute="leading" id="7bn-tz-elp"/>
+                            <constraint firstAttribute="centerX" secondItem="PRY-hp-jsH" secondAttribute="centerX" id="F9o-bb-OIC"/>
+                            <constraint firstAttribute="centerX" secondItem="qfF-J8-TEJ" secondAttribute="centerX" id="ICk-cv-a4T"/>
+                            <constraint firstItem="qfF-J8-TEJ" firstAttribute="top" secondItem="Ur6-L2-WI4" secondAttribute="top" id="ITC-pT-RB5"/>
+                            <constraint firstAttribute="bottom" secondItem="UVt-BE-ook" secondAttribute="bottom" id="Ir0-DE-dpB"/>
+                            <constraint firstAttribute="bottom" secondItem="PRY-hp-jsH" secondAttribute="bottom" constant="50" id="Ubq-aZ-Pl9"/>
+                            <constraint firstItem="qfF-J8-TEJ" firstAttribute="leading" secondItem="Ur6-L2-WI4" secondAttribute="leading" id="XwF-Ng-DA2"/>
+                            <constraint firstAttribute="bottom" secondItem="Rcb-vR-Ran" secondAttribute="bottom" id="ngR-oO-UHr"/>
+                            <constraint firstAttribute="bottom" secondItem="qfF-J8-TEJ" secondAttribute="bottom" id="t51-5j-uyA"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="addPhoneButton" destination="Rcb-vR-Ran" id="Ved-6R-zgu"/>
+                        <outlet property="handHoldingPhoneImageView" destination="PRY-hp-jsH" id="Z9A-t6-Y1v"/>
+                        <outlet property="moreInfoLabel" destination="BQI-Rm-Flw" id="Ojl-ex-bz9"/>
+                        <outlet property="privacyExplanationLabel" destination="rdg-68-1bs" id="4AG-QZ-AT2"/>
+                        <outlet property="purpleBGView" destination="qfF-J8-TEJ" id="yF0-KN-SqU"/>
+                        <outlet property="readThisButton" destination="5cZ-sB-UQq" id="Im7-yR-1f0"/>
+                        <outlet property="skipButton" destination="UVt-BE-ook" id="0HL-fp-XOI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RvM-ns-XI9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-739" y="-901"/>
+        </scene>
         <!--viewCasesMerge-->
         <scene sceneID="xL9-wU-viV">
             <objects>
@@ -2227,13 +2335,13 @@
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Match ID" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9sA-N5-iSC">
                                                             <rect key="frame" x="78" y="8" width="165" height="21"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="6" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="External Match Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n7t-Ts-4oX">
                                                             <rect key="frame" x="80" y="59" width="188" height="21"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Match Name" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qnG-1j-FnH">
@@ -2682,7 +2790,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CVH-10-5b2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-647" y="-234.5"/>
+            <point key="canvasLocation" x="-739" y="-146.5"/>
         </scene>
     </scenes>
     <resources>
@@ -2695,12 +2803,15 @@
         <image name="background@3x.jpg" width="1242" height="2208"/>
         <image name="blurPhotoBG2.jpg" width="2000" height="1500"/>
         <image name="blurredlights.jpg" width="640" height="1136"/>
+        <image name="butt_active@3x.png" width="675" height="150"/>
+        <image name="butt_skip@3x.png" width="285" height="150"/>
         <image name="butt_upload-photo@3x.png" width="390" height="390"/>
         <image name="cityLightsBG.jpg" width="640" height="1136"/>
         <image name="globeicon.png" width="256" height="256"/>
         <image name="green-checkmark.jpg" width="425" height="425"/>
         <image name="ico_female@3x.png" width="90" height="90"/>
         <image name="ico_male@3x.png" width="90" height="90"/>
+        <image name="illustration@3x.png" width="620" height="901"/>
         <image name="imageselect.png" width="256" height="256"/>
         <image name="internetOfflineIcon.png" width="128" height="128"/>
         <image name="login-button.png" width="175" height="53"/>

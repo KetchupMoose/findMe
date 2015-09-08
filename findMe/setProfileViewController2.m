@@ -273,9 +273,8 @@ NSString *locationText;
     BOOL saveSuccess= [currentUser save];
     if(saveSuccess==NO)
     {
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Saving The Parse User Failed--Error Code 11", nil) message:NSLocalizedString(@"Error Code 11", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        errorAlert.tag = 101;
-        [errorAlert show];
+        
+        BOOL errorCheck = [self displayErrorsBoolean:@"p1"];
         
         return;
     }
@@ -294,9 +293,7 @@ NSString *locationText;
         BOOL saveSuccess = [self.itsMTLObject save];
         if(saveSuccess ==NO)
         {
-            UIAlertView *errorCodeAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"MTL Save Fail First Profile", nil) message:@"Error Code 12" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-            errorCodeAlert.tag = 101;
-            [errorCodeAlert show];
+             BOOL errorCheck = [self displayErrorsBoolean:@"p2"];
             
                                            
         }
@@ -309,9 +306,7 @@ NSString *locationText;
         if(installSaveSuccess==NO)
         {
             {
-                UIAlertView *eCodeView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Installation Save Fail", nil) message:@"Error Code 13" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                eCodeView.tag = 101;
-                [eCodeView show];
+                 BOOL errorCheck = [self displayErrorsBoolean:@"p3"];
                 
             
             }
@@ -327,7 +322,7 @@ NSString *locationText;
         itsMTLObjectID = self.homeScreenMTLObjectID;
     }
     
-    NSString *hardcodedXMLString = @"<PAYLOAD><USEROBJECTID>4OvTmAzGE7</USEROBJECTID><LAISO>EN</LAISO><PREFERENCES><SHOWNAME>Rose</SHOWNAME><COUNTRY>CA</COUNTRY><GENDER>F</GENDER><TEMPLATEID1>01VURH6zGz</TEMPLATEID1><TEMPLATEID2>9XXwNvkFTI</TEMPLATEID2></PREFERENCES></PAYLOAD>";
+    //NSString *hardcodedXMLString = @"<PAYLOAD><USEROBJECTID>4OvTmAzGE7</USEROBJECTID><LAISO>EN</LAISO><PREFERENCES><SHOWNAME>Rose</SHOWNAME><COUNTRY>CA</COUNTRY><GENDER>F</GENDER><TEMPLATEID1>01VURH6zGz</TEMPLATEID1><TEMPLATEID2>9XXwNvkFTI</TEMPLATEID2></PREFERENCES></PAYLOAD>";
     
     NSString *xmlGeneratedString = [self createTemplateXMLFunction:itsMTLObjectID];
     
@@ -356,32 +351,13 @@ NSString *locationText;
     [PFCloud callFunctionInBackground:@"submitXML"
                        withParameters:@{@"payload": xmlGeneratedString}
                                 block:^(NSString *responseString, NSError *error) {
-                                    if (!error) {
-                                        
-                                        NSString *responseText = responseString;
-                                        NSString *errorStr;
-                                        if([responseText length]>5)
-                                        {
-                                            NSLog(@"JulyStringReached");
-                                            
-                                            errorStr=[responseText substringToIndex:20];
-                                        }
-                                        if([errorStr containsString:@"[ERROR]"])
-                                        {
-                                            [phoneSearchersView removeFromSuperview];
-                                            UIAlertView *pError = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Profile Error", nil) message:@"Error Code 15" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                            pError.tag = 101;
-                                            [pError show];
-                                            
-                                            
-                                            //dismiss the progress HUD and keep the user on the profile screen
-                                            [HUD hide:NO];
-                                            
-                                            return;
-                                            
-                                        }
-                                        
-                                        NSLog(responseText);
+                                  
+                                    BOOL errorCheck = [self checkForErrors:responseString errorCode:@"p4" returnedError:error];
+                                    
+                                    if(errorCheck)
+                                    {
+                                        NSLog(@"got to point of saving parse user to MTL");
+
                                         [HUD hide:NO];
                                         
                                         [self.itsMTLObject setObject:currentUser forKey:@"ParseUser"];
@@ -390,34 +366,18 @@ NSString *locationText;
                                         if(saveSuccess==FALSE)
                                         {
                                             
-                                            UIAlertView *mtlErr = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error SavingMTL 3", nil) message:@"There was an error saving the MTL Object, ERROR CODE 16" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                                                   mtlErr.tag = 101;
-                                            [mtlErr show];
-                                            
+                                             BOOL errorCheck = [self displayErrorsBoolean:@"p5"];
                                             
                                             return;
                                         }
                                         else
                                         {
+                                            NSLog(@"calling delegate to dismiss the set profile controller");
                                              [self.delegate setNewProfile2:self.itsMTLObject];
                                         }
-                                   
-                                        
+                                  
                                     }
-                                    
-                                    else
-                                    {
-                                        NSLog(@"%@",[error localizedDescription]);
-                                        NSLog(@"July");
-                                        
-                                        [HUD hide:NO];
-                                        [phoneSearchersView removeFromSuperview];
-                                        UIAlertView *code17 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Profile Error Code 17", nil) message:@"Error Code 17" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                        code17.tag = 101;
-                                        [code17 show];
-                                        return;
-                                        
-                                    }
+                             
                                 }];
     
 }
@@ -514,6 +474,14 @@ NSString *locationText;
     
     [self.itsMTLObject fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         //do stuff with object.
+        
+        //brian sep6
+        NSString *responseString = @"";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"p101" returnedError:error];
+        
+        if(errorCheck)
+        {
+        
         PFObject *templateMakerObj = [object objectForKey:@"templateMaker"];
         
         //note November 1
@@ -542,6 +510,7 @@ NSString *locationText;
             
             // [self removeViewsShowTemplateChoices:(templateMakerObj)];
         }
+            }
     }];
     
     timerTicks2=timerTicks2+1;
@@ -1179,7 +1148,6 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
     UIButton *sendingButton = (UIButton *)sender;
     [sendingButton.superview removeFromSuperview];
 
-    
     //show a country selector instead
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Here we will need ability to select country"
                                                         message:@"Future coding needed, select country"
@@ -1194,7 +1162,6 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
     //interpret user location data
     NSString *locationString = [self getAddressFromLatLon:latitude withLongitude:longitude];
-    
     
 }
 
@@ -1233,9 +1200,7 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
         else {
             NSLog(@"%@", error.debugDescription);
             {
-               UIAlertView *errorCodeView =  [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Location Geocode Fail", nil) message:@"Error Code 18" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                errorCodeView.tag = 101;
-                [errorCodeView show];
+                [self displayErrorsBoolean:@"p102"];
                 return;
             }
 
@@ -1257,6 +1222,68 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
         strcpy(0, "bla");
     }
 }
+
+//brian Sep5
+-(BOOL) checkForErrors:(NSString *) returnedString errorCode:(NSString *)customErrorCode returnedError:(NSError *)error;
+{
+    [HUD hide:NO];
+    
+    if(error)
+    {
+        NSString *errorString = error.localizedDescription;
+        NSLog(errorString);
+        
+        NSString *customErrorString = [@"Parse Error,Error Code: " stringByAppendingString:customErrorCode];
+        
+        UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Error", nil) message:customErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        errorView.tag = 101;
+        [errorView show];
+        
+        return NO;
+    }
+    if([returnedString containsString:@"BROADCAST"])
+    {
+        //show a ui alertview with the response text
+        NSString *specificErrorString = [[returnedString stringByAppendingString:@"Backend Error, Error Source: "] stringByAppendingString:customErrorCode];
+        
+        UIAlertView *b1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Broadcast Error", nil) message:specificErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        
+        [b1 show];
+        return NO;
+    }
+    
+    if([returnedString containsString:@"ERROR"])
+    {
+        NSString *specificErrorString = [[returnedString stringByAppendingString:@"Backend Error, Error Source: "] stringByAppendingString:customErrorCode];
+        
+        UIAlertView *b1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Wait for Sync Error", nil) message:specificErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        
+        [b1 show];
+        return NO;
+        
+        
+    }
+    else
+    {
+        return YES;
+    }
+    
+}
+
+//brian Sep5
+-(BOOL) displayErrorsBoolean:(NSString *)customErrorCode;
+{
+    [HUD hide:NO];
+    
+    NSString *customErrorString = [@"Parse Error,Error Code: " stringByAppendingString:customErrorCode];
+        
+    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Error", nil) message:customErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+    errorView.tag = 101;
+    [errorView show];
+        
+    return NO;
+}
+
 
 @end
 

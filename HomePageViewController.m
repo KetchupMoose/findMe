@@ -30,6 +30,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "privatelyViewController.h"
 #import "findMeBottomTab.h"
+#import "addPhoneViewController.h"
 
 @interface HomePageViewController ()
 
@@ -55,15 +56,13 @@ NSString *homePageTheMatchPropertyNum;
     [locationPropertyQuery whereKey:@"designation" equalTo:@"EN~PinDrop"];
     
     [locationPropertyQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-        if(error)
+        NSString *responseString = @"";
+       BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H1" returnedError:error];
+        if(errorCheck)
         {
-            UIAlertView *h1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location Property Retrieve Error Code H1", nil) message:@"Error Code H1" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-            h1.tag = 101;
-            [h1 show];
-            
-            return;
+            homePageManualLocationPropertyNum = object.objectId;
         }
-        homePageManualLocationPropertyNum = object.objectId;
+        
     }];
     
 }
@@ -74,26 +73,26 @@ NSString *homePageTheMatchPropertyNum;
     [designationPropertiesQuery whereKey:@"designation" notEqualTo:@""];
     [designationPropertiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
-        if(error)
+        NSString *responseString = @"";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H2" returnedError:error];
+        
+        if(errorCheck)
         {
-            UIAlertView *h2 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"designation Property Retrieve Error Code H2", nil) message:@"Error Code H2" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-            h2.tag = 101;
-            [h2 show];
-            return;
-        }
-        //filter through this array to get a smaller array
-        NSMutableArray *cleanPropsArray = [[NSMutableArray alloc] init];
-        for(PFObject *propObject in objects)
-        {
-            NSString *propDescr = [propObject objectForKey:@"propertyDescr"];
-            NSString *designation = [propObject objectForKey:@"designation"];
-            
-            if([propDescr length]>0 && [designation length] >0)
+            //filter through this array to get a smaller array
+            NSMutableArray *cleanPropsArray = [[NSMutableArray alloc] init];
+            for(PFObject *propObject in objects)
             {
-                [cleanPropsArray addObject:propObject];
+                NSString *propDescr = [propObject objectForKey:@"propertyDescr"];
+                NSString *designation = [propObject objectForKey:@"designation"];
+                
+                if([propDescr length]>0 && [designation length] >0)
+                {
+                    [cleanPropsArray addObject:propObject];
+                }
             }
+            self.designationProperties = [cleanPropsArray copy];
         }
-        self.designationProperties = [cleanPropsArray copy];
+        
         
     }];
 }
@@ -105,20 +104,31 @@ NSString *homePageTheMatchPropertyNum;
     [locationPropertyQuery whereKey:@"designation" equalTo:@"EN~TheMatch"];
     
     [locationPropertyQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-        if(error)
+        
+        NSString *responseString = @"";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H3" returnedError:error];
+    
+        if(errorCheck)
         {
-            UIAlertView *h3 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"theMatch Property Retrieve Error Code H3", nil) message:@"Error Code H3" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-            h3.tag = 101;
-            [h3 show];
-            
-            return;
+           homePageTheMatchPropertyNum= object.objectId;
         }
-        homePageTheMatchPropertyNum= object.objectId;
+       
     }];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    
+    for (NSString* family in [UIFont familyNames])
+    {
+        NSLog(@"%@", family);
+        
+        for (NSString* name in [UIFont fontNamesForFamilyName: family])
+        {
+            NSLog(@"  %@", name);
+        }
+    }
     
     // Do any additional setup after loading the view.
     
@@ -251,11 +261,8 @@ NSString *homePageTheMatchPropertyNum;
         NSLog(@"success flagged here brian");
         
     } errorBlock:^(PNError *error) {
-       NSLog(@"%@",[error localizedDescription]);
-        UIAlertView *h4 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"pubnub Connect Error H4", nil) message:@"Error Code H4" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        h4.tag = 101;
-        [h4 show];
-        return;
+        NSString *responseString = @"";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H4" returnedError:error];
 
     }];
     
@@ -267,9 +274,8 @@ NSString *homePageTheMatchPropertyNum;
         else if (!connected || connectionError)
         {
             NSLog(@"OBSERVER: Error %@, Connection Failed!", connectionError.localizedDescription);
-            UIAlertView *h5 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"pubnub addClientConnection Error H5", nil) message:@"Error Code H5" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-            h5.tag = 101;
-            [h5 show];
+            NSString *responseString = @"";
+            BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H5" returnedError:connectionError];
             return;
         }
     }];
@@ -316,14 +322,13 @@ NSString *homePageTheMatchPropertyNum;
     
     [newQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         //for each conversation object, subscribe to that channel on pubnub'
+        NSString *responseString = @"";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H6" returnedError:error];
         
-        if(error)
+        if(errorCheck)
         {
-            UIAlertView *h6 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"find ConversationObjects Error H6", nil) message:@"Error Code H6" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-            h6.tag = 101;
-            [h6 show];
-            return;
-        }
+            
+        
         NSLog(@"retrieved this many conversation objects");
         NSLog(@"%lu",(unsigned long)objects.count);
         
@@ -332,15 +337,10 @@ NSString *homePageTheMatchPropertyNum;
         NSArray *subscribedToChannels = [PubNub subscribedObjectsList];
         
         [PubNub unsubscribeFrom:subscribedToChannels withCompletionHandlingBlock:^(NSArray *channels, PNError *error) {
+            NSString *responseString = @"";
+            BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H7" returnedError:error];
             
-            if(error)
-            {
-                UIAlertView *h7 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Unsubscribe Error H7", nil) message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                h7.tag = 101;
-                [h7 show];
-                return;
-            }
-            else
+            if(errorCheck)
          
             {
                 //subscribe on channels for each conversation object
@@ -352,21 +352,21 @@ NSString *homePageTheMatchPropertyNum;
                 NSArray *channelsArray = [PNChannel channelsWithNames:channelsToSubscribeTo];
         
                         [PubNub subscribeOn:channelsArray withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
-                            if(error)
+                        
+                            NSString *responseString = @"";
+                            BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H8" returnedError:error];
+                            if(errorCheck)
                             {
-                                UIAlertView *h8 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Subscribe Error H8", nil) message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                h8.tag = 101;
-                                [h8 show];
-                                return;
-                            }
+                                
+                            
                             //subscribe successful.
                             NSLog(@"successfully subscribed on channels");
                             NSLog(@"%lu",(unsigned long)channels.count);
-                
+                            }
                         }];
             }
         }];
-        
+        }
     }];
      
     
@@ -392,17 +392,13 @@ NSString *homePageTheMatchPropertyNum;
     NSArray *returnedMTLObjects = [newQuery findObjects:&errorObj];
     if(errorObj)
     {
-        UIAlertView *h9 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"MTL Query Error H9", nil) message:errorObj.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        h9.tag = 101;
-        [h9 show];
+        NSString *responseString = @"";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H9" returnedError:errorObj];
         return;
     }
     if(returnedMTLObjects.count >1)
     {
-        UIAlertView *errorAlert = [[UIAlertView alloc]
-                                   initWithTitle:@"Multiple MTL Objects for this User--Error H10" message:currentUser.objectId delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        errorAlert.tag = 101;
-        [errorAlert show];
+        [self displayErrorsBoolean:@"Multiple MTL Objects for this User--Error H10"];
         
         return;
         
@@ -628,9 +624,8 @@ NSString *homePageTheMatchPropertyNum;
     NSArray *returnedCaseProfiles = [caseProfileQuery findObjects:&caseProfilesError];
     if(caseProfilesError)
     {
-        UIAlertView *h11 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"getCaseProfiles Error H11", nil) message:caseProfilesError.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        h11.tag = 101;
-        [h11 show];
+        NSString *responseString = @"";
+          BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H11" returnedError:caseProfilesError];
         return;
     }
     
@@ -749,10 +744,8 @@ NSString *homePageTheMatchPropertyNum;
     NSArray *returnedCaseProfiles = [caseProfileQuery findObjects:&caseProfileError];
     if(caseProfileError)
     {
-        UIAlertView *h12 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"getCaseProfiles Error H12", nil) message:caseProfileError.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        h12.tag = 101;
-        [h12 show];
-        
+        NSString *responseString = @"";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H12" returnedError:caseProfileError];
         return;
     }
     
@@ -818,10 +811,8 @@ NSString *homePageTheMatchPropertyNum;
     HomePageITSMTLObject = [query getObjectWithId:HomePageuserName error:&mtlObjectQueryError];
     if(mtlObjectQueryError)
     {
-        UIAlertView *h13 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"TestButtonQuery Error H13", nil) message:@"Error H13" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        h13.tag = 101;
-        [h13 show];
-        
+        NSString *responseString = @"";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H13" returnedError:mtlObjectQueryError];
         return;
     }
     //query for data based on this itsMTLobject and reload data on the home page
@@ -850,13 +841,11 @@ NSString *homePageTheMatchPropertyNum;
         
         [HUD hide:NO];
         
-        if(error)
-        {
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Reload Home Error 14", nil) message:NSLocalizedString([error localizedDescription], nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
-            return;
-            
-        }
         
+        NSString *responseString = @"";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H14" returnedError:error];
+        if(errorCheck)
+        {
         //do some logic to sort through these cases and see how many have matches, how many are awaiting more info.
        homePageCases = [latestCaseList objectForKey:@"cases"];
         
@@ -884,7 +873,7 @@ NSString *homePageTheMatchPropertyNum;
         [self.view addSubview:bubbleIndicatorCases];
         
         [self subscribeToConversationChannels];
-        
+          }
     }];
     
 }
@@ -903,8 +892,20 @@ NSString *homePageTheMatchPropertyNum;
     }
     
     //[self ReloadHomePageData];
-    [self.navigationController popViewControllerAnimated:YES];
+    //[self.navigationController popViewControllerAnimated:YES];
+    addPhoneViewController *apvc = [self.storyboard instantiateViewControllerWithIdentifier:@"apvc"];
+    apvc.delegate = self;
+    apvc.itsMTLID = newITSMTLObject.objectId;
     
+    
+    [self.navigationController pushViewController:apvc animated:YES];
+    
+}
+
+-(void)confirmPhoneNumber:(id)sender
+{
+   [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(IBAction)TestSlidingView:(id)sender
@@ -1051,6 +1052,68 @@ NSString *homePageTheMatchPropertyNum;
         strcpy(0, "bla");
     }
 }
+
+//brian Sep5
+-(BOOL) checkForErrors:(NSString *) returnedString errorCode:(NSString *)customErrorCode returnedError:(NSError *)error;
+{
+    [HUD hide:NO];
+    
+    if(error)
+    {
+        NSString *errorString = error.localizedDescription;
+        NSLog(errorString);
+        
+        NSString *customErrorString = [@"Parse Error,Error Code: " stringByAppendingString:customErrorCode];
+        
+        UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Error", nil) message:customErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        errorView.tag = 101;
+        [errorView show];
+        
+        return NO;
+    }
+    if([returnedString containsString:@"BROADCAST"])
+    {
+        //show a ui alertview with the response text
+        NSString *specificErrorString = [[returnedString stringByAppendingString:@"Backend Error, Error Source: "] stringByAppendingString:customErrorCode];
+        
+        UIAlertView *b1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Broadcast Error", nil) message:specificErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        
+        [b1 show];
+        return NO;
+    }
+    
+    if([returnedString containsString:@"ERROR"])
+    {
+        NSString *specificErrorString = [[returnedString stringByAppendingString:@"Backend Error, Error Source: "] stringByAppendingString:customErrorCode];
+        
+        UIAlertView *b1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Wait for Sync Error", nil) message:specificErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        
+        [b1 show];
+        return NO;
+        
+        
+    }
+    else
+    {
+        return YES;
+    }
+    
+}
+
+//brian Sep5
+-(BOOL) displayErrorsBoolean:(NSString *)customErrorCode;
+{
+    [HUD hide:NO];
+    
+    NSString *customErrorString = [@"Parse Error,Error Code: " stringByAppendingString:customErrorCode];
+    
+    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Error", nil) message:customErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+    errorView.tag = 101;
+    [errorView show];
+    
+    return NO;
+}
+
 
 
 @end

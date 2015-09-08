@@ -109,24 +109,9 @@ BOOL firstMatchViewLoadMerge = TRUE;
                        withParameters:@{@"payload": userName}
                                 block:^(NSString *responseString, NSError *error) {
                                     
-                                    if(error)
-                                    {
-                                        UIAlertView *v1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"waitForSync Error v1", nil) message:@"Error Code v1" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                        v1.tag = 101;
-                                        [v1 show];
-                                        return;
-
-                                    }
+                                     BOOL errorCheck = [self checkForErrors:responseString errorCode:@"v1" returnedError:error];
                                     
-                                    if([responseString containsString:@"ERROR"])
-                                    {
-                                        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WaitForSync Failed", nil) message:NSLocalizedString(responseString, nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
-                                        [HUD hide:NO];
-                                        
-                                        return;
-                                        
-                                    }
-                                    else
+                                    if(errorCheck)
                                     {
                                         
                                         dispatch_async(dispatch_get_main_queue(),
@@ -180,11 +165,12 @@ BOOL firstMatchViewLoadMerge = TRUE;
     NSError *refreshTableQueryError = nil;
     PFObject *object = [query getObjectWithId:userName error:&refreshTableQueryError];
     
+    
     if(refreshTableQueryError)
     {
-        UIAlertView *v2 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"refreshTableQuery Error v2", nil) message:@"Error Code v2" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        v2.tag = 101;
-        [v2 show];
+        NSString *responseString = @"";
+        
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"v2" returnedError:refreshTableQueryError];
         return;
 
     }
@@ -225,9 +211,8 @@ BOOL firstMatchViewLoadMerge = TRUE;
     caseObjects = [caseQuery findObjects:&caseQueryError];
     if(caseQueryError)
     {
-        UIAlertView *v3 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"cases Error v3", nil) message:@"Error Code v3" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        v3.tag = 101;
-        [v3 show];
+        NSString *responseString = @"";
+          BOOL errorCheck = [self checkForErrors:responseString errorCode:@"v3" returnedError:refreshTableQueryError];
         return;
 
     }
@@ -238,9 +223,8 @@ BOOL firstMatchViewLoadMerge = TRUE;
     caseProfileObjects = [caseProfileQuery findObjects:&caseProfileObjsError];
     if(caseProfileObjsError)
     {
-        UIAlertView *v4 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"caseProfileObjsError Error v4", nil) message:@"Error Code v4" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        v4.tag = 101;
-        [v4 show];
+        NSString *responseString = @"";
+        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"v4" returnedError:caseProfileObjsError];
         return;
 
     }
@@ -802,9 +786,7 @@ viewForHeaderInSection:(NSInteger)section
     NSArray *returnedConversations = [query findObjects:&returnedConversationsError];
     if(returnedConversationsError)
     {
-        UIAlertView *v5 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"conversationsQuery Error v5", nil) message:@"Error Code v5" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        v5.tag = 101;
-        [v5 show];
+        BOOL errorCheck = [self checkForErrors:@"" errorCode:@"v5" returnedError:returnedConversationsError];
         return;
     }
    
@@ -820,9 +802,7 @@ viewForHeaderInSection:(NSInteger)section
         [conversationObject save:&convoObjSaveError];
         if(convoObjSaveError)
         {
-            UIAlertView *v6 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"conversation Obj Save Error v6", nil) message:@"Error Code v6" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-            v6.tag = 101;
-            [v6 show];
+              BOOL errorCheck = [self checkForErrors:@"" errorCode:@"v6" returnedError:returnedConversationsError];
             return;
         }
         
@@ -913,7 +893,10 @@ viewForHeaderInSection:(NSInteger)section
     [PFCloud callFunctionInBackground:@"submitXML"
                        withParameters:@{@"payload": xmlToSwipe}
                                 block:^(NSString *responseString, NSError *error) {
-                                    if (!error) {
+                                    
+                                     BOOL errorCheck = [self checkForErrors:@"" errorCode:@"v7" returnedError:error];
+                                    
+                                    if (errorCheck) {
                                         
                                         // NSString *responseText = responseString;
                                         //NSLog(responseText);
@@ -929,9 +912,6 @@ viewForHeaderInSection:(NSInteger)section
                                         NSLog(@"%@",[error localizedDescription]);
                                         [HUD hide:NO];
                                         
-                                        UIAlertView *v7 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"submitXML Error v7", nil) message:@"Error Code v7" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                        v7.tag = 101;
-                                        [v7 show];
                                         return;
                                         
                                     }
@@ -1051,14 +1031,9 @@ viewForHeaderInSection:(NSInteger)section
     
     [query getObjectInBackgroundWithId:self.matchesUserName block:^(PFObject *latestCaseList, NSError *error) {
         
-        if(error)
+         BOOL errorCheck = [self checkForErrors:@"" errorCode:@"v8" returnedError:error];
+        if(errorCheck)
         {
-            UIAlertView *v8 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"mtlQuery Error v8", nil) message:@"Error Code v8" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-            v8.tag = 101;
-            [v8 show];
-            return;
-        }
-        
         // Do something with the returned PFObject
         NSLog(@"%@", latestCaseList);
         
@@ -1102,7 +1077,8 @@ viewForHeaderInSection:(NSInteger)section
         self.matchesCaseItemArrays = [allMatchCaseItemObjectsArray copy];
         
         [self.casesTableView reloadData];
-        
+            
+        }
     }];
     
     
@@ -1241,6 +1217,52 @@ viewForHeaderInSection:(NSInteger)section
     }
 }
 
+//brian Sep5
+-(BOOL) checkForErrors:(NSString *) returnedString errorCode:(NSString *)customErrorCode returnedError:(NSError *)error;
+{
+    [HUD hide:NO];
+    
+    if(error)
+    {
+        NSString *errorString = error.localizedDescription;
+        NSLog(errorString);
+        
+        NSString *customErrorString = [@"Parse Error,Error Code: " stringByAppendingString:customErrorCode];
+        
+        UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Error", nil) message:customErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        errorView.tag = 101;
+        [errorView show];
+        
+        return NO;
+    }
+    if([returnedString containsString:@"BROADCAST"])
+    {
+        //show a ui alertview with the response text
+        NSString *specificErrorString = [[returnedString stringByAppendingString:@"Backend Error, Error Source: "] stringByAppendingString:customErrorCode];
+        
+        UIAlertView *b1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Broadcast Error", nil) message:specificErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        
+        [b1 show];
+        return NO;
+    }
+    
+    if([returnedString containsString:@"ERROR"])
+    {
+        NSString *specificErrorString = [[returnedString stringByAppendingString:@"Backend Error, Error Source: "] stringByAppendingString:customErrorCode];
+        
+        UIAlertView *b1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Wait for Sync Error", nil) message:specificErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        
+        [b1 show];
+        return NO;
+        
+        
+    }
+    else
+    {
+        return YES;
+    }
+    
+}
 
 
 

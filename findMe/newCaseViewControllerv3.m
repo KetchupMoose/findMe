@@ -115,15 +115,9 @@ NSString *locationLongitude;
                        withParameters:@{}
                                 block:^(NSArray *returnedObjects, NSError *error) {
                                     
-                                    if(error)
-                                    {
-                                        UIAlertView *n1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"getStartMenu Error N1", nil) message:@"Error Code N1" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                        n1.tag = 101;
-                                        [n1 show];
-                                        return;
-                                        
-                                    }
-                                    if (!error)
+                                    BOOL errorCheck = [self checkForErrors:@"" errorCode:@"N1" returnedError:error];
+                                    
+                                    if (errorCheck)
                                     {
                                         self.allTemplates = returnedObjects;
                                         
@@ -139,7 +133,7 @@ NSString *locationLongitude;
                                             {
                                                 //check the designation
                                                 [templateParentChoices addObject:templateObject];
-                                                [self.parentTemplateCategories addObject:templateObject];
+                                              
                                                 
                                             }
                                         }
@@ -150,7 +144,13 @@ NSString *locationLongitude;
                                         int lastObject = (int)templateParentChoices.count;
                                         int j = 1;
                                         
-                                        for (PFObject *parentTemplateObject in templateParentChoices)
+                                        //brian sep6
+                                        //sort this array by their category field before going into this.
+                                        NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"category" ascending:YES];
+                                        NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
+                                        NSArray *sortedTemplateParentArray = [templateParentChoices sortedArrayUsingDescriptors:descriptors];
+                                       
+                                        for (PFObject *parentTemplateObject in sortedTemplateParentArray)
                                         {
                                             NSString *category = [parentTemplateObject objectForKey:@"category"];
                                             if(category ==nil)
@@ -302,15 +302,9 @@ NSString *locationLongitude;
                        withParameters:@{@"payload": mtlID}
                                 block:^(NSArray *returnedObjects, NSError *error) {
                                     
-                                    if(error)
-                                    {
-                                        UIAlertView *n1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"getStartMenu Error N1", nil) message:@"Error Code N1" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-                                        n1.tag = 101;
-                                        [n1 show];
-                                        return;
-                                        
-                                    }
-                                    if (!error)
+                                    BOOL errorCheck = [self checkForErrors:@"" errorCode:@"N2" returnedError:error];
+                                    
+                                    if (errorCheck)
                                     {
                                         self.allTemplates = returnedObjects;
                                         
@@ -326,7 +320,7 @@ NSString *locationLongitude;
                                             {
                                                 //check the designation
                                                 [templateParentChoices addObject:templateObject];
-                                                [self.parentTemplateCategories addObject:templateObject];
+                                                
                                                 
                                             }
                                         }
@@ -337,7 +331,13 @@ NSString *locationLongitude;
                                         int lastObject = (int)templateParentChoices.count;
                                         int j = 1;
                                         
-                                        for (PFObject *parentTemplateObject in templateParentChoices)
+                                        //brian sep6
+                                        //sort this array by their category field before going into this.
+                                        NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"category" ascending:YES];
+                                        NSArray *descriptors = [NSArray arrayWithObject:valueDescriptor];
+                                        NSArray *sortedTemplateParentArray = [templateParentChoices sortedArrayUsingDescriptors:descriptors];
+                                        
+                                        for (PFObject *parentTemplateObject in sortedTemplateParentArray)
                                         {
                                             NSString *category = [parentTemplateObject objectForKey:@"category"];
                                             if(category ==nil)
@@ -478,6 +478,7 @@ NSString *locationLongitude;
                                         [HUD hide:YES];
                                     }
                                 }
+
      ];
     
 }
@@ -1050,11 +1051,8 @@ NSString *locationLongitude;
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"didFailWithError: %@", error);
-    UIAlertView *errorAlert = [[UIAlertView alloc]
-                               initWithTitle:@"Error N3" message:@"Failed to Get Your Location--Error Code N3" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    errorAlert.tag = 101;
-    [errorAlert show];
+   BOOL errorCheck = [self checkForErrors:@"" errorCode:@"N3" returnedError:error];
+    
     return;
     
 }
@@ -1092,11 +1090,7 @@ NSString *locationLongitude;
             
             //[HUD hide:YES];
         } else {
-            NSLog(@"%@", error.debugDescription);
-            UIAlertView *h4 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"geocode retrieve Error N4", nil) message:@"Error Code N4" delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-            h4.tag = 101;
-            [h4 show];
-            return;
+           BOOL errorCheck = [self checkForErrors:@"" errorCode:@"N4" returnedError:error];
             //[HUD hide:YES];
         }
     } ];
@@ -1128,6 +1122,67 @@ NSString *locationLongitude;
     {
         strcpy(0, "bla");
     }
+}
+
+//brian Sep5
+-(BOOL) checkForErrors:(NSString *) returnedString errorCode:(NSString *)customErrorCode returnedError:(NSError *)error;
+{
+    [HUD hide:NO];
+    
+    if(error)
+    {
+        NSString *errorString = error.localizedDescription;
+        NSLog(errorString);
+        
+        NSString *customErrorString = [@"Parse Error,Error Code: " stringByAppendingString:customErrorCode];
+        
+        UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Error", nil) message:customErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        errorView.tag = 101;
+        [errorView show];
+        
+        return NO;
+    }
+    if([returnedString containsString:@"BROADCAST"])
+    {
+        //show a ui alertview with the response text
+        NSString *specificErrorString = [[returnedString stringByAppendingString:@"Backend Error, Error Source: "] stringByAppendingString:customErrorCode];
+        
+        UIAlertView *b1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Broadcast Error", nil) message:specificErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        
+        [b1 show];
+        return NO;
+    }
+    
+    if([returnedString containsString:@"ERROR"])
+    {
+        NSString *specificErrorString = [[returnedString stringByAppendingString:@"Backend Error, Error Source: "] stringByAppendingString:customErrorCode];
+        
+        UIAlertView *b1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Wait for Sync Error", nil) message:specificErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        
+        [b1 show];
+        return NO;
+        
+        
+    }
+    else
+    {
+        return YES;
+    }
+    
+}
+
+//brian Sep5
+-(BOOL) displayErrorsBoolean:(NSString *)customErrorCode;
+{
+    [HUD hide:NO];
+    
+    NSString *customErrorString = [@"Parse Error,Error Code: " stringByAppendingString:customErrorCode];
+    
+    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Error", nil) message:customErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+    errorView.tag = 101;
+    [errorView show];
+    
+    return NO;
 }
 
 
