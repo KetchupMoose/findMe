@@ -568,7 +568,6 @@ UIView *starscontainer;
     splashcontainer.userInteractionEnabled = FALSE;
     splashcontainer.alpha=0;
     
-    
     self.logInView.logo.alpha = 0;
     self.logInView.facebookButton.alpha=1;
     self.logInView.twitterButton.alpha = 1;

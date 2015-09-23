@@ -46,6 +46,7 @@ MBProgressHUD *HUD;
 @synthesize testUserTextField;
 @synthesize homePageCases;
 @synthesize connectedMTLLabel;
+@synthesize locManager;
 
 NSString *homePageManualLocationPropertyNum;
 NSString *homePageTheMatchPropertyNum;
@@ -129,6 +130,19 @@ NSString *homePageTheMatchPropertyNum;
             NSLog(@"  %@", name);
         }
     }
+    
+    PFObject *customObj = [PFObject objectWithClassName:@"BrianTestClass"];
+    NSString *customClassString = customObj.objectId;
+    
+    [customObj setObject:@"blah2" forKey:@"testData"];
+    [customObj save];
+    
+    NSString *checkStringAgain = customObj.objectId;
+    
+    
+    //location manager instance variable allocs
+    locManager = [[CLLocationManager alloc] init];
+    [self getLocation:self];
     
     // Do any additional setup after loading the view.
     
@@ -222,6 +236,59 @@ NSString *homePageTheMatchPropertyNum;
     [self.view addSubview:bottomTab];
     
 }
+
+-(void)getLocation:(id)sender
+{
+    locManager.delegate = self;
+    locManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    //show progress HUD
+    /*
+     HUD.mode = MBProgressHUDModeDeterminate;
+     HUD.delegate = self;
+     HUD.labelText = @"Retrieving Location Data";
+     [HUD show:YES];
+     */
+    
+    // Check for iOS 8. Without this guard the code will crash with "unknown selector" on iOS 7.
+    if ([self.locManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+        [self.locManager requestWhenInUseAuthorization];
+    }
+    
+    [locManager startUpdatingLocation];
+}
+
+
+#pragma mark - CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSString *responseString = @"";
+    BOOL errorCheck = [self checkForErrors:responseString errorCode:@"h101" returnedError:error];
+    
+    return;
+    
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    // NSLog(@"didUpdateToLocation: %@", newLocation);
+    CLLocation *currentLocation = newLocation;
+    
+    if (currentLocation != nil) {
+        //longitudeLabel.text = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude];
+        //latitudeLabel.text = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude];
+        
+        
+        self.locationLongitude = [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude];
+        self.locationLatitude =[NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude];
+    }
+    
+    // Stop Location Manager
+    [locManager stopUpdatingLocation];
+    
+}
+
 
 -(void)replayMovie:(NSNotification *)notification
 {

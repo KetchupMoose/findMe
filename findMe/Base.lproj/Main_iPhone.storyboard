@@ -1972,89 +1972,6 @@
             <point key="canvasLocation" x="-1202" y="597"/>
         </scene>
         <!--Find Me-->
-        <scene sceneID="Zn1-04-FLN">
-            <objects>
-                <viewController storyboardIdentifier="hpvcv2" id="zVW-xt-3op" customClass="HomePageViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="1hG-Qb-lmn"/>
-                        <viewControllerLayoutGuide type="bottom" id="qzI-u3-gjX"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="02u-Y2-QJz">
-                        <rect key="frame" x="0.0" y="64" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Greecewallpaperblurred.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="Ibh-em-YHQ">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="575"/>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rLt-av-l6Q">
-                                <rect key="frame" x="48" y="357" width="225" height="50"/>
-                                <color key="backgroundColor" red="0.1578580433" green="0.54924624909999997" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                <state key="normal" title="View Progress">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="ViewMyCases:" destination="zVW-xt-3op" eventType="touchUpInside" id="qki-uR-Ztn"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gGc-RO-d6d">
-                                <rect key="frame" x="48" y="439" width="225" height="50"/>
-                                <color key="backgroundColor" red="0.1578580433" green="0.54924624909999997" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                <state key="normal" title="My Matches">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="MyMatches:" destination="zVW-xt-3op" eventType="touchUpInside" id="H21-yB-pfR"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FtV-p4-HLd">
-                                <rect key="frame" x="0.0" y="121" width="97" height="39"/>
-                                <color key="backgroundColor" red="0.1578580433" green="0.54924624909999997" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                <state key="normal" title="My Profile">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="MyProfile:" destination="zVW-xt-3op" eventType="touchUpInside" id="9iJ-Gp-xJr"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000001192092896" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Find Me" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pqx-jd-HvV">
-                                <rect key="frame" x="27" y="44" width="267" height="48"/>
-                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="60"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B3v-MY-m1Q">
-                                <rect key="frame" x="48" y="207" width="206" height="51"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="Ornella Button" backgroundImage="Brian-frame.png">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="CreateNewCase:" destination="zVW-xt-3op" eventType="touchUpInside" id="lab-A4-YJP"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Find Me" id="mZd-Bt-sLi"/>
-                    <connections>
-                        <outlet property="CreateNewCaseButton" destination="B3v-MY-m1Q" id="HvZ-oO-tLb"/>
-                        <outlet property="MyMatchesButton" destination="gGc-RO-d6d" id="waN-OY-Q81"/>
-                        <outlet property="MyProfileButton" destination="FtV-p4-HLd" id="Wmt-kR-Spl"/>
-                        <outlet property="ViewMyCasesButton" destination="rLt-av-l6Q" id="YGJ-lM-03x"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zBn-WX-4Fy" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-847" y="1330"/>
-        </scene>
-        <!--Find Me-->
         <scene sceneID="dbc-ZO-dgb">
             <objects>
                 <viewController storyboardIdentifier="hpvcv3" id="tzv-ih-vHm" customClass="HomePageViewController" sceneMemberID="viewController">
@@ -2186,6 +2103,82 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aPM-a0-2bQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1269" y="1352"/>
+        </scene>
+        <!--Custom Login View Controller-->
+        <scene sceneID="NT0-ac-vZg">
+            <objects>
+                <viewController storyboardIdentifier="login" id="LYG-TC-9p1" customClass="customLoginViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="3Zj-Na-XeM"/>
+                        <viewControllerLayoutGuide type="bottom" id="Mjr-4z-LCu"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Q3K-3Z-WT8">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xeJ-Yh-CWr">
+                                <rect key="frame" x="0.0" y="415" width="320" height="68"/>
+                                <state key="normal" image="butt_facebook@3x.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="facebookPress:" destination="LYG-TC-9p1" eventType="touchUpInside" id="iKH-2J-sj1"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hkc-iS-E0n">
+                                <rect key="frame" x="0.0" y="347" width="320" height="68"/>
+                                <state key="normal" image="butt_google@3x.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="googlePress:" destination="LYG-TC-9p1" eventType="touchUpInside" id="Kci-AM-r5q"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lfU-ZZ-T8N">
+                                <rect key="frame" x="0.0" y="262" width="320" height="68"/>
+                                <state key="normal" image="butt_signup@3x.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="emailPress:" destination="LYG-TC-9p1" eventType="touchUpInside" id="yjJ-ZB-AhT"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SIGN UP WITH EMAIL" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Xx-aL-Aqw">
+                                <rect key="frame" x="0.0" y="262" width="320" height="68"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="CONNECT WITH FACEBOOK" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nmy-fT-MHc">
+                                <rect key="frame" x="101" y="415" width="189" height="68"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="CONNECT WITH GOOGLE +" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mxz-o0-83X">
+                                <rect key="frame" x="101" y="347" width="189" height="68"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo@3x.png" translatesAutoresizingMaskIntoConstraints="NO" id="Smt-0n-NQV">
+                                <rect key="frame" x="40" y="48" width="240" height="144"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="emailLabel" destination="5Xx-aL-Aqw" id="VZn-Nz-9kD"/>
+                        <outlet property="emailSignupButton" destination="lfU-ZZ-T8N" id="iYE-Q1-Mfq"/>
+                        <outlet property="facebookButton" destination="xeJ-Yh-CWr" id="TgO-xm-L4a"/>
+                        <outlet property="facebookLabel" destination="nmy-fT-MHc" id="w30-kB-2y6"/>
+                        <outlet property="googleButton" destination="Hkc-iS-E0n" id="XRL-Ih-rtd"/>
+                        <outlet property="googleLabel" destination="mxz-o0-83X" id="tfg-PF-Yzy"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Y0F-Li-kLk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1255" y="-777"/>
         </scene>
         <!--Add Phone View Controller-->
         <scene sceneID="u3N-DM-tiT">
@@ -2799,11 +2792,13 @@
         <image name="Accept_circular_button_outline_256.png" width="256" height="256"/>
         <image name="Brian-frame.png" width="839" height="339"/>
         <image name="Gender-symbols-262x300.png" width="262" height="300"/>
-        <image name="Greecewallpaperblurred.jpg" width="640" height="1136"/>
         <image name="background@3x.jpg" width="1242" height="2208"/>
         <image name="blurPhotoBG2.jpg" width="2000" height="1500"/>
         <image name="blurredlights.jpg" width="640" height="1136"/>
         <image name="butt_active@3x.png" width="675" height="150"/>
+        <image name="butt_facebook@3x.png" width="960" height="150"/>
+        <image name="butt_google@3x.png" width="960" height="150"/>
+        <image name="butt_signup@3x.png" width="960" height="150"/>
         <image name="butt_skip@3x.png" width="285" height="150"/>
         <image name="butt_upload-photo@3x.png" width="390" height="390"/>
         <image name="cityLightsBG.jpg" width="640" height="1136"/>

@@ -10,6 +10,8 @@
 #import "FindMeLoginViewController.h"
 #import "MySignUpViewController.h"
 #import "HomePageViewController.h"
+#import "customLoginViewController.h"
+
 @interface HomeLoadingViewController ()
 
 @end
@@ -26,6 +28,28 @@
     // Check if user is logged in
     if (![PFUser currentUser]) {
         
+        
+        customLoginViewController *loginViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"login"];
+        MySignUpViewController *signUpViewController = [[MySignUpViewController alloc] init];
+        [signUpViewController setDelegate:self];
+        
+        [loginViewController setDelegate:self];
+        
+        [loginViewController setFacebookPermissions:[NSArray arrayWithObjects:@"friends_about_me,publish_actions", nil]];
+        [loginViewController setFields:PFLogInFieldsUsernameAndPassword
+         | PFLogInFieldsFacebook
+         | PFLogInFieldsSignUpButton
+         | PFLogInFieldsLogInButton
+         | PFLogInFieldsPasswordForgotten
+         ];
+
+        [loginViewController setSignUpController:signUpViewController];
+        
+        
+        [self presentViewController:loginViewController animated:NO completion:nil];
+        
+        //BrianSep12, changing this to show new customLoginViewController
+        /*
         // Instantiate our custom log in view controller
         FindMeLoginViewController *logInViewController = [[FindMeLoginViewController alloc] init];
         [logInViewController setDelegate:self];
@@ -49,7 +73,7 @@
         // Present log in view controller
         
         [self presentViewController:logInViewController animated:YES completion:NULL];
-        
+        */
     }
     else
     {

@@ -267,6 +267,10 @@
 		ECCD47021ADC1F8700804B06 /* myLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD47011ADC1F8700804B06 /* myLocation.m */; };
 		ECCD47041ADC211200804B06 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECCD47031ADC211200804B06 /* AddressBook.framework */; };
 		ECCD47071AE1984300804B06 /* verticalPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD47061AE1984300804B06 /* verticalPanGestureRecognizer.m */; };
+		ECD3D0031BA4E32E007455F9 /* customLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ECD3D0021BA4E32E007455F9 /* customLoginViewController.m */; };
+		ECD3D0081BA4E9F9007455F9 /* butt_facebook@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECD3D0051BA4E9F9007455F9 /* butt_facebook@3x.png */; };
+		ECD3D0091BA4E9F9007455F9 /* butt_google@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECD3D0061BA4E9F9007455F9 /* butt_google@3x.png */; };
+		ECD3D00A1BA4E9F9007455F9 /* butt_signup@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECD3D0071BA4E9F9007455F9 /* butt_signup@3x.png */; };
 		ECD591BC1ABC930700D32D5D /* carselfie1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ECD591BB1ABC930700D32D5D /* carselfie1.jpg */; };
 		ECDFA1551B83998600F5F8AC /* crashAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = ECDFA1541B83998600F5F8AC /* crashAlertView.m */; };
 		ECE1BD8C1B41EEEC00512C5C /* newCaseViewControllerv2.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE1BD8B1B41EEEC00512C5C /* newCaseViewControllerv2.m */; };
@@ -796,6 +800,11 @@
 		ECCD47031ADC211200804B06 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		ECCD47051AE1984300804B06 /* verticalPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = verticalPanGestureRecognizer.h; sourceTree = "<group>"; };
 		ECCD47061AE1984300804B06 /* verticalPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = verticalPanGestureRecognizer.m; sourceTree = "<group>"; };
+		ECD3D0011BA4E32E007455F9 /* customLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = customLoginViewController.h; sourceTree = "<group>"; };
+		ECD3D0021BA4E32E007455F9 /* customLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = customLoginViewController.m; sourceTree = "<group>"; };
+		ECD3D0051BA4E9F9007455F9 /* butt_facebook@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "butt_facebook@3x.png"; sourceTree = "<group>"; };
+		ECD3D0061BA4E9F9007455F9 /* butt_google@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "butt_google@3x.png"; sourceTree = "<group>"; };
+		ECD3D0071BA4E9F9007455F9 /* butt_signup@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "butt_signup@3x.png"; sourceTree = "<group>"; };
 		ECD591BB1ABC930700D32D5D /* carselfie1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = carselfie1.jpg; sourceTree = "<group>"; };
 		ECDFA1531B83998600F5F8AC /* crashAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crashAlertView.h; sourceTree = "<group>"; };
 		ECDFA1541B83998600F5F8AC /* crashAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = crashAlertView.m; sourceTree = "<group>"; };
@@ -1366,6 +1375,7 @@
 				EC2FB0711B97E71000482815 /* phoneNumberSet */,
 				EC93EC4F1B793B4500E0772D /* profileScreen */,
 				ECCBDCEC1B729EBE00CE26C9 /* bottomTabUI */,
+				ECD3D0041BA4E9D8007455F9 /* loginScreen */,
 				EC1519E81B72562300AE1DD6 /* splashScreen */,
 				ECAB71E51B5060B3004D4E5C /* papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg */,
 				ECAB71DD1B505AB3004D4E5C /* Dark-Night-Gradation-Blur-iPhone-6-plus-wallpaper-ilikewallpaper_com.jpg */,
@@ -1522,6 +1532,8 @@
 				EC641EA81AFFADC00005073C /* FrontSplashViewController.m */,
 				EC93C6A01AFFE1D200D3DE2A /* MySignUpViewController.h */,
 				EC93C6A11AFFE1D200D3DE2A /* MySignUpViewController.m */,
+				ECD3D0011BA4E32E007455F9 /* customLoginViewController.h */,
+				ECD3D0021BA4E32E007455F9 /* customLoginViewController.m */,
 				EC641E0A1AFF9C5B0005073C /* HomeLoadingViewController.h */,
 				EC641E0B1AFF9C5B0005073C /* HomeLoadingViewController.m */,
 			);
@@ -1850,6 +1862,16 @@
 				ECCBDCF21B729ED700CE26C9 /* ico_progress@3x.png */,
 			);
 			name = bottomTabUI;
+			sourceTree = "<group>";
+		};
+		ECD3D0041BA4E9D8007455F9 /* loginScreen */ = {
+			isa = PBXGroup;
+			children = (
+				ECD3D0051BA4E9F9007455F9 /* butt_facebook@3x.png */,
+				ECD3D0061BA4E9F9007455F9 /* butt_google@3x.png */,
+				ECD3D0071BA4E9F9007455F9 /* butt_signup@3x.png */,
+			);
+			name = loginScreen;
 			sourceTree = "<group>";
 		};
 		ECE6B17B1A0D9FAB007F4A19 /* commonControls */ = {
@@ -2399,6 +2421,7 @@
 				ECCBDCF31B729ED700CE26C9 /* bg_menu-active@3x.png in Resources */,
 				ECE6B16C1A069DAB007F4A19 /* stockphotowoman2.jpg in Resources */,
 				ECE6B16E1A06AD0E007F4A19 /* sawyousubway.jpg in Resources */,
+				ECD3D00A1BA4E9F9007455F9 /* butt_signup@3x.png in Resources */,
 				ECA7A21D1AA7B77900F899D5 /* internetOfflineIcon.png in Resources */,
 				EC73E2611B9D0903002BDE9F /* ProximaNova-Bold.otf in Resources */,
 				ECCBDCF81B729ED700CE26C9 /* ico_progress@3x.png in Resources */,
@@ -2449,6 +2472,7 @@
 				EC886A681B20E75300531FEA /* fishblur.jpg in Resources */,
 				ECC9E5151AA153070099C46A /* Icon-Small@3x.png in Resources */,
 				EC641EAF1AFFB1030005073C /* signup-button.png in Resources */,
+				ECD3D0081BA4E9F9007455F9 /* butt_facebook@3x.png in Resources */,
 				ECBEE58E1B25F1BF00D131E7 /* hawaiilessblur.jpg in Resources */,
 				EC1519EE1B72563600AE1DD6 /* background@3x.jpg in Resources */,
 				EC93C6CF1B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed@2x.png in Resources */,
@@ -2506,6 +2530,7 @@
 				EC8B3C401B1E36DF00DE04A9 /* FindMeCursive.png in Resources */,
 				EC93C6CE1B03B9CD00D3DE2A /* PLCameraSheetDoneButtonPressed.png in Resources */,
 				ECBEE58A1B25F04F00D131E7 /* beachblur.jpg in Resources */,
+				ECD3D0091BA4E9F9007455F9 /* butt_google@3x.png in Resources */,
 				EC10BD941B32494000F7ABDE /* cancel-circled-outline-512-000000.png in Resources */,
 				EC0823011A18689C000B6684 /* cityLightsBG.jpg in Resources */,
 				EC10BD961B324C5900F7ABDE /* shhh.jpg in Resources */,
@@ -2617,6 +2642,7 @@
 				ECFDAAA41AB38B5C00E42C33 /* PNChannelGroupNamespaceRemoveResponseParser.m in Sources */,
 				EC93C6A21AFFE1D200D3DE2A /* MySignUpViewController.m in Sources */,
 				EC0822FC1A0EE7F0000B6684 /* UIImage+WebP.m in Sources */,
+				ECD3D0031BA4E32E007455F9 /* customLoginViewController.m in Sources */,
 				ECEF94631A8D127F0000A444 /* ECSlidingViewController.m in Sources */,
 				ECA7A2A81AA8B86C00F899D5 /* JSQMessagesTimestampFormatter.m in Sources */,
 				ECA7A2BC1AA8B86C00F899D5 /* JSQMessagesInputToolbar.m in Sources */,

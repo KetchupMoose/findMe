@@ -16,7 +16,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "findMeBottomTab.h"
 #import "addPhoneViewController.h"
-@interface HomePageViewController : findMeBaseViewController <MBProgressHUDDelegate,SetProfileDelegate,UITextFieldDelegate,internetOfflineViewControllerDelegate,findMeBottomTabDelegate,addPhoneDelegate>
+@interface HomePageViewController : findMeBaseViewController <MBProgressHUDDelegate,SetProfileDelegate,UITextFieldDelegate,internetOfflineViewControllerDelegate,findMeBottomTabDelegate,addPhoneDelegate,CLLocationManagerDelegate>
 @property (strong, nonatomic) IBOutlet UIButton *CreateNewCaseButton;
 - (IBAction)CreateNewCase:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *ViewMyCasesButton;
@@ -38,6 +38,9 @@
 @property (strong,nonatomic) MPMoviePlayerController *moviePlayer;
 @property (strong,nonatomic) NSArray *designationProperties;
 -(IBAction)showPrivatelyView:(id)sender;
+@property CLLocationManager *locManager;
+@property (strong,nonatomic) NSString *locationLatitude;
+@property (strong,nonatomic) NSString *locationLongitude;
 
 
 @end

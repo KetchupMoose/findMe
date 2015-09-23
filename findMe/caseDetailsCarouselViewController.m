@@ -5935,7 +5935,7 @@ if(tableViewTag ==8999)
             UIAlertView *b1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Broadcast Error", nil) message:specificErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
           
             [b1 show];
-            return NO;
+            return YES;
         }
     
     if([returnedString containsString:@"ERROR"])
