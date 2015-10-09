@@ -31,6 +31,7 @@
 #import "privatelyViewController.h"
 #import "findMeBottomTab.h"
 #import "addPhoneViewController.h"
+#import "ErrorHandlingClass.h"
 
 @interface HomePageViewController ()
 
@@ -58,7 +59,7 @@ NSString *homePageTheMatchPropertyNum;
     
     [locationPropertyQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         NSString *responseString = @"";
-       BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H1" returnedError:error];
+       BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H1" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
         if(errorCheck)
         {
             homePageManualLocationPropertyNum = object.objectId;
@@ -75,7 +76,7 @@ NSString *homePageTheMatchPropertyNum;
     [designationPropertiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
         NSString *responseString = @"";
-        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H2" returnedError:error];
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H2" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
         
         if(errorCheck)
         {
@@ -107,7 +108,7 @@ NSString *homePageTheMatchPropertyNum;
     [locationPropertyQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         
         NSString *responseString = @"";
-        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H3" returnedError:error];
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H3" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
     
         if(errorCheck)
         {
@@ -264,7 +265,7 @@ NSString *homePageTheMatchPropertyNum;
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
     NSString *responseString = @"";
-    BOOL errorCheck = [self checkForErrors:responseString errorCode:@"h101" returnedError:error];
+    BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"h101" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
     
     return;
     
@@ -329,7 +330,7 @@ NSString *homePageTheMatchPropertyNum;
         
     } errorBlock:^(PNError *error) {
         NSString *responseString = @"";
-        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H4" returnedError:error];
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H4" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
 
     }];
     
@@ -342,7 +343,7 @@ NSString *homePageTheMatchPropertyNum;
         {
             NSLog(@"OBSERVER: Error %@, Connection Failed!", connectionError.localizedDescription);
             NSString *responseString = @"";
-            BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H5" returnedError:connectionError];
+            BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H5" returnedError:connectionError ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
             return;
         }
     }];
@@ -390,7 +391,7 @@ NSString *homePageTheMatchPropertyNum;
     [newQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         //for each conversation object, subscribe to that channel on pubnub'
         NSString *responseString = @"";
-        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H6" returnedError:error];
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H6" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
         
         if(errorCheck)
         {
@@ -405,7 +406,7 @@ NSString *homePageTheMatchPropertyNum;
         
         [PubNub unsubscribeFrom:subscribedToChannels withCompletionHandlingBlock:^(NSArray *channels, PNError *error) {
             NSString *responseString = @"";
-            BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H7" returnedError:error];
+            BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H7" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
             
             if(errorCheck)
          
@@ -421,7 +422,7 @@ NSString *homePageTheMatchPropertyNum;
                         [PubNub subscribeOn:channelsArray withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
                         
                             NSString *responseString = @"";
-                            BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H8" returnedError:error];
+                            BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H8" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
                             if(errorCheck)
                             {
                                 
@@ -460,11 +461,12 @@ NSString *homePageTheMatchPropertyNum;
     if(errorObj)
     {
         NSString *responseString = @"";
-        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H9" returnedError:errorObj];
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H9" returnedError:errorObj ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
         return;
     }
     if(returnedMTLObjects.count >1)
     {
+        
         [self displayErrorsBoolean:@"Multiple MTL Objects for this User--Error H10"];
         
         return;
@@ -692,7 +694,7 @@ NSString *homePageTheMatchPropertyNum;
     if(caseProfilesError)
     {
         NSString *responseString = @"";
-          BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H11" returnedError:caseProfilesError];
+          BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H11" returnedError:caseProfilesError ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
         return;
     }
     
@@ -812,7 +814,7 @@ NSString *homePageTheMatchPropertyNum;
     if(caseProfileError)
     {
         NSString *responseString = @"";
-        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H12" returnedError:caseProfileError];
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H12" returnedError:caseProfileError ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
         return;
     }
     
@@ -879,7 +881,7 @@ NSString *homePageTheMatchPropertyNum;
     if(mtlObjectQueryError)
     {
         NSString *responseString = @"";
-        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H13" returnedError:mtlObjectQueryError];
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H13" returnedError:mtlObjectQueryError ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
         return;
     }
     //query for data based on this itsMTLobject and reload data on the home page
@@ -910,7 +912,7 @@ NSString *homePageTheMatchPropertyNum;
         
         
         NSString *responseString = @"";
-        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"H14" returnedError:error];
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H14" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
         if(errorCheck)
         {
         //do some logic to sort through these cases and see how many have matches, how many are awaiting more info.
@@ -1120,6 +1122,7 @@ NSString *homePageTheMatchPropertyNum;
     }
 }
 
+/*
 //brian Sep5
 -(BOOL) checkForErrors:(NSString *) returnedString errorCode:(NSString *)customErrorCode returnedError:(NSError *)error;
 {
@@ -1166,6 +1169,7 @@ NSString *homePageTheMatchPropertyNum;
     }
     
 }
+*/
 
 //brian Sep5
 -(BOOL) displayErrorsBoolean:(NSString *)customErrorCode;

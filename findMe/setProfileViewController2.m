@@ -13,6 +13,7 @@
 #import "UIView+Animation.h"
 #import <DigitsKit/DigitsKit.h>
 #import "mapPinViewController.h"
+#import "ErrorHandlingClass.h"
 
 @interface setProfileViewController2 ()
 
@@ -352,7 +353,7 @@ NSString *locationText;
                        withParameters:@{@"payload": xmlGeneratedString}
                                 block:^(NSString *responseString, NSError *error) {
                                   
-                                    BOOL errorCheck = [self checkForErrors:responseString errorCode:@"p4" returnedError:error];
+                                    BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"p4" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:self.itsMTLObject];
                                     
                                     if(errorCheck)
                                     {
@@ -477,7 +478,7 @@ NSString *locationText;
         
         //brian sep6
         NSString *responseString = @"";
-        BOOL errorCheck = [self checkForErrors:responseString errorCode:@"p101" returnedError:error];
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"p101" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:self.itsMTLObject];
         
         if(errorCheck)
         {
@@ -1223,6 +1224,7 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
     }
 }
 
+/*
 //brian Sep5
 -(BOOL) checkForErrors:(NSString *) returnedString errorCode:(NSString *)customErrorCode returnedError:(NSError *)error;
 {
@@ -1269,7 +1271,7 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
     }
     
 }
-
+*/
 //brian Sep5
 -(BOOL) displayErrorsBoolean:(NSString *)customErrorCode;
 {

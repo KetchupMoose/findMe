@@ -2,14 +2,92 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>CFBundleName</key>
+	<string>${PRODUCT_NAME}</string>
+	<key>UIMainStoryboardFile~ipad</key>
+	<string>Main_iPad</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
-	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The user chooses to update their location when submitting a questionnaire</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>location</string>
+		<string>remote-notification</string>
+		<string>voip</string>
+	</array>
+	<key>CFBundleShortVersionString</key>
+	<string>1.63</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>The user&apos;s location is used to help others find them</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleVersion</key>
+	<string>1.63</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>ProximaNova-Regular.otf</string>
+		<string>ProximaNova-Light.otf</string>
+		<string>ProximaNova-Bold.otf</string>
+	</array>
+	<key>FacebookAppID</key>
+	<string>1604462079792258</string>
 	<key>CFBundleGetInfoString</key>
 	<string></string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>6092c1e7575b7f24de86af9d5815fd37501d70a6</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitName</key>
+				<string>Digits</string>
+				<key>KitInfo</key>
+				<dict>
+					<key>consumerKey</key>
+					<string>eUQsCwitHCcdTfFc7J4vwiDIk</string>
+					<key>consumerSecret</key>
+					<string>fpBPWGI7QouVSVNFiuvzH65EQSDcCBcVm1EgPR36em5ileaspX</string>
+				</dict>
+			</dict>
+		</array>
+	</dict>
+	<key>CFBundleIdentifier</key>
+	<string>com.avial.$(PRODUCT_NAME:rfc1034identifier)</string>
+	<key>FacebookDisplayName</key>
+	<string>FindMe</string>
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>Icon-40.png</string>
@@ -21,16 +99,37 @@
 		<string>Icon-Small@2x.png</string>
 		<string>Icon-Small@3x.png</string>
 	</array>
-	<key>CFBundleIdentifier</key>
-	<string>com.avial.$(PRODUCT_NAME:rfc1034identifier)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>${PRODUCT_NAME}</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>1.58</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>akamaihd.net</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSThirdPartyExceptionRequiresForwardSecrecy</key>
+				<false/>
+			</dict>
+			<key>facebook.com</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSThirdPartyExceptionRequiresForwardSecrecy</key>
+				<false/>
+			</dict>
+			<key>fbcdn.net</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSThirdPartyExceptionRequiresForwardSecrecy</key>
+				<false/>
+			</dict>
+		</dict>
+	</dict>
+	<key>CFBundleExecutable</key>
+	<string>${EXECUTABLE_NAME}</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main_iPhone</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -41,73 +140,6 @@
 				<string>fb1604462079792258</string>
 			</array>
 		</dict>
-	</array>
-	<key>CFBundleVersion</key>
-	<string>1.58</string>
-	<key>Fabric</key>
-	<dict>
-		<key>APIKey</key>
-		<string>6092c1e7575b7f24de86af9d5815fd37501d70a6</string>
-		<key>Kits</key>
-		<array>
-			<dict>
-				<key>KitInfo</key>
-				<dict>
-					<key>consumerKey</key>
-					<string>eUQsCwitHCcdTfFc7J4vwiDIk</string>
-					<key>consumerSecret</key>
-					<string>fpBPWGI7QouVSVNFiuvzH65EQSDcCBcVm1EgPR36em5ileaspX</string>
-				</dict>
-				<key>KitName</key>
-				<string>Digits</string>
-			</dict>
-		</array>
-	</dict>
-	<key>FacebookAppID</key>
-	<string>1604462079792258</string>
-	<key>FacebookDisplayName</key>
-	<string>FindMe</string>
-	<key>LSApplicationCategoryType</key>
-	<string></string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>The user's location is used to help others find them</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>The user chooses to update their location when submitting a questionnaire</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>ProximaNova-Regular.otf</string>
-		<string>ProximaNova-Light.otf</string>
-		<string>ProximaNova-Bold.otf</string>
-	</array>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>location</string>
-		<string>remote-notification</string>
-		<string>voip</string>
-	</array>
-	<key>UIMainStoryboardFile</key>
-	<string>Main_iPhone</string>
-	<key>UIMainStoryboardFile~ipad</key>
-	<string>Main_iPad</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 </dict>
 </plist>
