@@ -8,7 +8,7 @@
 
 #import "newCaseViewControllerv2.h"
 #import <Parse/Parse.h>
-#import <SDWebImage/UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 #import "UIImageView+Scaling.h"
 #import "UIView+Animation.h"

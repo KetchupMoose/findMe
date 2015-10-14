@@ -10,7 +10,7 @@
 #import "popupViewController.h"
 #import "XMLWriter.h"
 #import "SWTableViewCell.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 #import "UIViewController+ECSlidingViewController.h"
 #import "matchesViewController.h"

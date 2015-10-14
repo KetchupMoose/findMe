@@ -7,7 +7,7 @@
 //
 
 #import "ViewCasesViewMatchesMergedViewController.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "XMLWriter.h"
 #import <Parse/Parse.h>
 #import "MBProgressHUD.h"

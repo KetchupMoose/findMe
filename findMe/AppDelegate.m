@@ -18,6 +18,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Fabric/Fabric.h>
 #import <DigitsKit/DigitsKit.h>
+#import <Crashlytics/Crashlytics.h>
 
 
 //uncommented this "quick fix" someone had posted previously, seems the issue is resolved by making sure the project references the correct bolts SDK
@@ -41,7 +42,8 @@
     
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    [Fabric with:@[DigitsKit]];
+    [Fabric with:@[[Digits class], [Crashlytics class]]];
+
 
     
     //PFUser *currentUser = [PFUser currentUser];
