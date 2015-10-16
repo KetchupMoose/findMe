@@ -662,7 +662,7 @@ NSString *locationText;
     
     // add element with an attribute and some some text
     [xmlWriter writeStartElement:@"USEROBJECTID"];
-    [xmlWriter writeCharacters:userName];
+    [xmlWriter writeCharacters:self.username];
     [xmlWriter writeEndElement];
     
     [xmlWriter writeStartElement:@"LAISO"];

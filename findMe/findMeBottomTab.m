@@ -38,16 +38,16 @@
     //setup bottom tab views
     self.tabBG = [[UIImageView alloc] initWithFrame:self.bounds];
     
-    UIImage *bgImg = [UIImage imageNamed:@"bg_menu@3x.png"];
+    UIImage *bgImg = [UIImage imageNamed:@"bg_menunewStyle@3x.png"];
     self.tabBG.image = bgImg;
     
     self.tabBG.userInteractionEnabled = YES;
     [self addSubview:self.tabBG];
     
-    int numOfTabs = 4;
+    int numOfTabs = 5;
     
-    float tabWidth = self.frame.size.width/4;
-    float tabHeight = 50;
+    float tabWidth = self.frame.size.width/5;
+    float tabHeight = 70;
     
     int selectedViewTag = self.selectedViewController.intValue;
     
@@ -62,12 +62,6 @@
         CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
         UIColor *tcolor = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
         
-        //only highlight the selected image
-       if(selectedViewTag ==i)
-       {
-           standardTabView.image = [UIImage imageNamed:@"bg_menu-active@3x.png"];
-       }
-        
         UIButton *tabTextButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,tabWidth,tabHeight)];
         tabTextButton.tag = i;
         [tabTextButton addTarget:self action:@selector(tabPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -79,9 +73,17 @@
         if(i==0)
         {
             //pixel dimensions 42x42
-            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,14,14)];
-            btnImageView.image = [UIImage imageNamed:@"ico_home@3x.png"];
-            btnImageView.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y-7);
+            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,16,16)];
+            if(i==selectedViewTag)
+            {
+              btnImageView.image = [UIImage imageNamed:@"ico_dashboard-active@3x.png"];
+            }
+            else
+            {
+                btnImageView.image = [UIImage imageNamed:@"ico_dashboard-notactive@3x.png"];
+            }
+            
+            btnImageView.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y);
             //change frame to go 5 pixels up
             btnTextLabel.text = @"HOME";
             }
@@ -89,31 +91,75 @@
         if(i==1)
         {
             //pixel dimensions 48 × 48 pixels
-            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,24/1.5,24/1.5)];
-            btnImageView.image = [UIImage imageNamed:@"ico_progress@3x.png"];
-            btnImageView.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y-7);
+            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,16,16)];
+            if(i==selectedViewTag)
+            {
+                btnImageView.image = [UIImage imageNamed:@"ico_progress-active@3x.png"];
+                btnImageView.alpha = 1;
+            }
+            else
+            {
+                btnImageView.image = [UIImage imageNamed:@"ico_progress-active@3x.png"];
+                btnImageView.alpha = 0.5;
+            }
+            btnImageView.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y);
             btnTextLabel.text = @"PROGRESS";
            
         }
         if(i==2)
         {
             //pixel dimensions 48 × 48 pixels
-            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,24/1.5,24/1.5)];
-            btnImageView.image = [UIImage imageNamed:@"ico_matches@3x.png"];
-            btnImageView.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y-7);
-            btnTextLabel.text = @"MATCHES";
+            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,25,25)];
+            if(i==selectedViewTag)
+            {
+                btnImageView.image = [UIImage imageNamed:@"ico_search-active.png"];
+              
+            }
+            else
+            {
+                btnImageView.image = [UIImage imageNamed:@"ico_search-notactive.png"];
+                
+            }
+            btnImageView.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y);
+            btnTextLabel.text = @"";
         }
         if(i==3)
         {
             //pixel dimensions 33 × 48 pixels
-            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,16.5/1.5,24/1.5)];
-            btnImageView.image = [UIImage imageNamed:@"ico_profile@3x.png"];
-            btnImageView.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y-7);
+            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,16,16)];
+            if(i==selectedViewTag)
+            {
+                btnImageView.image = [UIImage imageNamed:@"ico_chat-active.png"];
+                
+            }
+            else
+            {
+                btnImageView.image = [UIImage imageNamed:@"ico_chat-notactive.png"];
+                
+            }
+            btnImageView.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y);
+            btnTextLabel.text = @"CHAT";
+        }
+        
+        if(i==4)
+        {
+            btnImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,16,16)];
+            if(i==selectedViewTag)
+            {
+                btnImageView.image = [UIImage imageNamed:@"ico_profile-active@3x.png"];
+                
+            }
+            else
+            {
+                btnImageView.image = [UIImage imageNamed:@"ico_profile-notactive@3x.png"];
+                
+            }
+            btnImageView.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y);
             btnTextLabel.text = @"PROFILE";
         }
         
         btnTextLabel.textColor = [UIColor whiteColor];
-        btnTextLabel.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y+14);
+        btnTextLabel.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y+22);
         btnTextLabel.textAlignment = NSTextAlignmentCenter;
         btnTextLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:12];
         

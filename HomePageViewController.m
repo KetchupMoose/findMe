@@ -230,8 +230,8 @@ NSString *homePageTheMatchPropertyNum;
                                                object: self.moviePlayer];
     
     float SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
-    
-    findMeBottomTab *bottomTab = [[findMeBottomTab alloc] initWithFrame:CGRectMake(0,SCREEN_HEIGHT-114,320,50)];
+    float SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
+    findMeBottomTab *bottomTab = [[findMeBottomTab alloc] initWithFrame:CGRectMake(0,SCREEN_HEIGHT-114,SCREEN_WIDTH,50)];
     bottomTab.delegate = self;
     
     [self.view addSubview:bottomTab];
