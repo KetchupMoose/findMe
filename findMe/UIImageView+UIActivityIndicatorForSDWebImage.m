@@ -67,12 +67,19 @@ static char TAG_ACTIVITY_INDICATOR;
     [self createActivityIndicatorWithStyle:activityStyle];
     
     __weak typeof(self) weakSelf = self;
+   /*
+    [self setImageWithURL:url placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+     [weakSelf removeActivityIndicator];
+    } usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle ];
+    */
+    
     [self setImageWithURL:url
          placeholderImage:nil
                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                     [weakSelf removeActivityIndicator];
                 }
      ];
+    
 }
 
 - (void)setImageWithURL:(NSURL *)url usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle imgNegative:(BOOL)imgNeg {
@@ -83,7 +90,6 @@ static char TAG_ACTIVITY_INDICATOR;
     [self setImageWithURL:url
          placeholderImage:nil
                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                    
                     
                     [weakSelf removeActivityIndicator];
                 }

@@ -11,7 +11,8 @@
 #import "setProfileViewController2.h"
 #import "ErrorHandlingClass.h"
 #import "matchesViewController.h"
-
+#import "newCaseViewControllerv3.h"
+#import "newCaseViewController.h"
 
 @interface stanHomeViewController ()
 
@@ -57,14 +58,14 @@ MBProgressHUD *HUD;
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,15,self.templatesScrollView.frame.size.width,20)];
     titleLabel.text = @"HAPPENING NEAR YOU";
     titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:15];
+    titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:11];
     
     
     [self.templatesScrollView addSubview:titleLabel];
     
     UILabel *whoopsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,titleLabel.frame.size.height+40+titleLabel.frame.origin.y,self.templatesScrollView.frame.size.width,22)];
     whoopsLabel.textAlignment = NSTextAlignmentCenter;
-    whoopsLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:17];
+    whoopsLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:14];
     whoopsLabel.text = @"WOOOOPS!";
     
     UILabel *description1Label = [[UILabel alloc] initWithFrame:CGRectMake(0,whoopsLabel.frame.size.height+whoopsLabel.frame.origin.y+10,self.templatesScrollView.frame.size.width,15)];
@@ -735,6 +736,23 @@ MBProgressHUD *HUD;
     
 }
 
+-(void)displayNewSearch:(id)sender
+{
+    newCaseViewControllerv3 *ncvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ncvc3"];
+    
+    
+    ncvc.itsMTLObject = self.HomePageITSMTLObject;
+    ncvc.totalSetsOfParentTemplates = self.totalSetsOfParentTemplates;
+  
+    ncvc.allTemplates = self.allTemplates;
+    ncvc.parentTemplateCategories = self.parentTemplateCategories;
+    ncvc.templatePickerActiveChoices = self.templatePickerActiveChoices;
+    
+    
+    [self.navigationController pushViewController:ncvc animated:YES];
+    
+}
+
 - (void)tabSelected:(NSInteger)selectedTab
 {
     if(selectedTab==0)
@@ -749,12 +767,17 @@ MBProgressHUD *HUD;
     }
     if(selectedTab==2)
     {
-        [self MyMatches:(self)];
+        [self displayNewSearch:self];
         
     }
     if(selectedTab==3)
     {
         [self MyProfile:(self)];
+        
+    }
+    
+    if(selectedTab==4)
+    {
         
     }
 }

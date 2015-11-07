@@ -161,7 +161,16 @@
         btnTextLabel.textColor = [UIColor whiteColor];
         btnTextLabel.center = CGPointMake(tabTextButton.center.x,tabTextButton.center.y+22);
         btnTextLabel.textAlignment = NSTextAlignmentCenter;
-        btnTextLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:12];
+        btnTextLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:9];
+        
+        if(i==selectedViewTag)
+        {
+            btnTextLabel.alpha = 1.0f;
+        }
+        else
+        {
+            btnTextLabel.alpha = 0.8f;
+        }
         
         [tabTextButton addSubview:btnTextLabel];
         

@@ -19,6 +19,7 @@
 #import "BaseCaseDetailsSlidingViewController.h"
 #import "caseDetailsCarouselViewController.h"
 #import "caseTitleSetViewController.h"
+#import "ErrorHandlingClass.h"
 
 @interface newCaseViewControllerv3 ()
 
@@ -52,36 +53,105 @@ NSString *locationLongitude;
     [self.view addSubview:self.baseScrollView];
     self.baseScrollView.contentSize = CGSizeMake(320,1000);
     
-    //bgview
-    UIImageView *backgroundView = [[UIImageView alloc] initWithFrame:self.baseScrollView.bounds];
-    backgroundView.image = [UIImage imageNamed:@"papers.co-mk25-night-city-view-dark-bw-nautre-art-33-iphone6-wallpaper.jpg"];
-    backgroundView.contentMode = UIViewContentModeScaleAspectFill;
+    [self setupTemplatesScroll];
     
-    [self.baseScrollView addSubview:backgroundView];
-    
-    //calculate the number of categories required
-    [self queryForTemplates];
-
     
 }
 
+-(void)setupTemplatesScroll
+{
+    int numberOfCategories = (int)self.totalSetsOfParentTemplates.count;
+    
+    //collection view height: 180
+    //collection view cell: 145 width, 130 height
+    //collection view image: 31 width, 8 height,82 width, 82height
+    //collection view titleLabel 8 width, 95 height,129 width, 27 height
+    
+    int yMarginBetweenCollectionViews= 40;
+    int cViewHeight = 180;
+    for (int i = 0; i <= numberOfCategories-1; i++)
+    {
+        UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
+        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        UILabel *sectionTitleLabel;
+        
+        UICollectionView *categoryCollectionView;
+        if(i==0)
+        {
+            categoryCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,yMarginBetweenCollectionViews,320,cViewHeight) collectionViewLayout:layout];
+            
+            //add title label from category text
+            NSArray *firstTemplatesArray = [self.totalSetsOfParentTemplates objectAtIndex:0];
+            PFObject *templateObj = [firstTemplatesArray objectAtIndex:0];
+            NSString *categoryText = [templateObj objectForKey:@"category"];
+            
+            //add a label
+            sectionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,0,320,yMarginBetweenCollectionViews)];
+            if([categoryText length]<=0)
+            {
+                categoryText = @"No Category";
+            }
+            sectionTitleLabel.text = categoryText;
+            
+            
+           
+        }
+        else
+        {
+            categoryCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,(cViewHeight*i)+yMarginBetweenCollectionViews*i+yMarginBetweenCollectionViews,320,cViewHeight) collectionViewLayout:layout];
+            
+            sectionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,cViewHeight*i+yMarginBetweenCollectionViews,320,yMarginBetweenCollectionViews)];
+            
+            //add title label from category text
+            NSArray *firstTemplatesArray = [self.totalSetsOfParentTemplates objectAtIndex:i];
+            PFObject *templateObj = [firstTemplatesArray objectAtIndex:0];
+            NSString *categoryText = [templateObj objectForKey:@"category"];
+            if([categoryText isEqualToString:@""] || categoryText == nil)
+            {
+                categoryText = @"Null Category";
+            }
+            sectionTitleLabel.text = categoryText;
+            
+        }
+        
+        sectionTitleLabel.textAlignment = NSTextAlignmentLeft;
+        sectionTitleLabel.textColor = [UIColor blackColor];
+        sectionTitleLabel.font = [UIFont fontWithName:@"Futura-Medium" size:12];
+        sectionTitleLabel.tag = i+1;
+        
+        [self.baseScrollView addSubview:sectionTitleLabel];
+        
+        categoryCollectionView.tag = i+1;
+        categoryCollectionView.dataSource = self;
+        categoryCollectionView.delegate = self;
+        categoryCollectionView.backgroundColor = [UIColor whiteColor];
+        
+        [categoryCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"templateCell"];
+        
+        [self.baseScrollView addSubview:categoryCollectionView];
+        
+        [categoryCollectionView reloadData];
+    }
+}
+
+/*
 -(void) queryForTemplates
 {
     //show progress HUD
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:HUD];
-    
+ 
     HUD.mode = MBProgressHUDModeDeterminate;
     HUD.delegate = self;
     HUD.labelText = @"Gathering Local Templates";
     [HUD show:YES];
-    
+ 
     self.allTemplates = [[NSArray alloc] init];
-    
-    
-    
+ 
+ 
+ 
     self.totalSetsOfParentTemplates = [[NSMutableArray alloc] init];
-    
+ 
     self.templatePickerActiveChoices = [[NSMutableArray alloc] init];
     self.parentTemplateCategories = [[NSMutableArray alloc] init];
 
@@ -94,33 +164,33 @@ NSString *locationLongitude;
         payloadString = TRUE;
         payload = @"payload";
         [self callStartFunctionID:mtlObjID];
-        
+ 
     }
     else
     {
         mtlObjID = @"nottest";
         [self callStartFunctionNOID];
-        
+ 
     }
-    
-   
-    
-    
+ 
+ 
 }
+*/
 
+/*
 -(void)callStartFunctionNOID
 {
     NSMutableArray *templateParentChoices = [[NSMutableArray alloc] init];
     [PFCloud callFunctionInBackground:@"getStartMenu"
                        withParameters:@{}
                                 block:^(NSArray *returnedObjects, NSError *error) {
-                                    
+ 
                                     BOOL errorCheck = [self checkForErrors:@"" errorCode:@"N1" returnedError:error];
-                                    
+ 
                                     if (errorCheck)
                                     {
                                         self.allTemplates = returnedObjects;
-                                        
+ 
                                         //self.allTemplates = (NSMutableArray *)[templateQuery findObjects];
                                         for(PFObject *templateObject in self.allTemplates)
                                         {
@@ -294,7 +364,9 @@ NSString *locationLongitude;
      ];
 
 }
+*/
 
+/*
 -(void)callStartFunctionID:(NSString *)mtlID
 {
     NSMutableArray *templateParentChoices = [[NSMutableArray alloc] init];
@@ -482,7 +554,7 @@ NSString *locationLongitude;
      ];
     
 }
-
+*/
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -548,19 +620,22 @@ NSString *locationLongitude;
     
     PFObject *templateObject = [sourceArray objectAtIndex:indexPath.row];
     
-    NSString *imgURL = [templateObject objectForKey:@"imageURL"];
-    UIActivityIndicatorViewStyle activityStyle = UIActivityIndicatorViewStyleGray;
+    //NSString *imgURL = [templateObject objectForKey:@"imageURL"] ;
+    NSString *imgURL = [templateObject valueForKey:@"imageURL"];
     
+    UIActivityIndicatorViewStyle activityStyle = UIActivityIndicatorViewStyleGray;
+    //http://www.worldfortravel.com/wp-content/uploads/2012/01/Croatia-Natural-Beauty.jpg
+    //https://www.wonderplugin.com/wp-content/plugins/wonderplugin-lightbox/images/demo-image0.jpg
+    //http://s.zkcdn.net/Advertisers/2af28877e997433092cf5bd6ed43ce86.png
     [caseImageView setImageWithURL:[NSURL URLWithString:imgURL] usingActivityIndicatorStyle:(UIActivityIndicatorViewStyle)activityStyle];
+    
+    caseImageView.contentMode = UIViewContentModeScaleAspectFill;
     
     descrLabel.text = [templateObject objectForKey:@"description"];
     
     descrLabel.font = [UIFont fontWithName:@"Futura-Medium" size:12];
     
     descrLabel.textAlignment = NSTextAlignmentCenter;
-    
-    
-    //caseImageView.image = [UIImage imageNamed:[recipeImages objectAtIndex:indexPath.row]];
     
     return cell;
 }
@@ -616,8 +691,6 @@ NSString *locationLongitude;
     labelFrame.origin.y -=75;
     labelFrame.size.width = 190;
     labelFrame.size.height = 90;
-    
-    
     
     cellDescriptionLabel.frame = labelFrame;
     cellDescriptionLabel.font = [UIFont fontWithName:@"Futura-Medium" size:25];
@@ -1051,7 +1124,7 @@ NSString *locationLongitude;
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-   BOOL errorCheck = [self checkForErrors:@"" errorCode:@"N3" returnedError:error];
+    BOOL errorCheck = [ErrorHandlingClass checkForErrors:@"" errorCode:@"N3" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:self.itsMTLObject];
     
     return;
     
@@ -1090,7 +1163,7 @@ NSString *locationLongitude;
             
             //[HUD hide:YES];
         } else {
-           BOOL errorCheck = [self checkForErrors:@"" errorCode:@"N4" returnedError:error];
+           BOOL errorCheck = [ErrorHandlingClass checkForErrors:@"" errorCode:@"N4" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:self.itsMTLObject];
             //[HUD hide:YES];
         }
     } ];
@@ -1122,67 +1195,6 @@ NSString *locationLongitude;
     {
         strcpy(0, "bla");
     }
-}
-
-//brian Sep5
--(BOOL) checkForErrors:(NSString *) returnedString errorCode:(NSString *)customErrorCode returnedError:(NSError *)error;
-{
-    [HUD hide:NO];
-    
-    if(error)
-    {
-        NSString *errorString = error.localizedDescription;
-        NSLog(errorString);
-        
-        NSString *customErrorString = [@"Parse Error,Error Code: " stringByAppendingString:customErrorCode];
-        
-        UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Error", nil) message:customErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        errorView.tag = 101;
-        [errorView show];
-        
-        return NO;
-    }
-    if([returnedString containsString:@"BROADCAST"])
-    {
-        //show a ui alertview with the response text
-        NSString *specificErrorString = [[returnedString stringByAppendingString:@"Backend Error, Error Source: "] stringByAppendingString:customErrorCode];
-        
-        UIAlertView *b1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Broadcast Error", nil) message:specificErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        
-        [b1 show];
-        return NO;
-    }
-    
-    if([returnedString containsString:@"ERROR"])
-    {
-        NSString *specificErrorString = [[returnedString stringByAppendingString:@"Backend Error, Error Source: "] stringByAppendingString:customErrorCode];
-        
-        UIAlertView *b1 = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Wait for Sync Error", nil) message:specificErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        
-        [b1 show];
-        return NO;
-        
-        
-    }
-    else
-    {
-        return YES;
-    }
-    
-}
-
-//brian Sep5
--(BOOL) displayErrorsBoolean:(NSString *)customErrorCode;
-{
-    [HUD hide:NO];
-    
-    NSString *customErrorString = [@"Parse Error,Error Code: " stringByAppendingString:customErrorCode];
-    
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Parse Error", nil) message:customErrorString delegate:self cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-    errorView.tag = 101;
-    [errorView show];
-    
-    return NO;
 }
 
 

@@ -185,13 +185,9 @@ BOOL notifierLoaded;
         [messageReceivedView addGestureRecognizer:msgButtonPanRecognizer];
         
         [self.view SlideFromRightWithBounceBack:messageReceivedView containerView:self.view duration:0.3 option:UIViewAnimationOptionCurveEaseOut];
-        
-        
-      
+       
     }];
-    
-   
-    
+  
 }
 
 
