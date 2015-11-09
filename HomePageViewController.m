@@ -17,7 +17,6 @@
 #import "setProfileViewController2.h"
 #import "matchesViewController.h"
 #import "UIViewController+ECSlidingViewController.h"
-#import "originalViewController.h"
 #import "reachabilitySingleton.h"
 #import "Reachability.h"
 #import "PNImports.h"
@@ -978,18 +977,6 @@ NSString *homePageTheMatchPropertyNum;
 
 -(IBAction)TestSlidingView:(id)sender
 {
-    /*
-    ECSlidingViewController *myecvc = (ECSlidingViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"ecsliding"];
-    
-    originalViewController *ovc = [self.storyboard instantiateViewControllerWithIdentifier:@"originalVC"];
-    
-    [myecvc setTopViewController:ovc];
-    
-    
-    [self.navigationController pushViewController:myecvc animated:YES];
-    */
-    //[self cloudCodeTest];
-    
     CarouselTestViewController *ctvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ctest"];
     [self.navigationController pushViewController:ctvc animated:YES];
     

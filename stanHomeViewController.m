@@ -1005,13 +1005,13 @@ NSString *homePageTheMatchPropertyNum;
     }
     if(selectedTab==3)
     {
-        [self MyProfile:(self)];
+       
         
     }
     
     if(selectedTab==4)
     {
-        
+        [self MyProfile:(self)];
     }
 }
 

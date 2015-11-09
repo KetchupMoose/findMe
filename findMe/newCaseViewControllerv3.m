@@ -67,40 +67,52 @@ NSString *locationLongitude;
     //collection view image: 31 width, 8 height,82 width, 82height
     //collection view titleLabel 8 width, 95 height,129 width, 27 height
     
-    int yMarginBetweenCollectionViews= 40;
-    int cViewHeight = 180;
+    //titleLabel is centered vertically in the headerSectionHeight
+    int headerSectionHeight = 35;
+    int sectionLabelHeight = 20;
+    int sectionHeaderYStart = (headerSectionHeight-sectionLabelHeight)/2;
+    
+    int cViewHeight = 157;
+    BOOL diffBGColor = FALSE;
+    int yMarginTopLabel = 10;
     for (int i = 0; i <= numberOfCategories-1; i++)
     {
         UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         UILabel *sectionTitleLabel;
-        
+        UIView *sectionHeader;
         UICollectionView *categoryCollectionView;
         if(i==0)
         {
-            categoryCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,yMarginBetweenCollectionViews,320,cViewHeight) collectionViewLayout:layout];
+            categoryCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,headerSectionHeight,320,cViewHeight) collectionViewLayout:layout];
             
             //add title label from category text
             NSArray *firstTemplatesArray = [self.totalSetsOfParentTemplates objectAtIndex:0];
             PFObject *templateObj = [firstTemplatesArray objectAtIndex:0];
             NSString *categoryText = [templateObj objectForKey:@"category"];
             
-            //add a label
-            sectionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,0,320,yMarginBetweenCollectionViews)];
+            //add a sectionHeader
+           sectionHeader = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.baseScrollView.frame.size.width,headerSectionHeight)];
+            
+            sectionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,sectionHeaderYStart,320,sectionLabelHeight)];
             if([categoryText length]<=0)
             {
                 categoryText = @"No Category";
             }
             sectionTitleLabel.text = categoryText;
             
+            [sectionHeader addSubview:sectionTitleLabel];
             
            
         }
         else
         {
-            categoryCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,(cViewHeight*i)+yMarginBetweenCollectionViews*i+yMarginBetweenCollectionViews,320,cViewHeight) collectionViewLayout:layout];
+            categoryCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,(cViewHeight*i)+headerSectionHeight*(i+1),320,cViewHeight) collectionViewLayout:layout];
             
-            sectionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,cViewHeight*i+yMarginBetweenCollectionViews,320,yMarginBetweenCollectionViews)];
+            //sectionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,cViewHeight*i+yMarginBetweenCollectionViews*i+yMarginTopLabel*i,320,yMarginBetweenCollectionViews)];
+            sectionTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,sectionHeaderYStart,self.baseScrollView.frame.size.width,sectionLabelHeight)];
+            
+             sectionHeader = [[UIView alloc] initWithFrame:CGRectMake(0,cViewHeight*i+headerSectionHeight*i,self.baseScrollView.frame.size.width,headerSectionHeight)];
             
             //add title label from category text
             NSArray *firstTemplatesArray = [self.totalSetsOfParentTemplates objectAtIndex:i];
@@ -119,12 +131,38 @@ NSString *locationLongitude;
         sectionTitleLabel.font = [UIFont fontWithName:@"Futura-Medium" size:12];
         sectionTitleLabel.tag = i+1;
         
-        [self.baseScrollView addSubview:sectionTitleLabel];
+        if(diffBGColor ==TRUE)
+        {
+            sectionHeader.backgroundColor = [UIColor colorWithRed:245.0/255.0f green:246.0/255.0f blue:252.0/255.0f alpha:1];
+        }
+        else
+        {
+            sectionHeader.backgroundColor = [UIColor clearColor];
+            
+        }
+       
+        
+        [sectionHeader addSubview:sectionTitleLabel];
+        
+        
+        [self.baseScrollView addSubview:sectionHeader];
+        
         
         categoryCollectionView.tag = i+1;
         categoryCollectionView.dataSource = self;
         categoryCollectionView.delegate = self;
-        categoryCollectionView.backgroundColor = [UIColor whiteColor];
+        
+        if(diffBGColor ==TRUE)
+        {
+            categoryCollectionView.backgroundColor = [UIColor colorWithRed:245.0/255.0f green:246.0/255.0f blue:252.0/255.0f alpha:1];
+            diffBGColor = FALSE;
+            
+        }
+        else
+        {
+            categoryCollectionView.backgroundColor = [UIColor clearColor];
+            diffBGColor = TRUE;
+        }
         
         [categoryCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"templateCell"];
         
@@ -1146,7 +1184,6 @@ NSString *locationLongitude;
         // NSLog(@"Found placemarks: %@, error: %@", placemarks, error);
         if (error == nil && [placemarks count] > 0) {
             placemark = [placemarks lastObject];
-            
             
             NSString *locationText =[NSString stringWithFormat:@"%@ %@\n%@ %@\n%@\n%@",
                                      placemark.subThoroughfare, placemark.thoroughfare,

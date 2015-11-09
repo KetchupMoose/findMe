@@ -24,10 +24,8 @@
     
     [[UINavigationBar appearance] setAlpha:0];
     
-    
     // Check if user is logged in
     if (![PFUser currentUser]) {
-        
         
         customLoginViewController *loginViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"login"];
         MySignUpViewController *signUpViewController = [[MySignUpViewController alloc] init];
