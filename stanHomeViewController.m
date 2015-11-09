@@ -13,6 +13,11 @@
 #import "matchesViewController.h"
 #import "newCaseViewControllerv3.h"
 #import "newCaseViewController.h"
+#import "reachabilitySingleton.h"
+#import "Reachability.h"
+#import "PNImports.h"
+#import "AppDelegate.h"
+#import "sharedUserDataSingleton.h"
 
 @interface stanHomeViewController ()
 
@@ -26,6 +31,9 @@
 CLLocation *location;
 BOOL shouldUpdateLocationHome = YES;
 MBProgressHUD *HUD;
+
+NSString *homePageManualLocationPropertyNum;
+NSString *homePageTheMatchPropertyNum;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -46,12 +54,237 @@ MBProgressHUD *HUD;
     
     self.HomePageUser = [PFUser currentUser];
     
+    //check to see if the parse connection is available.  If not, remove the HomePageViewController and show a ParseUnavailableViewController
+    Reachability *singletonReach = [[reachabilitySingleton sharedReachability] reacher];
+    
+    NetworkStatus status = [singletonReach currentReachabilityStatus];
+    
+    if (status !=NotReachable)
+    {
+        NSLog(@"reached it!");
+        [self LoadingHomePage];
+        
+    }
+    else
+    {
+        NSLog(@"no connection");
+        //show the internet offline view controller
+        internetOfflineViewController *iovc = [[internetOfflineViewController alloc] init];
+        iovc = [self.storyboard instantiateViewControllerWithIdentifier:@"iovc"];
+        
+        iovc.delegate = self;
+        
+        //[self.view addSubview:iovc.view];
+        
+        [self.navigationController presentViewController:iovc animated:YES completion:nil];
+        
+    }
+    
     //send xml to retrieve templates and check for home page style templates
     [self getLocalTemplates:self];
     
     [self setupScrollViewContents:self];
     
 }
+
+-(void)LoadingHomePage
+{
+    [self setPubNubConfigDetails];
+    
+    //create an itsMTL Object if necessary
+    [self createParseUser];
+    [self setDesignationProperties];
+    //[self setManualLocationProperty];
+    //[self setTheMatchProperty];
+    
+    //add a progress HUD to show it is retrieving list of cases
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    
+    //set up notification channels
+    //[self setUpNotificationChannels];
+}
+
+-(void) setPubNubConfigDetails
+{
+    PNConfiguration *configuration = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
+                                                                  publishKey:@"pub-c-52642b11-2177-44d9-9321-1e5bceb28507" subscribeKey:@"sub-c-cffdd2bc-c9ca-11e4-801b-02ee2ddab7fe" secretKey:@"sec-c-YWRhYjRjZDUtNDljMC00YjAwLWIxZTktMzg1MmYxZTU1ZTAw"];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [PubNub setConfiguration:configuration];
+    
+    
+    [PubNub connectWithSuccessBlock:^(NSString *origin) {
+        //NSLog(origin);
+        NSLog(@"success flagged here brian");
+        
+    } errorBlock:^(PNError *error) {
+        NSString *responseString = @"";
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H4" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
+        
+    }];
+    
+    [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:appDelegate withCallbackBlock:^(NSString *origin, BOOL connected, PNError *connectionError){
+        if (connected)
+        {
+            NSLog(@"OBSERVER: Successful Connection!");
+        }
+        else if (!connected || connectionError)
+        {
+            NSLog(@"OBSERVER: Error %@, Connection Failed!", connectionError.localizedDescription);
+            NSString *responseString = @"";
+            BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H5" returnedError:connectionError ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
+            return;
+        }
+    }];
+    
+}
+
+-(void) createParseUser {
+    
+    //create parse objects and create the new case for the template
+    PFUser *currentUser = [PFUser currentUser];
+    
+    //query to see if there is an ITSMTLObject for this user already
+    
+    // Set determinate mode
+    HUD.mode = MBProgressHUDModeDeterminate;
+    HUD.delegate = self;
+    HUD.labelText = @"Checking if there's an MTL Object";
+    [HUD show:YES];
+    
+    PFQuery *newQuery = [PFQuery queryWithClassName:@"ItsMTL"];
+    
+    [newQuery whereKey:@"ParseUser" equalTo:currentUser];
+    NSError *errorObj = nil;
+    NSArray *returnedMTLObjects = [newQuery findObjects:&errorObj];
+    if(errorObj)
+    {
+        NSString *responseString = @"";
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H9" returnedError:errorObj ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
+        return;
+    }
+    if(returnedMTLObjects.count >1)
+    {
+        //double check this code brianNov8
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:@"" errorCode:@"H10 Multiple MTL Objects" returnedError:nil ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
+        
+        return;
+        
+    }
+    if(returnedMTLObjects.count >=1)
+    {
+        NSLog(@"already have an itsMTL user");
+        
+        //do nothing, don't create an itsMTLObject
+        PFObject *returnedMTLObject = [returnedMTLObjects objectAtIndex:0];
+        HomePageuserName = returnedMTLObject.objectId;
+        sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
+        [sharedUData setUserName:HomePageuserName];
+        self.connectedMTLLabel.text = [@"Current MTL User: " stringByAppendingString:HomePageuserName];
+        
+        HomePageITSMTLObject = returnedMTLObject;
+        
+        [HUD hide:NO];
+        
+    }
+    else
+    {
+        //create new case with this user.
+        
+        NSLog(@"need to create mtl user from the template screen");
+        
+        //brian Apr4
+        //MTLobject will be created later on profile screen, commenting this out for now
+        /*
+         HomePageITSMTLObject = [PFObject objectWithClassName:@"ItsMTL"];
+         [HomePageITSMTLObject setObject:currentUser forKey:@"ParseUser"];
+         //[HomePageITSMTLObject setObject:@"newHomeScreenUser" forKey:@"showName"];
+         
+         // Set the access control list to current user for security purposes
+         PFACL *itsMTLACL = [PFACL ACLWithUser:[PFUser currentUser]];
+         [itsMTLACL setPublicReadAccess:YES];
+         [itsMTLACL setPublicWriteAccess:YES];
+         
+         HomePageITSMTLObject.ACL = itsMTLACL;
+         
+         [HomePageITSMTLObject save];
+         
+         HomePageuserName = HomePageITSMTLObject.objectId;
+         sharedUserDataSingleton *sharedUData = [sharedUserDataSingleton sharedUserData];
+         [sharedUData setUserName:HomePageuserName];
+         self.connectedMTLLabel.text = [@"Current MTL User: " stringByAppendingString:HomePageuserName];
+         //need to grab these properties later to save them on the user
+         
+         //set user properties to parse true user account
+         [currentUser setObject:@"newHomeScreenUser" forKey:@"showName"];
+         [currentUser setObject:@"5" forKey:@"cellNumber"];
+         [currentUser setObject:@"F" forKey:@"gender"];
+         [currentUser save];
+         
+         */
+        setProfileViewController2 *spvc2 = [self.storyboard instantiateViewControllerWithIdentifier:@"spvc2"];
+        spvc2.delegate = self;
+        
+        //[self presentViewController:spvc animated:NO completion:nil];
+        [self.navigationController pushViewController:spvc2 animated:YES];
+        
+        //[self.navigationController pushViewController:spvc animated:YES];
+        
+        [HUD hide:NO];
+    }
+    
+    
+}
+
+-(void)setDesignationProperties
+{
+    PFQuery *designationPropertiesQuery = [PFQuery queryWithClassName:@"Properts"];
+    [designationPropertiesQuery whereKey:@"designation" notEqualTo:@""];
+    [designationPropertiesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        NSString *responseString = @"";
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H2" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
+        
+        if(errorCheck)
+        {
+            //filter through this array to get a smaller array
+            NSMutableArray *cleanPropsArray = [[NSMutableArray alloc] init];
+            for(PFObject *propObject in objects)
+            {
+                NSString *propDescr = [propObject objectForKey:@"propertyDescr"];
+                NSString *designation = [propObject objectForKey:@"designation"];
+                
+                if([propDescr length]>0 && [designation length] >0)
+                {
+                    [cleanPropsArray addObject:propObject];
+                }
+            }
+            self.designationProperties = [cleanPropsArray copy];
+        }
+        
+        
+    }];
+}
+
+-(void)setTheMatchProperty
+{
+    //query for the property number to use
+    PFQuery *locationPropertyQuery = [PFQuery queryWithClassName:@"Properts"];
+    [locationPropertyQuery whereKey:@"designation" equalTo:@"EN~TheMatch"];
+    
+    [locationPropertyQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        
+        NSString *responseString = @"";
+        BOOL errorCheck = [ErrorHandlingClass checkForErrors:responseString errorCode:@"H3" returnedError:error ParseUser:[PFUser currentUser] MTLOBJ:HomePageITSMTLObject];
+        
+        if(errorCheck)
+        {
+            homePageTheMatchPropertyNum= object.objectId;
+        }
+        
+    }];
+}
+
 
 -(void)setupScrollViewContents:(id)sender
 {

@@ -8,12 +8,11 @@
 //
 
 #import "HomePageViewController.h"
-#import "newCaseViewController.h"
-#import "newCaseViewControllerv2.h"
+//#import "newCaseViewController.h"
+//#import "newCaseViewControllerv2.h"
 #import "newCaseViewControllerv3.h"
 #import "MBProgressHUD.h"
 #import <Parse/Parse.h>
-#import "ViewCasesViewController.h"
 #import "ViewCasesViewMatchesMergedViewController.h"
 #import "setProfileViewController2.h"
 #import "matchesViewController.h"
@@ -561,7 +560,7 @@ NSString *homePageTheMatchPropertyNum;
 
 
 - (IBAction)CreateNewCase:(id)sender {
-    
+    /*
     newCaseViewController *ncvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ncvc"];
     
     ncvc.itsMTLObject = HomePageITSMTLObject;
@@ -570,7 +569,7 @@ NSString *homePageTheMatchPropertyNum;
     //UINavigationController *uinc = self.navigationController;
     
     [self.navigationController pushViewController:ncvc animated:YES];
-    
+    */
 }
 - (IBAction)ViewMyCases:(id)sender {
     /*

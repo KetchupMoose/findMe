@@ -647,25 +647,22 @@ NSString *locationLongitude;
     //calculate the index based on # of collectionviews shown, this collectionview tag, and the sub contents of each array.
     NSInteger indexOfThisCollectionView = collectionView.tag;
     NSInteger objCountTotal = 0;
-    for(int i = 0; i <indexOfThisCollectionView-1; i++)
-    {
-        //sum up the counts of
-        NSArray *contentsOfCollectionViewAtIndex = [self.totalSetsOfParentTemplates objectAtIndex:i];
-        NSInteger objCount = contentsOfCollectionViewAtIndex.count;
-        objCountTotal += objCount;
-        
-    }
     
-    NSInteger indexForAllParentTemplates = objCountTotal + indexPath.row;
+    NSArray *contentsOfCollectionViewAtIndex = [self.totalSetsOfParentTemplates objectAtIndex:indexOfThisCollectionView-1];
     
-    [self parentTemplatePicked:indexForAllParentTemplates];
+    NSInteger selectedViewIndex = indexPath.row;
+    
+    PFObject *selectedParentObject = [contentsOfCollectionViewAtIndex objectAtIndex:selectedViewIndex];
+    
+    
+    [self parentTemplatePicked:selectedParentObject];
     
     UICollectionViewCell *selectedCell = [collectionView cellForItemAtIndexPath:indexPath];
     
     //create new UIImage & DescriptionLabel to animate onto screen with that
     UIImageView *replicaOfCellImageView = (UIImageView *)[selectedCell viewWithTag:1];
     UILabel *cellDescriptionLabel = (UILabel *)[selectedCell viewWithTag:2];
-    cellDescriptionLabel.textColor = [UIColor whiteColor];
+    cellDescriptionLabel.textColor = [UIColor blackColor];
     
     //dismiss tableview by animating left
     UIView *selectedFirstTemplateView = [[UIView alloc] initWithFrame:CGRectMake(5,5,310,140)];
@@ -684,7 +681,7 @@ NSString *locationLongitude;
     
     UILabel *categoryLabel = [[UILabel alloc] initWithFrame:CGRectMake(100,0,200,40)];
     categoryLabel.text = @"Selected Category:";
-    categoryLabel.textColor = [UIColor whiteColor];
+    categoryLabel.textColor = [UIColor blackColor];
     
     CGRect labelFrame = cellDescriptionLabel.frame;
     labelFrame.origin.x +=90;
@@ -724,20 +721,17 @@ NSString *locationLongitude;
     
 
 }
+-(void) parentTemplatePicked:(PFObject *)selectedParentObj
 
--(void) parentTemplatePicked:(NSInteger) tag;
 {
-    int btnTag = tag;
-    
     //select the next template display based on this button.
-    
-    NSLog(@"%i",btnTag);
     
     //remove everything from the previous active choices
     [templatePickerActiveChoices removeAllObjects];
     
     //get the selected parent template object
-    PFObject *selectedParentTemplateObj = [self.parentTemplateCategories objectAtIndex:btnTag];
+    PFObject *selectedParentTemplateObj = selectedParentObj;
+    
     selectedTemplate1 = selectedParentTemplateObj.objectId;
     
     
@@ -878,7 +872,7 @@ NSString *locationLongitude;
     //[templateDescLabel setShadowColor:shadow.shadowColor];
     //[templateDescLabel setShadowOffset:shadow.shadowOffset];
     
-    templateDescLabel.textColor = [UIColor whiteColor];
+    templateDescLabel.textColor = [UIColor blackColor];
     
     templateDescLabel.numberOfLines = 5;
     templateDescLabel.textAlignment = NSTextAlignmentCenter;
